@@ -17,7 +17,7 @@ public class MemberController {
 	private MemberService service;
 	
 	@RequestMapping(value = "login.kedai") 
-	public String login(HttpServletRequest request) { // http://localhost:9099/final_project/login.kedai
+	public String login(HttpServletRequest request) { // http://localhost:9099/KEDAI/login.kedai
 		
 		return "login";
 	}
@@ -31,7 +31,7 @@ public class MemberController {
 	}	
 	
 	@GetMapping("/index.kedai")
-	public ModelAndView index(ModelAndView mav) { // http://localhost:9099/final_project/index.kedai
+	public ModelAndView index(ModelAndView mav) { // http://localhost:9099/KEDAI/index.kedai
 		
 		mav.setViewName("tiles1/index.tiles"); 
 		
@@ -39,7 +39,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("/register.kedai")
-	public ModelAndView register(ModelAndView mav) { // http://localhost:9099/final_project/register.kedai
+	public ModelAndView register(ModelAndView mav) { // http://localhost:9099/KEDAI/register.kedai
 		
 		mav.setViewName("tiles1/register.tiles"); 
 		
