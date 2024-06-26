@@ -40,7 +40,7 @@
 <%-- header start --%>
 <div class="container-fluid">
 	<nav class="navbar navbar-expand-lg">
-		<a class="navbar-brand" href="#">LOGO</a>
+		<a class="navbar-brand" href="#"><img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver2.png" width="30%" /></a>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<form class="form-inline ml-auto my-2 mr-3 my-lg-0" style="position: relative;">
 	      		<input class="mr-sm-2 mb-0 input_search" type="search" placeholder="Search">

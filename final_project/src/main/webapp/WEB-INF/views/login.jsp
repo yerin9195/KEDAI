@@ -92,9 +92,9 @@
 </script>	
 </head>
 <body>
-	<div style="width: 40%; margin: 100px auto 0 auto; padding: 20px 0 40px 0; border: 1px solid #eee; border-radius: 50px 0 50px 0; text-align: center;">
+	<div style="width: 40%; margin: 3% auto 0 auto; padding: 2% 0 2% 0; border: 1px solid #ddd; border-radius: 50px 0 50px 0; text-align: center;">
 		<div style="padding: 30px 0; margin-bottom: 20px;">
-			<img alt="logo" src="" />
+			<img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver1.png" width="35%" />
 		</div>
 		
 		<form name="loginFrm">
@@ -113,7 +113,10 @@
          	<br><br>
          	<div style="text-align: left;">
          		<input type="checkbox" id="idSave" />&nbsp;<label for="idSave">아이디 저장하기</label>
-         		<span style="float: right;"><a href="">[ 관리자에게 문의하기 ]</a></span>
+         		<div style="border: 0px solid red; float: right;">
+         			<span><a href="">[ 아이디 찾기 ]</a></span>
+         			<span><a href="">[ 비밀번호 찾기 ]</a></span>
+         		</div>
          	</div>
          </div>        
 	</div>
