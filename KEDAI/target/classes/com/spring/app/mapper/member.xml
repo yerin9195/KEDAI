@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+
+	<select id="getLoginMember" resultType="MemberVO" parameterType="HashMap">
+		SELECT empid, name, nickname, jubun, email, mobile, 
+		       postcode, address, detailaddress, extraaddress,
+		       imgfilename, hire_date, salary, commission_pct, point,
+		       fk_dept_code, fk_job_code, dept_tel, sign_img, pwdchangegap, 
+		       NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
+		FROM 
+		( 
+		    select empid, name, nickname, jubun, email, mobile, 
+		           postcode, address, detailaddress, extraaddress,
+		           imgfilename, hire_date, salary, commission_pct, point,
+		           fk_dept_code, fk_job_code, dept_tel, sign_img,
+		           trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
+		    from tbl_employees 
+		    where status = 1 and empid = #{empid} and pwd = #{pwd} 
+		) E 
+		CROSS JOIN 
+		( 
+		    select trunc(months_between(sysdate, max(logindate))) AS lastlogingap 
+		    from tbl_loginhistory 
+		    where fk_empid = #{empid}
+		) H
+	</select>
+	
+	<insert id="insert_tbl_loginhistory" parameterType="HashMap">
+		insert into tbl_loginhistory(HISTORY_SEQ, FK_EMPID, logindate, clientip)
+		values(loginhistory_seq.nextval, #{empid}, default, #{clientip})
+	</insert>
+
+</mapper>
