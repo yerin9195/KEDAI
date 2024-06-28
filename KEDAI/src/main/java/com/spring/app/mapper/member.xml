@@ -33,7 +33,7 @@
 		values(loginhistory_seq.nextval, #{empid}, default, #{clientip})
 	</insert>
 	
-	<select id="idFind" parameterType="HashMap">
+	<select id="idFind" parameterType="HashMap" resultType="String">
 		select empid 
 		from tbl_employees
 		where status = 1 and name = #{name} and email = #{email}
