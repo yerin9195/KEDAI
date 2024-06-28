@@ -341,6 +341,8 @@ $(document).ready(function(){
 	
 	 function choiceBus(bus_no){
 		// 버스 번호 선택시 나오는 테이블 ajax 시작 // 
+		var positionArr = [];
+		
 		$.ajax({
 			url : "<%=ctxPath%>/bus_select.kedai",
 			data:{"bus_no":bus_no},
@@ -359,8 +361,21 @@ $(document).ready(function(){
 					html += `<div>\${item.way}<span style="display: block; border: solid 1px #2c4459;"></span></div></tr>`;
 					no = no+1;
 					
+					var position = {};
+					
+					position.content = `<div class='mycontent'>`+
+					                   `  <div class='title'>`+
+					                   `    <strong>\${item.station_name}</strong>`+
+					                   `  </div>`+
+					                   `</div>`;
+					                   
+					position.latlng = new kakao.maps.LatLng(item.lat, item.lng);
+					position.zIndex = item.zIndex;
+					
+					positionArr.push(position);
+					
 				})
-				console.log("no:" + no);
+				//console.log("no:" + no);
 				
 				html += `</table>`;
 	        	$("div#bus-route").html(html);
@@ -368,7 +383,42 @@ $(document).ready(function(){
 	        error: function(request, status, error){
 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 	        }
-		})
+		});
+		// infowindowArr 은 인포윈도우를 가지고 있는 객체 배열의 용도이다. 
+		var infowindowArr = new Array();
+		
+		// === 객체 배열 만큼 마커 및 인포윈도우를 생성하여 지도위에 표시한다. === //
+		for(var i=0; i<positionArr.length; i++){
+			
+			// == 마커 생성하기 == //
+			var marker = new kakao.maps.Marker({ 
+				map: mapobj, 
+		        position: positionArr[i].latlng   
+			}); 
+			
+			// 지도에 마커를 표시한다.
+			marker.setMap(mapobj);
+			
+			// == 인포윈도우를 생성하기 == 
+			var infowindow = new kakao.maps.InfoWindow({
+				content: positionArr[i].content,
+				removable: true,
+				zIndex : i+1
+			});
+			
+			// 인포윈도우를 가지고 있는 객체배열에 넣기 
+			infowindowArr.push(infowindow);
+			
+			// == 마커 위에 인포윈도우를 표시하기 == //
+			// infowindow.open(mapobj, marker);
+			
+			// == 마커 위에 인포윈도우를 표시하기 == //
+			// 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+		    // 이벤트 리스너로는 클로저(closure => 함수 내에서 함수를 정의하고 사용하도록 만든것)를 만들어 등록합니다 
+		    // for문에서 클로저(closure => 함수 내에서 함수를 정의하고 사용하도록 만든것)를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+		    kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(mapobj, marker, infowindow, infowindowArr)); 
+			
+		}// end of for----------------
 	}// end of function choiceBus() -----------------------------------------------------------------------	
 </script>
 
