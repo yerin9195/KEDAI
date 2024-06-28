@@ -74,6 +74,21 @@ commit;
 select *
 from tbl_bus
 
+		select bus_no, v.pf_station_id, h.pk_station_id, first_time, last_time, h.station_name, time_gap, lat, lng, way, zindex
+		from 
+		(
+		select bus_no, pf_station_id, first_time, last_time, time_gap
+		from tbl_bus
+		where bus_no = '101번'
+		order by first_time asc
+		)v cross join
+		(
+		select pk_station_id, station_name, lat, lng, way, zindex
+		from tbl_station
+		)h
+		where h.pk_station_id = v.pf_station_id
+		order by v.first_time asc
+        
 create table tbl_station
 (Pk_station_id                  VARCHAR2(30)                      --정류장아이디                   
 ,station_name                   VARCHAR2(100)  not null           --정류장명
