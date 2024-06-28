@@ -47,5 +47,12 @@ public class MemberService_imple implements MemberService {
 		
 		return loginuser;
 	}
+
+	// 아이디 찾기
+	@Override
+	public String idFind(Map<String, String> paraMap) {
+		String id = dao.idFind(paraMap);
+		return id;
+	}
 	
 }

@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%
 	String ctxPath = request.getContextPath();
+	//     /KEDAI
 %>
 <!DOCTYPE html>
 <html>

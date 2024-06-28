@@ -1,5 +1,7 @@
 package com.spring.app.member.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.app.common.AES256;
 import com.spring.app.common.Sha256;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.member.service.MemberService;
@@ -22,6 +25,9 @@ public class MemberController {
 
 	@Autowired
 	private MemberService service;
+	
+	@Autowired
+    private AES256 aES256;
 	
 	@GetMapping("/") 
 	public ModelAndView home(ModelAndView mav) { // http://localhost:9099/KEDAI/
@@ -96,13 +102,18 @@ public class MemberController {
 	@RequestMapping("/login/idFind.kedai")
 	public String idFind(HttpServletRequest request) { // http://localhost:9099/KEDAI/login/idFind.kedai
 
+		String method = request.getMethod();
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("name", name);
-		paraMap.put("email", email);
-/*		
+		try {
+			paraMap.put("email", aES256.encrypt(email));
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
 		String id = service.idFind(paraMap);
 		
 		if(id != null) {
@@ -112,9 +123,10 @@ public class MemberController {
 			request.setAttribute("id", "존재하지 않습니다.");
 		}
 		
+		request.setAttribute("method", method);
 		request.setAttribute("name", name);
 		request.setAttribute("email", email);
-	*/
+	
 		return "idFind";
 	}
 	

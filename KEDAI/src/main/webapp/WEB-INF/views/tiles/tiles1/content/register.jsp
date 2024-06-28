@@ -4,8 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%
 	String ctxPath = request.getContextPath();
+	//     /KEDAI
 %>
-
 <style type="text/css">
 	.register input {
 		width: 400px;

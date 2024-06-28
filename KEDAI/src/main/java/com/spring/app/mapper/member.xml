@@ -32,5 +32,11 @@
 		insert into tbl_loginhistory(HISTORY_SEQ, FK_EMPID, logindate, clientip)
 		values(loginhistory_seq.nextval, #{empid}, default, #{clientip})
 	</insert>
+	
+	<select id="idFind" parameterType="HashMap">
+		select empid 
+		from tbl_employees
+		where status = 1 and name = #{name} and email = #{email}
+	</select>
 
 </mapper>
