@@ -37,6 +37,7 @@ public class MemberController {
 		return "login";
 	}
 
+	// 로그인 처리하기
 	@PostMapping("/loginEnd.kedai")
 	public ModelAndView loginEnd(ModelAndView mav, HttpServletRequest request) { 
 
@@ -90,6 +91,48 @@ public class MemberController {
 
 		return mav;
 	}	
+	
+	// 아이디 찾기
+	@RequestMapping("/login/idFind.kedai")
+	public String idFind(HttpServletRequest request) { // http://localhost:9099/KEDAI/login/idFind.kedai
+
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("name", name);
+		paraMap.put("email", email);
+/*		
+		String id = service.idFind(paraMap);
+		
+		if(id != null) {
+			request.setAttribute("id", id);
+		}
+		else {
+			request.setAttribute("id", "존재하지 않습니다.");
+		}
+		
+		request.setAttribute("name", name);
+		request.setAttribute("email", email);
+	*/
+		return "idFind";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@GetMapping("/register.kedai")
 	public ModelAndView register(ModelAndView mav) { // http://localhost:9099/KEDAI/register.kedai
