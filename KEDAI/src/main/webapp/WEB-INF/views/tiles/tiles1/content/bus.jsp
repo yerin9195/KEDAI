@@ -384,6 +384,7 @@ $(document).ready(function(){
 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 	        }
 		});
+		
 		// infowindowArr 은 인포윈도우를 가지고 있는 객체 배열의 용도이다. 
 		var infowindowArr = new Array();
 		
