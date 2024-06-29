@@ -98,6 +98,24 @@ public class MemberController {
 		return mav;
 	}	
 	
+	// 로그아웃 처리하기
+	@GetMapping("/logout.kedai")
+	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();	
+		session.invalidate();
+		
+		String message = "정상적으로 로그아웃 되었습니다.";
+		String loc = request.getContextPath()+"/login.kedai";
+       
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+       
+		mav.setViewName("msg");
+		
+		return mav;	
+	}
+	
 	// 아이디 찾기
 	@RequestMapping("/login/idFind.kedai")
 	public String idFind(HttpServletRequest request) { // http://localhost:9099/KEDAI/login/idFind.kedai

@@ -4,4 +4,10 @@
 
 <mapper namespace="admin">
 
+	<select id="dept_select" resultType="com.spring.app.domain.DeptVO">
+		select dept_code, dept_name
+		from tbl_dept
+		order by dept_code asc
+	</select>
+
 </mapper>

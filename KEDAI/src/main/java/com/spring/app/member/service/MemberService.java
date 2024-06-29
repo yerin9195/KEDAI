@@ -12,7 +12,4 @@ public interface MemberService {
 	// 아이디 찾기
 	String idFind(Map<String, String> paraMap);
 
-	// 아이디 찾기
-	String idFind(Map<String, String> paraMap);
-
 }

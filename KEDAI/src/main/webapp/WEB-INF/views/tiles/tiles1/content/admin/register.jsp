@@ -62,6 +62,11 @@
 		
 		$("input#empid").focus();
 		
+		$.ajax({
+			url: ""
+			
+			
+		});
 		
 		
 		
@@ -257,7 +262,7 @@
 	<form name="registerFrm" enctype="multipart/form-data" class="row mt-5" style="border: 0px solid green;">
 		<div class="col-2" style="border: 0px solid blue;">
 			<h6>사진등록</h6>
-			<div style="width: 230px; height: 200px; border: 1px solid #eee;">
+			<div style="width: 230px; height: 250px; border: 1px solid #ddd;">
 				<img id="previewImg" />
 			</div>
 			<br>
@@ -342,9 +347,9 @@
 						<h6>부서</h6>
 						<select name="fk_dept_code" style="width: 180px;">
 							<option value="">부서</option>
-							<option value="1">1</option>
-		                   	<option value="2">2</option>
-		                   	<option value="3">3</option> 
+							<option value="1"></option>
+		                   	<option value="2"></option>
+		                   	<option value="3"></option> 
 						</select>
 					</div>
 					&nbsp;&nbsp;&nbsp;&nbsp;
