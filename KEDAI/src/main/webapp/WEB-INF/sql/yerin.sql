@@ -230,7 +230,7 @@ CROSS JOIN
     where fk_empid = #{empid}
 ) H
 
-insert into tbl_loginhistory(HISTORY_SEQ, FK_EMPID, logindate, clientip)
+insert into tbl_loginhistory(history_seq, fk_empid, logindate, clientip)
 values(loginhistory_seq.nextval, #{empid}, default, #{clientip})
 
 -----------------------------------------------------------------------
@@ -239,5 +239,11 @@ values(loginhistory_seq.nextval, #{empid}, default, #{clientip})
 select empid
 from tbl_employees
 where status = 1 and name = ? and email = ?
+
+-----------------------------------------------------------------------
+
+select dept_code, dept_name
+from tbl_dept
+order by dept_code asc;
         
         
