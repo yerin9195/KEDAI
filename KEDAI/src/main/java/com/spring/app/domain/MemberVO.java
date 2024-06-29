@@ -24,6 +24,7 @@ public class MemberVO {
 	private String lastpwdchangedate;  
 	private int    status;              
 	private String sign_img;
+	private int    annual_leave;
 
 	// select 용
 	private int pwdchangegap; // 마지막으로 암호를 변경한지가 몇개월인지 알려주는 개월수(3개월 동안 암호를 변경 안 했을시 암호를 변경하라는 메시지를 보여주기 위함이다.)
@@ -223,6 +224,14 @@ public class MemberVO {
 
 	public void setRequirePwdChange(boolean requirePwdChange) {
 		this.requirePwdChange = requirePwdChange;
+	}
+
+	public int getAnnual_leave() {
+		return annual_leave;
+	}
+
+	public void setAnnual_leave(int annual_leave) {
+		this.annual_leave = annual_leave;
 	}
 	
 }
