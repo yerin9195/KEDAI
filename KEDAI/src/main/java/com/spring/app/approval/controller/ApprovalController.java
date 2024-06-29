@@ -21,7 +21,7 @@ public class ApprovalController {
 	public ModelAndView mom(ModelAndView mav, HttpServletRequest request ) {
 		
 		String doc_type = request.getParameter("doc_type");
-		System.out.println(doc_type);
+	//	System.out.println(" doc_type " + doc_type);
 		
 		if(doc_type.equals("newdayoff")) {
 			mav.setViewName("tiles1/approval/newdayoff.tiles");
