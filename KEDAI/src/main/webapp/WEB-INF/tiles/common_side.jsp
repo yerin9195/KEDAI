@@ -192,11 +192,11 @@
 					<span class="icon"><i class="fa-solid fa-ranking-star"></i></span>
 				</li>
 				<li>
-					<a href="#">카쉐어</a>
+					<a href="<%=ctxPath%>/carShare.kedai">카쉐어</a>
 					<span class="icon"><i class="fa-solid fa-car"></i></span>
 				</li>
 				<li>
-					<a href="#">통근버스</a>
+					<a href="<%=ctxPath%>/bus.kedai">통근버스</a>
 					<span class="icon"><i class="fa-solid fa-bus-simple"></i></span>
 				</li>
 				<li>
