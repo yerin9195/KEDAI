@@ -12,4 +12,7 @@ public interface MemberDAO {
 	// tbl_loginhistory 테이블에 로그인 기록 입력하기
 	void insert_tbl_loginhistory(Map<String, String> paraMap);
 
+	// 아이디 찾기
+	String idFind(Map<String, String> paraMap);
+
 }

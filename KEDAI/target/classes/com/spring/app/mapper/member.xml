@@ -8,14 +8,14 @@
 		SELECT empid, name, nickname, jubun, email, mobile, 
 		       postcode, address, detailaddress, extraaddress,
 		       imgfilename, hire_date, salary, commission_pct, point,
-		       fk_dept_code, fk_job_code, dept_tel, sign_img, pwdchangegap, 
+		       fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave, pwdchangegap, 
 		       NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
 		FROM 
 		( 
 		    select empid, name, nickname, jubun, email, mobile, 
 		           postcode, address, detailaddress, extraaddress,
 		           imgfilename, hire_date, salary, commission_pct, point,
-		           fk_dept_code, fk_job_code, dept_tel, sign_img,
+		           fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave
 		           trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
 		    from tbl_employees 
 		    where status = 1 and empid = #{empid} and pwd = #{pwd} 
@@ -32,5 +32,11 @@
 		insert into tbl_loginhistory(HISTORY_SEQ, FK_EMPID, logindate, clientip)
 		values(loginhistory_seq.nextval, #{empid}, default, #{clientip})
 	</insert>
+	
+	<select id="idFind" parameterType="HashMap" resultType="String">
+		select empid
+		from tbl_employees
+		where status = 1 and name = #{name} and email = #{email}
+	</select>
 
 </mapper>

@@ -25,6 +25,12 @@ public class MemberDAO_imple implements MemberDAO {
 	@Override
 	public void insert_tbl_loginhistory(Map<String, String> paraMap) {
 		sqlsession.insert("member.insert_tbl_loginhistory", paraMap);	
+	}
+
+	@Override
+	public String idFind(Map<String, String> paraMap) {
+		String id = sqlsession.selectOne("member.idFind", paraMap);
+		return id;
 	} 
 	
 }
