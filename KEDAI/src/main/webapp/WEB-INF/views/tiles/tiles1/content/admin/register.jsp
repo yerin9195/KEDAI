@@ -63,12 +63,26 @@
 		$("input#empid").focus();
 		
 		$.ajax({
-			url: ""
-			
-			
-		});
+			url:"<%= ctxPath%>/admin/dept_select_JSON.kedai",
+			dataType:"json",
+			success:function(json){
+				console.log("~~~ 부서 : " + JSON.stringify(json));
+			},
+            error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+        }); // end of $.ajax ----------
 		
-		
+        $.ajax({
+			url:"<%= ctxPath%>/admin/job_select_JSON.kedai",
+			dataType:"json",
+			success:function(json){
+				console.log("~~~ 직급 : " + JSON.stringify(json));
+			},
+            error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+        }); // end of $.ajax ----------
 		
 		
 		
@@ -347,9 +361,9 @@
 						<h6>부서</h6>
 						<select name="fk_dept_code" style="width: 180px;">
 							<option value="">부서</option>
-							<option value="1"></option>
-		                   	<option value="2"></option>
-		                   	<option value="3"></option> 
+							<c:forEach var="dvo" items="${requestScope.deptList}">
+		                  		<option value="${dvo.dept_code}">${dvo.dept_name}</option>
+                  			</c:forEach> 
 						</select>
 					</div>
 					&nbsp;&nbsp;&nbsp;&nbsp;

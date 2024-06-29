@@ -9,5 +9,11 @@
 		from tbl_dept
 		order by dept_code asc
 	</select>
+	
+	<select id="job_select" resultType="com.spring.app.domain.JobVO">
+		select job_code, job_name
+		from tbl_job
+		order by job_code asc
+	</select>
 
 </mapper>

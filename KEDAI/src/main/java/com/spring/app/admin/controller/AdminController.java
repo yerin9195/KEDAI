@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.admin.service.AdminService;
 import com.spring.app.domain.DeptVO;
+import com.spring.app.domain.JobVO;
 import com.spring.app.domain.MemberVO;
 
 @Controller 
@@ -23,14 +24,23 @@ public class AdminController {
 	@Autowired
 	private AdminService service;
 	
-	@ResponseBody
 	@GetMapping("/admin/register.kedai")
-	public ModelAndView register(ModelAndView mav, HttpServletRequest request) { // http://localhost:9099/KEDAI/admin/register.kedai
+	public ModelAndView register(ModelAndView mav) { // http://localhost:9099/KEDAI/admin/register.kedai
+		
+		mav.setViewName("tiles1/admin/register.tiles"); 
+		
+		return mav;
+	}
+	
+	// 부서 목록 조회하기
+	@ResponseBody
+	@GetMapping(value="/admin/dept_select_JSON.kedai", produces="text/plain;charset=UTF-8")
+	public String dept_select_JSON(HttpServletRequest request) { 
 		
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 		
-		if(loginuser != null && "admin".equals(loginuser.getNickname())) {
+	//	if(loginuser != null && "admin".equals(loginuser.getNickname())) {
 			List<DeptVO> deptList = service.dept_select();
 			
 			JSONArray jsonArr = new JSONArray(); // []
@@ -45,12 +55,37 @@ public class AdminController {
 					jsonArr.put(jsonObj); // [{"dept_code":"100", "dept_name":"인사부"}]
 				} // end of for ----------
 			}
-		}
+	//	}
+			
+		return jsonArr.toString();
+	}
+	
+	// 직급 목록 조회하기
+	@ResponseBody
+	@GetMapping(value="/admin/job_select_JSON.kedai", produces="text/plain;charset=UTF-8")
+	public String job_select_JSON(HttpServletRequest request) { 
 		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 		
-		mav.setViewName("tiles1/admin/register.tiles"); 
-		
-		return mav;
+	//	if(loginuser != null && "admin".equals(loginuser.getNickname())) {
+			List<JobVO> jobList = service.job_select();
+			
+			JSONArray jsonArr = new JSONArray(); // []
+			
+			// DB 에서 select 해온 값이 없다면 null 을 반환한다.
+			if(jobList != null) {
+				for(JobVO vo : jobList) {
+					JSONObject jsonObj = new JSONObject();     // {}
+					jsonObj.put("job_code", vo.getJob_code()); // {"job_code":"1"}
+					jsonObj.put("job_name", vo.getJob_name()); // {"job_code":"1", "job_name":"부장"}
+	
+					jsonArr.put(jsonObj); // [{"job_code":"1", "job_name":"부장"}]
+				} // end of for ----------
+			}
+	//	}
+			
+		return jsonArr.toString();
 	}
 	
 }

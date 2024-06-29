@@ -27,7 +27,7 @@ public class MemberController {
 	private MemberService service;
 	
 	@Autowired
-  private AES256 aES256;
+	private AES256 aES256;
 
 	@GetMapping("/") 
 	public ModelAndView home(ModelAndView mav) { // http://localhost:9099/KEDAI/
