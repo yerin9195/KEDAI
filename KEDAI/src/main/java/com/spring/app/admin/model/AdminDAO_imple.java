@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.JobVO;
+import com.spring.app.domain.MemberVO;
 
 @Repository
 public class AdminDAO_imple implements AdminDAO {
@@ -30,5 +31,29 @@ public class AdminDAO_imple implements AdminDAO {
 		List<JobVO> jobList = sqlsession.selectList("admin.job_select");
 		return jobList;
 	}
+
+	// 아이디중복확인
+	@Override
+	public String idDuplicateCheck(String empid) {
+		String searchId = sqlsession.selectOne("admin.idDuplicateCheck", empid);
+		return searchId;
+	}
+
+	// 이메일중복확인
+	@Override
+	public String emailDuplicateCheck(String email) {
+		String searchEmail = sqlsession.selectOne("admin.emailDuplicateCheck", email);
+		return searchEmail;
+	}
+
+	// 사원정보 등록하기
+	@Override
+	public int empRegister(MemberVO mvo) {
+		int n = sqlsession.insert("admin.empRegister", mvo);
+		return n;
+	}
+	
+	
+	
 	
 }

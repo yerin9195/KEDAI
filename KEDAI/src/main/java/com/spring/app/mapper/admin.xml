@@ -15,5 +15,22 @@
 		from tbl_job
 		order by job_code asc
 	</select>
+	
+	<select id="idDuplicateCheck" resultType="String">
+		select empid
+		from tbl_employees
+		where empid = #{empid}
+	</select>
+	
+	<select id="emailDuplicateCheck" resultType="String">
+		select email
+		from tbl_employees
+		where email = #{email}
+	</select>
+	
+	<insert id="empRegister" parameterType="MemberVO">
+		insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel,sign_img)
+		values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},#{imgfilename},#{hire_date},#{salary},0,#{fk_dept_code},#{fk_job_code},#{dept_tel},#{sign_img})
+	</insert>
 
 </mapper>

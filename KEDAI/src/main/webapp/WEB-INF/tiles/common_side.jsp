@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String ctxPath = request.getContextPath();
+	//     /KEDAI
 %>
 <style type="text/css">
 	.primary-nav {
@@ -210,6 +211,10 @@
 				<li>
 					<a href="#">거래처정보</a>
 					<span class="icon"><i class="fa-solid fa-store"></i></span>
+				</li>
+				<li>
+					<a href="<%= ctxPath%>/admin/register.kedai">사원정보등록</a>
+					<span class="icon"><i class="fa-solid fa-user-plus"></i></span>
 				</li>
 			</ul>
 		</div>
