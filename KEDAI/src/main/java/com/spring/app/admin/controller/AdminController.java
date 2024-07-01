@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.admin.service.AdminService;
@@ -102,12 +102,14 @@ public class AdminController {
 	}
 	
 	// 사원정보 등록하기
-	@RequestMapping("/empRegister.kedai")
-	public ModelAndView empRegister(ModelAndView mav, HttpServletRequest request) {
+	@PostMapping("/admin/empRegister.kedai")
+	public ModelAndView empRegister(ModelAndView mav, MultipartHttpServletRequest request) {
 		
 		String jubun1 = request.getParameter("jubun1");
 		String jubun2 = request.getParameter("jubun2");
 		String jubun = jubun1 + jubun2;
+		System.out.println("~~~ 확인용 jubun : " + jubun);
+		System.out.println("~~~ 확인용 empid : " +request.getParameter("empid"));  
 		
 		String hp1 = request.getParameter("hp1");
 		String hp2 = request.getParameter("hp2");
@@ -115,7 +117,7 @@ public class AdminController {
 		String mobile = hp1 + hp2 + hp3;
 		
 		String dept_name = request.getParameter("dept_name");
-	//	System.out.println("~~~ 확인용 dept_name : " + dept_name);
+		System.out.println("~~~ 확인용 dept_name : " + dept_name);
 		
 		String fk_dept_code = "";
 		String dept_tel = "";
@@ -149,10 +151,11 @@ public class AdminController {
 		} 
 		else {
 			fk_dept_code = "";
+			dept_tel = "";
 		}
 		
 		String job_name = request.getParameter("job_name");
-	//	System.out.println("~~~ 확인용 job_name : " + job_name);
+		System.out.println("~~~ 확인용 job_name : " + job_name);
 		
 		String fk_job_code = "";
 		if(job_name.equals("부장")) {
