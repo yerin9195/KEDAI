@@ -1,5 +1,7 @@
 package com.spring.app.member.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.app.common.AES256;
 import com.spring.app.common.Sha256;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.member.service.MemberService;
@@ -23,6 +26,9 @@ public class MemberController {
 	@Autowired
 	private MemberService service;
 	
+	@Autowired
+	private AES256 aES256;
+
 	@GetMapping("/") 
 	public ModelAndView home(ModelAndView mav) { // http://localhost:9099/KEDAI/
 
@@ -37,6 +43,7 @@ public class MemberController {
 		return "login";
 	}
 
+	// 로그인 처리하기
 	@PostMapping("/loginEnd.kedai")
 	public ModelAndView loginEnd(ModelAndView mav, HttpServletRequest request) { 
 
@@ -78,7 +85,7 @@ public class MemberController {
 				String goBackURL = (String)session.getAttribute("goBackURL");
 				
 				if(goBackURL != null) {
-					mav.setViewName("redirect:" + goBackURL);
+					mav.setViewName("redirect:"+goBackURL);
 					session.removeAttribute("goBackURL");
 				}
 				else {
@@ -91,13 +98,73 @@ public class MemberController {
 		return mav;
 	}	
 	
-	@GetMapping("/register.kedai")
-	public ModelAndView register(ModelAndView mav) { // http://localhost:9099/KEDAI/register.kedai
+	// 로그아웃 처리하기
+	@GetMapping("/logout.kedai")
+	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {
 		
-		mav.setViewName("tiles1/register.tiles"); 
+		HttpSession session = request.getSession();	
+		session.invalidate();
 		
-		return mav;
+		String message = "정상적으로 로그아웃 되었습니다.";
+		String loc = request.getContextPath()+"/login.kedai";
+       
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+       
+		mav.setViewName("msg");
+		
+		return mav;	
 	}
+	
+	// 아이디 찾기
+	@RequestMapping("/login/idFind.kedai")
+	public String idFind(HttpServletRequest request) { // http://localhost:9099/KEDAI/login/idFind.kedai
+
+		String method = request.getMethod();
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("name", name);
+		try {
+			paraMap.put("email", aES256.encrypt(email));
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
+		String id = service.idFind(paraMap);
+		
+		if(id != null) {
+			request.setAttribute("id", id);
+		}
+		else {
+			request.setAttribute("id", "존재하지 않습니다.");
+		}
+		
+		request.setAttribute("method", method);
+		request.setAttribute("name", name);
+		request.setAttribute("email", email);
+	
+		return "idFind";
+	}
+	
+	// 비밀번호 찾기
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@GetMapping("/index.kedai")
 	public ModelAndView index(ModelAndView mav) { // http://localhost:9099/KEDAI/index.kedai

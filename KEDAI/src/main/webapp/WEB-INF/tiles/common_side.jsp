@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String ctxPath = request.getContextPath();
+	//     /KEDAI
 %>
 <style type="text/css">
 	.primary-nav {
@@ -128,19 +129,19 @@
 	  	z-index: -1;
 	  	display: block;
 	}
-	.menu a.logotype {
+	.menu div.logotype {
 	  	position: absolute!important;
 	  	top: 11px;
 	  	left: 55px;
 	  	display: block;
 	  	text-transform: uppercase;
-	  	font-weight: 800;
+	  	font-weight: 400;
 	  	color: #363636;
 	  	font-size: 21px;
 	  	padding: 10px;
 	}
-	.menu a.logotype span {
-	  	font-weight: 400;
+	.menu div.logotype span {
+	  	font-weight: 800;
 	}
 	.menu:hover {
 		position: absolute;
@@ -164,7 +165,11 @@
 	</button>
 
 	<nav role="navigation" class="menu">
-		<a href="#" class="logotype">LOGO<span>TYPE</span></a>
+		<div class="logotype">
+			<c:if test="${not empty sessionScope.loginuser}">
+				<span>${sessionScope.loginuser.name}</span>님 로그인 중
+			</c:if>
+		</div>
 		<div class="overflow-container">
 			<ul class="menu-dropdown">
 				<li>
@@ -206,6 +211,10 @@
 				<li>
 					<a href="#">거래처정보</a>
 					<span class="icon"><i class="fa-solid fa-store"></i></span>
+				</li>
+				<li>
+					<a href="<%= ctxPath%>/admin/register.kedai">사원정보등록</a>
+					<span class="icon"><i class="fa-solid fa-user-plus"></i></span>
 				</li>
 			</ul>
 		</div>

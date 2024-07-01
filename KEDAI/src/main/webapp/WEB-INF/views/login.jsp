@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%
 	String ctxPath = request.getContextPath();
+	//     /KEDAI
 %>
 <!DOCTYPE html>
 <html>
@@ -114,8 +115,8 @@
          	<div style="text-align: left;">
          		<input type="checkbox" id="idSave" />&nbsp;<label for="idSave">아이디 저장하기</label>
          		<div style="border: 0px solid red; float: right;">
-         			<span><a href="">[ 아이디 찾기 ]</a></span>
-         			<span><a href="">[ 비밀번호 찾기 ]</a></span>
+         			<span><a href="<%= ctxPath%>/login/idFind.kedai">[ 아이디 찾기 ]</a></span>
+         			<span><a href="<%= ctxPath%>/login/pwdFind.kedai">[ 비밀번호 찾기 ]</a></span>
          		</div>
          	</div>
          </div>        
