@@ -400,7 +400,7 @@
 	    }
 	    
 	    const frm = document.registerFrm;
-     	frm.action = "<%= ctxPath%>/empRegister.kedai";
+     	frm.action = "<%= ctxPath%>/admin/empRegister.kedai";
      	frm.method = "post";
     	frm.submit();
      	
@@ -427,14 +427,6 @@
 			</div>
 			<br>
 			<input type="file" name="imgfilename" class="infoData img_file" accept='image/*' />
-			<br>
-			<br>
-			<h6>서명등록</h6>
-			<div style="width: 200px; height: 230px; border: 1px solid #ddd;">
-				<img id="previewImg" />
-			</div>
-			<br>
-			<input type="file" name="sign_img" class="infoData img_file" accept='image/*' />
 		</div>
 		
 		<div class="col-10 row" id="empRegister">
