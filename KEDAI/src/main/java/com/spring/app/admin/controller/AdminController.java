@@ -104,12 +104,7 @@ public class AdminController {
 	// 사원정보 등록하기
 	@PostMapping("/admin/empRegister.kedai")
 	public ModelAndView empRegister(ModelAndView mav, MultipartHttpServletRequest mrequest, MemberVO mvo) {
-		
-		String imgfilename = mrequest.getParameter("imgfilename");
-		if(imgfilename == null) {
-			imgfilename = "";
-		}
-		
+
 		String jubun1 = mrequest.getParameter("jubun1");
 		String jubun2 = mrequest.getParameter("jubun2");
 		String jubun = jubun1 + jubun2;
@@ -120,8 +115,9 @@ public class AdminController {
 		String mobile = hp1 + hp2 + hp3;
 		
 		String dept_name = mrequest.getParameter("dept_name");		
-		String fk_dept_code = "";
-		String dept_tel = "";
+		String fk_dept_code = null;
+		String dept_tel = null;
+
 		if(dept_name.equals("인사부")) {
 			fk_dept_code = "100";
 			dept_tel = "070-1234-100";
@@ -150,13 +146,17 @@ public class AdminController {
 			fk_dept_code = "700";
 			dept_tel = "070-1234-700";
 		} 
-		else {
-			fk_dept_code = "없음";
-			dept_tel = "없음";
+		else  {
+			fk_dept_code = null;
+			dept_tel = null;
 		}
 		
+		
+		
+
+		
 		String job_name = mrequest.getParameter("job_name");
-		String fk_job_code = "";
+		String fk_job_code = null;
 		if(job_name.equals("부장")) {
 			fk_job_code = "1";
 		}
@@ -176,11 +176,11 @@ public class AdminController {
 			fk_job_code = "6";
 		}
 		else {
-			fk_job_code = "없음";
+			fk_job_code = null;
 		}
 		
 		mvo = new MemberVO();
-		mvo.setImgfilename(imgfilename);
+	//	mvo.setImgfilename(imgfilename);
 		mvo.setEmpid(mrequest.getParameter("empid"));
 		mvo.setPwd(Sha256.encrypt(mrequest.getParameter("pwd")));
 		mvo.setName(mrequest.getParameter("name"));
