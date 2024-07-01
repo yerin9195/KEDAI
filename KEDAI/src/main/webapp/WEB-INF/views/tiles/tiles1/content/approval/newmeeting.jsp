@@ -1,38 +1,47 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% String ctxPath = request.getContextPath(); %>
+
+<%-- Bootstrap CSS --%>
+<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/bootstrap-4.6.2-dist/css/bootstrap.min.css" > 
     
 <style type="text/css">
 
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
+
+table th,
+table td{
+	padding:0;
 }
 
-th, td{
-	padding:2%;
+/*
+table.left_table tr{
+	height: 15px; 
+}*/
+
+div#title{
+	font-size:27px;
+	margin : 3% 0 1% 0;
 }
 
-table tr{
-	height: 50px; 
+div#title2{
+	font-size:25px;
+	margin : 0 0 1% 0;
+}
+table.left_table{
+	width:100%
 }
 
-span#title{
-	margin : 2% 0;
-}
-
-table#title_table th{
+table.left_table th{
 	width : 25%;
 	background-color: #EBEBEB;
 }
 
-table#title_table td{
-	width : 25%;
+table#add th{
+	padding-left:35px;
 }
 
-table#meeting th{
-	 width:25%;
-	 background-color: #EBEBEB;
+table#title_table td{
+	width : 25%;
 }
 
 </style>
@@ -60,54 +69,50 @@ table#meeting th{
 		    bUseModeChanger : true,
 		}
 	});
-	<%-- === 스마트 에디터 구현 끝 === --%>	
-	
-	 <%-- === 스마트 에디터 구현 시작 === --%>
-     // id가 content인 textarea에 에디터에서 대입
-       obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
-    <%-- === 스마트 에디터 구현 끝 === --%>
-	 
-	 // 글제목 유효성 검사
-	 const subject = $("input:text[name='subject']").val().trim();
-	 if(subject == ""){
-		 alert("글 제목을 입력하세요!!");
-		 $("input:text[name='subject']").val("");
-		 return; // 종료
-	 }
-	 
-	 // 글내용 유효성 검사(스마트 에디터를 사용할 경우) 
-	 <%-- const content = $("textarea[name='content']").val().trim();
-	 if(content == ""){
-		 alert("글 내용을 입력하세요!!");
-		 return; // 종료
-	 } 
-	 ==> 이렇게 입력했을 경우 html로 변환했을 때 <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p> 이렇게 나옴. 
-	 그래서 공백이라고 인식하지 못함.
-	--%>
-	let content_val = $("textarea[name='content']").val().trim();
-		//alert(content_val); // content에 공백만 여러개를 입력하여 쓰기할 경우 알아보는 것
-		// <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>
-	//content_val.replace("&nbsp;", ""); 첫 번째로 발견된 &nbsp; 문자열만을 빈 문자열로 대체. 그러므로 여러 개의 &nbsp;가 존재하는 경우 첫 번째만 대체되고 나머지는 그대로 남게 됨.
-		content_val = content_val.replace(/&nbsp;/gi, ""); // 공백(&nbsp;)을 ""으로 변환
-		/*    
-    	대상문자열.replace(/찾을 문자열/gi, "변경할 문자열");
-  		==> 여기서 꼭 알아야 될 점은 나누기(/)표시안에 넣는 찾을 문자열의 따옴표는 없어야 한다는 점입니다. 
-            	그리고 뒤의 gi는 다음을 의미합니다.
+		
+	// 쓰기버튼
+	$("#btnWrite").click(function(){
+	       
+		<%-- === 스마트 에디터 구현 시작 === --%>
+		// id가 content인 textarea에 에디터에서 대입
+	    obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+		<%-- === 스마트 에디터 구현 끝 === --%>
+			
+		// 글제목 유효성 검사
+		const subject = $("input#subject").val().trim();
+		if(subject == "") {
+			alert("글제목을 입력하세요!!");
+			return;
+		}	
+	<%-- === 글내용 유효성 검사(스마트 에디터 사용 할 경우) 시작 === --%>
+		var contentval = $("textarea#content").val();
+		        
+		 // 글내용 유효성 검사 하기 
+         // alert(contentval); // content에  공백만 여러개를 입력하여 쓰기할 경우 알아보는것.
+         // <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p> 이라고 나온다.
+         
+        contentval = contentval.replace(/&nbsp;/gi, ""); // 공백을 "" 으로 변환
+         /*    
+		         대상문자열.replace(/찾을 문자열/gi, "변경할 문자열");
+		     ==> 여기서 꼭 알아야 될 점은 나누기(/)표시안에 넣는 찾을 문자열의 따옴표는 없어야 한다는 점입니다. 
+		                  그리고 뒤의 gi는 다음을 의미합니다.
+		
+		 	 g : 전체 모든 문자열을 변경 global
+		 	 i : 영문 대소문자를 무시, 모두 일치하는 패턴 검색 ignore
+		*/ 
+      //   alert(contentval);
+      //   <p>             </p>
+         
+        contentval = contentval.substring(contentval.indexOf("<p>")+3);   // "             </p>"
+        contentval = contentval.substring(0, contentval.indexOf("</p>")); // "             "
+                  
+        if(contentval.trim().length == 0) {
+        	alert("글내용을 입력하세요!!");
+               return;
+        }
+	<%-- === 글내용 유효성 검사(스마트 에디터 사용 할 경우) 끝 === --%>
 
-      g : 전체 모든 문자열을 변경 global
-      i : 영문 대소문자를 무시, 모두 일치하는 패턴 검색 ignore
-   */ 
-   	alert(content_val);
-  	// <p>    </p>
-  	
- 	content_val = content_val.substring(content_val.indexOf("<p>")+3);
- 	content_val = content_val.substring(0,content_val.indexOf("</p>"));
- 	
- 	if(content_val.trim().length == 0){
- 		alert("글 내용을 입력하세요!!");
- 		return; //종료
- 	}
-	 	
+	
 	 // 폼(form)을 전송(submit)
 	const frm = document.newDocFrm;
  	frm.method = "post";
@@ -118,9 +123,9 @@ table#meeting th{
 
 
 <div id="total_contatiner" style="display:flex;">
-	<div id="left-table" class="col-md-5" style="width:100%; padding:0;">
-		<span id="title" style=" font-size:30px;"> 회의록</span>
-		<table id="title_table" style="width:100%;">
+	<div id="leftside" class="col-md-5" style="width:90%; padding:0;">
+		<div id="title"> 회의록</div>
+		<table class="table left_table" id="title_table" >
 			<tr>
 				<th>문서번호</th>
 				<td>1</td>
@@ -134,8 +139,7 @@ table#meeting th{
 				<td>영업부</td>		
 			</tr>
 		</table>
-		<br>
-		<table id="meeting" style="width:100%;">
+		<table class="table left_table" id="meeting" >
 			<tr>
 				<th>주관부서</th>
 				<td>ggg</td>
@@ -153,16 +157,26 @@ table#meeting th{
 				<td>어쩌구</td>
 			</tr>
 		</table>
+		
+		<div id="title2"> 결제라인 &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; <button type="button" class="btn btn-outline-secondary btn-sm">선택하기</button></div> 
+		<table class="table left_table" id="approval">
+			<tr style="text-align:center;">
+				<th>순서</th>
+				<th>소속</th>
+				<th>직급</th>
+				<th>성명</th>
+			</tr>
+		</table>
 	</div>
-	<div class="col-md-6" style="margin:0;">
-		<form name="newDocFrm" enctype="multipart/form-data"> 
-        	<table style="width: 100%" class="table table-bordered">
+	<div class="col-md-6" style="margin:0; width: 100%">
+		<form name="newDocFrm" enctype="multipart/form-data" > 
+        	<table style="margin-left:5%;" class="table" id="add">
 	         	<tr>
-	            	<th style="width : 50%;">제목</th>
+	            	<th style="width:20%;">제목</th>
 	            	<td>
 	            		<%-- === 원글쓰기인 경우 === 
 	                	<c:if test='${requestScope.fk_seq eq ""}'>--%> 
-	        				<input type="text" name="subject" size="100" maxlength="200" /> 
+	        				<input type="text" style="height:23pt;" name="subject" size="80" maxlength="100" /> 
 						<%--</c:if>     --%>
 	                    
 	            	</td>
@@ -179,7 +193,7 @@ table#meeting th{
 	         	<%-- === #170. 파일첨부 타입 추가하기 시작=== --%>
 	         	
 	         	<tr>
-            		<th style="width : 50%;">파일첨부</th>  
+            		<th>파일첨부</th>  
             		<td>
                 		<input type="file" name="attach" />
             		</td>
@@ -191,8 +205,8 @@ table#meeting th{
         
         
         	<div style="margin: 20px;">
-            	<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnWrite">완료</button>
-            	<button type="button" class="btn btn-secondary btn-sm" onclick="javascript:history.back()">취소</button>  
+            	<button type="button" class="btn btn btn-dark btn-sm mr-4" id="btnWrite" >확인</button>
+            	<button type="button" class="btn btn-primary btn-sm" onclick="javascript:history.back()">취소</button>  
         	</div>
         <%-- 버튼이 form 태그 안에 있으면 무조건 get방식으로 submit되어진다. 유효성 검사를 하고 post방식으로 submit해주고 싶다면 무조건   type="button" 해야 한다. --%>
      	</form>
