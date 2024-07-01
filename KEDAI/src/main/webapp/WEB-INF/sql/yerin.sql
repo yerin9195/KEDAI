@@ -246,7 +246,7 @@ from tbl_employees
 where empid = '2024100-001'
 
 -- 사원정보 등록하기
-insert into tbl(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel,sign_img)
+insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel,sign_img)
 values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},#{imgfilename},#{hire_date},#{salary},0,#{fk_dept_code},#{fk_job_code},#{dept_tel},#{sign_img})
       
 select *

@@ -29,8 +29,8 @@
 	</select>
 	
 	<insert id="empRegister" parameterType="MemberVO">
-		insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel,sign_img)
-		values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},#{imgfilename},#{hire_date},#{salary},0,#{fk_dept_code},#{fk_job_code},#{dept_tel},#{sign_img})
+		insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel)
+		values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},#{imgfilename},to_date('#{hire_date}', 'yyyy-mm-dd'),#{salary},0,#{fk_dept_code},#{fk_job_code},#{dept_tel})
 	</insert>
 
 </mapper>
