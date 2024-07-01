@@ -9,6 +9,10 @@ table, th, td {
   border-collapse: collapse;
 }
 
+th, td{
+	padding:2%;
+}
+
 table tr{
 	height: 50px; 
 }
@@ -19,6 +23,7 @@ span#title{
 
 table#title_table th{
 	width : 25%;
+	background-color: #EBEBEB;
 }
 
 table#title_table td{
@@ -27,6 +32,7 @@ table#title_table td{
 
 table#meeting th{
 	 width:25%;
+	 background-color: #EBEBEB;
 }
 
 </style>
@@ -102,10 +108,10 @@ table#meeting th{
  		return; //종료
  	}
 	 	
-	 	// 폼(form)을 전송(submit)
-	 	const frm = document.addFrm;
+	 // 폼(form)을 전송(submit)
+	const frm = document.newDocFrm;
  	frm.method = "post";
-  	frm.action = "<%= ctxPath%>/addEnd.kedai";
+  	frm.action = "<%= ctxPath%>/newDocEnd.kedai";
     frm.submit();
     
 </script>	
@@ -149,7 +155,7 @@ table#meeting th{
 		</table>
 	</div>
 	<div class="col-md-6" style="margin:0;">
-		<form name="addFrm" enctype="multipart/form-data"> 
+		<form name="newDocFrm" enctype="multipart/form-data"> 
         	<table style="width: 100%" class="table table-bordered">
 	         	<tr>
 	            	<th style="width : 50%;">제목</th>
