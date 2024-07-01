@@ -27,8 +27,8 @@ public class MemberController {
 	private MemberService service;
 	
 	@Autowired
-    private AES256 aES256;
-	
+	private AES256 aES256;
+
 	@GetMapping("/") 
 	public ModelAndView home(ModelAndView mav) { // http://localhost:9099/KEDAI/
 
@@ -85,7 +85,7 @@ public class MemberController {
 				String goBackURL = (String)session.getAttribute("goBackURL");
 				
 				if(goBackURL != null) {
-					mav.setViewName("redirect:" + goBackURL);
+					mav.setViewName("redirect:"+goBackURL);
 					session.removeAttribute("goBackURL");
 				}
 				else {
@@ -97,6 +97,24 @@ public class MemberController {
 
 		return mav;
 	}	
+	
+	// 로그아웃 처리하기
+	@GetMapping("/logout.kedai")
+	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();	
+		session.invalidate();
+		
+		String message = "정상적으로 로그아웃 되었습니다.";
+		String loc = request.getContextPath()+"/login.kedai";
+       
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+       
+		mav.setViewName("msg");
+		
+		return mav;	
+	}
 	
 	// 아이디 찾기
 	@RequestMapping("/login/idFind.kedai")
@@ -130,6 +148,7 @@ public class MemberController {
 		return "idFind";
 	}
 	
+	// 비밀번호 찾기
 	
 	
 	
@@ -146,13 +165,6 @@ public class MemberController {
 	
 	
 	
-	@GetMapping("/register.kedai")
-	public ModelAndView register(ModelAndView mav) { // http://localhost:9099/KEDAI/register.kedai
-		
-		mav.setViewName("tiles1/register.tiles"); 
-		
-		return mav;
-	}
 	
 	@GetMapping("/index.kedai")
 	public ModelAndView index(ModelAndView mav) { // http://localhost:9099/KEDAI/index.kedai

@@ -23,6 +23,7 @@ public class MemberService_imple implements MemberService {
 	@Autowired
     private AES256 aES256;
 
+	// 로그인 처리하기
 	@Override
 	public MemberVO getLoginMember(Map<String, String> paraMap) {
 		MemberVO loginuser = dao.getLoginMember(paraMap);

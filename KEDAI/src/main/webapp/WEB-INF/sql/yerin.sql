@@ -211,14 +211,14 @@ desc tbl_loginhistory;
 SELECT empid, name, nickname, jubun, email, mobile, 
        postcode, address, detailaddress, extraaddress,
        imgfilename, hire_date, salary, commission_pct, point,
-       fk_dept_code, fk_job_code, dept_tel, sign_img, pwdchangegap, 
+       fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave, pwdchangegap, 
        NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
 FROM 
 ( 
     select empid, name, nickname, jubun, email, mobile, 
            postcode, address, detailaddress, extraaddress,
            imgfilename, hire_date, salary, commission_pct, point,
-           fk_dept_code, fk_job_code, dept_tel, sign_img,
+           fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave
            trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
     from tbl_employees 
     where status = 1 and empid = #{empid} and pwd = #{pwd} 
@@ -230,12 +230,24 @@ CROSS JOIN
     where fk_empid = #{empid}
 ) H
 
-insert into tbl_loginhistory(HISTORY_SEQ, FK_EMPID, logindate, clientip)
+insert into tbl_loginhistory(history_seq, fk_empid, logindate, clientip)
 values(loginhistory_seq.nextval, #{empid}, default, #{clientip})
 
+-----------------------------------------------------------------------
 
+-- 아이디 찾기
+select empid
+from tbl_employees
+where status = 1 and name = ? and email = ?
 
+-- 아이디 중복확인하기
+select empid
+from tbl_employees
+where empid = '2024100-001'
 
-        
-        
-        
+-- 사원정보 등록하기
+insert into tbl(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel,sign_img)
+values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},#{imgfilename},#{hire_date},#{salary},0,#{fk_dept_code},#{fk_job_code},#{dept_tel},#{sign_img})
+      
+select *
+from tbl_employees;       

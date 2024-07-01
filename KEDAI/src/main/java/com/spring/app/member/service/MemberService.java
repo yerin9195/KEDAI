@@ -8,7 +8,7 @@ public interface MemberService {
 
 	// 로그인 처리하기
 	MemberVO getLoginMember(Map<String, String> paraMap);
-
+ 
 	// 아이디 찾기
 	String idFind(Map<String, String> paraMap);
 

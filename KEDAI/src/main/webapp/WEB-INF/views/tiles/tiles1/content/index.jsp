@@ -6,6 +6,7 @@
 	String ctxPath = request.getContextPath();
 	//     /KEDAI
 %>
+
 <style type="text/css">
 	.nav-tabs {
 		padding-bottom: 1px;
