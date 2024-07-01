@@ -1,0 +1,161 @@
+.wrapper{
+  display: flex;
+
+}
+div.navBar{
+  width: 320px;
+  height: 100vh;
+  background-color: #999;
+}
+div.contents{
+  width: calc(100vw - 320px);
+  header{
+    background-color: #999;
+    width: 100%;
+    height: 80px;
+  }
+  section{
+    height: calc(100vh - 80px);
+    background-color: #ffefef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .artWrap{
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      width: calc(100% - 520px);
+      margin: 0 auto;
+      article{
+        width: calc(33.33% - 20px);
+        background-color: #fff;
+        box-shadow: 0 0 20px rgba(0,0,0,0.25);
+        padding-bottom: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+        &:nth-of-type(3)~article{
+          margin-top: 20px;
+        }
+        .cardHead{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #2C4459;
+          color: #fff;
+          padding-right: 20px;
+          h4{
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 40px;
+            text-indent: 40px;
+          }
+          button{
+            width: 30px; height: 30px;
+            border-radius: 50px;
+            img{
+              height: 16px;
+            }
+          }
+        }
+        .cardBody{
+          margin-top: 20px;
+          li{
+            display: flex;
+            .listImg{
+              width: 40px;
+              height: 40px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              img{
+                height: 16px;
+              }
+            }
+            .listTxt{
+              line-height: 40px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.popupWrap{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  position: fixed;
+  top: 0; left: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  .popup{
+    width: calc(100% - 800px);
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    overflow: hidden;
+    .popupHead{
+      display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #2C4459;
+          color: #fff;
+          padding-right: 20px;
+          h4{
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 60px;
+            text-indent: 40px;
+          }
+          button{
+            width: 30px; height: 30px;
+            border-radius: 50px;
+            img{
+              height: 16px;
+            }
+          }
+    }
+    .popupBody{
+      padding: 100px 0;
+      .forAlign{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .popupImg{ 
+        width: 180px;
+        height: 180px;
+        background-color: #999;
+      }
+      .popupList{
+        margin-left: 50px;
+        li{
+          width: 300px;
+          display: flex;
+          margin-top: 20px;
+          font-size: 18px;
+          font-weight: 700;
+          &:first-of-type{margin-top: 0;}
+          &:hover{
+            background-color: #eee;
+          }
+          .listImg{
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img{
+              height: 16px;
+            }
+          }
+          .listTxt{
+            line-height: 40px;
+          }
+        }
+      }
+      
+    }
+  }
+}

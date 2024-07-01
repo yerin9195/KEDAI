@@ -19,6 +19,10 @@
 <%-- Font Awesome 6 Icons --%>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+
+
+
+
 <%-- Optional JavaScript --%>
 <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="<%= ctxPath%>/resources/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js" ></script>
@@ -76,14 +80,15 @@
 	}
 	#mySide,
 	#myContent {
-		min-height: 1200px;			
+		height: 1200px;
+					
 	}
 </style>
 </head>
 <body>
 	<div id="myContainer">
 		<div class="pl-0 pr-0" id="myHeader">
-			<tiles:insertAttribute name="header" />
+			<tiles:insertAttribute name="header"/>
 		</div>
 
 		<div class="row">
