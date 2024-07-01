@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%
 	String ctxPath = request.getContextPath();
-%>
+%>  
 <style type="text/css">
 	.nav-tabs {
 		padding-bottom: 1px;
