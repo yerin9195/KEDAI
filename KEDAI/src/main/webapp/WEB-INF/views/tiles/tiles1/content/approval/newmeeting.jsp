@@ -105,7 +105,7 @@ table#meeting th{
 	 	// 폼(form)을 전송(submit)
 	 	const frm = document.addFrm;
  	frm.method = "post";
-  	frm.action = "<%= ctxPath%>/addEnd.action";
+  	frm.action = "<%= ctxPath%>/addEnd.kedai";
     frm.submit();
     
 </script>	
