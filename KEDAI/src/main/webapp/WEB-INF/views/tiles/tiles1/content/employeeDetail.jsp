@@ -152,9 +152,9 @@ perList{
                 <input type="text" class="form-control"  value="010-2222-3333" readonly>
             </div>
             
-            <!-- 버튼 부분 -->
+            <!-- 버튼 부분__ -->
             <div class="text-center;" style="padding-left:18%; padding-top:50%;">
-	            <button class="btn btn-primary profile-button" type="button">수정하기</button>
+	            <button class="btn btn-primary profile-button" type="button">수정하기</button>	
 	            <button class="btn btn-primary profile-button" type="button">저장하기</button>
 	            <button class="btn btn-primary profile-button" type="button">삭제하기</button>
 	        </div> 
