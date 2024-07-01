@@ -136,7 +136,8 @@ color:#2c4459;
 
 /* 팝업 내용 요소 시작 */
 .popup-overlay-tree{
-	display: none;
+  
+  display: none;
   justify-content: center;
   align-items: center;
   position: fixed;
@@ -165,22 +166,23 @@ color:#2c4459;
 	width:100%;
 } 
 .popup-overlay-tree .popup .close-btn img{
-    position: absolute;
+    position: flex;
     top: 10px;
     right: 10px;
 }
 .popup-overlay-tree .popup .close-btn button{
-	cursor: pointer;
+   
+   cursor: pointer;
    border: none; 									/* 경계선 없애기 */
    background-color: #2c4459;  
 }
 .popup-overlay-tree .popup .close-btn button i{
-	font-size: 20px;
+   font-size: 20px;
    color: #fff;
 }
 .popup-overlay-tree .popup .close-btn img {
     width: 20px; 						/* 원하는 너비로 조정 */
-    height: 20px; 					/* 원하는 높이로 조정 */
+    height: 20px; 					    /* 원하는 높이로 조정 */
     background-color: gray;
     border-radius:50%;
     display:none;
@@ -328,7 +330,7 @@ color:#2c4459;
 }
 .emp-detail .section .article .img-box{
 	width: 70%;
-	margin: 0 auto;
+	/* margin: 0 auto; */
 	
 	background-color: #ccc;
 }
@@ -359,7 +361,6 @@ color:#2c4459;
 	width: 50%;
 }
 .emp-detail .section .article .input-address label span{
-
 	display: flex;
 	padding-right: 10px;
 }
@@ -402,6 +403,17 @@ bigName{
 .form-control{
 	margin: 0 auto;
 } 
+
+.header{
+	display : flex;
+}
+
+#xmark{
+	border-radius :50%; 
+	width:5%;
+}
+
+
 
 
 </style>
@@ -477,19 +489,19 @@ bigName{
 		    <!-- 팝업 창 -->
 		    <div class="popup">
 		    	<div class="header">
-		    		<h2>회사 조직도</h2>
+		    		<div style="width : 98%"><h2>회사 조직도</h2></div>
+		    		<button id="xmark" class="close-btn" style="">
+							<i class="fa-solid fa-xmark"></i>
+							<%-- <img src="<%= ctxPath%>/resources/images/common/xmark.svg" alt=""> --%>
+					</button>
 		    	</div>
+
 		    	<div class="section">
 		    		<div class="img-box">
 		    			<img src="<%= ctxPath%>/resources/images/common/ptree.png" alt="">
 		    		</div>
 		    	</div>
-		    	<div class="close-btn">
-						<button>
-							<i class="fa-solid fa-xmark"></i>
-							<%-- <img src="<%= ctxPath%>/resources/images/common/xmark.svg" alt=""> --%>
-						</button>
-					</div>
+		    	
         
 		    </div>
 			</div>
