@@ -400,7 +400,7 @@
 	    }
 	    
 	    const frm = document.registerFrm;
-     	frm.action = "<%= ctxPath%>/empRegister.kedai";
+     	frm.action = "<%= ctxPath%>/admin/empRegister.kedai";
      	frm.method = "post";
     	frm.submit();
      	
