@@ -247,7 +247,59 @@ where empid = '2024100-001'
 
 -- 사원정보 등록하기
 insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel,sign_img)
-values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},#{imgfilename},#{hire_date},#{salary},0,#{fk_dept_code},#{fk_job_code},#{dept_tel},#{sign_img})
+
       
 select *
 from tbl_employees;       
+
+
+
+
+INSERT INTO tbl_employees (
+    empid,
+    pwd,
+    name,
+    nickname,
+    jubun,
+    email,
+    mobile,
+    postcode,
+    address,
+    detailaddress,
+    extraaddress,
+    imgfilename,
+    hire_date,
+    salary,
+    commission_pct,
+    point,
+    fk_dept_code,
+    fk_job_code,
+    dept_tel,
+    lastpwdchangedate,
+    status,
+    sign_img
+) VALUES (
+    'EMP0012',
+    'password123',
+    'John Doe',
+    'JD',
+    '9001011234567',
+    'johndo@example.com',
+    '010-1234-5678',
+    '12345',
+    'Seoul',
+    'Gangnam-gu',
+    '123 Building',
+    'profile.jpg',
+    TO_DATE('2024-07-01', 'yyyy-mm-dd'),
+    50000,  -- 예시로 salary 값을 조정
+    0.05,   -- 예시로 commission_pct 값을 조정
+    100,
+    null,
+    1,
+    '02-1234-5678',
+    SYSDATE,
+    1,
+    'signature.jpg'
+);
+

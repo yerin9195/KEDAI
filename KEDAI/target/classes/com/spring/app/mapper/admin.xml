@@ -29,8 +29,35 @@
 	</select>
 	
 	<insert id="empRegister" parameterType="MemberVO">
-		insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel)
-		values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},#{imgfilename},to_date('#{hire_date}', 'yyyy-mm-dd'),#{salary},0,#{fk_dept_code},#{fk_job_code},#{dept_tel})
+		<if test="fk_dept_code == null || dept_tel == null">
+			
+			insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel)
+			values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},'test',to_date(#{hire_date}, 'yyyy-mm-dd'),to_number(#{salary}),0, null, null, null)
+		</if>
+		
+		<if test="fk_job_code == null">
+			<if test="fk_dept_code == null || dept_tel == null">
+			insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel)
+			values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},'test',to_date(#{hire_date}, 'yyyy-mm-dd'),to_number(#{salary}),0, null, null, null)
+			
+		</if>
+		
+		<if test="fk_job_code == null && (fk_dept_code == null || dept_tel == null)">
+			insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel)
+			values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},'test',to_date(#{hire_date}, 'yyyy-mm-dd'),to_number(#{salary}),0, null, null, null)
+		</if>
+		
+		
+		
+		<if test="fk_dept_code != null">
+			insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel)
+			values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},'test',to_date(#{hire_date}, 'yyyy-mm-dd'),to_number(#{salary}),0,#{fk_dept_code}, #{fk_job_code},#{dept_tel})
+		</if>
+		
+		<if test="fk_job_code != null">
+			insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel)
+			values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},'test',to_date(#{hire_date}, 'yyyy-mm-dd'),to_number(#{salary}),0, null, null, null)
+		</if>
 	</insert>
 
 </mapper>

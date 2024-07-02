@@ -426,7 +426,7 @@
 				<img id="previewImg" />
 			</div>
 			<br>
-			<input type="file" name="imgfilename" class="infoData img_file" accept='image/*' />
+		<%-- 	<input type="file" name="imgfilename" class="infoData img_file" accept='image/*' /> --%>
 		</div>
 		
 		<div class="col-10 row" id="empRegister">
