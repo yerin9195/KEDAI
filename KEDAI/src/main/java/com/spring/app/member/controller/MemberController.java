@@ -107,4 +107,15 @@ public class MemberController {
 		return mav;
 	}
 	
+	@GetMapping(value = "/pay_stub.kedai")  // http://localhost:8090/board/pay_stub.action
+	public String pay_stub(HttpServletRequest request) {
+		
+		return "tiles1/pay_stub/pay_stub.tiles";
+	}
+	
+	@GetMapping(value = "/pay_stub_admin.kedai")  // http://localhost:8090/board/pay_stub.action
+	public String pay_stub_admin(HttpServletRequest request) {
+		
+		return "tiles1/pay_stub/pay_stub_admin.tiles";
+	}
 }

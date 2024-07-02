@@ -65,7 +65,6 @@
 		
 		$('#workListcom_btn').click(function(){
 			 $('#modal1').modal("show");
-             $("#datepicker").datepicker(); 
 		});
 		$('#close').click(function(e){
 			modal.style.display = "none"
@@ -73,44 +72,133 @@
 		
 		$('#workhis').click(function(e){
 			$('#modal2').modal("show");
+			initializeDatepickers();
 		});
+		
+		 // 모달1과 모달2의 상태를 확인하기 위한 변수
+		  var isModal2Open = false;
 
-		 $("#monthpicker").datepicker({
-	            dateFormat: 'yy-mm', // 월과 년도 표시 형식 설정
-	            changeMonth: true,   // 월 선택 가능
-	            changeYear: true,   // 년도 선택 불가능
-	            showButtonPanel: true, // 버튼 패널 표시
-	            onSelect: function(dateText, inst) {
-	                var selectedDate = $(this).datepicker('getDate');
-	                var year = selectedDate.getFullYear(); // 선택한 년도 가져오기
-	                var month = selectedDate.getMonth() + 1; // 선택한 월 가져오기
-	                var weekdays = countWeekdays(year, month); // 평일 수 계산 함수 호출
+		  // 모달2가 열릴 때 isModal2Open를 true로 설정
+		  $('#modal2').on('show.bs.modal', function () {
+		    isModal2Open = true;
+		  });
 
-	                $("#weekdayCount").text("평일 수: " + weekdays);
-	            }
-	        });
-		 
-         // 평일 수 계산 함수
-          function countWeekdays(year, month) {
-        	var weekdays = 0;
-            var startDay = new Date(year, month - 1, 1);
-            var endDay = new Date(year, month, 0);
+		  // 모달2가 닫힐 때 isModal2Open를 false로 설정
+		  $('#modal2').on('hidden.bs.modal', function () {
+		    isModal2Open = false;
+		  });
 
-            console.log(startDay);
-            console.log(endDay);
-            
-            for (var day = 1; day <= endDay.getDate(); day++) {
-                var currentDate = new Date(year, month - 1, day);
-                if (currentDate.getDay() >= 1 && currentDate.getDay() <= 5) {
-                    weekdays++;
-                }
-            }
+		  // 모달1이 닫히려고 할 때, 모달2가 열려 있는 경우 닫히지 않도록 방지
+		  $('#modal1').on('hide.bs.modal', function (e) {
+			if (isModal2Open) {
+		    	alert("열려있는 창이 있습니다.");
+		     	e.preventDefault();
+		    }
+		  });
 
-            return weekdays;
-        }
-		 
+		  // 모달2가 닫히지 않도록 설정
+		  $('#modal2').modal({
+		    backdrop: 'static',
+		    keyboard: false,
+		    show: false
+		  });
+		
+	
+	    //	
+	    $('#dateSave').click(function(e){
+	    	if($("#weekdayCount").val() == ""){
+	    		alert("날짜를 지정하여 주시기 바랍니다.");
+	    	}
+	    	else{
+	    		$("#weekdayCountfi").val($("#weekdayCount").val())
+	    		$('#modal2').modal("hide")
+	    		$('#start-date').datepicker('destroy'); 
+	    	}
+	    	
+	    });
+	    
+	    $('#btnClose').click(function(e){
+	    	$('#start-date').datepicker('setDate', "");
+		    $('#end-date').datepicker('setDate', "");
+		    $('#weekdayCount').val("");
+		    $('#start-date').datepicker('destroy'); 
+		    initializeDatepickers();
+	    });
+	    
 	});	//	end of $(document).ready(function(){--------
 		
+	// 날짜 가져오기 함수
+	function getDate(dateString) {
+	    var date;
+	    try {
+	        date = $.datepicker.parseDate("yy-mm-dd", dateString);
+	    } catch (error) {
+	        date = null; // 날짜 형식 오류 처리
+	    }
+	    return date;
+	}
+	
+	function initializeDatepickers() {
+	    var currentYear = new Date().getFullYear(); 
+	    var dateFormat = "yy-mm-dd";
+
+	    $("#start-date").datepicker({
+	        changeMonth: true,
+	        changeYear: true,
+	        dateFormat: dateFormat,
+	        yearRange: (currentYear - 5) + ":" + (currentYear + 5),
+	        onClose: function(selectedDate) {
+	            $("#end-date").datepicker("option", "minDate", selectedDate ? selectedDate : null);
+	            calculateWeekdays();
+	        }
+	    });
+
+	    $("#end-date").datepicker({
+	        changeMonth: true,
+	        changeYear: true,
+	        dateFormat: dateFormat,
+	        yearRange: (currentYear - 5) + ":" + (currentYear + 5),
+	        onClose: function(selectedDate) {
+	            $("#start-date").datepicker("option", "maxDate", selectedDate ? selectedDate : null);
+	            calculateWeekdays();
+	        }
+	    });
+	}
+
+	// 평일 수 계산 함수
+	function calculateWeekdays() {
+		 var startDate = getDate($("#start-date").val());
+	    var endDate = getDate($("#end-date").val());
+
+	    console.log("startDate:", startDate);
+	    console.log("endDate:", endDate);
+	    
+	    if (startDate && endDate) {
+	        console.log("start", startDate); // startDate 로그 확인
+	        var weekdays = countWeekdays(startDate, endDate); // 평일 수 계산
+	        $("#weekdayCount").val(weekdays); // 계산된 평일 수를 #weekdayCount 입력 필드에 설정
+	    } else {
+	        console.log("One or both dates are not selected."); // 날짜가 선택되지 않은 경우 로그
+	    }
+	}
+
+	
+		
+    function countWeekdays(startDate, endDate) {
+        var weekdays = 0;
+        var currentDate = new Date(startDate);
+
+        while (currentDate <= endDate) {
+            var dayOfWeek = currentDate.getDay();
+            if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Sunday (0) and Saturday (6)
+                weekdays++;
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        return weekdays;
+    }
+	 
 	
 	function addNewRow() {
 	    const table = document.querySelector('tbody');
@@ -143,36 +231,7 @@
 	    }
 	}
 	
-	 function datepicker() {
-         // 모든 datepicker에 대한 공통 옵션 설정
-         $.datepicker.setDefaults({
-             dateFormat: 'yy-mm-dd', // Input Display Format 변경
-             showOtherMonths: true,  // 빈 공간에 현재월의 앞뒤월의 날짜를 표시
-             showMonthAfterYear: true, // 년도 먼저 나오고, 뒤에 월 표시
-             changeYear: true,       // 콤보박스에서 년 선택 가능
-             changeMonth: true,      // 콤보박스에서 월 선택 가능                
-             yearSuffix: "년",       // 달력의 년도 부분 뒤에 붙는 텍스트
-             monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'], // 달력의 월 부분 텍스트
-             monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'], // 달력의 월 부분 Tooltip 텍스트
-             dayNamesMin: ['일','월','화','수','목','금','토'], // 달력의 요일 부분 텍스트
-             dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] // 달력의 요일 부분 Tooltip 텍스트
-         });
-
-         // input을 datepicker로 선언
-         $("input#fromDate").datepicker();                    
-         $("input#toDate").datepicker();
-         
-         // From의 초기값을 오늘 날짜로 설정
-         $('input#fromDate').datepicker('setDate', 'today');
-         
-         // To의 초기값을 3일후로 설정
-         $('input#toDate').datepicker('setDate', '+3D');
-     }
-
-    
-     
-
-
+	
 </script>
 
 <div class="header">
@@ -253,7 +312,7 @@
                                 <td>2015-067A</td>
                                 <td>사원1</td>
                                 <td>회계팀</td>
-                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control" id="weekdayCountfi"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -282,16 +341,19 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="monthpicker">월 선택</label>
-                    <input type="text" id="monthpicker" class="form-control" readonly>
+                    <p>날짜 선택</p>
+                    <label for="start-date">시작 날짜:</label>
+				    <input type="text" id="start-date">
+				    <label for="end-date">마지막 날짜:</label>
+				    <input type="text" id="end-date">
                 </div>
                 <div class="form-group">
-                    <p id="weekdayCount"></p>
+				 	<input type="hidden" id="weekdayCount" />
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn mr-2">저장</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button class="btn mr-2" id="dateSave">저장</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnClose">닫기</button>
             </div>
         </div>
     </div>
