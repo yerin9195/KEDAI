@@ -350,7 +350,7 @@ $(document).ready(function(){
       $.ajax({
          url : "<%=ctxPath%>/bus_select.kedai",
          data:{"bus_no":bus_no},
-         async : true, 
+         async:false, // !!!!! 지도는 비동기 통신이 아닌 동기 통신으로 해야 한다.!!!!!!
          dataType:"json",
          success:function(json){
             console.log(JSON.stringify(json));
