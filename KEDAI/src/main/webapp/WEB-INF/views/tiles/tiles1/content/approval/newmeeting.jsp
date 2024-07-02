@@ -10,11 +10,6 @@
     
 <style type="text/css">
 
-table.table left_table > th,
-table.table left_table > td{
-	padding:0;
-}
-
 div#title{
 	font-size:27px;
 	margin : 3% 0 1% 0;
@@ -38,7 +33,20 @@ table.left_table th{
 
 table#title_table td{
 	width : 25%;
+	padding: 0 0 0 3%;
 }
+
+table#title_table th,
+table#meeting th,
+table#meeting td{
+	padding: 0 0 0 3%;
+}
+
+table#approval th,
+table#approval td{
+	padding: 0%;
+}
+
 
 </style>
 
@@ -198,7 +206,7 @@ table#title_table td{
 				<td>1</td>
 				<th>기안일자</th>
 				<td>
-					<input type="text" name="created_date" id="datepicker" maxlength="8" />
+					<input type="text" name="created_date" id="datepicker" maxlength="8" style="height : 15pt;" size="8" />
                 </td>
 			</tr>
 			<tr>
@@ -216,7 +224,7 @@ table#title_table td{
 			<tr>
 				<th>회의일자</th>
 				<td>
-					<input type="text" name="meeting_date" id="datepicker" maxlength="8" />
+					<input type="text" name="meeting_date" id="datepicker" maxlength="8" style="height : 15pt;" size="8" />
 				</td>
 			</tr>
 			<tr>
