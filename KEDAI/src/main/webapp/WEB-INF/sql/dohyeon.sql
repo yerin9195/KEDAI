@@ -1,29 +1,29 @@
--- ¿À¶óÅ¬ °èÁ¤ »ı¼ºÀ» À§ÇØ¼­´Â SYS ¶Ç´Â SYSTEM À¸·Î ¿¬°áÇÏ¿© ÀÛ¾÷À» ÇØ¾ß ÇÕ´Ï´Ù. [SYS ½ÃÀÛ] --
+-- ï¿½ï¿½ï¿½ï¿½Å¬ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ SYS ï¿½Ç´ï¿½ SYSTEM ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Û¾ï¿½ï¿½ï¿½ ï¿½Ø¾ï¿½ ï¿½Õ´Ï´ï¿½. [SYS ï¿½ï¿½ï¿½ï¿½] --
 show user;
--- USERÀÌ(°¡) "SYS"ÀÔ´Ï´Ù.
+-- USERï¿½ï¿½(ï¿½ï¿½) "SYS"ï¿½Ô´Ï´ï¿½.
 
--- ¿À¶óÅ¬ °èÁ¤ »ı¼º½Ã °èÁ¤¸í ¾Õ¿¡ c## ºÙÀÌÁö ¾Ê°í »ı¼ºÇÏµµ·Ï ÇÏ°Ú½À´Ï´Ù.
+-- ï¿½ï¿½ï¿½ï¿½Å¬ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Õ¿ï¿½ c## ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½Ï°Ú½ï¿½ï¿½Ï´ï¿½.
 alter session set "_ORACLE_SCRIPT"=true;
--- SessionÀÌ(°¡) º¯°æµÇ¾ú½À´Ï´Ù.
+-- Sessionï¿½ï¿½(ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
 
--- ¿À¶óÅ¬ °èÁ¤¸íÀº MYMVC_USER ÀÌ°í ¾ÏÈ£´Â gclass ÀÎ »ç¿ëÀÚ °èÁ¤À» »ı¼ºÇÕ´Ï´Ù.
+-- ï¿½ï¿½ï¿½ï¿½Å¬ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MYMVC_USER ï¿½Ì°ï¿½ ï¿½ï¿½È£ï¿½ï¿½ gclass ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 create user final_orauser5 identified by gclass default tablespace users; 
--- User MYMVC_USERÀÌ(°¡) »ı¼ºµÇ¾ú½À´Ï´Ù.
+-- User MYMVC_USERï¿½ï¿½(ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
 
--- À§¿¡¼­ »ı¼ºµÇ¾îÁø MYMVC_USER ÀÌ¶ó´Â ¿À¶óÅ¬ ÀÏ¹İ»ç¿ëÀÚ °èÁ¤¿¡°Ô ¿À¶óÅ¬ ¼­¹ö¿¡ Á¢¼ÓÀÌ µÇ¾îÁö°í,
--- Å×ÀÌºí »ı¼º µîµîÀ» ÇÒ ¼ö ÀÖµµ·Ï ¿©·¯°¡Áö ±ÇÇÑÀ» ºÎ¿©ÇØÁÖ°Ú½À´Ï´Ù.
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ MYMVC_USER ï¿½Ì¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å¬ ï¿½Ï¹İ»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å¬ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½,
+-- ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î¿ï¿½ï¿½ï¿½ï¿½Ö°Ú½ï¿½ï¿½Ï´ï¿½.
 grant connect, resource, create view, unlimited tablespace to final_orauser5;
--- GrantÀ»(¸¦) ¼º°øÇß½À´Ï´Ù.
+-- Grantï¿½ï¿½(ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.
 
 -----------------------------------------------------------------------
--- Á¢¼Ó - »õÁ¢¼Ó - Name: remote_final_orauser5 »ç¿ëÀÚÀÌ¸§: final_orauser5 ºñ¹Ğ¹øÈ£: gclass ºñ¹Ğ¹øÈ£ ÀúÀå - Å×½ºÆ® - ÀúÀå - Ãë¼Ò
+-- ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ - Name: remote_final_orauser5 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½: final_orauser5 ï¿½ï¿½Ğ¹ï¿½È£: gclass ï¿½ï¿½Ğ¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ - ï¿½×½ï¿½Æ® - ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½
 
 create table tbl_bus
 (bus_no                     VARCHAR2(30)  not null               
-,pf_station_id              VARCHAR2(30)  not null          --Á¤·ùÀå¾ÆÀÌµğ
-,first_time                 VARCHAR2(200)  not null                  --Ã¹Â÷½Ã°£
-,last_time                  VARCHAR2(200)  not null                  --¸·Â÷½Ã°£
-,time_gap                   NUMBER  not null          --¹èÂ÷°£°İ
+,pf_station_id              VARCHAR2(30)  not null          --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½
+,first_time                 VARCHAR2(200)  not null                  --Ã¹ï¿½ï¿½ï¿½Ã°ï¿½
+,last_time                  VARCHAR2(200)  not null                  --ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½
+,time_gap                   NUMBER  not null          --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 ,constraint PK_tbl_bus primary key(bus_no,pf_station_id)
 ,constraint FK_tbl_station_pf_station_id foreign key(pf_station_id) references tbl_station(Pk_station_id)
 );
@@ -36,39 +36,39 @@ nominvalue
 nocycle
 nocache; 
 -- 101
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101¹ø','03122','07:00:00','24:00:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101¹ø','04021','07:03:00','23:57:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101¹ø','04397','07:07:00','23:53:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101¹ø','04396','07:11:00','23:49:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101¹ø','04019','07:12:00','23:48:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101¹ø','03123','07:14:00','23:46:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101ï¿½ï¿½','03122','07:00:00','24:00:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101ï¿½ï¿½','04021','07:03:00','23:57:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101ï¿½ï¿½','04397','07:07:00','23:53:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101ï¿½ï¿½','04396','07:11:00','23:49:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101ï¿½ï¿½','04019','07:12:00','23:48:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101ï¿½ï¿½','03123','07:14:00','23:46:00','10');
 --102
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03015','07:00:00','24:00:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03039','07:03:00','23:57:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03137','07:07:00','23:53:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03107','07:11:00','23:49:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03124','07:12:00','23:48:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03122','07:14:00','23:46:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03015','07:00:00','24:00:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03039','07:03:00','23:57:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03137','07:07:00','23:53:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03107','07:11:00','23:49:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03124','07:12:00','23:48:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03122','07:14:00','23:46:00','10');
 
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03123','07:17:00','23:44:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03125','07:19:00','23:42:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03110','07:20:00','23:39:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03142','07:23:00','23:37:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03038','07:25:00','23:35:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102¹ø','03017','07:28:00','23:32:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03123','07:17:00','23:44:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03125','07:19:00','23:42:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03110','07:20:00','23:39:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03142','07:23:00','23:37:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03038','07:25:00','23:35:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102ï¿½ï¿½','03017','07:28:00','23:32:00','10');
 commit;
 --103
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103¹ø','03090','07:00:00','24:00:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103¹ø','03170','07:03:00','23:57:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103¹ø','03103','07:07:00','23:53:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103¹ø','03172','07:11:00','23:49:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103¹ø','03122','07:12:00','23:48:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103ï¿½ï¿½','03090','07:00:00','24:00:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103ï¿½ï¿½','03170','07:03:00','23:57:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103ï¿½ï¿½','03103','07:07:00','23:53:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103ï¿½ï¿½','03172','07:11:00','23:49:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103ï¿½ï¿½','03122','07:12:00','23:48:00','10');
 
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103¹ø','03123','07:17:00','23:44:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103¹ø','03173','07:19:00','23:42:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103¹ø','03104','07:20:00','23:39:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103¹ø','03169','07:23:00','23:37:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103¹ø','03091','07:25:00','23:35:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103ï¿½ï¿½','03123','07:17:00','23:44:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103ï¿½ï¿½','03173','07:19:00','23:42:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103ï¿½ï¿½','03104','07:20:00','23:39:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103ï¿½ï¿½','03169','07:23:00','23:37:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103ï¿½ï¿½','03091','07:25:00','23:35:00','10');
 commit;
 
 select *
@@ -79,7 +79,7 @@ from tbl_bus
 		(
 		select bus_no, pf_station_id, first_time, last_time, time_gap
 		from tbl_bus
-		where bus_no = '101¹ø'
+		where bus_no = '101ï¿½ï¿½'
 		order by first_time asc
 		)v cross join
 		(
@@ -90,10 +90,10 @@ from tbl_bus
 		order by v.first_time asc
         
 create table tbl_station
-(Pk_station_id                  VARCHAR2(30)                      --Á¤·ùÀå¾ÆÀÌµğ                   
-,station_name                   VARCHAR2(100)  not null           --Á¤·ùÀå¸í
-,lat                            NUMBER  not null                  --À§µµ
-,lng                            NUMBER  not null                  --°æµµ
+(Pk_station_id                  VARCHAR2(30)                      --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½                   
+,station_name                   VARCHAR2(100)  not null           --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+,lat                            NUMBER  not null                  --ï¿½ï¿½ï¿½ï¿½
+,lng                            NUMBER  not null                  --ï¿½æµµ
 ,constraint PK_tbl_station_station_id primary key(Pk_station_id)
 );
 
@@ -104,40 +104,40 @@ create table tbl_station
 
 commit;
 
---101¹ø
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03122','¼ö¿ø¿ùµåÄÅ°æ±âÀå.¾Æ¸§ÇĞ±³','37.28674706537582','127.0402587819467','°æ±âµµ°æÁ¦°úÇĞÁøÈï¿ø ¹æ¸é',1);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('04021','°æ±âµµ°æÁ¦°úÇĞÁøÈï¿ø','37.29079534179728','127.04547963591234','±¤±³Áß¾Ó.°æ±âµµÃ».¾ÆÁÖ´ë¿ªÈ¯½Â¼¾ÅÍ ¹æ¸é',2);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('04397','±¤±³Áß¾Ó.°æ±âµµÃ».¾ÆÁÖ´ë¿ªÈ¯½Â¼¾ÅÍ','37.288454732776685','127.05138185376052','Á¾Á¡',3);
+--101ï¿½ï¿½
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03122','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ï¿½ï¿½.ï¿½Æ¸ï¿½ï¿½Ğ±ï¿½','37.28674706537582','127.0402587819467','ï¿½ï¿½âµµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½',1);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('04021','ï¿½ï¿½âµµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½','37.29079534179728','127.04547963591234','ï¿½ï¿½ï¿½ï¿½ï¿½ß¾ï¿½.ï¿½ï¿½âµµÃ».ï¿½ï¿½ï¿½Ö´ë¿ªÈ¯ï¿½Â¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½',2);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('04397','ï¿½ï¿½ï¿½ï¿½ï¿½ß¾ï¿½.ï¿½ï¿½âµµÃ».ï¿½ï¿½ï¿½Ö´ë¿ªÈ¯ï¿½Â¼ï¿½ï¿½ï¿½','37.288454732776685','127.05138185376052','ï¿½ï¿½ï¿½ï¿½',3);
 
 
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('04396','±¤±³Áß¾Ó.°æ±âµµÃ».¾ÆÁÖ´ë¿ªÈ¯½Â¼¾ÅÍ','37.288537908037156','127.05177379426947','°æ±âµµ°æÁ¦°úÇĞÁøÈï¿ø ¹æ¸é',4);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('04019','°æ±âµµ°æÁ¦°úÇĞÁøÈï¿ø','37.291135603390984','127.04516688665875','¼ö¿ø¿ùµåÄÅ°æ±âÀå.¾Æ¸§ÇĞ±³ ¹æ¸é',5);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03123','¼ö¿ø¿ùµåÄÅ°æ±âÀå.¾Æ¸§ÇĞ±³','37.28707375972554','127.0400587889236','Á¾Á¡',6);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('04396','ï¿½ï¿½ï¿½ï¿½ï¿½ß¾ï¿½.ï¿½ï¿½âµµÃ».ï¿½ï¿½ï¿½Ö´ë¿ªÈ¯ï¿½Â¼ï¿½ï¿½ï¿½','37.288537908037156','127.05177379426947','ï¿½ï¿½âµµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½',4);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('04019','ï¿½ï¿½âµµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½','37.291135603390984','127.04516688665875','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ï¿½ï¿½.ï¿½Æ¸ï¿½ï¿½Ğ±ï¿½ ï¿½ï¿½ï¿½',5);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03123','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ï¿½ï¿½.ï¿½Æ¸ï¿½ï¿½Ğ±ï¿½','37.28707375972554','127.0400587889236','ï¿½ï¿½ï¿½ï¿½',6);
 
---102¹ø
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03015','¼ö¿ø¿ª.³ëº¸ÅÚ¼ö¿ø','37.268212757868156','126.99956876164312','¼¼¹«¼­.½Å¿ëÈ¸º¹À§¿øÈ¸ ¹æ¸é',7);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03039','¼¼¹«¼­.½Å¿ëÈ¸º¹À§¿øÈ¸','37.26734320504059','127.00338785976807','³ì»ê¹®°í¾Õ ¹æ¸é',8);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03137','³ì»ê¹®°í¾Õ',' 37.27510882921343','127.0181954083477','ÀÎ°è¼±°æ¾ÆÆÄÆ® ¹æ¸é',9);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03107','ÀÎ°è¼±°æ¾ÆÆÄÆ®','37.27682782145644','127.03656077602773','Ã¢Çö°í±³.¾ÆÁÖ´ëÇĞ±³.À¯½Å°í±³ ¹æ¸é',10);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03124','Ã¢Çö°í±³.¾ÆÁÖ´ëÇĞ±³.À¯½Å°í±³','37.280878404042944','127.04211057329069','¼ö¿ø¿ùµåÄÅ°æ±âÀå.¾Æ¸§ÇĞ±³ ¹æ¸é',11);
+--102ï¿½ï¿½
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03015','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.ï¿½ëº¸ï¿½Ú¼ï¿½ï¿½ï¿½','37.268212757868156','126.99956876164312','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.ï¿½Å¿ï¿½È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¸ ï¿½ï¿½ï¿½',7);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03039','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.ï¿½Å¿ï¿½È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¸','37.26734320504059','127.00338785976807','ï¿½ï¿½ê¹®ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½',8);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03137','ï¿½ï¿½ê¹®ï¿½ï¿½ï¿½',' 37.27510882921343','127.0181954083477','ï¿½Î°è¼±ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½',9);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03107','ï¿½Î°è¼±ï¿½ï¿½ï¿½ï¿½ï¿½Æ®','37.27682782145644','127.03656077602773','Ã¢ï¿½ï¿½ï¿½ï¿½.ï¿½ï¿½ï¿½Ö´ï¿½ï¿½Ğ±ï¿½.ï¿½ï¿½ï¿½Å°ï¿½ ï¿½ï¿½ï¿½',10);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03124','Ã¢ï¿½ï¿½ï¿½ï¿½.ï¿½ï¿½ï¿½Ö´ï¿½ï¿½Ğ±ï¿½.ï¿½ï¿½ï¿½Å°ï¿½','37.280878404042944','127.04211057329069','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ï¿½ï¿½.ï¿½Æ¸ï¿½ï¿½Ğ±ï¿½ ï¿½ï¿½ï¿½',11);
 
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03125','Ã¢Çö°í±³.¾ÆÁÖ´ëÇĞ±³.À¯½Å°í±³','37.280574302250706','127.04211322287942','¿ì¸¸½Å¼º¾ÆÆÄÆ® ¹æ¸é',12);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03110','¿ì¸¸½Å¼º¾ÆÆÄÆ®','37.27707546906844','127.03700627909338','¿µµ¿½ÃÀå ¹æ¸é',13);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03142','¿µµ¿½ÃÀå','37.275313764757875','127.01852525914751','¼¼¹«¼­.½Å¿ëÈ¸º¹À§¿øÈ¸ ¹æ¸é',14);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03038','¼¼¹«¼­.½Å¿ëÈ¸º¹À§¿øÈ¸','37.26894689758696','127.00704926536443','¼ö¿ø¿ª.AKÇÃ¶óÀÚ ¹æ¸é',15);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03017','¼ö¿ø¿ª.AKÇÃ¶óÀÚ','37.26745362831417','127.00081455316372','Á¾Á¡',16);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03125','Ã¢ï¿½ï¿½ï¿½ï¿½.ï¿½ï¿½ï¿½Ö´ï¿½ï¿½Ğ±ï¿½.ï¿½ï¿½ï¿½Å°ï¿½','37.280574302250706','127.04211322287942','ï¿½ì¸¸ï¿½Å¼ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½',12);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03110','ï¿½ì¸¸ï¿½Å¼ï¿½ï¿½ï¿½ï¿½ï¿½Æ®','37.27707546906844','127.03700627909338','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½',13);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03142','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½','37.275313764757875','127.01852525914751','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.ï¿½Å¿ï¿½È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¸ ï¿½ï¿½ï¿½',14);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03038','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.ï¿½Å¿ï¿½È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¸','37.26894689758696','127.00704926536443','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.AKï¿½Ã¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½',15);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03017','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.AKï¿½Ã¶ï¿½ï¿½ï¿½','37.26745362831417','127.00081455316372','ï¿½ï¿½ï¿½ï¿½',16);
 
 COMMIT;
---103¹ø
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03090','¼ö¿ø½ÃÃ»¿ª9¹øÃâ±¸.±¹¹Î¿¬±İ°ø´Ü','37.26296873108508','127.03252946353398','ÀÎ°è·¡¹Ì¾È³ëºíÅ¬·¡½º ¹æ¸é',17);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03170','ÀÎ°è·¡¹Ì¾È³ëºíÅ¬·¡½º','37.26879104986174','127.0348629277089','Çö´ëÈú½ºÅ×ÀÌÆ®.ÀÎ°è»ï¼º¾ÆÆÄÆ® ¹æ¸é',18);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03103','Çö´ëÈú½ºÅ×ÀÌÆ®.ÀÎ°è»ï¼º¾ÆÆÄÆ®','37.270935284162796','127.03568132562151','¿ùµå¸Ş¸£µğ¾Ó ¹æ¸é',19);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03172','¿ùµå¸Ş¸£µğ¾Ó','37.278291523233456','127.03810907484589','¼ö¿ø¿ùµåÄÅ°æ±âÀå.¾Æ¸§ÇĞ±³ ¹æ¸é',20);
+--103ï¿½ï¿½
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03090','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½9ï¿½ï¿½ï¿½â±¸.ï¿½ï¿½ï¿½Î¿ï¿½ï¿½İ°ï¿½ï¿½ï¿½','37.26296873108508','127.03252946353398','ï¿½Î°è·¡ï¿½Ì¾È³ï¿½ï¿½Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½',17);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03170','ï¿½Î°è·¡ï¿½Ì¾È³ï¿½ï¿½Å¬ï¿½ï¿½ï¿½ï¿½','37.26879104986174','127.0348629277089','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®.ï¿½Î°ï¿½ï¼ºï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½',18);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03103','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®.ï¿½Î°ï¿½ï¼ºï¿½ï¿½ï¿½ï¿½Æ®','37.270935284162796','127.03568132562151','ï¿½ï¿½ï¿½ï¿½Ş¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½',19);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03172','ï¿½ï¿½ï¿½ï¿½Ş¸ï¿½ï¿½ï¿½ï¿½','37.278291523233456','127.03810907484589','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ï¿½ï¿½.ï¿½Æ¸ï¿½ï¿½Ğ±ï¿½ ï¿½ï¿½ï¿½',20);
 
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03173','¿ùµå¸Ş¸£µğ¾Ó','37.280127734188476','127.03703032535326','ÀÎ°è»ï¼º¾ÆÆÄÆ®.Çö´ëÈú½ºÅ×ÀÌÆ® ¹æ¸é',21);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03104','ÀÎ°è»ï¼º¾ÆÆÄÆ®.Çö´ëÈú½ºÅ×ÀÌÆ®','37.27110432574714','127.03536007826766','ÀÎ°è·¡¹Ì¾È³ëºíÅ¬·¡½º ¹æ¸é',22);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03169','ÀÎ°è·¡¹Ì¾È³ëºíÅ¬·¡½º','37.26878891362191','127.03446550797491','¼ö¿ø½ÃÃ»¿ª8¹øÃâ±¸.¾¾³×ÆÄÅ©.ÇåÇ÷ÀÇÁı ¹æ¸é',23);
-insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03091','¼ö¿ø½ÃÃ»¿ª8¹øÃâ±¸.¾¾³×ÆÄÅ©.ÇåÇ÷ÀÇÁı','37.263757169233','127.03243397754491','Á¾Á¡',24);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03173','ï¿½ï¿½ï¿½ï¿½Ş¸ï¿½ï¿½ï¿½ï¿½','37.280127734188476','127.03703032535326','ï¿½Î°ï¿½ï¼ºï¿½ï¿½ï¿½ï¿½Æ®.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½',21);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03104','ï¿½Î°ï¿½ï¼ºï¿½ï¿½ï¿½ï¿½Æ®.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®','37.27110432574714','127.03536007826766','ï¿½Î°è·¡ï¿½Ì¾È³ï¿½ï¿½Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½',22);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03169','ï¿½Î°è·¡ï¿½Ì¾È³ï¿½ï¿½Å¬ï¿½ï¿½ï¿½ï¿½','37.26878891362191','127.03446550797491','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½8ï¿½ï¿½ï¿½â±¸.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å©.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½',23);
+insert into tbl_station(Pk_station_id, station_name, lat, lng, way, zindex) values('03091','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½8ï¿½ï¿½ï¿½â±¸.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å©.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½','37.263757169233','127.03243397754491','ï¿½ï¿½ï¿½ï¿½',24);
 
 delete from tbl_bus
 delete from tbl_station
@@ -153,73 +153,73 @@ ROLLBACK;
 SELECT *
 FROM tbl_station
 
---»ç¿øÂ÷·®Á¤º¸ Å×ÀÌºí
+--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½
 create table tbl_car
-(car_seq                  NUMBER                     --Á¤·ùÀå¾ÆÀÌµğ                   
-,fk_empid                 VARCHAR2(30)  not null           --Á¤·ùÀå¸í
-,car_num                  VARCHAR2(100)  not null                  --À§µµ
-,car_kind                 VARCHAR2(100)  not null                  --°æµµ
-,max_num                  NUMBER  not null                  --°æµµ
+(car_seq                  NUMBER                     --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½                   
+,fk_empid                 VARCHAR2(30)  not null           --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+,car_num                  VARCHAR2(100)  not null                  --ï¿½ï¿½ï¿½ï¿½
+,car_kind                 VARCHAR2(100)  not null                  --ï¿½æµµ
+,max_num                  NUMBER  not null                  --ï¿½æµµ
 ,constraint PK_tbl_car_car_seq primary key(car_seq)
 ,constraint FK_tbl_car_fk_empid foreign key(fk_empid) references tbl_employees(empid)
 );
 
 
--- ÀÏº°Â÷·®°øÀ¯Á¤º¸ Å×ÀÌºí
+-- ï¿½Ïºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½
 create table tbl_day_share
-(res_num                  NUMBER                      --Á¤·ùÀå¾ÆÀÌµğ                   
-,fk_car_seq               NUMBER  not null           --Á¤·ùÀå¸í
-,start_date               DATE  not null                  --À§µµ
-,last_date                DATE  not null                  --°æµµ
-,dp_add                   VARCHAR2(200)  not null                  --°æµµ
-,dp_lat                   NUMBER  not null                  --°æµµ
-,dp_lng                   NUMBER  not null                  --°æµµ
-,ds_add                   VARCHAR2(200)  not null                  --°æµµ
-,ds_lat                   NUMBER  not null                  --°æµµ
-,ds_lng                   NUMBER  not null                  --°æµµ
-,want_max                 NUMBER  not null                  --°æµµ
-,st_fee                   NUMBER  not null                  --°æµµ
-,end_status               NUMBER  not null                  --°æµµ
-,cancel_status            NUMBER  not null                  --°æµµ
+(res_num                  NUMBER                      --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½                   
+,fk_car_seq               NUMBER  not null           --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+,start_date               DATE  not null                  --ï¿½ï¿½ï¿½ï¿½
+,last_date                DATE  not null                  --ï¿½æµµ
+,dp_add                   VARCHAR2(200)  not null                  --ï¿½æµµ
+,dp_lat                   NUMBER  not null                  --ï¿½æµµ
+,dp_lng                   NUMBER  not null                  --ï¿½æµµ
+,ds_add                   VARCHAR2(200)  not null                  --ï¿½æµµ
+,ds_lat                   NUMBER  not null                  --ï¿½æµµ
+,ds_lng                   NUMBER  not null                  --ï¿½æµµ
+,want_max                 NUMBER  not null                  --ï¿½æµµ
+,st_fee                   NUMBER  not null                  --ï¿½æµµ
+,end_status               NUMBER  not null                  --ï¿½æµµ
+,cancel_status            NUMBER  not null                  --ï¿½æµµ
 ,constraint PK_tbl_day_share_res_num primary key(res_num)
 ,constraint FK_tbl_day_share_fk_car_seq foreign key(fk_car_seq) references tbl_car(car_seq)
 );
 
 
--- ÀÏº°Å¾½Â½ÅÃ»Á¤º¸ Å×ÀÌºí
+-- ï¿½Ïºï¿½Å¾ï¿½Â½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½
 create table tbl_car_share
-(pf_res_num             NUMBER                      --Á¤·ùÀå¾ÆÀÌµğ                   
-,pf_empid               VARCHAR2(30)  not null           --Á¤·ùÀå¸í
-,rshare_date            DATE  not null                  --À§µµ
-,rdp_add                VARCHAR2(200)  not null                  --°æµµ
-,rdp_lat                NUMBER  not null                  --°æµµ
-,rdp_lng                NUMBER  not null                  --°æµµ
-,rds_add                VARCHAR2(200)  not null                  --°æµµ
-,rds_lat                NUMBER  not null                  --°æµµ
-,rds_lng                NUMBER  not null                  --°æµµ
-,share_fee              NUMBER  not null                  --°æµµ
-,share_status           NUMBER  not null                  --°æµµ
-,start_time             VARCHAR2(200)  not null                  --°æµµ
-,end_time               VARCHAR2(200)                   --°æµµ
-,cancel_status          DATE                   --°æµµ
+(pf_res_num             NUMBER                      --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½                   
+,pf_empid               VARCHAR2(30)  not null           --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+,rshare_date            DATE  not null                  --ï¿½ï¿½ï¿½ï¿½
+,rdp_add                VARCHAR2(200)  not null                  --ï¿½æµµ
+,rdp_lat                NUMBER  not null                  --ï¿½æµµ
+,rdp_lng                NUMBER  not null                  --ï¿½æµµ
+,rds_add                VARCHAR2(200)  not null                  --ï¿½æµµ
+,rds_lat                NUMBER  not null                  --ï¿½æµµ
+,rds_lng                NUMBER  not null                  --ï¿½æµµ
+,share_fee              NUMBER  not null                  --ï¿½æµµ
+,share_status           NUMBER  not null                  --ï¿½æµµ
+,start_time             VARCHAR2(200)  not null                  --ï¿½æµµ
+,end_time               VARCHAR2(200)                   --ï¿½æµµ
+,cancel_status          DATE                   --ï¿½æµµ
 ,constraint PK_tbl_car primary key(pf_res_num,pf_empid)
 ,constraint FK_tbl_car_share_pf_res_num foreign key(pf_res_num) references tbl_day_share(res_num)
 ,constraint FK_tbl_car_share_pf_empid  foreign key(pf_empid) references tbl_employees(empid)
 );
 
--- ¿¹>
+-- ï¿½ï¿½>
 --------------- tbl_car
--- Å×ÀÌºí ÁÖ¼®¹®
+-- ï¿½ï¿½ï¿½Ìºï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½
 comment on table tbl_car 
-is '»ç¿øÀÇ Â÷·®Á¤º¸°¡ µé¾îÀÖ´Â Å×ÀÌºí';
+is 'ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½';
 
 comment on table tbl_day_share 
-is 'ÀÏº°Â÷·®°øÀ¯Á¤º¸°¡ µé¾îÀÖ´Â Å×ÀÌºí';
+is 'ï¿½Ïºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½';
 
 comment on table tbl_car_share 
-is 'ÀÏº°Å¾½Â½ÅÃ»Á¤º¸°¡ µé¾îÀÖ´Â Å×ÀÌºí';
+is 'ï¿½Ïºï¿½Å¾ï¿½Â½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½';
 
--- Å×ÀÌºí ÁÖ¼®¹® È®ÀÎ
+-- ï¿½ï¿½ï¿½Ìºï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 select *
 from user_tab_comments
 where table_name = 'tbl_car';
@@ -232,58 +232,58 @@ select *
 from user_tab_comments
 where table_name = 'tbl_car_share';
 --------------- tbl_car
--- ÄÃ·³¸í ÁÖ¼®¹®
-comment on column tbl_car.car_seq is 'Â÷·®Á¤º¸¹øÈ£'; 
-comment on column tbl_car.fk_empid is '»ç¿ø¾ÆÀÌµğ'; 
-comment on column tbl_car.car_num is 'Â÷¹øÈ£'; 
-comment on column tbl_car.car_kind is 'Â÷Á¾'; 
-comment on column tbl_car.max_num is 'ÃÖ´ëÅ¾½ÂÀÎ¿ø'; 
+-- ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½
+comment on column tbl_car.car_seq is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£'; 
+comment on column tbl_car.fk_empid is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½'; 
+comment on column tbl_car.car_num is 'ï¿½ï¿½ï¿½ï¿½È£'; 
+comment on column tbl_car.car_kind is 'ï¿½ï¿½ï¿½ï¿½'; 
+comment on column tbl_car.max_num is 'ï¿½Ö´ï¿½Å¾ï¿½ï¿½ï¿½Î¿ï¿½'; 
 
 --------------- tbl_car_share
--- ÄÃ·³¸í ÁÖ¼®¹®
-comment on column tbl_car_share.pf_res_num is '¿¹¾à¹øÈ£'; 
-comment on column tbl_car_share.pf_empid is '»ç¿ø¾ÆÀÌµğ'; 
-comment on column tbl_car_share.rshare_date is 'Å¾½ÂÀÏÀÚ'; 
-comment on column tbl_car_share.rdp_add is 'Ãâ¹ßÁöÁÖ¼Ò'; 
-comment on column tbl_car_share.rdp_lat is 'Ãâ¹ßÁöÀ§µµ'; 
-comment on column tbl_car_share.rdp_lng is 'Ãâ¹ßÁö°æµµ'; 
-comment on column tbl_car_share.rds_add is 'µµÂøÁöÁÖ¼Ò'; 
-comment on column tbl_car_share.rds_lat is 'µµÂøÁöÀ§µµ'; 
-comment on column tbl_car_share.rds_lng is 'µµÂøÁö°æµµ'; 
-comment on column tbl_car_share.share_fee is 'ÁöºÒºñ¿ë'; 
-comment on column tbl_car_share.share_status is '½ÂÀÎ¿©ºÎ'; 
-comment on column tbl_car_share.start_time is '½ÂÂ÷½Ã°£'; 
-comment on column tbl_car_share.end_time is 'ÇÏÂ÷½Ã°£'; 
+-- ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½
+comment on column tbl_car_share.pf_res_num is 'ï¿½ï¿½ï¿½ï¿½ï¿½È£'; 
+comment on column tbl_car_share.pf_empid is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½'; 
+comment on column tbl_car_share.rshare_date is 'Å¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'; 
+comment on column tbl_car_share.rdp_add is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½'; 
+comment on column tbl_car_share.rdp_lat is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'; 
+comment on column tbl_car_share.rdp_lng is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æµµ'; 
+comment on column tbl_car_share.rds_add is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½'; 
+comment on column tbl_car_share.rds_lat is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'; 
+comment on column tbl_car_share.rds_lng is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æµµ'; 
+comment on column tbl_car_share.share_fee is 'ï¿½ï¿½ï¿½Òºï¿½ï¿½'; 
+comment on column tbl_car_share.share_status is 'ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½'; 
+comment on column tbl_car_share.start_time is 'ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½'; 
+comment on column tbl_car_share.end_time is 'ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½'; 
 
 
 --------------- tbl_day_share
--- ÄÃ·³¸í ÁÖ¼®¹®
-comment on column tbl_day_share.res_num is '¿¹¾à¹øÈ£'; 
-comment on column tbl_day_share.fk_car_seq is 'Â÷·®Á¤º¸¹øÈ£'; 
-comment on column tbl_day_share.start_date is '¸ğÁı½ÃÀÛÀÏÀÚ'; 
-comment on column tbl_day_share.last_date is '¸ğÁı¸¶°¨ÀÏÀÚ'; 
-comment on column tbl_day_share.dp_add is 'Ãâ¹ßÁöÁÖ¼Ò'; 
-comment on column tbl_day_share.dp_lat is 'Ãâ¹ßÁöÀ§µµ'; 
-comment on column tbl_day_share.dp_lng is 'Ãâ¹ßÁö°æµµ'; 
-comment on column tbl_day_share.ds_add is 'µµÂøÁöÁÖ¼Ò'; 
-comment on column tbl_day_share.ds_lat is 'µµÂøÁöÀ§µµ'; 
-comment on column tbl_day_share.ds_lng is 'µµÂøÁö°æµµ'; 
-comment on column tbl_day_share.want_max is 'Á¤¿ø'; 
-comment on column tbl_day_share.st_fee is '°¡°İ'; 
-comment on column tbl_day_share.end_status is '¸¶°¨»óÅÂ'; 
-comment on column tbl_day_share.cancel_status is 'Ãë¼Ò¿©ºÎ'; 
+-- ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½
+comment on column tbl_day_share.res_num is 'ï¿½ï¿½ï¿½ï¿½ï¿½È£'; 
+comment on column tbl_day_share.fk_car_seq is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£'; 
+comment on column tbl_day_share.start_date is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'; 
+comment on column tbl_day_share.last_date is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'; 
+comment on column tbl_day_share.dp_add is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½'; 
+comment on column tbl_day_share.dp_lat is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'; 
+comment on column tbl_day_share.dp_lng is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æµµ'; 
+comment on column tbl_day_share.ds_add is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½'; 
+comment on column tbl_day_share.ds_lat is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'; 
+comment on column tbl_day_share.ds_lng is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æµµ'; 
+comment on column tbl_day_share.want_max is 'ï¿½ï¿½ï¿½ï¿½'; 
+comment on column tbl_day_share.st_fee is 'ï¿½ï¿½ï¿½ï¿½'; 
+comment on column tbl_day_share.end_status is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'; 
+comment on column tbl_day_share.cancel_status is 'ï¿½ï¿½Ò¿ï¿½ï¿½ï¿½'; 
 
--- ÄÃ·³¸í ÁÖ¼®¹® È®ÀÎ
+-- ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 select column_name, comments
 from user_col_comments
 where table_name = 'tbl_car';
 
--- ÄÃ·³¸í ÁÖ¼®¹® È®ÀÎ
+-- ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 select column_name, comments
 from user_col_comments
 where table_name = 'tbl_car_share';
 
--- ÄÃ·³¸í ÁÖ¼®¹® È®ÀÎ
+-- ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 select column_name, comments
 from user_col_comments
 where table_name = 'tbl_day_share';
@@ -299,7 +299,7 @@ from
 (
 select bus_no, pf_station_id, first_time, last_time, time_gap
 from tbl_bus
-where bus_no = '101¹ø'
+where bus_no = '101ï¿½ï¿½'
 order by first_time asc
 )v cross join
 (
@@ -328,7 +328,7 @@ FROM
         FROM 
             tbl_bus
         WHERE 
-            bus_no = '101¹ø'
+            bus_no = '101ï¿½ï¿½'
         ORDER BY 
             first_time ASC
     ) v
@@ -352,7 +352,7 @@ from
 (
 select bus_no, pf_station_id, first_time, last_time, time_gap
 from tbl_bus
-where bus_no = '103¹ø'
+where bus_no = '103ï¿½ï¿½'
 order by first_time asc
 )v cross join
 (
@@ -363,4 +363,141 @@ where h.pk_station_id = v.pf_station_id
 order by v.first_time asc
 
 select *
-from BIN$xO9DfSPvRe+DqMICxn5zhQ==$0;
+from tbl_day_share
+
+commit;
+
+--ì‚¬ì›ì°¨ëŸ‰ì •ë³´ í…Œì´ë¸”
+create table tbl_car
+(car_seq                  NUMBER                     --ì •ë¥˜ì¥ì•„ì´ë””                   
+,fk_empid                 VARCHAR2(30)  not null           --ì •ë¥˜ì¥ëª…
+,car_num                  VARCHAR2(100)  not null                  --ìœ„ë„
+,car_kind                 VARCHAR2(100)  not null                  --ê²½ë„
+,max_num                  NUMBER  not null                  --ê²½ë„
+,constraint PK_tbl_car_car_seq primary key(car_seq)
+,constraint FK_tbl_car_fk_empid foreign key(fk_empid) references tbl_employees(empid)
+);
+
+
+-- ì¼ë³„ì°¨ëŸ‰ê³µìœ ì •ë³´ í…Œì´ë¸”
+create table tbl_day_share
+(res_num                  NUMBER                      --ì •ë¥˜ì¥ì•„ì´ë””                   
+,fk_car_seq               NUMBER  not null           --ì •ë¥˜ì¥ëª…
+,start_date               DATE  not null                  --ìœ„ë„
+,last_date                DATE  not null                  --ê²½ë„
+,dp_add                   VARCHAR2(200)  not null                  --ê²½ë„
+,dp_lat                   NUMBER  not null                  --ê²½ë„
+,dp_lng                   NUMBER  not null                  --ê²½ë„
+,ds_add                   VARCHAR2(200)  not null                  --ê²½ë„
+,ds_lat                   NUMBER  not null                  --ê²½ë„
+,ds_lng                   NUMBER  not null                  --ê²½ë„
+,want_max                 NUMBER  not null                  --ê²½ë„
+,st_fee                   NUMBER  not null                  --ê²½ë„
+,end_status               NUMBER  not null                  --ê²½ë„
+,cancel_status            NUMBER  not null                  --ê²½ë„
+,constraint PK_tbl_day_share_res_num primary key(res_num)
+,constraint FK_tbl_day_share_fk_car_seq foreign key(fk_car_seq) references tbl_car(car_seq)
+);
+
+
+-- ì¼ë³„íƒ‘ìŠ¹ì‹ ì²­ì •ë³´ í…Œì´ë¸”
+create table tbl_car_share
+(pf_res_num             NUMBER                      --ì •ë¥˜ì¥ì•„ì´ë””                   
+,pf_empid               VARCHAR2(30)  not null           --ì •ë¥˜ì¥ëª…
+,rshare_date            DATE  not null                  --ìœ„ë„
+,rdp_add                VARCHAR2(200)  not null                  --ê²½ë„
+,rdp_lat                NUMBER  not null                  --ê²½ë„
+,rdp_lng                NUMBER  not null                  --ê²½ë„
+,rds_add                VARCHAR2(200)  not null                  --ê²½ë„
+,rds_lat                NUMBER  not null                  --ê²½ë„
+,rds_lng                NUMBER  not null                  --ê²½ë„
+,share_fee              NUMBER  not null                  --ê²½ë„
+,share_status           NUMBER  not null                  --ê²½ë„
+,start_time             NUMBER  not null                  --ê²½ë„
+,end_time               DATE                   --ê²½ë„
+,cancel_status          DATE                   --ê²½ë„
+,constraint PK_tbl_car primary key(pf_res_num,pf_empid)
+,constraint FK_tbl_car_share_pf_res_num foreign key(pf_res_num) references tbl_day_share(res_num)
+,constraint FK_tbl_car_share_pf_empid  foreign key(pf_empid) references tbl_employees(empid)
+);
+
+-- ì˜ˆ>
+--------------- tbl_car
+-- í…Œì´ë¸” ì£¼ì„ë¬¸
+comment on table tbl_car 
+is 'ì‚¬ì›ì˜ ì°¨ëŸ‰ì •ë³´ê°€ ë“¤ì–´ìˆëŠ” í…Œì´ë¸”';
+
+comment on table tbl_day_share 
+is 'ì¼ë³„ì°¨ëŸ‰ê³µìœ ì •ë³´ê°€ ë“¤ì–´ìˆëŠ” í…Œì´ë¸”';
+
+comment on table tbl_car_share 
+is 'ì¼ë³„íƒ‘ìŠ¹ì‹ ì²­ì •ë³´ê°€ ë“¤ì–´ìˆëŠ” í…Œì´ë¸”';
+
+-- í…Œì´ë¸” ì£¼ì„ë¬¸ í™•ì¸
+select *
+from user_tab_comments
+where table_name = 'TBL_CAR';
+
+select *
+from user_tab_comments
+where table_name = 'TBL_DAY_SHARE';
+
+select *
+from user_tab_comments
+where table_name = 'TBL_CAR_SHARE';
+--------------- tbl_car
+-- ì»¬ëŸ¼ëª… ì£¼ì„ë¬¸
+comment on column tbl_car.car_seq is 'ì°¨ëŸ‰ì •ë³´ë²ˆí˜¸'; 
+comment on column tbl_car.fk_empid is 'ì‚¬ì›ì•„ì´ë””'; 
+comment on column tbl_car.car_num is 'ì°¨ë²ˆí˜¸'; 
+comment on column tbl_car.car_kind is 'ì°¨ì¢…'; 
+comment on column tbl_car.max_num is 'ìµœëŒ€íƒ‘ìŠ¹ì¸ì›'; 
+
+--------------- tbl_car_share
+-- ì»¬ëŸ¼ëª… ì£¼ì„ë¬¸
+comment on column tbl_car_share.pf_res_num is 'ì˜ˆì•½ë²ˆí˜¸'; 
+comment on column tbl_car_share.pf_empid is 'ì‚¬ì›ì•„ì´ë””'; 
+comment on column tbl_car_share.rshare_date is 'íƒ‘ìŠ¹ì¼ì'; 
+comment on column tbl_car_share.rdp_add is 'ì¶œë°œì§€ì£¼ì†Œ'; 
+comment on column tbl_car_share.rdp_lat is 'ì¶œë°œì§€ìœ„ë„'; 
+comment on column tbl_car_share.rdp_lng is 'ì¶œë°œì§€ê²½ë„'; 
+comment on column tbl_car_share.rds_add is 'ë„ì°©ì§€ì£¼ì†Œ'; 
+comment on column tbl_car_share.rds_lat is 'ë„ì°©ì§€ìœ„ë„'; 
+comment on column tbl_car_share.rds_lng is 'ë„ì°©ì§€ê²½ë„'; 
+comment on column tbl_car_share.share_fee is 'ì§€ë¶ˆë¹„ìš©'; 
+comment on column tbl_car_share.share_status is 'ìŠ¹ì¸ì—¬ë¶€'; 
+comment on column tbl_car_share.start_time is 'ìŠ¹ì°¨ì‹œê°„'; 
+comment on column tbl_car_share.end_time is 'í•˜ì°¨ì‹œê°„'; 
+
+
+--------------- tbl_day_share
+-- ì»¬ëŸ¼ëª… ì£¼ì„ë¬¸
+comment on column tbl_day_share.res_num is 'ì˜ˆì•½ë²ˆí˜¸'; 
+comment on column tbl_day_share.fk_car_seq is 'ì°¨ëŸ‰ì •ë³´ë²ˆí˜¸'; 
+comment on column tbl_day_share.start_date is 'ëª¨ì§‘ì‹œì‘ì¼ì'; 
+comment on column tbl_day_share.last_date is 'ëª¨ì§‘ë§ˆê°ì¼ì'; 
+comment on column tbl_day_share.dp_add is 'ì¶œë°œì§€ì£¼ì†Œ'; 
+comment on column tbl_day_share.dp_lat is 'ì¶œë°œì§€ìœ„ë„'; 
+comment on column tbl_day_share.dp_lng is 'ì¶œë°œì§€ê²½ë„'; 
+comment on column tbl_day_share.ds_add is 'ë„ì°©ì§€ì£¼ì†Œ'; 
+comment on column tbl_day_share.ds_lat is 'ë„ì°©ì§€ìœ„ë„'; 
+comment on column tbl_day_share.ds_lng is 'ë„ì°©ì§€ê²½ë„'; 
+comment on column tbl_day_share.want_max is 'ì •ì›'; 
+comment on column tbl_day_share.st_fee is 'ê°€ê²©'; 
+comment on column tbl_day_share.end_status is 'ë§ˆê°ìƒíƒœ'; 
+comment on column tbl_day_share.cancel_status is 'ì·¨ì†Œì—¬ë¶€'; 
+
+-- ì»¬ëŸ¼ëª… ì£¼ì„ë¬¸ í™•ì¸
+select column_name, comments
+from user_col_comments
+where table_name = 'TBL_CAR';
+
+-- ì»¬ëŸ¼ëª… ì£¼ì„ë¬¸ í™•ì¸
+select column_name, comments
+from user_col_comments
+where table_name = 'tbl_car_share';
+
+-- ì»¬ëŸ¼ëª… ì£¼ì„ë¬¸ í™•ì¸
+select column_name, comments
+from user_col_comments
+where table_name = 'tbl_day_share';
