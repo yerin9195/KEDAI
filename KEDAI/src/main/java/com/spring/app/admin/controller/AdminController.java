@@ -40,7 +40,7 @@ public class AdminController {
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 		
-		if(loginuser != null && "admin".equals(loginuser.getNickname())) {
+		if(loginuser != null && "Admin".equals(loginuser.getNickname())) {
 			List<DeptVO> deptList = service.dept_select();
 			List<JobVO> jobList = service.job_select();
 			
