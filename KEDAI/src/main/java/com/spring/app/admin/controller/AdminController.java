@@ -103,22 +103,23 @@ public class AdminController {
 	
 	// 사원정보 등록하기
 	@PostMapping("/admin/empRegister.kedai")
-	public ModelAndView empRegister(ModelAndView mav, MultipartHttpServletRequest request) {
+	public ModelAndView empRegister(ModelAndView mav, MultipartHttpServletRequest mrequest, MemberVO mvo) {
 		
-		String jubun1 = request.getParameter("jubun1");
-		String jubun2 = request.getParameter("jubun2");
+		String imgfilename = mrequest.getParameter("imgfilename");
+		if(imgfilename == null) {
+			imgfilename = "";
+		}
+		
+		String jubun1 = mrequest.getParameter("jubun1");
+		String jubun2 = mrequest.getParameter("jubun2");
 		String jubun = jubun1 + jubun2;
-		System.out.println("~~~ 확인용 jubun : " + jubun);
-		System.out.println("~~~ 확인용 empid : " +request.getParameter("empid"));  
 		
-		String hp1 = request.getParameter("hp1");
-		String hp2 = request.getParameter("hp2");
-		String hp3 = request.getParameter("hp3");
+		String hp1 = mrequest.getParameter("hp1");
+		String hp2 = mrequest.getParameter("hp2");
+		String hp3 = mrequest.getParameter("hp3");
 		String mobile = hp1 + hp2 + hp3;
 		
-		String dept_name = request.getParameter("dept_name");
-		System.out.println("~~~ 확인용 dept_name : " + dept_name);
-		
+		String dept_name = mrequest.getParameter("dept_name");		
 		String fk_dept_code = "";
 		String dept_tel = "";
 		if(dept_name.equals("인사부")) {
@@ -150,13 +151,11 @@ public class AdminController {
 			dept_tel = "070-1234-700";
 		} 
 		else {
-			fk_dept_code = "";
-			dept_tel = "";
+			fk_dept_code = "없음";
+			dept_tel = "없음";
 		}
 		
-		String job_name = request.getParameter("job_name");
-		System.out.println("~~~ 확인용 job_name : " + job_name);
-		
+		String job_name = mrequest.getParameter("job_name");
 		String fk_job_code = "";
 		if(job_name.equals("부장")) {
 			fk_job_code = "1";
@@ -177,17 +176,18 @@ public class AdminController {
 			fk_job_code = "6";
 		}
 		else {
-			fk_job_code = "";
+			fk_job_code = "없음";
 		}
 		
-		MemberVO mvo = new MemberVO();
-		mvo.setEmpid(request.getParameter("empid"));
-		mvo.setPwd(Sha256.encrypt(request.getParameter("pwd")));
-		mvo.setName(request.getParameter("name"));
-		mvo.setNickname(request.getParameter("nickname"));
+		mvo = new MemberVO();
+		mvo.setImgfilename(imgfilename);
+		mvo.setEmpid(mrequest.getParameter("empid"));
+		mvo.setPwd(Sha256.encrypt(mrequest.getParameter("pwd")));
+		mvo.setName(mrequest.getParameter("name"));
+		mvo.setNickname(mrequest.getParameter("nickname"));
 		mvo.setJubun(jubun);
 		try {
-			mvo.setEmail(aES256.encrypt(request.getParameter("email")));
+			mvo.setEmail(aES256.encrypt(mrequest.getParameter("email")));
 		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 			e.printStackTrace();
 		}
@@ -196,12 +196,12 @@ public class AdminController {
 		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 			e.printStackTrace();
 		}
-		mvo.setPostcode(request.getParameter("postcode"));
-		mvo.setAddress(request.getParameter("address"));
-		mvo.setDetailaddress(request.getParameter("detailaddress"));
-		mvo.setExtraaddress(request.getParameter("extraaddress"));
-		mvo.setHire_date(request.getParameter("hire_date"));
-		mvo.setSalary(request.getParameter("salary"));
+		mvo.setPostcode(mrequest.getParameter("postcode"));
+		mvo.setAddress(mrequest.getParameter("address"));
+		mvo.setDetailaddress(mrequest.getParameter("detailaddress"));
+		mvo.setExtraaddress(mrequest.getParameter("extraaddress"));
+		mvo.setHire_date(mrequest.getParameter("hire_date"));
+		mvo.setSalary(mrequest.getParameter("salary"));
 		mvo.setFk_dept_code(fk_dept_code);
 		mvo.setFk_job_code(fk_job_code);
 		mvo.setDept_tel(dept_tel);
@@ -210,7 +210,7 @@ public class AdminController {
 		
 		if(n == 1) {
 			String message = "사원정보가 정상적으로 등록되었습니다.";
-			String loc = request.getContextPath()+"/index.kedai";
+			String loc = mrequest.getContextPath()+"/index.kedai";
            
 			mav.addObject("message", message);
 			mav.addObject("loc", loc);

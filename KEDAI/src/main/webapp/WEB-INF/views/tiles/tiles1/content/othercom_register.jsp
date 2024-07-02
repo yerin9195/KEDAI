@@ -10,15 +10,6 @@
 %>
 
 <style type="text/css">
-* {
-	margin: 0;
-	padding: 0;
-}
-
-div#container {
-	
-}
-
 div#myHead {
 	height: 80px;
 	background-color: #999;
@@ -28,7 +19,7 @@ div#row {
 	display: flex !important;
 }
 
-div#myContent {
+div#register_com {
 	width: calc(100vw - 250px);
 	height: calc(100vh - 80px);
 	display: flex;
@@ -38,11 +29,8 @@ div#myContent {
 
 /* 여기서부터 시작 */
 .clientWrap {
-	width: 80%;
-	background-color: #fff;
-	box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-	border-radius: 20px;
-	padding: 0 20px;
+	width: 100%;
+
 }
 
 .clientWrap label {
@@ -169,7 +157,7 @@ div#myContent {
 </style>
 
 
-<div id="myContent">
+<div id="register_com" style="padding-right:10%;">
 	<form action="" class="clientWrap">
 		<div class="clientHeader">
 			<button
