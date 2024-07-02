@@ -166,9 +166,7 @@
 
 	<nav role="navigation" class="menu">
 		<div class="logotype">
-			<c:if test="${not empty sessionScope.loginuser}">
-				<span>${sessionScope.loginuser.name}</span>님 로그인 중
-			</c:if>
+			
 		</div>
 		<div class="overflow-container">
 			<ul class="menu-dropdown">
@@ -212,10 +210,12 @@
 					<a href="#">거래처정보</a>
 					<span class="icon"><i class="fa-solid fa-store"></i></span>
 				</li>
-				<li>
-					<a href="<%= ctxPath%>/admin/register.kedai">사원정보등록</a>
-					<span class="icon"><i class="fa-solid fa-user-plus"></i></span>
-				</li>
+				<c:if test="${sessionScope.loginuser.nickname == 'Admin'}">
+					<li>
+						<a href="<%= ctxPath%>/admin/register.kedai">사원정보등록</a>
+						<span class="icon"><i class="fa-solid fa-user-plus"></i></span>
+					</li>
+				</c:if>
 			</ul>
 		</div>
 	</nav>

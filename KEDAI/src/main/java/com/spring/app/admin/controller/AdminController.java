@@ -39,7 +39,7 @@ public class AdminController {
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 		
-	//	if(loginuser != null && "admin".equals(loginuser.getNickname())) {
+		if(loginuser != null && "admin".equals(loginuser.getNickname())) {
 			List<DeptVO> deptList = service.dept_select();
 			List<JobVO> jobList = service.job_select();
 			
@@ -47,10 +47,9 @@ public class AdminController {
 			mav.addObject("jobList", jobList); 
 		
 			mav.setViewName("tiles1/admin/register.tiles");
-			
-			return mav;
-	//	}
+		}
 		
+		return mav;
 	}
 	
 	// 아이디중복확인
@@ -114,9 +113,9 @@ public class AdminController {
 		String hp3 = mrequest.getParameter("hp3");
 		String mobile = hp1 + hp2 + hp3;
 		
-		String dept_name = mrequest.getParameter("dept_name");		
-		String fk_dept_code = null;
-		String dept_tel = null;
+		String dept_name = mrequest.getParameter("dept_name");	
+		String dept_tel = "";
+		String fk_dept_code = "";
 
 		if(dept_name.equals("인사부")) {
 			fk_dept_code = "100";
@@ -147,16 +146,13 @@ public class AdminController {
 			dept_tel = "070-1234-700";
 		} 
 		else  {
-			fk_dept_code = null;
-			dept_tel = null;
+			fk_dept_code = "";
+			dept_tel = "";
 		}
-		
-		
-		
-
-		
+	
 		String job_name = mrequest.getParameter("job_name");
-		String fk_job_code = null;
+		String fk_job_code = "";
+		
 		if(job_name.equals("부장")) {
 			fk_job_code = "1";
 		}
@@ -176,7 +172,7 @@ public class AdminController {
 			fk_job_code = "6";
 		}
 		else {
-			fk_job_code = null;
+			fk_job_code = "";
 		}
 		
 		mvo = new MemberVO();
@@ -206,18 +202,29 @@ public class AdminController {
 		mvo.setFk_job_code(fk_job_code);
 		mvo.setDept_tel(dept_tel);
 		
-		int n = service.empRegister(mvo);
-		
-		if(n == 1) {
-			String message = "사원정보가 정상적으로 등록되었습니다.";
-			String loc = mrequest.getContextPath()+"/index.kedai";
+		try {
+			int n = service.empRegister(mvo);
+			
+			if(n == 1) {
+				String message = "사원정보가 정상적으로 등록되었습니다.";
+				String loc = mrequest.getContextPath()+"/index.kedai";
+	           
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+	           
+				mav.setViewName("msg"); 
+			}
+			
+		} catch (Exception e) {
+			String message = "사원정보 등록이 실패하였습니다.\\n다시 시도해주세요.";
+			String loc = "javascript:history.back()";
            
 			mav.addObject("message", message);
 			mav.addObject("loc", loc);
            
 			mav.setViewName("msg"); 
 		}
-		
+
 		return mav;
 	}
 	
