@@ -15,7 +15,7 @@
 		    select empid, name, nickname, jubun, email, mobile, 
 		           postcode, address, detailaddress, extraaddress,
 		           imgfilename, hire_date, salary, commission_pct, point,
-		           fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave
+		           fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
 		           trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
 		    from tbl_employees 
 		    where status = 1 and empid = #{empid} and pwd = #{pwd} 

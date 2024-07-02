@@ -9,6 +9,8 @@
 <head>
 <meta charset="UTF-8">
 <title>LOGIN</title>
+<%-- Optional JavaScript --%>
+<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
 <style type="text/css">
 	.form-group input{
 		width: 400px;

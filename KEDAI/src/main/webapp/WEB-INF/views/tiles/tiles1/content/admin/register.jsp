@@ -19,8 +19,12 @@
 		color: #e68c0e;
 	}
 	span.error {
-		font-size: 12pt;
+		font-size: 10pt;
 		color: #e68c0e;
+	}
+	span#idCheckResult,
+	span#emailCheckResult {
+		font-size: 10pt;
 	}
 	button#emailcheck,
 	button#idcheck,
@@ -57,7 +61,6 @@
 </style>
 
 <script type="text/javascript">
-	
 	let b_idcheck_click = false; 
 	let b_emailcheck_click = false; 
 	let b_zipcodeSearch_click = false;
@@ -302,7 +305,6 @@
 	                else{ 
 	                    $("span#idCheckResult").html("&nbsp;&nbsp;사용 가능한 아이디입니다.").css({"color":"#2c4459", "font-weight":"bold"});
 	                }
-	    
 	            },
 	            error: function(request, status, error){
 	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -413,7 +415,6 @@
 	    $("span#emailCheckResult").empty();
 
 	} // end of function goReset() ----------
-	
 </script>
 	
 <div style="border: 0px solid red; padding: 1% 0;">
@@ -426,7 +427,7 @@
 				<img id="previewImg" />
 			</div>
 			<br>
-			<input type="file" name="imgfilename" class="infoData img_file" accept='image/*' />
+	   <%-- <input type="file" name="imgfilename" class="infoData img_file" accept='image/*' /> --%>
 		</div>
 		
 		<div class="col-10 row" id="empRegister">

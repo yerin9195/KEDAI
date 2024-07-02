@@ -37,7 +37,7 @@ public class MemberController {
 		return mav;
 	}	
 
-	@RequestMapping("login.kedai") 
+	@RequestMapping("/login.kedai") 
 	public String login(HttpServletRequest request) { // http://localhost:9099/KEDAI/login.kedai
 
 		return "login";

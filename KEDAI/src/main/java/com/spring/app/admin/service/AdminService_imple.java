@@ -46,9 +46,7 @@ public class AdminService_imple implements AdminService {
 
 	// 사원정보 등록하기
 	@Override
-	public int empRegister(MemberVO mvo) {
-		System.out.println("~~~~service " + mvo.getDept_tel());
-		
+	public int empRegister(MemberVO mvo) {		
 		int n = dao.empRegister(mvo);
 		return n;
 	}

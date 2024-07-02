@@ -218,16 +218,16 @@ FROM
     select empid, name, nickname, jubun, email, mobile, 
            postcode, address, detailaddress, extraaddress,
            imgfilename, hire_date, salary, commission_pct, point,
-           fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave
+           fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
            trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
     from tbl_employees 
-    where status = 1 and empid = #{empid} and pwd = #{pwd} 
+    where status = 1 and empid = '2010001-001' and pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
 ) E 
 CROSS JOIN 
 ( 
     select trunc(months_between(sysdate, max(logindate))) AS lastlogingap 
     from tbl_loginhistory 
-    where fk_empid = #{empid}
+    where fk_empid = '2010001-001'
 ) H
 
 insert into tbl_loginhistory(history_seq, fk_empid, logindate, clientip)
@@ -244,10 +244,42 @@ where status = 1 and name = ? and email = ?
 select empid
 from tbl_employees
 where empid = '2024100-001'
-
--- 사원정보 등록하기
-insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel,sign_img)
-values(#{empid},#{pwd},#{name},#{nickname},#{jubun},#{email},#{mobile},#{postcode},#{address},#{detailaddress},#{extraaddress},#{imgfilename},#{hire_date},#{salary},0,#{fk_dept_code},#{fk_job_code},#{dept_tel},#{sign_img})
       
 select *
-from tbl_employees;       
+from tbl_employees
+where fk_dept_code = '200'
+order by fk_job_code asc;   
+
+delete from tbl_employees
+where empid = '2010001-001'
+
+commit;
+-- 커밋 완료.
+
+select dept_code, dept_name
+from tbl_dept;
+/*
+    100	인사부
+    200	영업지원부
+    300	회계부
+    400	상품개발부
+    500	마케팅부
+    600	해외사업부
+    700	온라인사업부
+*/
+
+select job_code, job_name
+from tbl_job;
+/*
+    1	부장
+    2	과장
+    3	차장
+    4	대리
+    5	주임
+    6	사원
+*/
+
+update tbl_employees set fk_job_code = '3'
+where empid = '2014100-003'
+
+
