@@ -25,7 +25,7 @@ public class CarController {
 	@GetMapping("/carShare.kedai")
 	public ModelAndView carShare(ModelAndView mav) { // http://localhost:9099/final_project/carShare.kedai
 		
-		mav.setViewName("tiles1/carShare.tiles"); 
+		mav.setViewName("tiles1/reservation/carShare.tiles"); 
 		return mav;
 		
 	}
@@ -34,7 +34,7 @@ public class CarController {
 	@GetMapping("/carRegister.kedai")
 	public ModelAndView carRegister(ModelAndView mav) { // http://localhost:9099/final_project/carRegister.kedai
 		
-		mav.setViewName("tiles1/carRegister.tiles"); 
+		mav.setViewName("tiles1/reservation/carRegister.tiles"); 
 		return mav;
 		
 	}
@@ -43,7 +43,7 @@ public class CarController {
 	@GetMapping("/bus.kedai")
 	public ModelAndView bus(ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
 		
-		mav.setViewName("tiles1/bus.tiles"); 
+		mav.setViewName("tiles1/reservation/bus.tiles"); 
 		return mav;
 		
 	}
