@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,7 +34,7 @@ public class AdminController {
 	private AES256 aES256;
 
 	// 부서&직급 목록 조회하기
-	@GetMapping("/admin/register.kedai")
+	@RequestMapping("/admin/register.kedai")
 	public ModelAndView dept_job_select(ModelAndView mav, HttpServletRequest request) {
 		
 		HttpSession session = request.getSession();

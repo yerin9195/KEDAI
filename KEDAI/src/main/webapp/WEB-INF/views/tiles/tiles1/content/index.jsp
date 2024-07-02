@@ -6,7 +6,6 @@
 	String ctxPath = request.getContextPath();
 	//     /KEDAI
 %>
-
 <style type="text/css">
 	.nav-tabs {
 		padding-bottom: 1px;
@@ -69,12 +68,14 @@
 			
 			</div>
 			<div class="mt-3">
-				<h4>이름&nbsp;[ 닉네임 ]</h4>
-				<h5>직책</h5>
+				<h4>${(sessionScope.loginuser).name}&nbsp;[ ${(sessionScope.loginuser).nickname} ]</h4>
+				<c:if test="">
+					<h5>직책 : ${(sessionScope.loginuser).name}</h5>
+				</c:if>
 				<span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp;<fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###" /> POINT
 				<br><br>
-				[&nbsp;<a href="javascript:goEditMyInfo('${(sessionScope.loginuser).userid}','<%= ctxPath%>')">마이페이지</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;
-               	[&nbsp;<a href="javascript:goCoinPurchaseTypeChoice('${(sessionScope.loginuser).userid}','<%= ctxPath%>')">포인트충전</a>&nbsp;]
+				[&nbsp;<a href="javascript:goEditMyInfo('${(sessionScope.loginuser).empid}','<%= ctxPath%>')">마이페이지</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;
+               	[&nbsp;<a href="javascript:goCoinPurchaseTypeChoice('${(sessionScope.loginuser).empid}','<%= ctxPath%>')">포인트충전</a>&nbsp;]
 			</div>
 		</div>
 	</section>
