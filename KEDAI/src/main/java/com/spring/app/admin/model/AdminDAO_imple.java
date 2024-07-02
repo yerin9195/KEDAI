@@ -49,9 +49,12 @@ public class AdminDAO_imple implements AdminDAO {
 	// 사원정보 등록하기
 	@Override
 	public int empRegister(MemberVO mvo) {
-		System.out.println("~~~~DAO " + mvo.getDept_tel());
-		int n = sqlsession.insert("admin.empRegister", mvo);
 		
+		if(mvo.getFk_dept_code() == null) {
+		    System.out.println("~~~~~~~~~~ 확인용  fk_dept_code : " + mvo.getFk_dept_code());
+		}
+		
+		int n = sqlsession.insert("admin.empRegister", mvo);	
 		return n;
 	}
 	
