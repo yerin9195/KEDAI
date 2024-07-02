@@ -60,6 +60,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
+		Memberview();
 		
 		const modalClose = document.querySelector('.close_btn');
 		
@@ -232,6 +233,7 @@
 	}
 	
 	
+	
 </script>
 
 <div class="header">
@@ -312,7 +314,7 @@
                                 <td>2015-067A</td>
                                 <td>사원1</td>
                                 <td>회계팀</td>
-                                <td><input type="text" class="form-control" id="weekdayCountfi"></td>
+                                <td><input type="text" class="form-control" id="weekdayCountfi" readonly /></td>
                             </tr>
                         </tbody>
                     </table>
@@ -328,6 +330,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- 모달2 -->
 <div class="modal fade" id="modal2" tabindex="-1" role="dialog" style="width: 30%">
