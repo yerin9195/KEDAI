@@ -361,3 +361,6 @@ from tbl_station
 )h
 where h.pk_station_id = v.pf_station_id
 order by v.first_time asc
+
+select *
+from BIN$xO9DfSPvRe+DqMICxn5zhQ==$0;

@@ -9,14 +9,14 @@
 
 %>
 <style type="text/css">
-	table#tblProdInput {border: solid #c180ff 1px; 
+	table#tblProdInput {border: solid #2c4459; 1px; 
 	                    border-collapse: collapse; }
 	                    
-    table#tblProdInput td {border: solid #c180ff 1px; 
+    table#tblProdInput td {border: solid #2c4459; 1px; 
 	                       padding-left: 10px;
 	                       height: 50px; }
 	                       
-    .prodInputName {background-color: #e6ccff; 
+    .prodInputName {background-color: #e68c0e; 
                     font-weight: bold; }	                       	                    
 	
 	.error {color: red; font-weight: bold; font-size: 9pt;}
@@ -39,7 +39,7 @@
 
 <div align="center" style="margin-bottom: 20px;">
 
-	<div style="border: solid #c180ff 2px; width: 250px; margin-top: 20px; padding-top: 10px; padding-bottom: 10px; border-left: hidden; border-right: hidden;">       
+	<div style="border: solid #2c4459; 2px; width: 250px; margin-top: 20px; padding-top: 10px; padding-bottom: 10px; border-left: hidden; border-right: hidden;">       
 		<span style="font-size: 15pt; font-weight: bold;">카셰어링&nbsp;등록</span>	
 	</div>
 	<br/>
