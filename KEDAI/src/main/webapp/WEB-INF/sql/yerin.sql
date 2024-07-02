@@ -283,3 +283,28 @@ update tbl_employees set fk_job_code = '3'
 where empid = '2014100-003'
 
 
+
+
+-- 여기 수정하기
+SELECT empid, name, nickname, jubun, email, mobile, 
+       postcode, address, detailaddress, extraaddress,
+       imgfilename, hire_date, salary, commission_pct, point,
+       fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
+       trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap,
+       D.dept_name
+FROM
+(
+select empid, name, nickname, jubun, email, mobile, 
+       postcode, address, detailaddress, extraaddress,
+       imgfilename, hire_date, salary, commission_pct, point,
+       fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
+       trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
+from tbl_employees 
+where status = 1 and empid = '2010001-001' and pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
+) E
+LEFT JOIN
+(
+select dept_code, dept_name
+from tbl_dept
+) D
+WHERE E.fk_dept_code = D.dept_code

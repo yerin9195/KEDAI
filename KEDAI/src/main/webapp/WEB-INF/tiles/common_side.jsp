@@ -210,7 +210,7 @@
 					<a href="#">거래처정보</a>
 					<span class="icon"><i class="fa-solid fa-store"></i></span>
 				</li>
-				<c:if test="${sessionScope.loginuser.nickname == 'Admin'}">
+				<c:if test="${(sessionScope.loginuser).nickname == 'Admin'}">
 					<li>
 						<a href="<%= ctxPath%>/admin/register.kedai">사원정보등록</a>
 						<span class="icon"><i class="fa-solid fa-user-plus"></i></span>
