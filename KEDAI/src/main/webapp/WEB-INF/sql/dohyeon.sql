@@ -492,6 +492,16 @@ select column_name, comments
 from user_col_comments
 where table_name = 'TBL_CAR';
 
+-- 테이블 이름이 time_table이고, 컬럼 이름이 time_column이라고 가정합니다.
+SELECT
+    first_time,
+    TO_DATE(first_time, 'HH24:MI:SS') AS time_converted,
+    CURRENT_DATE AS current_time,
+    (CURRENT_DATE - TO_DATE(first_time, 'HH24:MI:SS')) * 24 * 60 AS minutes_difference
+FROM
+    tbl_bus;
+
+
 -- 컬럼명 주석문 확인
 select column_name, comments
 from user_col_comments
