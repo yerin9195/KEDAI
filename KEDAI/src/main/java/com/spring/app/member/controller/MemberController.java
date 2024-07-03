@@ -125,39 +125,50 @@ public class MemberController {
 	
 	// 아이디 찾기
 	@RequestMapping("/login/idFind.kedai")
-	public String idFind(HttpServletRequest request) { // http://localhost:9099/KEDAI/login/idFind.kedai
+	public String idFindEnd(HttpServletRequest request) { // http://localhost:9099/KEDAI/login/idFind.kedai
 
 		String method = request.getMethod();
-		String name = request.getParameter("name");
-		String email = request.getParameter("email");
 		
-		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("name", name);
-		try {
-			paraMap.put("email", aES256.encrypt(email));
-		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
-			e.printStackTrace();
+		if("POST".equalsIgnoreCase(method)) {
+			String name = request.getParameter("name");
+			String email = request.getParameter("email");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("name", name);
+		
+			try {
+				paraMap.put("email", aES256.encrypt(email));
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+			
+			String empid = service.idFind(paraMap);
+			System.out.println("~~~ 확인용 empid : " + empid);
+			
+			if(empid != null) {
+				request.setAttribute("empid", empid);
+			}
+			else {
+				request.setAttribute("empid", "존재하지 않습니다.");
+			}
+			
+			request.setAttribute("name", name);
+			request.setAttribute("email", email);
 		}
-		
-		String id = service.idFind(paraMap);
-		
-		if(id != null) {
-			request.setAttribute("id", id);
-		}
-		else {
-			request.setAttribute("id", "존재하지 않습니다.");
-		}
-		
-		request.setAttribute("method", method);
-		request.setAttribute("name", name);
-		request.setAttribute("email", email);
+
+		request.setAttribute("method", method);		
 	
 		return "idFind";
 	}
 	
 	// 비밀번호 찾기
-	
-	
+	@RequestMapping("/login/pwdFind.kedai")
+	public String pwdFind(HttpServletRequest request) {
+		
+		String method = request.getMethod();
+		
+		return "pwFind";
+	}
 	
 	
 	
