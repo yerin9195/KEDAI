@@ -23,6 +23,17 @@
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 
+	<!-- ==== #19. 엑셀파일다운로드를 위해  BeanNameViewResolver 추가하기 ==== -->
+    <!-- 
+		스프링 프레임워크(Spring Framework)에서 JSP가 아닌 컨트롤러를 호출하여 파일을 다운로드 하려면 다음과 같은 단계를 거쳐야 한다. 
+        BeanNameViewResolver 뷰 리졸버를 추가한 후 파일 다운로드를 처리해줄 빈을 등록한다.
+		쉽게 생각해서 파일 다운로드 처리를 해주는 view 페이지 라고 생각하면 된다. 
+    -->
+    <beans:bean id="excelDownloadView" class="com.spring.app.excel.ExcelDownloadView" /> 
+	<beans:bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+        <beans:property name="order" value="0" />
+    </beans:bean> 
+	
 	<!-- ==== #20. 실행시 모든 페이지에 기본틀이 되어지는 틀을 배치하기 위한 템플릿 프레임워크인 TilesViewResolver 를 사용하기 위해 빈으로 등록한다. ==== -->
    	<beans:bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
 		<beans:property name="definitions">
@@ -44,7 +55,7 @@
 		<beans:property name="order" value="2"/>
 	</beans:bean>
 	
-	<!-- ===== #21. 파일업로드 및 파일다운로드에 필요한 의존객체 설정하기 ===== -->
+	<!-- ==== #21. 파일업로드 및 파일다운로드에 필요한 의존객체 설정하기 ==== -->
    	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">   
    	<!-- 자바파일이 UTF-8로 저장된 경우 한글파일명이 깨지지 않게하기 위해 -->
 		<beans:property name="defaultEncoding" value="utf-8" />
