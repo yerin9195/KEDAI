@@ -547,7 +547,7 @@ $(document).ready(function(){
          dataType:"json",
          success:function(json){
             console.log(JSON.stringify(json));
-//            [{"station_name":"수원월드컵경기장.아름학교","lng":127.0402587819467,"pf_station_id":"03122","time_gap":10,"way":"경기도경제과학진흥원 방면","lat":37.28674706537582},{"station_name":"경기도경제과학진흥원","lng":127.04547963591234,"pf_station_id":"04021","time_gap":10,"way":"광교중앙.경기도청.아주대역환승센터 방면","lat":37.29079534179728},{"station_name":"광교중앙.경기도청.아주대역환승센터","lng":127.05138185376052,"pf_station_id":"04397","time_gap":10,"way":"종점","lat":37.288454732776685},{"station_name":"광교중앙.경기도청.아주대역환승센터","lng":127.05177379426947,"pf_station_id":"04396","time_gap":10,"way":"경기도경제과학진흥원 방면","lat":37.288537908037156},{"station_name":"경기도경제과학진흥원","lng":127.04516688665875,"pf_station_id":"04019","time_gap":10,"way":"수원월드컵경기장.아름학교 방면","lat":37.291135603390984},{"station_name":"수원월드컵경기장.아름학교","lng":127.0400587889236,"pf_station_id":"03123","time_gap":10,"way":"종점","lat":37.28707375972554}]
+//          [{"station_name":"수원월드컵경기장.아름학교","lng":127.0402587819467,"pf_station_id":"03122","time_gap":10,"way":"경기도경제과학진흥원 방면","lat":37.28674706537582},{"station_name":"경기도경제과학진흥원","lng":127.04547963591234,"pf_station_id":"04021","time_gap":10,"way":"광교중앙.경기도청.아주대역환승센터 방면","lat":37.29079534179728},{"station_name":"광교중앙.경기도청.아주대역환승센터","lng":127.05138185376052,"pf_station_id":"04397","time_gap":10,"way":"종점","lat":37.288454732776685},{"station_name":"광교중앙.경기도청.아주대역환승센터","lng":127.05177379426947,"pf_station_id":"04396","time_gap":10,"way":"경기도경제과학진흥원 방면","lat":37.288537908037156},{"station_name":"경기도경제과학진흥원","lng":127.04516688665875,"pf_station_id":"04019","time_gap":10,"way":"수원월드컵경기장.아름학교 방면","lat":37.291135603390984},{"station_name":"수원월드컵경기장.아름학교","lng":127.0400587889236,"pf_station_id":"03123","time_gap":10,"way":"종점","lat":37.28707375972554}]
             let html = `<table id="bus_no_route">`;
             let no = 1;
 		    var locPosition = new kakao.maps.LatLng(json[0].lat, json[0].lng);     
@@ -564,6 +564,7 @@ $(document).ready(function(){
 
                 // 마커에 클릭 이벤트 추가
                 kakao.maps.event.addListener(marker, 'click', function() {
+
                     alert(busStop.station_name);
                 });
             });
@@ -670,7 +671,7 @@ $(document).ready(function(){
   	        // == 마커 생성하기 끝 == //
          },
            error: function(request, status, error){
-               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+               alert("code11111: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
            }
       });
       
@@ -680,10 +681,111 @@ $(document).ready(function(){
    function showStation(e){
       var text = event.target.innerText;
       var pf_station_id =  (text.match(/\(([^)]+)\)/) || [])[1]; 
-      console.log("pf_station_id : " + pf_station_id);
-      
-      // 버스 정류장 선택시 지도 보여주기 ajax 시작 // 
-      
+      //console.log("pf_station_id : " + pf_station_id);
+
+      // 버스 정류장 선택시 해당위치의 인포윈도우 보여주기 ajax 시작 // 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	  
+		$.ajax({
+		         url : "<%=ctxPath%>/station_select.kedai",
+		         data:{"pf_station_id":pf_station_id},
+		         dataType:"json",
+		         success:function(json){
+//		            console.log(JSON.stringify(json));
+//		            [{"station_name":"경기도경제과학진흥원","zindex":2,"lng":127.04547963591234,"pf_station_id":"04021","way":"광교중앙.경기도청.아주대역환승센터 방면","lat":37.29079534179728,"minutes_until_next_bus":9}]
+					
+					let html =	``;
+		        	// == 지도를 담을 영역의 DOM 만들기 시작 == //
+		   	        json.forEach( (item, index) => {
+		   	     	    html += `<div class="map" id="map\${index}"></div>`;
+		   	        });                
+		   	        
+		   	        $("div#map_container").html(html);
+		   	        // == 지도를 담을 영역의 DOM 만들기 끝 == //
+		   	        
+		   	        
+		   	        // == 지도를 담을 영역의 DOM 레퍼런스 만들기 시작 == //
+		   	        const arr_mapContainer = [];
+		   	        for(let i=0; i<json.length; i++){
+		   	        	let mapContainer = document.getElementById("map"+i);
+		   	        	arr_mapContainer.push(mapContainer);
+		   	        }// end of for---------------------------
+		   	        // == 지도를 담을 영역의 DOM 레퍼런스 만들기 끝 == //
+		   	        
+		             // == 지도를 생성할때 필요한 기본 옵션 만들기 시작 == //
+		  	        const arr_options = [];
+		  	        
+		  	        json.forEach( item => {
+		  	     	    let options = {center: new kakao.maps.LatLng(item.lat, item.lng), // 지도의 중심좌표. 반드시 존재해야함.
+		  	            	 	       /*
+		  	            		  	     center 에 할당할 값은 kakao.maps.LatLng 클래스를 사용하여 생성한다.
+		  	            		  	     kakao.maps.LatLng 클래스의 2개 인자값은 첫번째 파라미터는 위도(latitude)이고, 두번째 파라미터는 경도(longitude)이다.
+		  	            		       */
+		  	            	 	       level: 4  // 지도의 레벨(확대, 축소 정도). 숫자가 클수록 축소된다. 4가 적당함.
+		  	             };
+		  	     	    
+		  	     	    arr_options.push(options);
+		  	        });
+		  	        // == 지도를 생성할때 필요한 기본 옵션 만들기 끝 == //
+		   	        
+		            // == 지도 생성 및 생성된 지도객체 리턴 시작 == // 
+		   	        const arr_mapobj = [];
+		   	        
+		   	        arr_options.forEach( (item, index) => {
+		   	     	    
+		   	        	let mapobj = new kakao.maps.Map(arr_mapContainer[index], arr_options[index]);
+		   	        	
+		   	        	arr_mapobj.push(mapobj);
+		   	        });
+		   	        // == 지도 생성 및 생성된 지도객체 리턴 끝 == //
+		   	        
+		   	        
+		   	        // == 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성함 시작 ==
+		   	        // == 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성함 시작 ==	
+		   	        arr_mapobj.forEach( item => {
+		   	        	
+		   	        	// 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성함. 	
+		       	        let mapTypeControl = new kakao.maps.MapTypeControl();
+		       	
+		       	        // 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성함.	
+		       	        let zoomControl = new kakao.maps.ZoomControl();
+		   	        	
+		   	        	// 지도 타입 컨트롤을 지도에 표시함.
+		       	        // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미함.
+		   	        	item.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);        	
+		   	        	
+		   	        	// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 지도에 표시함.
+		       	    	// kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 RIGHT는 오른쪽을 의미함.	 
+		       	    	item.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);   	
+		   	        });
+		   	        // == 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성함 끝 ==
+		   	        // == 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성함 끝 ==	
+		   	        
+		   	        // == 마커 생성하기 시작 == //
+		   	        const arr_marker = [];
+		   	        
+		   	        arr_mapobj.forEach( (item, index) => {
+		   	        	
+		   	        	let latitude = json[index].lat;
+		   	        	let longitude = json[index].lng;
+		   	        	
+		   	        	let locPosition = new kakao.maps.LatLng(latitude, longitude);
+		   	        	
+		   	        	let marker = new kakao.maps.Marker({ map: arr_mapobj[index], 
+		 	    		                                         position: locPosition // locPosition 좌표에 마커를 생성 
+		 	    			                                   });
+		   	        	
+		   	        	arr_marker.push(marker);
+		   	        });
+		   	        // == 마커 생성하기 끝 == //
+		      	
+		         },
+		           error: function(request, status, error){
+		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		           }
+		      });
+ //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
    }//end of function showStation(${item.station_name}){
 </script>
 

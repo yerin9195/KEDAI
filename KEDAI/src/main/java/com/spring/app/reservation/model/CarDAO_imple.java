@@ -23,6 +23,12 @@ public class CarDAO_imple implements CarDAO {
 		return stationList;
 	}
 
+	@Override
+	public List<BusVO> getStationTimeList(String pf_station_id) {
+		List<BusVO> stationTimeList = sqlsession.selectList("reservation.getStationTimeList", pf_station_id);
+		return stationTimeList;
+	}
+
 
 
 }

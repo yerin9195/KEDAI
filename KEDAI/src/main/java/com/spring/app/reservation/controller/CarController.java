@@ -54,9 +54,10 @@ public class CarController {
 	public String bus(HttpServletRequest request) { // http://localhost:9099/final_project/bus.kedai
 
 		String bus_no = request.getParameter("bus_no");
+		String pf_station_id = request.getParameter("pf_station_id");
 
 		List<BusVO> stationList = service.getStationList(bus_no);
-
+//		List<BusVO> stationTime = service.getStationTime(pf_station_id);
 		
 		JSONArray jsonArr = new JSONArray();				// []
 		
@@ -68,9 +69,39 @@ public class CarController {
 				jsonObj.put("way", busvo.getWay());		
 				jsonObj.put("lat", busvo.getLat());	
 				jsonObj.put("lng", busvo.getLng());
-				jsonObj.put("time_gap", busvo.getTime_gap());
 				jsonObj.put("zindex", busvo.getZindex());
+				jsonObj.put("minutes_until_next_bus", busvo.getMinutes_until_next_bus());
 				
+				jsonArr.put(jsonObj);
+			}//end of for-------------------------
+		}
+		
+		
+		return jsonArr.toString();
+		
+	}
+	
+	@ResponseBody
+	@GetMapping("/station_select.kedai")
+	public String station(HttpServletRequest request) { // http://localhost:9099/final_project/bus.kedai
+
+		String pf_station_id = request.getParameter("pf_station_id");
+//		System.out.println("~~~ 확인용 pf_station_id : "+ pf_station_id);
+		
+		List<BusVO> stationTimeList = service.getStationTimeList(pf_station_id);
+		
+		JSONArray jsonArr = new JSONArray();				// []
+		
+		if(stationTimeList != null) {
+			for(BusVO busvo : stationTimeList) {
+				JSONObject jsonObj = new JSONObject();		// {}
+				jsonObj.put("pf_station_id", busvo.getPf_station_id());	
+				jsonObj.put("station_name", busvo.getStation_name()); 
+				jsonObj.put("way", busvo.getWay());		
+				jsonObj.put("lat", busvo.getLat());	
+				jsonObj.put("lng", busvo.getLng());
+				jsonObj.put("zindex", busvo.getZindex());
+				jsonObj.put("minutes_until_next_bus", busvo.getMinutes_until_next_bus());
 				
 				jsonArr.put(jsonObj);
 			}//end of for-------------------------

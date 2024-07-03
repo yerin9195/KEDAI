@@ -14,7 +14,9 @@ public class BusVO {
 	private double lng;
 	private String way;
 	private int zindex;
+	private int minutes_until_next_bus;
 	
+
 	public int getZindex() {
 		return zindex;
 	}
@@ -81,7 +83,12 @@ public class BusVO {
 	public void setWay(String way) {
 		this.way = way;
 	}
-	
+	public int getMinutes_until_next_bus() {
+		return minutes_until_next_bus;
+	}
+	public void setMinutes_until_next_bus(int minutes_until_next_bus) {
+		this.minutes_until_next_bus = minutes_until_next_bus;
+	}
 	
 	
 

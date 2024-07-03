@@ -28,4 +28,56 @@
 		where h.pk_station_id = v.pf_station_id
 		order by v.first_time asc
 	</select>
+	
+	<resultMap id="stationTime" type="BusVO">
+       <result property="bus_no"                   column="bus_no"             javaType="String"/>
+       <result property="pf_station_id"             column="pf_station_id"         javaType="String"/>
+       <result property="station_name"             column="station_name"         javaType="String"/>
+       <result property="way"                      column="way"               javaType="String"/>
+       <result property="zindex"                   column="zindex"               javaType="int"/>
+       <result property="minutes_until_next_bus"       column="minutes_until_next_bus"   javaType="int"/>
+   </resultMap>
+   <select id="getStationTimeList" parameterType="String" resultMap="stationTime">      
+      WITH current_times
+      AS (
+            select bus_no, v.pf_station_id, h.pk_station_id, first_time, last_time, h.station_name, time_gap, lat, lng, way, current_time, zindex
+              from 
+              (
+                  select bus_no, pf_station_id, TO_DATE(first_time, 'HH24:MI') AS first_time
+                       , TO_DATE(last_time, 'HH24:MI') AS last_time, time_gap
+                       , TO_DATE(TO_CHAR(SYSDATE, 'HH24:MI'), 'HH24:MI') AS current_time
+                  from tbl_bus
+                  where pf_station_id = #{pf_station_id}
+                  order by first_time asc
+              )v cross join
+              (
+                  select pk_station_id, station_name, lat, lng, way, zindex
+                  from tbl_station
+              )h
+              where h.pk_station_id = v.pf_station_id
+              order by v.first_time asc
+          )
+      SELECT
+          bus_no, pf_station_id, station_name, way, lat, lng, zindex,
+          CASE
+           <![CDATA[
+              WHEN current_time < first_time THEN
+            ]]>
+                  ROUND((first_time - current_time) * 24 * 60)
+            <![CDATA[       
+              WHEN current_time > last_time THEN
+            ]]>
+                  NULL
+              ELSE
+                  ROUND(
+                      (time_gap - MOD(
+                          (current_time - first_time) * 24 * 60,
+                          time_gap
+                      ))
+                  )
+          END AS minutes_until_next_bus
+      FROM
+          current_times
+   </select>
+	
 </mapper>
