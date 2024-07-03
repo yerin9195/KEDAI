@@ -3,5 +3,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="salary">
+
+	<resultMap type="HashMap" id="memberMap">
+		<result property="EMPID" 		column="empid" 		javaType="String" />
+		<result property="NAME" 	column="name" 		javaType="String" />
+		<result property="FK_DEPT_CODE" column="fk_dept_code" 	javaType="String" />
+	</resultMap>
 	
+	<select id="memberListView" parameterType="String" resultType="MemberVO">
+		select empid, name, fk_dept_code
+		from tbl_employees
+	</select>
 </mapper>

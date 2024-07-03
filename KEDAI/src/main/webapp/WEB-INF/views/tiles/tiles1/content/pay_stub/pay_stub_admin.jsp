@@ -60,12 +60,11 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		Memberview();
-		
 		const modalClose = document.querySelector('.close_btn');
 		
 		$('#workListcom_btn').click(function(){
 			 $('#modal1').modal("show");
+			 Memberview();
 		});
 		$('#close').click(function(e){
 			modal.style.display = "none"
@@ -127,6 +126,63 @@
 	    });
 	    
 	});	//	end of $(document).ready(function(){--------
+		
+		
+	function Memberview(){
+		var tbody = $('#modal1table');
+		
+		 $.ajax({
+	    	 url:"<%= ctxPath%>/memberView.kedai",
+	    	 type:"get",
+	    	 dataType:"json",
+	    	 success:function(json){
+	    		 $.each(json, function(index, item) {
+	    			if("100" === item.fk_dept_code){
+	    				item.fk_dept_code = "인사부"; 
+	    			}
+	    			else if("200" === item.fk_dept_code){
+	    				item.fk_dept_code = "영업지원부";
+	    			}
+	    			else if("300" === item.fk_dept_code){
+	    				item.fk_dept_code = "회계부";
+	    			}
+	    			else if("400" === item.fk_dept_code){
+	    				item.fk_dept_code = "상품개발부";
+	    			}
+	    			else if("500" === item.fk_dept_code){
+	    				item.fk_dept_code = "마케팅부";
+	    			}
+	    			else if("600" === item.fk_dept_code){
+	    				item.fk_dept_code = "해외사업부";
+	    			}
+	    			else if("700" === item.fk_dept_code){
+	    				item.fk_dept_code = "온라인사업부";
+	    			}
+	    			else{
+	    				item.fk_dept_code = "";
+	    			
+	    			}
+	    		 
+	    		        var newRow = '<tr>';
+	    		        newRow += '<td><input type="checkbox"></td>';
+	    		        newRow += '<td>' + item.empid + '</td>'; // 사원번호
+	    		        newRow += '<td>' + item.name + '</td>'; // 사원명
+	    		        newRow += '<td>' + item.fk_dept_code + '</td>'; // 부서명
+	    		        newRow += '<td><input type="text" class="form-control" id="weekdayCountfi" readonly /></td>'; // 근무일수
+	    		        newRow += '<td><input type="text" class="form-control" readonly /></td>'; // 추가근무일수 (데이터가 없어서 비워둠)
+	    		        newRow += '</tr>';
+	    		        
+	    		        // 새로운 행을 tbody에 추가
+	    		        tbody.append(newRow);
+	    
+	    		    });
+	    	  	
+	    	 },
+	    	 error: function(request, status, error){
+			    alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			 }
+	     });
+	}
 		
 	// 날짜 가져오기 함수
 	function getDate(dateString) {
@@ -306,16 +362,11 @@
                                 <th>사원명</th>
                                 <th>부서명</th>
                                 <th>근무일수</th>
+                                <th>추가근무일수</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><button class="btn btn-secondary btn-sm">1</button></td>
-                                <td>2015-067A</td>
-                                <td>사원1</td>
-                                <td>회계팀</td>
-                                <td><input type="text" class="form-control" id="weekdayCountfi" readonly /></td>
-                            </tr>
+                        <tbody id="modal1table">
+                          
                         </tbody>
                     </table>
                 </div>

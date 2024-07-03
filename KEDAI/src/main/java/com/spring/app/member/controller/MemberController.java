@@ -1,16 +1,22 @@
 package com.spring.app.member.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.Sha256;
@@ -117,5 +123,33 @@ public class MemberController {
 	public String pay_stub_admin(HttpServletRequest request) {
 		
 		return "tiles1/pay_stub/pay_stub_admin.tiles";
+	}
+	
+	@GetMapping(value = "/memberView.kedai", produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String memberView(){
+		
+		List<MemberVO> memberList = service.memberListView();
+		
+		JSONArray jsonArr = new JSONArray(); //  [] 
+		
+		if(memberList != null) {
+			for(MemberVO vo : memberList) {
+				JSONObject jsonObj = new JSONObject();     // {}
+				if("2010001-001".equals(vo.getEmpid())) {
+					continue;
+				}
+				 
+				jsonObj.put("empid", vo.getEmpid());         
+				jsonObj.put("name", vo.getName());         
+				jsonObj.put("fk_dept_code", vo.getFk_dept_code()); 
+				
+				jsonArr.put(jsonObj); // [{"no":"101", "name":"이순신", "writeday":"2024-06-11 17:27:09"}]
+			}// end of for------------------------
+		}
+//		System.out.println(jsonArr.toString());
+		return jsonArr.toString(); // "[{"no":"101", "name":"이순신", "writeday":"2024-06-11 17:27:09"}]" 
+		                           // 또는 "[]"
+		
 	}
 }
