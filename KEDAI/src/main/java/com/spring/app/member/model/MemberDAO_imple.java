@@ -29,8 +29,8 @@ public class MemberDAO_imple implements MemberDAO {
 
 	@Override
 	public String idFind(Map<String, String> paraMap) {
-		String id = sqlsession.selectOne("member.idFind", paraMap);
-		return id;
+		String empid = sqlsession.selectOne("member.idFind", paraMap);
+		return empid;
 	} 
 	
 }
