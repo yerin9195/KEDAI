@@ -9,7 +9,7 @@ public interface CarDAO {
 
 	List<BusVO> getStationList(String bus_no);
 
-	List<BusVO> getStationTimeList(String pf_station_id);
+	List<BusVO> getStationTimeList(String pf_station_id, String bus_no);
 
 
 

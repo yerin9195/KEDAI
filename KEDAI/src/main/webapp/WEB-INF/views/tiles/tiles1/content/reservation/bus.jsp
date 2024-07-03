@@ -564,7 +564,6 @@ $(document).ready(function(){
 
                 // 마커에 클릭 이벤트 추가
                 kakao.maps.event.addListener(marker, 'click', function() {
-
                     alert(busStop.station_name);
                 });
             });
@@ -573,7 +572,8 @@ $(document).ready(function(){
             	
                html += `<tr>`;
                html += `<td rowspan='2' width="10%;"><img src='<%=ctxPath%>/resources/images/common/bus/bus\${no}.png' style="width:100%;"/></td>`;
-               html += `<td width="90%;" id="showMap" onclick="showStation(\${item.pf_station_id})">\${item.station_name}<span style="font-size: 10pt;">(</span><span style="font-size: 10pt;">\${item.pf_station_id}</span><span style="font-size: 10pt;">)</span></td>`;
+               html += `<td width="90%;" id="showMap"  onclick="showStation(event, '\${item.pf_station_id}', '\${bus_no}')">\${item.station_name}<span style="font-size: 10pt;">(</span><span style="font-size: 10pt;">\${item.pf_station_id}</span><span style="font-size: 10pt;">)</span></td>`;
+//               html += `<td width="90%;" id="showMap" onclick="showStation(\${item.pf_station_id})">\${item.station_name}<span style="font-size: 10pt;">(</span><span style="font-size: 10pt;">\${item.pf_station_id}</span><span style="font-size: 10pt;">)</span></td>`;
                html += `</tr>`;
                html += `<tr>`;
                html += `<td width="90%;" style="color: #666666;">\${item.way}<span style="display: block; border: solid 1px #2c4459;"></span></td>`;
@@ -678,23 +678,88 @@ $(document).ready(function(){
    }// end of function choiceBus() -----------------------------------------------------------------------   
    
    
-   function showStation(e){
-      var text = event.target.innerText;
-      var pf_station_id =  (text.match(/\(([^)]+)\)/) || [])[1]; 
-      //console.log("pf_station_id : " + pf_station_id);
+   function showStation(event, pf_station_id, bus_no) {
+	   var mapContainer = document.getElementById("map");
+	   
+	   // 지도를 생성할때 필요한 기본 옵션
+	   var options = {
+	           center: new kakao.maps.LatLng(37.556513150417395, 126.91951995383943), // 지도의 중심좌표. 반드시 존재해야함.
+	           <%--
+	               center 에 할당할 값은 kakao.maps.LatLng 클래스를 사용하여 생성한다.
+	               kakao.maps.LatLng 클래스의 2개 인자값은 첫번째 파라미터는 위도(latitude)이고, 두번째 파라미터는 경도(longitude)이다.
+	           --%>
+	           level: 4  // 지도의 레벨(확대, 축소 정도). 숫자가 클수록 축소된다. 4가 적당함.
+	     };
+	   
+	   // 지도 생성 및 생성된 지도객체 리턴
+	   var mapobj = new kakao.maps.Map(mapContainer, options);      
+	   // === 인포윈도우(텍스트를 올릴 수 있는 말풍선 모양의 이미지) 생성하기 === //
+	     
+	   // == 마커 위에 인포윈도우를 표시하기 == //
+	   // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+	   // 이벤트 리스너로는 클로저(closure => 함수 내에서 함수를 정의하고 사용하도록 만든것)를 만들어 등록합니다 
+	   // for문에서 클로저(closure => 함수 내에서 함수를 정의하고 사용하도록 만든것)를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+	   //kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(mapobj, marker, infowindow)); 
+   
+	   kakao.maps.event.addListener(mapobj, 'click', function(mouseEvent) {         
+	          
+	       // 클릭한 위도, 경도 정보를 가져옵니다 
+	       var latlng = mouseEvent.latLng;
+	       
+	       // 마커 위치를 클릭한 위치로 옮긴다.
+	       movingMarker.setPosition(latlng);
+	       
+	       // 인포윈도우의 내용물 변경하기 
+	       movingInfowindow.setContent("<div style='padding:5px; font-size:9pt;'>여기가 어디에요?<br/><a href='https://map.kakao.com/link/map/여기,"+latlng.getLat()+","+latlng.getLng()+"' style='color:blue;' target='_blank'>큰지도</a> <a href='https://map.kakao.com/link/to/여기,"+latlng.getLat()+","+latlng.getLng()+"' style='color:blue' target='_blank'>길찾기</a></div>");  
+	       
+	       // == 마커 위에 인포윈도우를 표시하기 == //
+	       movingInfowindow.open(mapobj, movingMarker);
+	       
+	       var htmlMessage = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, '; 
+	           htmlMessage += '경도는 ' + latlng.getLng() + ' 입니다';
+	          
+	       var resultDiv = document.getElementById("latlngResult"); 
+	       resultDiv.innerHTML = htmlMessage;
+	   });
+
+	   //console.log("pf_station_id : " + pf_station_id);
 
       // 버스 정류장 선택시 해당위치의 인포윈도우 보여주기 ajax 시작 // 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	  
 		$.ajax({
 		         url : "<%=ctxPath%>/station_select.kedai",
-		         data:{"pf_station_id":pf_station_id},
+		         data:{"pf_station_id":pf_station_id,"bus_no":bus_no},
 		         dataType:"json",
 		         success:function(json){
-//		            console.log(JSON.stringify(json));
-//		            [{"station_name":"경기도경제과학진흥원","zindex":2,"lng":127.04547963591234,"pf_station_id":"04021","way":"광교중앙.경기도청.아주대역환승센터 방면","lat":37.29079534179728,"minutes_until_next_bus":9}]
+		            console.log(JSON.stringify(json));
 					
-					let html =	``;
+				    var locPosition = new kakao.maps.LatLng(json[0].lat, json[0].lng);     
+			        
+			        mapobj.setCenter(locPosition);
+	                var markerPosition  = new kakao.maps.LatLng(json[0].lat, json[0].lng);
+	
+	                var marker = new kakao.maps.Marker({
+	                    position: markerPosition
+	                });
+	
+	                marker.setMap(mapobj);
+	
+	         	   var infowindow = new kakao.maps.InfoWindow({
+	         		  content: "정류소:" + json[0].station_name + ":" + json[0].minutes_until_next_bus + "뒤에도착", 
+	         		  removable: true,
+	        	      zIndex : 1
+	        	    });
+	        	      
+	        	    
+	        	   // == 마커 위에 인포윈도우를 표시하기 == //
+	        	   infowindow.open(mapobj, marker);
+	                // 마커에 클릭 이벤트 추가
+	                kakao.maps.event.addListener(marker, 'click', function() {
+	                    alert(json[0].station_name);
+	                });
+
+	                let html =	``;
 		        	// == 지도를 담을 영역의 DOM 만들기 시작 == //
 		   	        json.forEach( (item, index) => {
 		   	     	    html += `<div class="map" id="map\${index}"></div>`;
@@ -778,7 +843,7 @@ $(document).ready(function(){
 		   	        	arr_marker.push(marker);
 		   	        });
 		   	        // == 마커 생성하기 끝 == //
-		      	
+		      
 		         },
 		           error: function(request, status, error){
 		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);

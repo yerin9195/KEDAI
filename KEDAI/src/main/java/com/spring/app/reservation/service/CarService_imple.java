@@ -29,8 +29,8 @@ public class CarService_imple implements CarService {
 	}
 
 	@Override
-	public List<BusVO> getStationTimeList(String pf_station_id) {
-		List<BusVO> stationTimeList = dao.getStationTimeList(pf_station_id);
+	public List<BusVO> getStationTimeList(String pf_station_id, String bus_no) {
+		List<BusVO> stationTimeList = dao.getStationTimeList(bus_no,pf_station_id);
 		return stationTimeList;
 	}
 

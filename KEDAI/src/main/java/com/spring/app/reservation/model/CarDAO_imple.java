@@ -1,5 +1,6 @@
 package com.spring.app.reservation.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +25,12 @@ public class CarDAO_imple implements CarDAO {
 	}
 
 	@Override
-	public List<BusVO> getStationTimeList(String pf_station_id) {
-		List<BusVO> stationTimeList = sqlsession.selectList("reservation.getStationTimeList", pf_station_id);
+	public List<BusVO> getStationTimeList(String pf_station_id, String bus_no) {
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("bus_no", bus_no);
+		paraMap.put("pf_station_id", pf_station_id);
+		
+		List<BusVO> stationTimeList = sqlsession.selectList("reservation.getStationTimeList", paraMap);
 		return stationTimeList;
 	}
 
