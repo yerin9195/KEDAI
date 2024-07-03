@@ -208,21 +208,27 @@ where table_name = 'TBL_LOGINHISTORY';
 desc tbl_employees;
 desc tbl_loginhistory;
 
-SELECT empid, name, nickname, jubun, email, mobile, 
-       postcode, address, detailaddress, extraaddress,
-       imgfilename, hire_date, salary, commission_pct, point,
-       fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave, pwdchangegap, 
-       NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
+SELECT empid, name, nickname, jubun, gender, age, email, mobile
+     , postcode, address, detailaddress, extraaddress
+     , imgfilename, hire_date, salary, commission_pct, point
+     , fk_dept_code, dept_name, fk_job_code, job_name, dept_tel, sign_img, annual_leave, pwdchangegap
+     , NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
 FROM 
-( 
-    select empid, name, nickname, jubun, email, mobile, 
-           postcode, address, detailaddress, extraaddress,
-           imgfilename, hire_date, salary, commission_pct, point,
-           fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
-           trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
-    from tbl_employees 
+(
+    select empid, name, nickname, jubun
+         , func_gender(jubun) AS gender
+         , func_age(jubun) AS age
+         , email, mobile, postcode, address, detailaddress, extraaddress
+         , imgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
+         , fk_dept_code, nvl(D.dept_name, '부서없음') AS dept_name
+         , fk_job_code, nvl(J.job_name, '직급없음') AS job_name
+         , dept_tel, sign_img, annual_leave
+         , trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap
+    from tbl_employees E1 
+    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
     where status = 1 and empid = '2010001-001' and pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
-) E 
+) E2 
 CROSS JOIN 
 ( 
     select trunc(months_between(sysdate, max(logindate))) AS lastlogingap 
@@ -232,6 +238,10 @@ CROSS JOIN
 
 insert into tbl_loginhistory(history_seq, fk_empid, logindate, clientip)
 values(loginhistory_seq.nextval, #{empid}, default, #{clientip})
+
+select empid 
+from tbl_employees
+where status = 1 and name = '관리자' and email = 'KmwWd6gn2fheAtIEcHhtdq4ZISt5PKTmXRFHRew2vWc=';
 
 -----------------------------------------------------------------------
 
@@ -324,36 +334,9 @@ from tbl_employees;
 
 -----------------------------------------------------------------------
 
--- 여기 수정하기
-SELECT empid, name, nickname, jubun, email, mobile, 
-       postcode, address, detailaddress, extraaddress,
-       imgfilename, hire_date, salary, commission_pct, point,
-       fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
-       trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap,
-       D.dept_name
-FROM
-(
-select empid, name, nickname, jubun, email, mobile, 
-       postcode, address, detailaddress, extraaddress,
-       imgfilename, hire_date, salary, commission_pct, point,
-       fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
-       trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
-from tbl_employees 
-where status = 1 and empid = '2010001-001' and pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
-) E
-LEFT JOIN tbl_dept D
-ON E.fk_dept_code = D.dept_code
-WHERE E.fk_dept_code = D.dept_code
 
 
 
 
 
-select empid, name, nickname, jubun, email, mobile, 
-       postcode, address, detailaddress, extraaddress,
-       imgfilename, hire_date, salary, commission_pct, point,
-       fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
-       trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap,
-       nvl(D.dept_name, '관리자')
-from tbl_employees E LEFT JOIN tbl_dept D
-ON E.fk_dept_code = D.dept_code
+

@@ -95,24 +95,24 @@
 </head>
 <body>
 	<div style="margin: 5% auto; text-align: center;">
-		<div style="width: 400px; margin: 0 auto; margin-bottom: 20px;">
+		<div style="width: 400px; margin: 0 auto; margin-bottom: 3%;">
 			<img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver1.png" width="60%" class="img-fluid" />
 		</div>
 		
 		<form name="loginFrm" style="width: 400px; margin: 0 auto;">
         	<div class="form-row">    
-            	<div class="form-group" style="margin-bottom: 8px;">
+            	<div class="form-group" style="margin-bottom: 3%;">
                		<input type="text" class="form-control" name="empid" id="empid" value="" placeholder="사원아이디" />
                	</div>
    
-            	<div class="form-group" style="margin-bottom: 8px;">
+            	<div class="form-group" style="margin-bottom: 3%;">
                		<input type="password" class="form-control" name="pwd" id="pwd" value="" placeholder="비밀번호" /> 
             	</div>
          	</div>
          </form>
          
          <div style="width: 400px; margin: 0 auto;">
-         	<button class="login_btn" id="btnSubmit">로그인</button>
+         	<button type="button" class="login_btn" id="btnSubmit">로그인</button>
          	<br><br>
          	<div style="text-align: left;">
          		<input type="checkbox" id="idSave" />&nbsp;<label for="idSave">아이디 저장하기</label>

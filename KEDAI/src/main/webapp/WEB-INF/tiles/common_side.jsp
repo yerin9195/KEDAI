@@ -171,7 +171,7 @@
 		<div class="overflow-container">
 			<ul class="menu-dropdown">
 				<li>
-					<a href="#">전자결재</a>
+					<a href="<%=ctxPath%>/approval/main.kedai">전자결재</a>
 					<span class="icon"><i class="fa-regular fa-pen-to-square"></i></span>
 				</li>
 				<li>
