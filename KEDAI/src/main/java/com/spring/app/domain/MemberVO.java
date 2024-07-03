@@ -33,6 +33,9 @@ public class MemberVO {
 	private boolean requirePwdChange = false; // 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지났으면 true
 											  // 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지나지 않았으면 false
 
+	private DeptVO dvo;
+	private JobVO  jvo;
+	
 	// getters & setters
 	public String getEmpid() {
 		return empid;
@@ -232,6 +235,22 @@ public class MemberVO {
 
 	public void setAnnual_leave(int annual_leave) {
 		this.annual_leave = annual_leave;
+	}
+
+	public DeptVO getDvo() {
+		return dvo;
+	}
+
+	public void setDvo(DeptVO dvo) {
+		this.dvo = dvo;
+	}
+
+	public JobVO getJvo() {
+		return jvo;
+	}
+
+	public void setJvo(JobVO jvo) {
+		this.jvo = jvo;
 	}
 	
 }
