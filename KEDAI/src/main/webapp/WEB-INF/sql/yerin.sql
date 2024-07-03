@@ -282,6 +282,54 @@ from tbl_job;
 update tbl_employees set fk_job_code = '3'
 where empid = '2014100-003'
 
+-----------------------------------------------------------------------
+
+-- 주민번호를 입력받아서 성별을 알려주는 함수 func_gender(주민번호)을 생성 
+create or replace function func_gender 
+(p_jubun  IN  varchar2) 
+return varchar2         
+is
+    v_result varchar2(6); 
+begin
+    select case when substr(p_jubun, 7, 1) in('1', '3') then '남' else '여' end
+           INTO
+           v_result
+    from dual;
+    return v_result;
+end func_gender;
+-- Function FUNC_GENDER이(가) 컴파일되었습니다.
+
+-- 주민번호를 입력받아서 나이를 알려주는 함수 func_age(주민번호)을 생성
+create or replace function func_age
+(p_jubun  IN  varchar2) 
+return number         
+is
+    v_age number(3); 
+begin
+    select case when to_date(to_char(sysdate, 'yyyy')||substr(p_jubun, 3, 4), 'yyyymmdd') - to_date(to_char(sysdate, 'yyyymmdd'),'yyyymmdd') > 0 
+                then extract(year from sysdate) - (to_number(substr(p_jubun, 1, 2)) + case when substr(p_jubun, 7, 1) in('1', '2') then 1900 else 2000 end ) - 1 
+                else extract(year from sysdate) - (to_number(substr(p_jubun, 1, 2)) + case when substr(p_jubun, 7, 1) in('1', '2') then 1900 else 2000 end )
+           end
+           INTO
+           v_age
+    from dual;
+    return v_age;
+end func_age;
+-- Function FUNC_AGE이(가) 컴파일되었습니다.
+
+select jubun
+     , func_gender(jubun) AS gender
+     , func_age(jubun) AS age
+from tbl_employees;
+
+-----------------------------------------------------------------------
+
+
+
+
+
+
+
 
 
 
