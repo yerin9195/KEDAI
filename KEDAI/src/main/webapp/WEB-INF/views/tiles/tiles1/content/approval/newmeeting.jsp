@@ -47,6 +47,9 @@ table#approval td{
 	padding: 0%;
 }
 
+table.left_table input{
+	height : 15pt;
+}
 
 </style>
 
@@ -126,8 +129,9 @@ table#approval td{
   	   // 폼(form)을 전송(submit)
   	   	 	const frm = document.newDocFrm;
   	     	frm.method = "post";
-  	      	frm.action = "<%= ctxPath%>/approval/newDocEnd.kedai";
+  	      //frm.action = "<%= ctxPath%>/approval/newDocEnd.kedai";
   	        frm.submit();
+  	        
 		});// end of $("button#btnWrite").click(function()--------------
   	  
 				
@@ -190,7 +194,9 @@ table#approval td{
 	     
 	    });
  	     
+	    
  	     
+		
 	});// end of $(document).ready(function(){})-----------
    ///////////////////////////////////////////////////////////////////////
 
@@ -203,37 +209,37 @@ table#approval td{
 		<table class="table left_table" id="title_table" >
 			<tr>
 				<th>문서번호</th>
-				<td>1</td>
+				<td>${requestScope.doc_no}</td>
 				<th>기안일자</th>
 				<td>
-					<input type="text" name="created_date" id="datepicker" maxlength="8" style="height : 15pt;" size="8" />
+					<input type="text" name="created_date" id="datepicker" maxlength="8" size="8" />
                 </td>
 			</tr>
 			<tr>
 				<th>기안자</th>
-				<td>김땡땡</td>
+				<td><input type="text" name="name" value="${sessionScope.loginuser.name}" size="5" readonly /></td>
 				<th>부서</th>
-				<td>영업부</td>		
+				<td><input type="text" name="dept" value="${sessionScope.loginuser.name}" size="5"  readonly /> </td>		
 			</tr>
 		</table>
 		<table class="table left_table" id="meeting" >
 			<tr>
 				<th>주관부서</th>
-				<td>ggg</td>
+				<td><input type="text" name="meeting_room" size="30" maxlength="60" style="width : 100%;" /></td>
 			</tr>
 			<tr>
 				<th>회의일자</th>
 				<td>
-					<input type="text" name="meeting_date" id="datepicker" maxlength="8" style="height : 15pt;" size="8" />
+					<input type="text" name="meeting_date" id="datepicker" maxlength="8" size="8" />
 				</td>
 			</tr>
 			<tr>
 				<th>회의장소</th>
-				<td>gggg</td>
+				<td><input type="text" name="meeting_room" size="30" maxlength="60" style="width : 100%;" /></td>
 			</tr>
 			<tr>
 				<th>회의 참여부서</th>
-				<td>어쩌구</td>
+				<td><input type="text" name="meeting_room" size="30" maxlength="60" style="width : 100%;" /></td>
 			</tr>
 		</table>
 		

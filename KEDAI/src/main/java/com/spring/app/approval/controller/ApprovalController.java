@@ -1,5 +1,8 @@
 package com.spring.app.approval.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -26,7 +29,11 @@ public class ApprovalController {
 		String doc_type = request.getParameter("doc_type");
 	//	System.out.println(" doc_type " + doc_type);
 		
+		Map<String, String> paraMap = new HashMap<>();
+		
 		if(doc_type.equals("newdayoff")) {
+			paraMap.put("fk_doctype_code", "101");
+			
 			mav.setViewName("tiles1/approval/newdayoff.tiles");
 		}
 		else if(doc_type.equals("newmeeting")){
