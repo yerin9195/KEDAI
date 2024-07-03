@@ -324,15 +324,6 @@ from tbl_employees;
 
 -----------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
 -- 여기 수정하기
 SELECT empid, name, nickname, jubun, email, mobile, 
        postcode, address, detailaddress, extraaddress,
@@ -350,9 +341,19 @@ select empid, name, nickname, jubun, email, mobile,
 from tbl_employees 
 where status = 1 and empid = '2010001-001' and pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
 ) E
-LEFT JOIN
-(
-select dept_code, dept_name
-from tbl_dept
-) D
+LEFT JOIN tbl_dept D
+ON E.fk_dept_code = D.dept_code
 WHERE E.fk_dept_code = D.dept_code
+
+
+
+
+
+select empid, name, nickname, jubun, email, mobile, 
+       postcode, address, detailaddress, extraaddress,
+       imgfilename, hire_date, salary, commission_pct, point,
+       fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
+       trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap,
+       nvl(D.dept_name, '관리자')
+from tbl_employees E LEFT JOIN tbl_dept D
+ON E.fk_dept_code = D.dept_code
