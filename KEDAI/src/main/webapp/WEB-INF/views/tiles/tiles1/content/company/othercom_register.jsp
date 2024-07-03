@@ -287,7 +287,40 @@ div#register_com {
 		
 		
 		
-		
+		$("input#comNumber").blur( (e) => { 
+
+			const comNumber = $(e.target).val().trim();
+			if(comNumber == ""){
+					// 입력하지 않거나 공백만 입력했을 경우 
+					$(".clientWrap :input").prop("disabled", true);
+					$(e.target).prop("disabled", false);
+		      $(e.target).focus();
+	        $(e.target).parent().parent().find("span#empty.error").show();
+			}
+			
+			else{
+				$(".clientWrap :input").prop("disabled", false);
+        $(e.target).parent().parent().find("span#empty.error").hide();
+			}
+
+			const regExp_comNumber = new RegExp(/^[0-9]{3}-[0-9]{2}-[0-9]{5}$/);  
+      const bool = regExp_comNumber.test($(e.target).val());
+
+       if(!bool) {
+           
+           $(".clientWrap :input").prop("disabled", true);
+           $(e.target).prop("disabled", false);
+           $(e.target).focus();
+       
+           $(e.target).parent().parent().find("span#format.error").show();
+       }
+       else {
+           $(".clientWrap :input").prop("disabled", false);
+           $(e.target).parent().parent().find("span#format.error").hide();
+       }
+   
+	});// 아이디가  comNumber인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.       
+			
 		
 		
 		
@@ -335,12 +368,14 @@ div#register_com {
 						</label> 
 						<div class="chk_businum">
 						<label> 
-							<span>사업자등록번호&nbsp;<span class="star">*</span></span> <span class="error">사업자등록번호는 필수 입력사항입니다.</span>
+							<span>사업자등록번호&nbsp;<span class="star">*</span></span> 
 							<div style="display:flex;">
-								<input type="text" placeholder="사업자등록번호를 입력하세요."/>
+								<input type="text" id="comNumber" placeholder="사업자등록번호를 입력하세요."/>
 								<input type="button" onclick="" value="중복확인"/> 
-								
+
 							</div>
+								<span id="empty" class="error">사업자등록번호는 필수 입력사항입니다.</span> 
+								<span id="format" class="error">사업자등록번호형식이 잘못되었습니다.</span>
 						</label>
 						</div> 
 						<label> 
