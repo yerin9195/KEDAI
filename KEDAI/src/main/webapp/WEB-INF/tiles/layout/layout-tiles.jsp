@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%
-   String ctxPath = request.getContextPath();
+	String ctxPath = request.getContextPath();
+	//     /KEDAI
 %>      
 <!DOCTYPE html>
 <html>
@@ -70,7 +71,7 @@
 	  	line-height: 0;
 	}
 	#myHeader {
-		min-height: 70px;	
+		min-height: 50px;	
 		background: #2c4459;
 		align-content: center;
 	}

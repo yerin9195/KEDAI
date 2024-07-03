@@ -8,10 +8,10 @@ import org.springframework.web.servlet.ModelAndView;
 public class CompanyController {
 
 		
-	@GetMapping(value="/othercom_register.kedai")	// http://localhost:9099/kedai/othercom_list.kedai
+	@GetMapping(value="/othercom_register.kedai")	// http://localhost:9099/KEDAI/othercom_list.kedai
 	public ModelAndView other_comRegister(ModelAndView mav) {
 		
-		mav.setViewName("tiles1/othercom_register.tiles");
+		mav.setViewName("tiles1/company/othercom_register.tiles");
 		
 		return mav;
 	}
@@ -19,7 +19,7 @@ public class CompanyController {
 	@GetMapping(value="/employee.kedai")
 	public ModelAndView employee(ModelAndView mav) {
 		
-		mav.setViewName("tiles1/employee.tiles");
+		mav.setViewName("tiles1/company/employee.tiles");
 		
 		return mav;
 	}
@@ -27,7 +27,7 @@ public class CompanyController {
 	@GetMapping(value="/employeeDetail.kedai")
 	public ModelAndView employeeDetail(ModelAndView mav) {
 		
-		mav.setViewName("tiles1/employeeDetail.tiles");
+		mav.setViewName("tiles1/company/employeeDetail.tiles");
 		
 		return mav;
 	}
@@ -35,7 +35,7 @@ public class CompanyController {
 	@GetMapping(value="/othercom_list.kedai")
 	public ModelAndView otherCom_list(ModelAndView mav) {
 		
-		mav.setViewName("tiles1/othercom_list.tiles");
+		mav.setViewName("tiles1/company/othercom_list.tiles");
 		
 		return mav;
 	}
