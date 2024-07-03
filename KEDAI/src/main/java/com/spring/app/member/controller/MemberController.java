@@ -37,10 +37,18 @@ public class MemberController {
 		return mav;
 	}	
 
-	@RequestMapping("login.kedai") 
+	@RequestMapping("/login.kedai") 
 	public String login(HttpServletRequest request) { // http://localhost:9099/KEDAI/login.kedai
 
 		return "login";
+	}
+	
+	@GetMapping("/index.kedai")
+	public ModelAndView index(ModelAndView mav) { // http://localhost:9099/KEDAI/index.kedai
+		
+		mav.setViewName("tiles1/index.tiles"); 
+		
+		return mav;
 	}
 
 	// 로그인 처리하기
@@ -92,7 +100,6 @@ public class MemberController {
 					mav.setViewName("redirect:/index.kedai"); 
 				}
 			}
-			
 		}
 
 		return mav;
@@ -166,12 +173,6 @@ public class MemberController {
 	
 	
 	
-	@GetMapping("/index.kedai")
-	public ModelAndView index(ModelAndView mav) { // http://localhost:9099/KEDAI/index.kedai
-		
-		mav.setViewName("tiles1/index.tiles"); 
-		
-		return mav;
-	}
+	
 	
 }

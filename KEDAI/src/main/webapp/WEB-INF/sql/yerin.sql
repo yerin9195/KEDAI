@@ -218,16 +218,16 @@ FROM
     select empid, name, nickname, jubun, email, mobile, 
            postcode, address, detailaddress, extraaddress,
            imgfilename, hire_date, salary, commission_pct, point,
-           fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave
+           fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
            trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
     from tbl_employees 
-    where status = 1 and empid = #{empid} and pwd = #{pwd} 
+    where status = 1 and empid = '2010001-001' and pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
 ) E 
 CROSS JOIN 
 ( 
     select trunc(months_between(sysdate, max(logindate))) AS lastlogingap 
     from tbl_loginhistory 
-    where fk_empid = #{empid}
+    where fk_empid = '2010001-001'
 ) H
 
 insert into tbl_loginhistory(history_seq, fk_empid, logindate, clientip)
@@ -244,62 +244,115 @@ where status = 1 and name = ? and email = ?
 select empid
 from tbl_employees
 where empid = '2024100-001'
-
--- 사원정보 등록하기
-insert into tbl_employees(empid,pwd,name,nickname,jubun,email,mobile,postcode,address,detailaddress,extraaddress,imgfilename,hire_date,salary,commission_pct,fk_dept_code,fk_job_code,dept_tel,sign_img)
-
       
 select *
-from tbl_employees;       
+from tbl_employees
+where fk_dept_code = '200'
+order by fk_job_code asc;   
+
+delete from tbl_employees
+where empid = '2010001-001'
+
+commit;
+-- 커밋 완료.
+
+select dept_code, dept_name
+from tbl_dept;
+/*
+    100	인사부
+    200	영업지원부
+    300	회계부
+    400	상품개발부
+    500	마케팅부
+    600	해외사업부
+    700	온라인사업부
+*/
+
+select job_code, job_name
+from tbl_job;
+/*
+    1	부장
+    2	과장
+    3	차장
+    4	대리
+    5	주임
+    6	사원
+*/
+
+update tbl_employees set fk_job_code = '3'
+where empid = '2014100-003'
+
+-----------------------------------------------------------------------
+
+-- 주민번호를 입력받아서 성별을 알려주는 함수 func_gender(주민번호)을 생성 
+create or replace function func_gender 
+(p_jubun  IN  varchar2) 
+return varchar2         
+is
+    v_result varchar2(6); 
+begin
+    select case when substr(p_jubun, 7, 1) in('1', '3') then '남' else '여' end
+           INTO
+           v_result
+    from dual;
+    return v_result;
+end func_gender;
+-- Function FUNC_GENDER이(가) 컴파일되었습니다.
+
+-- 주민번호를 입력받아서 나이를 알려주는 함수 func_age(주민번호)을 생성
+create or replace function func_age
+(p_jubun  IN  varchar2) 
+return number         
+is
+    v_age number(3); 
+begin
+    select case when to_date(to_char(sysdate, 'yyyy')||substr(p_jubun, 3, 4), 'yyyymmdd') - to_date(to_char(sysdate, 'yyyymmdd'),'yyyymmdd') > 0 
+                then extract(year from sysdate) - (to_number(substr(p_jubun, 1, 2)) + case when substr(p_jubun, 7, 1) in('1', '2') then 1900 else 2000 end ) - 1 
+                else extract(year from sysdate) - (to_number(substr(p_jubun, 1, 2)) + case when substr(p_jubun, 7, 1) in('1', '2') then 1900 else 2000 end )
+           end
+           INTO
+           v_age
+    from dual;
+    return v_age;
+end func_age;
+-- Function FUNC_AGE이(가) 컴파일되었습니다.
+
+select jubun
+     , func_gender(jubun) AS gender
+     , func_age(jubun) AS age
+from tbl_employees;
+
+-----------------------------------------------------------------------
 
 
 
 
-INSERT INTO tbl_employees (
-    empid,
-    pwd,
-    name,
-    nickname,
-    jubun,
-    email,
-    mobile,
-    postcode,
-    address,
-    detailaddress,
-    extraaddress,
-    imgfilename,
-    hire_date,
-    salary,
-    commission_pct,
-    point,
-    fk_dept_code,
-    fk_job_code,
-    dept_tel,
-    lastpwdchangedate,
-    status,
-    sign_img
-) VALUES (
-    'EMP0012',
-    'password123',
-    'John Doe',
-    'JD',
-    '9001011234567',
-    'johndo@example.com',
-    '010-1234-5678',
-    '12345',
-    'Seoul',
-    'Gangnam-gu',
-    '123 Building',
-    'profile.jpg',
-    TO_DATE('2024-07-01', 'yyyy-mm-dd'),
-    50000,  -- 예시로 salary 값을 조정
-    0.05,   -- 예시로 commission_pct 값을 조정
-    100,
-    null,
-    1,
-    '02-1234-5678',
-    SYSDATE,
-    1,
-    'signature.jpg'
-);
 
+
+
+
+
+
+-- 여기 수정하기
+SELECT empid, name, nickname, jubun, email, mobile, 
+       postcode, address, detailaddress, extraaddress,
+       imgfilename, hire_date, salary, commission_pct, point,
+       fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
+       trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap,
+       D.dept_name
+FROM
+(
+select empid, name, nickname, jubun, email, mobile, 
+       postcode, address, detailaddress, extraaddress,
+       imgfilename, hire_date, salary, commission_pct, point,
+       fk_dept_code, fk_job_code, dept_tel, sign_img, annual_leave,
+       trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
+from tbl_employees 
+where status = 1 and empid = '2010001-001' and pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
+) E
+LEFT JOIN
+(
+select dept_code, dept_name
+from tbl_dept
+) D
+WHERE E.fk_dept_code = D.dept_code

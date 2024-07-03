@@ -22,6 +22,10 @@
 		font-size: 12pt;
 		color: #e68c0e;
 	}
+	span#idCheckResult,
+	span#emailCheckResult {
+		font-size: 12pt;
+	}
 	button#emailcheck,
 	button#idcheck,
 	button#zipcodeSearch {
@@ -57,7 +61,6 @@
 </style>
 
 <script type="text/javascript">
-	
 	let b_idcheck_click = false; 
 	let b_emailcheck_click = false; 
 	let b_zipcodeSearch_click = false;
@@ -296,13 +299,12 @@
 	            //	console.log(JSON.stringify(json));
 	            	
 	            	if(json.isExists){ 
-	                    $("span#idCheckResult").html("&nbsp;&nbsp;이미 사용 중 이므로 다른 아이디를 입력하세요.").css({"color":"#e68c0e", "font-weight":"bold"});
+	                    $("span#idCheckResult").html("&nbsp;&nbsp;이미 사용 중인 아이디입니다.").css({"color":"#e68c0e"});
 	                    $("input#empid").val(""); 
 	                }
 	                else{ 
-	                    $("span#idCheckResult").html("&nbsp;&nbsp;사용 가능한 아이디입니다.").css({"color":"#2c4459", "font-weight":"bold"});
+	                    $("span#idCheckResult").html("&nbsp;&nbsp;사용 가능한 아이디입니다.").css({"color":"#2c4459"});
 	                }
-	    
 	            },
 	            error: function(request, status, error){
 	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -325,11 +327,11 @@
 	            //	console.log(JSON.stringify(json));
 	            	
 	            	if(json.isExists){ 
-	                    $("span#emailCheckResult").html("&nbsp;&nbsp;이미 사용 중 이므로 다른 이메일을 입력하세요.").css({"color":"#e68c0e", "font-weight":"bold"});
+	                    $("span#emailCheckResult").html("&nbsp;&nbsp;이미 사용 중인 이메일입니다.").css({"color":"#e68c0e"});
 	                    $("input#email").val(""); 
 	                }
 	                else{ 
-	                    $("span#emailCheckResult").html("&nbsp;&nbsp;사용 가능한 이메일입니다.").css({"color":"#2c4459", "font-weight":"bold"});
+	                    $("span#emailCheckResult").html("&nbsp;&nbsp;사용 가능한 이메일입니다.").css({"color":"#2c4459"});
 	                }
 	            },
 	            error: function(request, status, error){
@@ -413,7 +415,6 @@
 	    $("span#emailCheckResult").empty();
 
 	} // end of function goReset() ----------
-	
 </script>
 	
 <div style="border: 0px solid red; padding: 1% 0;">
@@ -426,7 +427,7 @@
 				<img id="previewImg" />
 			</div>
 			<br>
-		<%-- 	<input type="file" name="imgfilename" class="infoData img_file" accept='image/*' /> --%>
+	   <%-- <input type="file" name="imgfilename" class="infoData img_file" accept='image/*' /> --%>
 		</div>
 		
 		<div class="col-10 row" id="empRegister">
