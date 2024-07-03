@@ -164,22 +164,154 @@ div#register_com {
 .chk_businum input[type="button"]{
 	width: 50%;
 }
-</style>
-<script type="text/javascript">
-	/* 사업자명 유효성검사 시작 */
-	
 
+.star,.error{
+	font-size:12px;
+	color:red;
+
+}
+
+
+
+</style>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		$("span.error").hide();
+		$("input#comName").focus();
+		
+		$("input#comName").blur((e) => {
+			
+			const comName = $(e.target).val().trim();
+			if(comName ==""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+	            /*	
+				   >>>> .prop() 와 .attr() 의 차이 <<<<	         
+			            .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
+			            .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
+				*/
+				$(".clientWrap :input").prop("disabled" ,true);
+			    $(e.target).prop("disabled", false);
+			    $(e.target).val("");
+			    
+			//  $(e.target).next().show();
+		    //  또는
+		        $(e.target).parent().find("span.error").show();
+			}
+			
+			else{
+				// 공백이 아닌 글자를 입력했을 경우
+				$(".clientWrap :input").prop("disabled" ,false);
+				
+				$(e.target).parent().find("span.error").hide();
+			}
+		
+		});  // id가 comName 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+		
+		
+		$("input#comType").blur((e) => {
+			
+			const comType = $(e.target).val().trim();
+			if(comType == ""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+				$(".clientWrap :input").prop("disabled", true);
+				$(e.target).prop("disabled", false);
+	            $(e.target).val("").focus();
+	            
+       		//  $(e.target).next().show();
+            //  또는
+	            $(e.target).parent().find("span.error").show();
+			}
+			else{
+				// 공백이 아닌 글자를 입력했을 경우
+				$(".clientWrap :input").prop("disabled",false);
+				$(e.target).parent().fidn("span.error").hide();
+			}
+			
+		});// id가 comType 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+		
+		$("input#Name").blur((e) => {
+			
+			const Name = $(e.target).val().trim();
+			if(Name == ""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+				$(".clientWrap :input").prop("disabled", true);
+				$(e.target).prop("disabled", false);
+	            $(e.target).val("").focus();
+	            
+       		//  $(e.target).next().show();
+            //  또는
+	            $(e.target).parent().find("span.error").show();
+			}
+			else{
+				// 공백이 아닌 글자를 입력했을 경우
+				$(".clientWrap :input").prop("disabled",false);
+				$(e.target).parent().fidn("span.error").hide();
+			}
+			
+		});	// id가 Name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+		
+		$("input#comEmail").blur( (e) => { 
+
+        // const regExp_email = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;  
+	    // 또는
+	       const regExp_comEmail = new RegExp(/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i);  
+	       // 이메일 정규표현식 객체 생성 
+           
+           const bool = regExp_comEmail.test($(e.target).val());
+   
+           if(!bool) {
+               // 이메일이 정규표현식에 위배된 경우 
+               
+               $(".clientWrap :input").prop("disabled", true);
+               $(e.target).prop("disabled", false);
+               $(e.target).val("").focus();
+           
+           //  $(e.target).next().show();
+           //  또는
+               $(e.target).parent().find("span.error").show();
+   
+           }
+           else {
+               // 이메일이 정규표현식에 맞는 경우 
+               $(".clientWrap :input").prop("disabled", false);
+   
+               //  $(e.target).next().hide();
+               //  또는
+               $(e.target).parent().find("span.error").hide();
+           }
+   
+       });// 아이디가  comEmail인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.       
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}); // end of $(document).ready(function(){}----------------------------
 
 </script>
 
 <div id="register_com" style="padding-right:10%;">
 	<form action="" class="clientWrap">
 		<div class="clientHeader">
-			<button
-				style="background-image: url(<%=ctxPath%>/resources/images/common/arrow-left-solid.svg)">
+			<button style="background-image: url(<%=ctxPath%>/resources/images/common/arrow-left-solid.svg)">
 				<span hidden>뒤로가기</span>
 			</button>
-			<h3>거래처<span id="">등록</span>하기</h3>
+			<h3>거래처등록하기</h3>
 		</div>
 		<div class="clientRegister">
 			<div class="rgs-profile">
@@ -192,49 +324,55 @@ div#register_com {
 				<div class="rgs-forms">
 					<div class="rgs-left">
 						<label> 
-							<span>거래처명</span> 
-							<input type="text" placeholder="거래처명을 입력하세요.">
+							<span>거래처명&nbsp;<span class="star">*</span></span> 
+							<input type="text" class="comName" id="comName" placeholder="거래처명을 입력하세요.">
+							<span class="error">거래처명은 필수 입력사항입니다.</span>
 						</label> 
 						<label> 
-							<span>거래처업종</span>
-							<input type="text" placeholder="거래처업종을 입력하세요.">
+							<span>거래처업종&nbsp;<span class="star">*</span></span> 
+							<input type="text" id="comType" placeholder="거래처업종을 입력하세요.">
+							<span class="error">거래처업종은 필수 입력사항입니다.</span>
 						</label> 
 						<div class="chk_businum">
 						<label> 
-							<span>사업자등록번호</span>
+							<span>사업자등록번호&nbsp;<span class="star">*</span></span> <span class="error">사업자등록번호는 필수 입력사항입니다.</span>
 							<div style="display:flex;">
-							<input type="text" placeholder="사업자등록번호를 입력하세요."/>
-							<input type="button" onclick="" value="중복확인"/> 
+								<input type="text" placeholder="사업자등록번호를 입력하세요."/>
+								<input type="button" onclick="" value="중복확인"/> 
+								
 							</div>
 						</label>
 						</div> 
 						<label> 
-							<span>웹사이트</span>
+							<span>웹사이트&nbsp;<span class="star">*</span></span> 
 							<input type="text" placeholder="사이트주소를 입력하세요.">
+							<span class="error">거래처 웹사이트는 필수 입력사항입니다.</span>
 						</label>
 					</div>
 					<div class="rgs-right">
 						<label> 
-							<span>담당자명</span>
-							<input type="text" placeholder="거래처명을 입력하세요.">
+							<span>담당자명&nbsp;<span class="star">*</span></span> 
+							<input type="text" id="Name" placeholder="담당자명을 입력하세요.">
+							<span class="error">담당자명은 필수 입력사항입니다.</span>
 						</label> 
 						<label> 
-							<span>담당자부서</span>
-							<input type="text" placeholder="거래처명을 입력하세요.">
+							<span>담당자부서</span> 
+							<input type="text" placeholder="담당자부서를 입력하세요.">
 						</label> 
 						<label> 
 							<span>담당자전화번호</span> 
-							<input type="text" placeholder="거래처명을 입력하세요.">
+							<input type="text" placeholder="담당자연락처를 입력하세요">
 						</label> 
 						<label>
-							<span>담당자이메일</span>
-							<input type="text" placeholder="거래처명을 입력하세요.">
+							<span>담당자이메일&nbsp;<span class="star">*</span></span>
+							<input type="text" id="comEmail" placeholder="담당자이메일을 입력하세요.">
+							<span class="error">담당자 이메일은 필수 입력사항입니다.</span>
 						</label>
 					</div>
 				</div>
 				<div class="rgs-address">
 					<label>
-						<span>주소</span>
+						<span>주소&nbsp;<span class="star">*</span></span><span class="error">거래처주소는 필수 입력사항입니다.</span>
 						<span>						
 							<input type="text" id="sample6_postcode" placeholder="우편번호">
 							<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"> 
@@ -243,6 +381,7 @@ div#register_com {
 					<input class="addfield" type="text" id="sample6_address" placeholder="주소"> 
 					<input class="addfield" type="text" id="sample6_detailAddress" placeholder="상세주소"> 
 					<input class="addfield" type="text" id="sample6_extraAddress" placeholder="참고항목">
+					
 					<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 					
 					<script>
@@ -306,8 +445,7 @@ div#register_com {
 			</div>
 		</div>
 		<div class="clientConfirm">
-			<input type="reset" value="취소"><input type="submit"
-				value="등록">
+			<input type="reset" value="취소"><input type="submit" value="등록">
 		</div>
 	</form>
 	<!--//들고가야함  -->

@@ -311,6 +311,7 @@
 		주로 워드, 엑셀, 파워포인트와 파일을 지원하며 최근의 오피스 포맷인 Office Open XML File Formats(OOXML, 즉 xml 기반의 *.docx, *.xlsx, *.pptx 등) 이나 아웃룩, 비지오, 퍼블리셔 등으로 지원 파일 포맷을 늘려가고 있다. 
 		poi-ooxml은 excel 2007이후 버전이며 이때 schemas도 같이 porting을 해줘야 xlsx 파일을 읽어들인다. 
 		poi는 excel 2007포함한 이전 버전이다.  -->
+		
       	<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml-schemas -->
       	<dependency>
         	<groupId>org.apache.poi</groupId>
