@@ -25,6 +25,7 @@ import com.spring.app.domain.JobVO;
 import com.spring.app.domain.MemberVO;
 
 @Controller 
+@RequestMapping(value = "/admin/*")
 public class AdminController {
 
 	@Autowired
@@ -34,7 +35,7 @@ public class AdminController {
 	private AES256 aES256;
 
 	// 부서&직급 목록 조회하기
-	@RequestMapping("/admin/register.kedai")
+	@RequestMapping("register.kedai")
 	public ModelAndView dept_job_select(ModelAndView mav, HttpServletRequest request) {
 		
 		HttpSession session = request.getSession();
@@ -102,7 +103,7 @@ public class AdminController {
 	}
 	
 	// 사원정보 등록하기
-	@PostMapping("/admin/empRegister.kedai")
+	@PostMapping("empRegister.kedai")
 	public ModelAndView empRegister(ModelAndView mav, MultipartHttpServletRequest mrequest, MemberVO mvo) {
 
 		String jubun1 = mrequest.getParameter("jubun1");
