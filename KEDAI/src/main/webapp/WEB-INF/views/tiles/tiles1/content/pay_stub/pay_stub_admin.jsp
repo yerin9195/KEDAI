@@ -54,15 +54,28 @@
             max-width: 50%;
         }
         
-   
+   .modal-body {
+            max-height: 500px; /* 모달의 최대 높이 설정 */
+            overflow-y: auto; /* 모달 내용의 세로 스크롤 설정 */
+        }
+        
+	#modal3 > div > div > div.modal-body > table{
+		font-size: 10pt;
+		margin: 0 auto;
+		width: 100%;
+	}
 
+   .bold-line {
+          background-color: yellow;
+    }
+	
 </style>
 
 <script type="text/javascript">
 	$(document).ready(function(){
 		const modalClose = document.querySelector('.close_btn');
 		
-		$('#workListcom_btn').click(function(){
+		$("#workListcom_btn").click(function(e){
 			 $('#modal1').modal("show");
 			 Memberview();
 		});
@@ -70,11 +83,33 @@
 			modal.style.display = "none"
 		});
 		
-		$('#workhis').click(function(e){
-			$('#modal2').modal("show");
-			initializeDatepickers();
-		});
+		// 모두선택박스 반응
+		 $(document).on('change', ".checkbox-member", function() {
+	        var allChecked = true;
+	        $(".checkbox-member").each(function() {
+	            if (!$(this).prop("checked")) {
+	                allChecked = false;
+	                return false;
+	            }
+	        });
+	
+	        if (allChecked) {
+	            $("#allCheckbox").prop("checked", true);
+	        } else {
+	            $("#allCheckbox").prop("checked", false);
+	        }
+    	});
 		
+		//	모두선택박스 컨트롤
+		$('#allCheckbox').click(function(e) {
+	        if($("#allCheckbox").is(':checked')) {
+	    		$("input[name=checkbox-member]").prop("checked", true);
+	    	} else {
+	    		$("input[name=checkbox-member]").prop("checked", false);
+	    	}
+	    
+	    });
+				
 		 // 모달1과 모달2의 상태를 확인하기 위한 변수
 		  var isModal2Open = false;
 
@@ -105,17 +140,6 @@
 		
 	
 	    //	
-	    $('#dateSave').click(function(e){
-	    	if($("#weekdayCount").val() == ""){
-	    		alert("날짜를 지정하여 주시기 바랍니다.");
-	    	}
-	    	else{
-	    		$("#weekdayCountfi").val($("#weekdayCount").val())
-	    		$('#modal2').modal("hide")
-	    		$('#start-date').datepicker('destroy'); 
-	    	}
-	    	
-	    });
 	    
 	    $('#btnClose').click(function(e){
 	    	$('#start-date').datepicker('setDate', "");
@@ -124,6 +148,10 @@
 		    $('#start-date').datepicker('destroy'); 
 		    initializeDatepickers();
 	    });
+	    
+	   $('#total_bth').click(function(e){
+		   $('#modal3').modal("show");
+	   })
 	    
 	});	//	end of $(document).ready(function(){--------
 		
@@ -164,8 +192,8 @@
 	    			}
 	    		 
 	    		        var newRow = '<tr>';
-	    		        newRow += '<td><input type="checkbox"></td>';
-	    		        newRow += '<td>' + item.empid + '</td>'; // 사원번호
+	    		        newRow += '<td><input type="checkbox" class="checkbox-member" id="checkbox-' + index + '" name="checkbox-member"></td>';
+	    		        newRow += '<td class="empid">' + item.empid + '</td>'; // 사원번호
 	    		        newRow += '<td>' + item.name + '</td>'; // 사원명
 	    		        newRow += '<td>' + item.fk_dept_code + '</td>'; // 부서명
 	    		        newRow += '<td><input type="text" class="form-control" id="weekdayCountfi" readonly /></td>'; // 근무일수
@@ -176,6 +204,44 @@
 	    		        tbody.append(newRow);
 	    
 	    		    });
+	    		 
+	    		 $('#workhis').click(function(e){
+	    			 if ($(".checkbox-member:checked").length == 0) {
+	                     alert("선택한 사원이 없습니다.");
+	                     return;
+	                 } else {
+	                     var selectedEmpIds = [];
+	                     $(".checkbox-member:checked").each(function() {
+	                         var empid = $(this).closest('tr').find('.empid').text();
+	                         selectedEmpIds.push(empid);
+	                     });
+	                     //	alert("선택한 사원의 번호: " + selectedEmpIds.join(", "));
+	                  
+    					$('#modal2').modal("show");
+    					initializeDatepickers();
+	    				 
+	    			 }
+	    		});
+	    		 
+	    		 $('#dateSave').click(function(e){
+	    		    	if($("#weekdayCount").val() == ""){
+    		    		alert("날짜를 지정하여 주시기 바랍니다.");
+    		    		return;
+    		    	}
+    		    	else{
+    		    		 var weekdayCountValue = $("#weekdayCount").val();
+
+    		    	        // Find all checked checkboxes
+    		    	        $(".checkbox-member:checked").each(function() {
+    		    	            // Find the closest tr and then find the #weekdayCountfi input inside it
+    		    	            $(this).closest('tr').find('#weekdayCountfi').val(weekdayCountValue);
+    		    	        });
+
+    		    		$('#modal2').modal("hide")
+    		    		$('#start-date').datepicker('destroy'); 
+    		    	}
+    		    	
+    		    });
 	    	  	
 	    	 },
 	    	 error: function(request, status, error){
@@ -234,8 +300,6 @@
 	        console.log("start", startDate); // startDate 로그 확인
 	        var weekdays = countWeekdays(startDate, endDate); // 평일 수 계산
 	        $("#weekdayCount").val(weekdays); // 계산된 평일 수를 #weekdayCount 입력 필드에 설정
-	    } else {
-	        console.log("One or both dates are not selected."); // 날짜가 선택되지 않은 경우 로그
 	    }
 	}
 
@@ -258,7 +322,7 @@
 	 
 	
 	function addNewRow() {
-	    const table = document.querySelector('tbody');
+		const table = document.querySelector('tbody');
 	    const newRow = table.insertRow();
 	    
 	    var today = new Date()
@@ -268,13 +332,12 @@
 	    let seq = 1;
 	    
 	    const cellsContent = [
-	        '<button>'+year+month+date+'-'+seq+'</button>',
-	        '급여구분',
-	        '대장명칭',
-	        '지급일',
-	        '지급연월',
-	        '<button>근무기록확정</button>',
-	        '<button>전체계산</button>',
+	        year+'년 0'+month+'월 급여',
+	        '급여',
+	        year+'/'+month+'/02',
+	        year+'/'+month,
+	        '<button id="workListcom_btn">근무기록확정</button>',
+	        '<button id="total_bth">전체계산</button>',
 	        '인원수',
 	        '<button>조회</button>',
 	        '<button>조회</button>',
@@ -286,7 +349,21 @@
 	        newCell.innerHTML = cellsContent[i];
 	        seq++;
 	    }
+	   
+	    // 전체계산 버튼 클릭 이벤트 바인딩
+	    newRow.querySelector('#workListcom_btn').addEventListener('click', function() {
+	    	 $('#modal1').modal("show");
+			 Memberview();
+	    });
+	    
+
+	    // 전체계산 버튼 클릭 이벤트 바인딩
+	    newRow.querySelector('#total_bth').addEventListener('click', function() {
+	        $('#modal3').modal("show");
+	    });
+	    
 	}
+	
 	
 	
 	
@@ -303,9 +380,8 @@
     <table>
         <thead>
             <tr>
-                <th>신고귀속</th>
-                <th>급여구분</th>
-                <th>대장명칭</th>
+            	<th>대장명칭</th>
+                <th>급여구분</th>                
                 <th>지급일</th>
                 <th>지급연월</th>
                 <th>사전작업</th>
@@ -318,13 +394,12 @@
         </thead>
         <tbody>
             <tr>
-                <td><button>20230701-1</button></td>
+            	<td>2023년 07월 급여</td>
                 <td>급여</td>
-                <td>2023년 07월 급여</td>
                 <td>2023/06/02</td>
                 <td>2023/06</td>
                 <td><button id="workListcom_btn">근무기록확정</button></td>
-                <td><button>전체계산</button></td>
+                <td><button id="total_bth">전체계산</button></td>
                 <td>2</td>
                 <td><button>조회</button></td>
                 <td><button>버튼</button></td>
@@ -357,7 +432,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><input type="checkbox"></th>
+                                <th><input type="checkbox" id="allCheckbox"></th>
                                 <th>사원번호</th>
                                 <th>사원명</th>
                                 <th>부서명</th>
@@ -412,5 +487,69 @@
         </div>
     </div>
 </div>
+
+<!--  계산 모달 -->>
+<div id="modal3" class="modal fade" tabindex="-1" role="dialog" style="width: 80;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+			<h5>2023년 07월 급여 명세서</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+             </button>
+            </div>
+            <div class="modal-body">
+				<table>
+			    	<thead>
+			        <tr>
+			            <th colspan="4">사원정보</th>
+			            <th colspan="5">급여 항목</th>
+			            <th colspan="7">공제 항목</th>
+			        </tr>
+			        <tr>
+			            <th>사원번호</th>
+			            <th>성명</th>
+			            <th>부서</th>
+			            <th>직위</th>
+			            <th>기본급</th>
+			            <th>식대</th>
+			            <th>연차수당</th>
+			            <th>초과근무수당</th>
+			            <th class="bold-line">지급총액</th>
+			            <th>소득세</th>
+			            <th>지방소득세</th>
+			            <th>국민연금</th>
+			            <th>건강보험</th>
+			            <th>고용보험</th>
+			            <th class="bold-line">공제총액</th>
+			            <th class="bold-line">실지급액</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        <tr>
+			            <td>2010001</td>
+			            <td>홍길동</td>
+			            <td>영업부</td>
+			            <td>사원</td>
+			            <td>3000000</td>
+			            <td>500000</td>
+			            <td>100000</td>
+			            <td>50000</td>
+			            <td>3650000</td>
+			            <td>500000</td>
+			            <td>100000</td>
+			            <td>150000</td>
+			            <td>100000</td>
+			            <td>50000</td>
+			            <td>300000</td>
+			            <td>3350000</td>
+			        </tr>
+				    </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
 	   
 </html>
