@@ -268,8 +268,10 @@ COMMENT ON COLUMN tbl_approval.approval_date IS '결재일자 ';
 
 --- 문서번호 추가하기
 
+desc tbl_job
 
-
+select *
+from tbl_job
 
     
     

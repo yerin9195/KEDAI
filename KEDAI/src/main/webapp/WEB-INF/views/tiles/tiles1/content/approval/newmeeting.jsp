@@ -206,6 +206,7 @@ table.left_table input{
 		
 		
 	}
+	
    ///////////////////////////////////////////////////////////////////////
 
 </script>	
@@ -250,9 +251,58 @@ table.left_table input{
 		</table>
 		
 		<div id="title2"> 결제라인
-			<button type="button" class="btn btn-outline-secondary btn-sm" style="margin-left:20%;" onclick="selectLine()">선택하기</button>
-		
+			<button type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal" style="margin-left:20%;" data-target="#selectLineModal" >선택하기</button>		
 		</div> 
+		
+		<!-- Modal -->
+		<!-- Modal 구성 요소는 현재 페이지 상단에 표시되는 대화 상자/팝업 창입니다. -->
+		<div class="modal fade" id="selectLineModal">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+		  	<!-- .modal-dialog-centered 클래스를 사용하여 페이지 내에서 모달을 세로 및 가로 중앙에 배치합니다. .modal-dialog 클래스를 사용하여 <div> 요소에 크기 클래스를 추가합니다.-->
+		    	<div class="modal-content">
+		      <!-- Modal header -->
+		      		<div class="modal-header">
+		        		<h5 class="modal-title">결제자 선택</h5>
+		        		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		      		</div>
+		      
+		      <!-- Modal body -->
+		      		<div class="modal-body">
+		        		<ul>
+		        			<li class="dept"><a>test</a>
+		        				<ul>
+		        					<li>1</li>
+		        					<li>2</li>
+		        					<li>3</li>
+		        					<li>4</li>
+		        					<li>5</li>
+		        				</ul>
+		        			</li>
+		        			
+		        			<li class="dept"><a>test2</a>
+		        				<ul>
+		        					<li>1</li>
+		        					<li>2</li>
+		        					<li>3</li>
+		        					<li>4</li>
+		        					<li>5</li>
+		        				</ul>
+		        			</li>
+		        		</ul>	
+		      		</div>
+		      
+		      		<!-- Modal footer -->
+		      		<div class="modal-footer">
+		        		<button type="button" class="btn btn-danger" data-dismiss="modal">취소</button>
+		        		<button type="button" class="btn btn-primary">확인</button>
+		      		</div>
+		    	</div>
+		  	</div>
+		</div>
+		
+		
+		
+		
 		<table class="table left_table" id="approval">
 			<tr style="text-align:center;">
 				<th>순서</th>
