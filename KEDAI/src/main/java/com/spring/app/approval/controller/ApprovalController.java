@@ -1,19 +1,29 @@
 package com.spring.app.approval.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.app.approval.service.ApprovalService;
+import com.spring.app.domain.MemberVO;
+
 @Controller 
 @RequestMapping(value="/approval/*") // 이렇게 하면 @GetMapping("/approval/newdoc.kedai")에서 /approval를 빼도 됨. /approval 가 붙는 효과가 있음.
 public class ApprovalController {
+	
+	@Autowired  // Type에 따라 알아서 Bean 을 주입해준다.
+	private ApprovalService service;
 	
 	@GetMapping(value = "main.kedai")
 	public ModelAndView approval(ModelAndView mav) {
@@ -31,12 +41,23 @@ public class ApprovalController {
 		
 		Map<String, String> paraMap = new HashMap<>();
 		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		
+		paraMap.put("dept_code", loginuser.getFk_dept_code());
+		
+		Date now = new Date(); // 현재시각
+		SimpleDateFormat sdfmt = new SimpleDateFormat("yyyy-MM-dd");
+		String str_now = sdfmt.format(now); // "2024-07-04"
+		String dept_name = service.getDeptNumber(paraMap);
+		mav.addObject("str_now", str_now);
+		mav.addObject("dept_name", dept_name);
+		
 		if(doc_type.equals("newdayoff")) {
-			paraMap.put("fk_doctype_code", "101");
-			
 			mav.setViewName("tiles1/approval/newdayoff.tiles");
 		}
 		else if(doc_type.equals("newmeeting")){
+			
 			mav.setViewName("tiles1/approval/newmeeting.tiles");
 		}
 		

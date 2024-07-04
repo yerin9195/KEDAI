@@ -21,13 +21,13 @@ grant connect, resource, create view, unlimited tablespace to final_orauser5;
 create table tbl_bus
 (bus_no                     VARCHAR2(30)  not null               
 ,pf_station_id              VARCHAR2(30)  not null          --��������̵�
-,first_time                 VARCHAR2(200)  not null                  --ù���ð�
-,last_time                  VARCHAR2(200)  not null                  --�����ð�
+,first_time                 VARCHAR2(5)  not null                  --ù���ð�
+,last_time                  VARCHAR2(5)  not null                  --�����ð�
 ,time_gap                   NUMBER  not null          --��������
 ,constraint PK_tbl_bus primary key(bus_no,pf_station_id)
 ,constraint FK_tbl_station_pf_station_id foreign key(pf_station_id) references tbl_station(Pk_station_id)
 );
-
+drop table tbl_bus;
 create sequence total_seq
 start with 1
 increment by 1
@@ -36,39 +36,39 @@ nominvalue
 nocycle
 nocache; 
 -- 101
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101��','03122','07:00:00','24:00:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101��','04021','07:03:00','23:57:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101��','04397','07:07:00','23:53:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101��','04396','07:11:00','23:49:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101��','04019','07:12:00','23:48:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101��','03123','07:14:00','23:46:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101번','03122','07:00','23:59','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101번','04021','07:03','23:57','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101번','04397','07:07','23:53','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101번','04396','07:11','23:49','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101번','04019','07:12','23:48','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('101번','03123','07:14','23:46','10');
 --102
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03015','07:00:00','24:00:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03039','07:03:00','23:57:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03137','07:07:00','23:53:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03107','07:11:00','23:49:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03124','07:12:00','23:48:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03122','07:14:00','23:46:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03015','07:00','23:59','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03039','07:03','23:57','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03137','07:07','23:53','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03107','07:11','23:49','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03124','07:12','23:48','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03122','07:14','23:46','10');
 
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03123','07:17:00','23:44:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03125','07:19:00','23:42:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03110','07:20:00','23:39:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03142','07:23:00','23:37:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03038','07:25:00','23:35:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102��','03017','07:28:00','23:32:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03123','07:17','23:44','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03125','07:19','23:42','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03110','07:20','23:39','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03142','07:23','23:37','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03038','07:25','23:35','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('102번','03017','07:28','23:32','10');
 commit;
 --103
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103��','03090','07:00:00','24:00:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103��','03170','07:03:00','23:57:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103��','03103','07:07:00','23:53:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103��','03172','07:11:00','23:49:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103��','03122','07:12:00','23:48:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103번','03090','07:00','23:59','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103번','03170','07:03','23:57','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103번','03103','07:07','23:53','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103번','03172','07:11','23:49','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103번','03122','07:12','23:48','10');
 
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103��','03123','07:17:00','23:44:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103��','03173','07:19:00','23:42:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103��','03104','07:20:00','23:39:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103��','03169','07:23:00','23:37:00','10');
-insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103��','03091','07:25:00','23:35:00','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103번','03123','07:17','23:44','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103번','03173','07:19','23:42','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103번','03104','07:20','23:39','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103번','03169','07:23','23:37','10');
+insert into tbl_bus(bus_no, pf_station_id, first_time, last_time, time_gap) values('103번','03091','07:25','23:35','10');
 commit;
 
 select *
@@ -299,7 +299,7 @@ from
 (
 select bus_no, pf_station_id, first_time, last_time, time_gap
 from tbl_bus
-where bus_no = '101��'
+where bus_no = '101번'
 order by first_time asc
 )v cross join
 (
@@ -352,7 +352,7 @@ from
 (
 select bus_no, pf_station_id, first_time, last_time, time_gap
 from tbl_bus
-where bus_no = '103��'
+where bus_no = '103번'
 order by first_time asc
 )v cross join
 (
@@ -492,6 +492,16 @@ select column_name, comments
 from user_col_comments
 where table_name = 'TBL_CAR';
 
+-- 테이블 이름이 time_table이고, 컬럼 이름이 time_column이라고 가정합니다.
+SELECT
+    first_time,
+    TO_DATE(first_time, 'HH24:MI:SS') AS time_converted,
+    CURRENT_DATE AS current_time,
+    (CURRENT_DATE - TO_DATE(first_time, 'HH24:MI:SS')) * 24 * 60 AS minutes_difference
+FROM
+    tbl_bus;
+
+
 -- 컬럼명 주석문 확인
 select column_name, comments
 from user_col_comments
@@ -501,3 +511,59 @@ where table_name = 'tbl_car_share';
 select column_name, comments
 from user_col_comments
 where table_name = 'tbl_day_share';
+
+select *
+from tbl_bus;
+
+desc tbl_bus;
+
+SELECT first_time
+     , LENGTH(FIRST_TIME)
+     , TO_DATE(first_time, 'HH24:MI') AS first_time
+  FROM TBL_BUS
+;
+
+SELECT TO_DATE('07:00', 'HH24:MI')
+  FROM DUAL
+;
+
+-- 몇분전 계산하기
+WITH current_times
+AS (
+      select bus_no, v.pf_station_id, h.pk_station_id, first_time, last_time, h.station_name, time_gap, lat, lng, way, current_time, zindex
+        from 
+        (
+            select bus_no, pf_station_id, TO_DATE(first_time, 'HH24:MI') AS first_time
+                 , TO_DATE(last_time, 'HH24:MI') AS last_time, time_gap
+                 , TO_DATE(TO_CHAR(SYSDATE, 'HH24:MI'), 'HH24:MI') AS current_time
+            from tbl_bus
+            where pf_station_id = '03090'
+            order by first_time asc
+        )v cross join
+        (
+            select pk_station_id, station_name, lat, lng, way, zindex
+            from tbl_station
+        )h
+        where h.pk_station_id = v.pf_station_id
+        order by v.first_time asc
+    )
+SELECT
+    bus_no, pf_station_id, station_name, way, lat, lng, zindex,
+    CASE
+            WHEN current_time < first_time THEN
+                ROUND((first_time - current_time) * 24 * 60)
+            WHEN current_time > last_time THEN
+            NULL
+        ELSE
+            ROUND(
+                (time_gap - MOD(
+                    (current_time - first_time) * 24 * 60,
+                    time_gap
+                ))
+            )
+    END AS minutes_until_next_bus
+FROM
+    current_times;
+    
+select *
+from tbl_employees

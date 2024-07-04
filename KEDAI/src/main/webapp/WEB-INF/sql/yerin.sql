@@ -250,6 +250,11 @@ select empid
 from tbl_employees
 where status = 1 and name = ? and email = ?
 
+-- 비밀번호 찾기
+select pwd
+from tbl_employees
+where status = 1 and empid = '2014100-004' and name = '이지은' and email = 'gpYWbUyoXF5e21I/zchLYZa5CieVh0uqW9c6k7/niIU=';
+
 -- 아이디 중복확인하기
 select empid
 from tbl_employees
@@ -281,6 +286,16 @@ from tbl_dept;
 select job_code, job_name
 from tbl_job;
 /*
+    1   대표이사
+    2   전무
+    3   상무
+    4   부장
+    5	과장
+    6	차장
+    7	대리
+    8	사원
+    
+    
     1	부장
     2	과장
     3	차장
@@ -289,8 +304,24 @@ from tbl_job;
     6	사원
 */
 
-update tbl_employees set fk_job_code = '3'
-where empid = '2014100-003'
+update tbl_job set job_name = '대표이사'
+where job_code = 1;
+
+insert into tbl_job(job_code, job_name)
+values(8, '사원');
+
+commit;
+-- 커밋 완료.
+
+select *
+from tbl_employees
+where fk_dept_code = '200'
+order by fk_job_code;
+
+update tbl_employees set fk_job_code = 8
+where empid = '2020200-006';
+
+commit;
 
 -----------------------------------------------------------------------
 
