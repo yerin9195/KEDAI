@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String ctxPath = request.getContextPath();
+	//	   /KEDAI
 %>
 <style type="text/css">
 	.form-control:active, 

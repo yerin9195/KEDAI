@@ -50,7 +50,7 @@
 				</div>
 			</div>
 			
-			<div class="row justify-content-between mt-2" style="border: 1px solid red; height: 200px;">
+			<div class="row justify-content-between mt-2" style="border: 1px solid red; height: 300px;">
 				<div class="col-4" style="border: 1px solid red;">
 					날씨
 				</div>
@@ -64,17 +64,13 @@
 		</div>
 		
 		<div class="col-4" style="border: 1px solid red; background: #2c4459; text-align: center; color: #fff;">
-			<div class="mt-3" style="width: 120px; height: 120px; border-radius: 50%; background: #fff; display: inline-block;">
+			<div class="mt-5" style="width: 150px; height: 150px; border-radius: 50%; background: #fff; display: inline-block;">
 			
 			</div>
 			<div class="mt-3">
 				<h4>${(sessionScope.loginuser).name}&nbsp;[ ${(sessionScope.loginuser).nickname} ]</h4>
-				<c:if test="${(sessionScope.loginuser).nickname eq 'Admin'}">
-					<h5>대표이사</h5>
-				</c:if>
-				<c:if test="${(sessionScope.loginuser).nickname ne 'Admin'}">
-					<h5>${(sessionScope.loginuser).fk_dept_code}</h5>
-				</c:if>
+				<h5>${(sessionScope.loginuser).fk_job_code}</h5>
+			
 				<span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp;<fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###" /> POINT
 				<br><br>
 				[&nbsp;<a href="javascript:goEditMyInfo('${(sessionScope.loginuser).empid}','<%= ctxPath%>')">마이페이지</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;
@@ -84,7 +80,7 @@
 	</section>
 	
 	<section class="row justify-content-between mt-2">
-		<div class="col-8 pl-0" style="border: 1px solid red; height: 300px;">
+		<div class="col-8 pl-0" style="border: 1px solid red; height: 250px;">
 			<ul class="nav nav-tabs">
 				<li class="nav-item">
 					<a class="nav-link active" data-toggle="tab" href="#home">사내공지</a>
