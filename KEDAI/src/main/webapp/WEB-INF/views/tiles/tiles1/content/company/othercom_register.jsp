@@ -175,8 +175,13 @@ div#register_com {
 
 </style>
 
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <script type="text/javascript">
+	let comAddr_chk = false;
+	let partnerNo_chk = false;
+	
+	
 	$(document).ready(function(){
 		
 		$("span.error").hide();
@@ -227,7 +232,7 @@ div#register_com {
 			else{
 				// 공백이 아닌 글자를 입력했을 경우
 				$(".clientWrap :input").prop("disabled",false);
-				$(e.target).parent().fidn("span.error").hide();
+				$(e.target).parent().find("span.error").hide();
 			}
 			
 		});// id가 comType 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
@@ -248,93 +253,211 @@ div#register_com {
 			else{
 				// 공백이 아닌 글자를 입력했을 경우
 				$(".clientWrap :input").prop("disabled",false);
-				$(e.target).parent().fidn("span.error").hide();
+				$(e.target).parent().find("span.error").hide();
 			}
 			
-		});	// id가 Name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+		});	// id가 Name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.-------------------------------------------------------------
 		
 		$("input#comEmail").blur( (e) => { 
-
-        // const regExp_email = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;  
-	    // 또는
-	       const regExp_comEmail = new RegExp(/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i);  
-	       // 이메일 정규표현식 객체 생성 
-           
-           const bool = regExp_comEmail.test($(e.target).val());
-   
-           if(!bool) {
-               // 이메일이 정규표현식에 위배된 경우 
-               
-               $(".clientWrap :input").prop("disabled", true);
-               $(e.target).prop("disabled", false);
-               $(e.target).val("").focus();
-           
-           //  $(e.target).next().show();
-           //  또는
-               $(e.target).parent().find("span.error").show();
-   
-           }
-           else {
-               // 이메일이 정규표현식에 맞는 경우 
-               $(".clientWrap :input").prop("disabled", false);
-   
-               //  $(e.target).next().hide();
-               //  또는
-               $(e.target).parent().find("span.error").hide();
-           }
-   
-       });// 아이디가  comEmail인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.       
-		
-		
-		
-		$("input#comNumber").blur( (e) => { 
-
-			const comNumber = $(e.target).val().trim();
-			if(comNumber == ""){
-					// 입력하지 않거나 공백만 입력했을 경우 
-					$(".clientWrap :input").prop("disabled", true);
-					$(e.target).prop("disabled", false);
-		      $(e.target).focus();
-	        $(e.target).parent().parent().find("span#empty.error").show();
-			}
 			
+		    const comEmail = $(e.target).val().trim();
+		    if (comEmail == "") {
+		        // 입력하지 않거나 공백만 입력했을 경우 
+		        $(".clientWrap :input").prop("disabled", true);
+		        $(e.target).prop("disabled", false);
+		        $(e.target).focus();
+		        $(e.target).parent().find("span#email_empty.error").show();
+		        // 중복된 숨기기 코드를 제거했습니다.
+		    } else {
+		        $(".clientWrap :input").prop("disabled", false);
+		        $(e.target).parent().find("span#email_empty.error").hide();
+
+		        const regExp_comEmail = new RegExp(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i);
+		        const bool = regExp_comEmail.test(comEmail); // $(e.target).val() 대신 comEmail 사용
+
+		        if (!bool) {
+		            $(".clientWrap :input").prop("disabled", true);
+		            $(e.target).prop("disabled", false);
+		            $(e.target).focus();
+		            $(e.target).parent().find("span#email_format.error").show();
+		            $(e.target).parent().find("span#email_empty.error").hide();
+		        } else {
+		            $(".clientWrap :input").prop("disabled", false);
+		            
+		            $(e.target).parent().find("span#email_format.error").hide();
+		            $(e.target).parent().find("span#email_empty.error").hide();
+		        }
+		    }
+		
+       });// 아이디가  comEmail인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다. --> 거래처담당자 이메일 확인-------------------------------------
+		
+       
+       // 사업자등록번호 유효성검사 // 
+	   $("input#partnerNo").blur( (e) => {
+			const comNumber = $(e.target).val().trim();
+		
+			if(partnerNo == ""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+				$(".clientWrap :input").prop("disabled", true);
+				$(e.target).prop("disabled", false);
+	     		$(e.target).focus();
+	        	$(e.target).parent().parent().find("span#empty.error").show();
+	        	
+	        	$(e.target).parent().parent().find("span#format.error").hide();
+			}
 			else{
 				$(".clientWrap :input").prop("disabled", false);
-        $(e.target).parent().parent().find("span#empty.error").hide();
-			}
+	    		$(e.target).parent().parent().find("span#empty.error").hide();
+	    		
+	    		
+	    		const regExp_partnerNo = new RegExp(/^[0-9]{3}-[0-9]{2}-[0-9]{5}$/);  
+	     		const bool = regExp_partnerNo.test($(e.target).val());
+	
+	    		if(!bool) {
+		           $(".clientWrap :input").prop("disabled", true);
+		           $(e.target).prop("disabled", false);
+		           $(e.target).focus();
+		           $(e.target).parent().parent().find("span#format.error").show();
+		           
+		           $(e.target).parent().parent().find("span#empty.error").hide();
+	    	    }
+	    	    else {
+		           $(".clientWrap :input").prop("disabled", false);
+		           $(e.target).parent().parent().find("span#format.error").hide();
+		           $(e.target).parent().parent().find("span#empty.error").hide();
+	    	    }
+	    		
+		    }
+	   }); // 아이디가  comNumber인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.     */   
+		
+      ////////////////////////////////////////////////////////////////////////////////////
+	  
+      $("input#partnerNo_chk").click(function(){// "사업자 등록번호" 가 이미 있는지 확인하는 이벤트  
+    	  partnerNo_chk = true;
+      	   
+      	  $.ajax({
+      		  url:"<%=ctxPath%>/partnerNoCheck.kedai",
+      		  data:{"partnerNo":$("input#partnerNo").val()},
+      		  type:"post",
+      		  async: true,
+      		  dataType:"json",
+      		  success: function(json){
+      			  if(json.isExists){
+      				  $("span#partNoChkResult").html("&nbsp;이미 등록된 사업자등록번호 입니다.").css({"color":"red"});
+      			  	  $("input#partnerNo").val("");
+      			  	  
+      			  }
+      			  else{
+      				  $("span#partNoChkResult").html("&nbsp;등록가능한 사업자등록번호입니다.").css({"color":"blue"});
+      			  }
+      		  },
+	      	  error: function(request, status, error){
+	          		alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	          }
+      	  });
+      		
 
-			const regExp_comNumber = new RegExp(/^[0-9]{3}-[0-9]{2}-[0-9]{5}$/);  
-      const bool = regExp_comNumber.test($(e.target).val());
-
-       if(!bool) {
-           
-           $(".clientWrap :input").prop("disabled", true);
-           $(e.target).prop("disabled", false);
-           $(e.target).focus();
-       
-           $(e.target).parent().parent().find("span#format.error").show();
-       }
-       else {
-           $(".clientWrap :input").prop("disabled", false);
-           $(e.target).parent().parent().find("span#format.error").hide();
-       }
-   
-	});// 아이디가  comNumber인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.       
+      });
+      
+      
+      
+      
+      
+      
+	  ////////////////////////////////////////////////////////////////////////////////////////
+		
+		$("input#comWebsite").blur((e) => {
 			
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+			const comWebsite = $(e.target).val().trim();
+			if(comWebsite == ""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+				$(".clientWrap :input").prop("disabled", true);
+				$(e.target).prop("disabled", false);
+	            $(e.target).val("").focus();
+	            
+	            $(e.target).parent().find("span.error").show();
+			}
+			else{
+				// 공백이 아닌 글자를 입력했을 경우
+				$(".clientWrap :input").prop("disabled",false);
+				$(e.target).parent().find("span.error").hide();
+			}
+			
+		});	// id가 comWebsite 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+
+		/////////////////////////////////////////////////////////////////////////////
 		
 		
 	}); // end of $(document).ready(function(){}----------------------------
+	
+			
+	// Function Declaration		
+	// 주소찾기
+	$("input#com_postcode").attr("readonly",true);
+	$("input#com_address").attr("readonly",true);
+	$("input#com_extraAddress").attr("readonly",true);
+	
+	function comDaumPostcode() {
+		new daum.Postcode({
+			oncomplete : function(data) {
+				// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+				// 각 주소의 노출 규칙에 따라 주소를 조합한다.
+				// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+				var addr = ''; // 주소 변수
+				var extraAddr = ''; // 참고항목 변수
+
+				//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+				if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+					addr = data.roadAddress;
+				} else { // 사용자가 지번 주소를 선택했을 경우(J)
+					addr = data.jibunAddress;
+				}
+
+				// 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+				if (data.userSelectedType === 'R') {
+					// 법정동명이 있을 경우 추가한다. (법정리는 제외)
+					// 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+					if (data.bname !== ''
+							&& /[동|로|가]$/g
+									.test(data.bname)) {
+						extraAddr += data.bname;
+					}
+					// 건물명이 있고, 공동주택일 경우 추가한다.
+					if (data.buildingName !== ''
+							&& data.apartment === 'Y') {
+						extraAddr += (extraAddr !== '' ? ', '
+								+ data.buildingName
+								: data.buildingName);
+					}
+					// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+					if (extraAddr !== '') {
+						extraAddr = ' ('
+								+ extraAddr + ')';
+					}
+					// 조합된 참고항목을 해당 필드에 넣는다.
+					document
+							.getElementById("com_extraAddress").value = extraAddr;
+
+				} else {
+					document
+							.getElementById("com_extraAddress").value = '';
+				}
+
+				// 우편번호와 주소 정보를 해당 필드에 넣는다.
+				document.getElementById('com_postcode').value = data.zonecode;
+				document.getElementById("com_address").value = addr;
+				// 커서를 상세주소 필드로 이동한다.
+				document.getElementById("com_detailAddress").focus();
+			}
+		}).open();
+		
+		$("input#com_postcode").attr("readonly",true);
+		$("input#com_address").attr("readonly",true);
+		$("input#com_extraAddress").attr("readonly",true);
+		
+		
+	}// end of function comDaumPostcode()-----------------------------			
 
 </script>
 
@@ -370,17 +493,17 @@ div#register_com {
 						<label> 
 							<span>사업자등록번호&nbsp;<span class="star">*</span></span> 
 							<div style="display:flex;">
-								<input type="text" id="comNumber" placeholder="사업자등록번호를 입력하세요."/>
-								<input type="button" onclick="" value="중복확인"/> 
-
+								<input type="text" id="partnerNo" placeholder="사업자등록번호를 입력하세요."/>
+								<input type="button" id="partnerNo_chk" onclick="" value="중복확인"/> 
+								<span id="partNoChkResult"></span>
 							</div>
-								<span id="empty" class="error">사업자등록번호는 필수 입력사항입니다.</span> 
-								<span id="format" class="error">사업자등록번호형식이 잘못되었습니다.</span>
+							<span id="empty" class="error">사업자등록번호는 필수 입력사항입니다.</span> 
+							<span id="format" class="error">사업자등록번호형식이 잘못되었습니다.</span>
 						</label>
 						</div> 
 						<label> 
 							<span>웹사이트&nbsp;<span class="star">*</span></span> 
-							<input type="text" placeholder="사이트주소를 입력하세요.">
+							<input type="text" id="comWebsite" placeholder="사이트주소를 입력하세요.">
 							<span class="error">거래처 웹사이트는 필수 입력사항입니다.</span>
 						</label>
 					</div>
@@ -401,7 +524,8 @@ div#register_com {
 						<label>
 							<span>담당자이메일&nbsp;<span class="star">*</span></span>
 							<input type="text" id="comEmail" placeholder="담당자이메일을 입력하세요.">
-							<span class="error">담당자 이메일은 필수 입력사항입니다.</span>
+							<span id="email_empty" class="error">담당자 이메일은 필수 입력사항입니다.</span>
+							<span id="email_format" class="error">이메일 형식이 잘못되었습니다.</span>
 						</label>
 					</div>
 				</div>
@@ -409,73 +533,13 @@ div#register_com {
 					<label>
 						<span>주소&nbsp;<span class="star">*</span></span><span class="error">거래처주소는 필수 입력사항입니다.</span>
 						<span>						
-							<input type="text" id="sample6_postcode" placeholder="우편번호">
-							<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"> 
+							<input type="text" id="com_postcode" placeholder="우편번호">
+							<input type="button" id="comAddr_chk" onclick="comDaumPostcode()" value="우편번호 찾기"> 
 						</span>
 					</label>
-					<input class="addfield" type="text" id="sample6_address" placeholder="주소"> 
-					<input class="addfield" type="text" id="sample6_detailAddress" placeholder="상세주소"> 
-					<input class="addfield" type="text" id="sample6_extraAddress" placeholder="참고항목">
-					
-					<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-					
-					<script>
-					function sample6_execDaumPostcode() {
-						new daum.Postcode({
-							oncomplete : function(data) {
-								// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-								// 각 주소의 노출 규칙에 따라 주소를 조합한다.
-								// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-								var addr = ''; // 주소 변수
-								var extraAddr = ''; // 참고항목 변수
-
-								//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-								if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-									addr = data.roadAddress;
-								} else { // 사용자가 지번 주소를 선택했을 경우(J)
-									addr = data.jibunAddress;
-								}
-
-								// 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-								if (data.userSelectedType === 'R') {
-									// 법정동명이 있을 경우 추가한다. (법정리는 제외)
-									// 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-									if (data.bname !== ''
-											&& /[동|로|가]$/g
-													.test(data.bname)) {
-										extraAddr += data.bname;
-									}
-									// 건물명이 있고, 공동주택일 경우 추가한다.
-									if (data.buildingName !== ''
-											&& data.apartment === 'Y') {
-										extraAddr += (extraAddr !== '' ? ', '
-												+ data.buildingName
-												: data.buildingName);
-									}
-									// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-									if (extraAddr !== '') {
-										extraAddr = ' ('
-												+ extraAddr + ')';
-									}
-									// 조합된 참고항목을 해당 필드에 넣는다.
-									document
-											.getElementById("sample6_extraAddress").value = extraAddr;
-
-								} else {
-									document
-											.getElementById("sample6_extraAddress").value = '';
-								}
-
-								// 우편번호와 주소 정보를 해당 필드에 넣는다.
-								document.getElementById('sample6_postcode').value = data.zonecode;
-								document.getElementById("sample6_address").value = addr;
-								// 커서를 상세주소 필드로 이동한다.
-								document.getElementById("sample6_detailAddress").focus();
-							}
-						}).open();
-					}
-					</script>
+					<input class="addfield" type="text" id="com_address" placeholder="주소"> 
+					<input class="addfield" type="text" id="com_detailAddress" placeholder="상세주소"> 
+					<input class="addfield" type="text" id="com_extraAddress" placeholder="참고항목">
 				</div>
 			</div>
 		</div>

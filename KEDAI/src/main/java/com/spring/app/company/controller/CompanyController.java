@@ -1,12 +1,66 @@
 package com.spring.app.company.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.spring.app.common.AES256;
+import com.spring.app.company.service.CompanyService;
 
 @Controller
 public class CompanyController {
-
+	
+	@Autowired
+	private CompanyService service;
+	
+	@Autowired
+	private AES256 aes256;
+	
+	// 거래처 사업자등록번호 이미 있는지 중복확인
+	@ResponseBody
+	@PostMapping(value="/partnerNoCheck.kedai", produces="text/plain;charset=UTF-8")
+	public String partnerNoDuplicateCheck(HttpServletRequest request) {
+		
+		String partnerNo = request.getParameter("partnerNo");
+		System.out.println("확인용 partnerNo : " + partnerNo);
+		
+		String searchPartnerNo = service.partnerNoDuplicateCheck(partnerNo);
+		
+		boolean isExists = false;
+		
+		if(searchPartnerNo != null) {
+			isExists = true;
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("isExists", isExists);
+		
+		return jsonObj.toString();
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////
 		
 	@GetMapping(value="/othercom_register.kedai")	// http://localhost:9099/KEDAI/othercom_list.kedai
 	public ModelAndView other_comRegister(ModelAndView mav) {

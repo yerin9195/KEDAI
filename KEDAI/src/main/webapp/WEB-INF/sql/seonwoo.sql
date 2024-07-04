@@ -118,10 +118,13 @@ commit;
     
 ---------------------------------------------------------------------------------------------------------------      
 
+select partner_no
+from tbl_business_part
+where partner_no = '123-15-59011'; 
 
 
-
-
+select *
+from tbl_business_part;
 
 
 
