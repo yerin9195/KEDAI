@@ -745,8 +745,19 @@ $(document).ready(function(){
 	
 	                marker.setMap(mapobj);
 	
+    	    		// == 인포윈도우에 넣을 내용물 생성하기 == 
+    	    		let html_content = "<div class='mycontent' style='text-align:center;'>"+ 
+    					       		   "  <div class='title'>"+ 
+    						           "    <span>"+json[0].station_name+"&nbsp;&nbsp;&nbsp;</span>"+  
+    						           "  </div>"+
+    						           "  <div class='desc'>"+ 
+    						           "    <span class='address'> "+ json[0].bus_no+ "</span><br>"+
+    						           "	<span class='address'> "+json[0].minutes_until_next_bus + "분뒤에도착</span>"	
+    						           "  </div>"+ 
+    						           "</div>";	
+    						           
 	         	   var infowindow = new kakao.maps.InfoWindow({
-	         		  content: "정류소:" + json[0].station_name + ":" + json[0].minutes_until_next_bus + "뒤에도착", 
+	         		  content: html_content, 
 	         		  removable: true,
 	        	      zIndex : 1
 	        	    });
