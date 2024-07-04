@@ -29,49 +29,17 @@ let b_zipcodeSearch_click = false;
 
 $(document).ready(function(){
    
-   // 로그인 유무 확인하기
-   
    // 모든 에러 메세지는 숨긴 상태에서 하나씩 show 해줄거임
    $('span.error').hide();
-   
-    $("input#email").blur( (e) => { 
-
-        // const regExp_email = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;  
-       // 또는
-          const regExp_email = new RegExp(/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i);  
-          // 이메일 정규표현식 객체 생성 
-           
-           const bool = regExp_email.test($(e.target).val());
-   
-           if(!bool) {
-               // 이메일이 정규표현식에 위배된 경우 
-               
-               $("table#tblProdInput :input").prop("disabled", true);
-               $(e.target).prop("disabled", false);
-               $(e.target).val("").focus();
-           
-           //  $(e.target).next().show();
-           //  또는
-               $(e.target).parent().find("span.error").show();
-   
-           }
-           else {
-               // 이메일이 정규표현식에 맞는 경우 
-               $("table#tblProdInput :input").prop("disabled", false);
-   
-               //  $(e.target).next().hide();
-               //  또는
-               $(e.target).parent().find("span.error").hide();
-           }
-   
-       });// 아이디가 email 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.  
-       
-
-    
-    ///////////////////////////////////////////////////////////
-
-
-// === "우편번호찾기"를 클릭했을 때 이벤트 처리하기 === //
+	
+	$("input:text[name='name']").click(function(){
+		alert("사원명은 변경 불가합니다.");
+	})
+	$("input:text[name='email']").click(function(){
+		alert("이메일은 변경 불가합니다.");
+	})
+	
+// === "출발지 우편번호찾기"를 클릭했을 때 이벤트 처리하기 === //
    $("button#departure_zipcodeSearch").click(function(){
 	
        new daum.Postcode({
@@ -124,7 +92,7 @@ $(document).ready(function(){
    
 });// end of $("img#zipcodeSearch").click()------------
 
-//=== "우편번호찾기"를 클릭했을 때 이벤트 처리하기 === //
+//=== "도착지 우편번호찾기"를 클릭했을 때 이벤트 처리하기 === //
 $("button#arrive_zipcodeSearch").click(function(){
 	
     new daum.Postcode({
@@ -177,6 +145,32 @@ $("button#arrive_zipcodeSearch").click(function(){
 
 });// end of $("img#zipcodeSearch").click()------------
 
+   // === 전체 datepicker 옵션 일괄 설정하기 ===  
+   //     한번의 설정으로 $("input#fromDate"), $('input#toDate')의 옵션을 모두 설정할 수 있다.
+   $(function() {
+       //모든 datepicker에 대한 공통 옵션 설정
+       $.datepicker.setDefaults({
+            dateFormat: 'yy-mm-dd' //Input Display Format 변경
+           ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
+           ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
+           ,changeYear: true //콤보박스에서 년 선택 가능
+           ,changeMonth: true //콤보박스에서 월 선택 가능                
+        // ,showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
+        // ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
+        // ,buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
+        // ,buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
+           ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
+           ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
+           ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
+           ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
+           ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
+        // ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+        // ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
+       });
+   
+    });
+   
+   ///////////////////////////////////////////////////////////////////////
    //=== jQuery UI 의 datepicker === //
    $('input#datepicker1').datepicker({
         dateFormat: 'yy-mm-dd'  //Input Display Format 변경
@@ -197,37 +191,10 @@ $("button#arrive_zipcodeSearch").click(function(){
    //  ,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
    });
    
-   // 초기값을 오늘 날짜로 설정
-   $('input#datepicker').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
+   // 시작 값이 오늘보다 이전인 경우 오류 메세지 띄우기 수정
+   // $('input#datepicker1').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
    
    
-   // === 전체 datepicker 옵션 일괄 설정하기 ===  
-   //     한번의 설정으로 $("input#fromDate"), $('input#toDate')의 옵션을 모두 설정할 수 있다.
-   $(function() {
-       //모든 datepicker에 대한 공통 옵션 설정
-       $.datepicker.setDefaults({
-            dateFormat: 'yy-mm-dd' //Input Display Format 변경
-           ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-           ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-           ,changeYear: true //콤보박스에서 년 선택 가능
-           ,changeMonth: true //콤보박스에서 월 선택 가능                
-        // ,showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
-        // ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-        // ,buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-        // ,buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
-           ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
-           ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
-           ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
-           ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
-           ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-        // ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-        // ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
-       });
-   
-    });
-   
-   ///////////////////////////////////////////////////////////////////////
-
 
    //=== jQuery UI 의 datepicker === //
    $('input#datepicker2').datepicker({
@@ -248,44 +215,14 @@ $("button#arrive_zipcodeSearch").click(function(){
    //  ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
    //  ,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
    });
-   
-   // 초기값을 오늘 날짜로 설정
-   // $('input#datepicker').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-   
-   
-   // === 전체 datepicker 옵션 일괄 설정하기 ===  
-   //     한번의 설정으로 $("input#fromDate"), $('input#toDate')의 옵션을 모두 설정할 수 있다.
-   $(function() {
-       //모든 datepicker에 대한 공통 옵션 설정
-       $.datepicker.setDefaults({
-            dateFormat: 'yy-mm-dd' //Input Display Format 변경
-           ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-           ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-           ,changeYear: true //콤보박스에서 년 선택 가능
-           ,changeMonth: true //콤보박스에서 월 선택 가능                
-        // ,showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
-        // ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-        // ,buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-        // ,buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
-           ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
-           ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
-           ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
-           ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
-           ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-        // ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-        // ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
-       });
-   
-    });
-   
+
    ///////////////////////////////////////////////////////////////////////
    
    $('input#datepicker2').bind("change", (e) => {
        if( $(e.target).val() != "") {
            $(e.target).next().hide();
        }
-   });// 생년월일에 마우스로 달력에 있는 날짜를 선택한 경우 이벤트 처리 한것 
-   
+   });
 
 ///////////////////////////////////////////////////////
 });//end of $(document).ready(function(){})---------------------------------------
@@ -313,7 +250,7 @@ function goRegister() {
  for(let i=0; i<requiredInfo_list.length; i++){
      const val = requiredInfo_list[i].value.trim();
      if(val == ""){
-         alert("선택사항외 모든 항목을 입력하셔야 합니다.");
+         alert("모든 항목을 입력하셔야 합니다.");
          b_requiredInfo = false;
          break; 
      }
@@ -334,7 +271,7 @@ function goRegister() {
  // *** "우편번호찾기" 를 클릭했는지 검사하기 끝 *** //
 
  // *** 우편번호 및 주소에 값을 입력했는지 검사하기 시작 *** //
-   const postcode = $("input#postcode").val().trim();
+   const postcode = $("input#departurepostcode").val().trim();
    const address = $("input#address").val().trim();
    const detailAddress = $("input#detailAddress").val().trim();
    const extraAddress = $("input#extraAddress").val().trim();
@@ -416,7 +353,7 @@ function goRegister() {
           <tr>
                 <td class="prodInputName">이메일&nbsp;</td>
                 <td style="border-top: hidden; border-bottom: hidden;">
-               <input type="text" name="name" style="padding: 5px;" value="${sessionScope.loginuser.email}" readonly />
+               <input type="text" name="email" style="padding: 5px;" value="${sessionScope.loginuser.email}" readonly />
                 </td>
           </tr>
             <tr>
@@ -424,18 +361,17 @@ function goRegister() {
                 <td>
                    <input type="text" name="start" id="datepicker1" maxlength="10" value="" style="padding: 5px;" placeholder = "시작일자" readonly/><span>&nbsp;~&nbsp;</span>
                    <input type="text" name="last" id="datepicker2" maxlength="10" value="" style="padding: 5px;" placeholder = "종료일자" readonly/>
-                   <span class="error compulsory">필수입력</span>
                    <span class="error period">종료일자가 시작일자보다 이전이면 안됩니다.</span>
                 </td>
             </tr>
          <tr>
             <td width="25%" class="prodInputName">출발지</td>
             <td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;">
-               <input type="text" name="departure_postcode" id="departure_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="우편번호" readonly/>&nbsp;&nbsp;
+               <input type="text" name="postcode" id="departure_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="우편번호" readonly/>&nbsp;&nbsp;
                     <%-- 우편번호 찾기 --%>
                     <button type="button" style="background-color: white; padding: 5px;" id="departure_zipcodeSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
                     <span class="error">우편번호 형식에 맞지 않습니다.</span><br>
-               <input type="text" name="departure_address" id="departure_address" size="40" maxlength="200" style="padding: 5px;" placeholder="주소" readonly/><br>
+               <input type="text" name="address" id="departure_address" size="40" maxlength="200" style="padding: 5px;" placeholder="주소" readonly/><br>
                     <input type="text" name="detailaddress" id="departure_detailAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="상세주소" />&nbsp;
                     <input type="text" name="extraaddress" id="departure_extraAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="참고항목" value="" readonly/>                            
                     <span class="error">주소를 입력하세요.</span><span class="error compulsory">필수입력</span>
@@ -444,11 +380,11 @@ function goRegister() {
          <tr>
             <td width="25%" class="prodInputName">도착지</td>
             <td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;">
-               <input type="text" name="arrive_postcode" id="arrive_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="우편번호" readonly/>&nbsp;&nbsp;
+               <input type="text" name="postcode" id="arrive_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="우편번호" readonly/>&nbsp;&nbsp;
                     <%-- 우편번호 찾기 --%>
                     <button type="button" style="background-color: white; padding: 5px;" id="arrive_zipcodeSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
                     <span class="error">우편번호 형식에 맞지 않습니다.</span><br>
-               <input type="text" name="arrive_address" id="arrive_address" size="40" maxlength="200" style="padding: 5px;" placeholder="주소" readonly/><br>
+               <input type="text" name="address" id="arrive_address" size="40" maxlength="200" style="padding: 5px;" placeholder="주소" readonly/><br>
                     <input type="text" name="detailaddress" id="arrive_detailAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="상세주소" />&nbsp;
                     <input type="text" name="extraaddress" id="arrive_extraAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="참고항목" value="" readonly/>                            
                     <span class="error">주소를 입력하세요.</span><span class="error compulsory">필수입력</span>
