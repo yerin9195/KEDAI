@@ -125,9 +125,19 @@ public class MemberController {
 		return mav;	
 	}
 	
+	// 아이디 & 비밀번호 찾기 페이지 이동
+	@GetMapping("/login/idPwdFind.kedai")
+	public String idPwdFind(HttpServletRequest request) { 
+		
+		String method = request.getMethod();
+		request.setAttribute("method", method);
+		
+		return "idPwdFind";
+	}
+	
 	// 아이디 찾기
-	@RequestMapping("/login/idFind.kedai")
-	public String idFind(HttpServletRequest request) { // http://localhost:9099/KEDAI/login/idFind.kedai
+	@PostMapping("/login/idFind.kedai")
+	public String idFind(HttpServletRequest request) { 
 
 		String method = request.getMethod();
 		
@@ -163,7 +173,7 @@ public class MemberController {
 	}
 	
 	// 비밀번호 찾기
-	@RequestMapping("/login/pwdFind.kedai")
+	@PostMapping("/login/pwdFind.kedai")
 	public String pwdFind(HttpServletRequest request) {
 		
 		String method = request.getMethod();
@@ -192,9 +202,9 @@ public class MemberController {
 				isEmpExist = true;
 			}
 			
-			if(isEmpExist) {
+			if(isEmpExist) { 
+				// 인증코드 생성하기
 				Random rnd = new Random();
-
 				String certification_code = "";
 
 				char randchar = ' ';
@@ -238,6 +248,7 @@ public class MemberController {
 		return "idPwdFind";
 	}
 	
+	// 인증코드 발송
 	@PostMapping("/login/verifyCertification.kedai")
 	public ModelAndView verifyCertification(ModelAndView mav, HttpServletRequest request) {
 		

@@ -294,14 +294,6 @@ from tbl_job;
     6	차장
     7	대리
     8	사원
-    
-    
-    1	부장
-    2	과장
-    3	차장
-    4	대리
-    5	주임
-    6	사원
 */
 
 update tbl_job set job_name = '대표이사'
@@ -318,10 +310,11 @@ from tbl_employees
 where fk_dept_code = '200'
 order by fk_job_code;
 
-update tbl_employees set fk_job_code = 8
-where empid = '2020200-006';
+update tbl_employees set fk_job_code = 1
+where empid = '2010001-001';
 
 commit;
+-- 커밋 완료.
 
 -----------------------------------------------------------------------
 
