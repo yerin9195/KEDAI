@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.AES256;
+import com.spring.app.common.GoogleMail;
 import com.spring.app.common.Sha256;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.member.service.MemberService;
@@ -125,7 +127,7 @@ public class MemberController {
 	
 	// 아이디 찾기
 	@RequestMapping("/login/idFind.kedai")
-	public String idFindEnd(HttpServletRequest request) { // http://localhost:9099/KEDAI/login/idFind.kedai
+	public String idFind(HttpServletRequest request) { // http://localhost:9099/KEDAI/login/idFind.kedai
 
 		String method = request.getMethod();
 		
@@ -142,11 +144,10 @@ public class MemberController {
 				e.printStackTrace();
 			}
 			
-			String empid = service.idFind(paraMap);
-			System.out.println("~~~ 확인용 empid : " + empid);
+			String empId = service.idFind(paraMap);
 			
-			if(empid != null) {
-				request.setAttribute("empid", empid);
+			if(empId != null) {
+				request.setAttribute("empid", empId);
 			}
 			else {
 				request.setAttribute("empid", "존재하지 않습니다.");
@@ -158,7 +159,7 @@ public class MemberController {
 
 		request.setAttribute("method", method);		
 	
-		return "idFind";
+		return "idPwdFind";
 	}
 	
 	// 비밀번호 찾기
@@ -167,9 +168,109 @@ public class MemberController {
 		
 		String method = request.getMethod();
 		
-		return "pwFind";
+		if("POST".equalsIgnoreCase(method)) {
+			String empid = request.getParameter("empid");
+			String name = request.getParameter("name");
+			String email = request.getParameter("email");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("empid", empid);
+			paraMap.put("name", name);
+			
+			try {
+				paraMap.put("email", aES256.encrypt(email));
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+			
+			String empPwd = service.pwdFind(paraMap);
+			
+			boolean isEmpExist = false;
+			boolean sendMailSuccess = false;
+
+			if(empPwd != null) {
+				isEmpExist = true;
+			}
+			
+			if(isEmpExist) {
+				Random rnd = new Random();
+
+				String certification_code = "";
+
+				char randchar = ' ';
+				for (int i=0; i<5; i++) {
+					randchar = (char) (rnd.nextInt('z' - 'a' + 1) + 'a');
+					certification_code += randchar;
+				} // end of for ---------- 
+
+				int randnum = 0;
+				for (int i=0; i<7; i++) {
+					randnum = rnd.nextInt(9 - 0 + 1) + 0;
+					certification_code += randnum;
+				} // end of for ---------- 
+				
+				GoogleMail mail = new GoogleMail();
+	            
+	            try {
+		            mail.send_certification_code(empid, name, email, certification_code);
+		            sendMailSuccess = true; 
+		            
+		            // session 불러오기
+		            HttpSession session = request.getSession();
+		            session.setAttribute("certification_code", certification_code);
+		            
+	            } catch(Exception e) { 
+	                e.printStackTrace();
+	                sendMailSuccess = false;
+	            }
+				
+			}
+			
+			request.setAttribute("isEmpExist", isEmpExist);
+			request.setAttribute("sendMailSuccess", sendMailSuccess);
+			request.setAttribute("empid", empid);
+			request.setAttribute("name", name);
+			request.setAttribute("email", email);
+		}
+		
+		request.setAttribute("method", method);	
+		
+		return "idPwdFind";
 	}
 	
+	@PostMapping("/login/verifyCertification.kedai")
+	public ModelAndView verifyCertification(ModelAndView mav, HttpServletRequest request) {
+		
+		String method = request.getMethod();
+		String empid = request.getParameter("empid");
+		
+		if("POST".equalsIgnoreCase(method)) {
+			String userCertificationCode = request.getParameter("userCertificationCode");
+			
+			HttpSession session = request.getSession();
+			String certification_code = (String)session.getAttribute("certification_code");
+			
+			String message = "";
+			String loc = "";
+			
+			if(userCertificationCode.equals(certification_code)) {
+				message = "인증이 성공되었습니다.\\n비밀번호를 변경해주세요.";
+				loc = request.getContextPath()+"/login/pwdUpdateEnd.kedai?empid="+empid;	
+			}
+			else {
+				message = "발급된 인증코드가 아닙니다.\\n인증코드를 다시 발급받으세요.";
+				loc = request.getContextPath()+"/login/pwdFind.kedai";	
+			}
+			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+	       
+			mav.setViewName("msg");
+			session.removeAttribute("certification_code");
+		}
+		
+		return mav;
+	}
 	
 	
 	
