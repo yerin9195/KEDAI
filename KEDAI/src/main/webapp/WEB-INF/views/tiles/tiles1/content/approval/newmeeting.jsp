@@ -51,6 +51,37 @@ table.left_table input{
 	height : 15pt;
 }
 
+.modal-dialog {
+	 height: 500px;
+	 max-height:500px;	
+}
+
+
+.modal-body {
+	overflow-y:  auto;
+}
+
+div.openList img{
+	width:11px; 
+	height:11px; 
+	margin-right:0.5%;
+	margin-bottom: 0.5%;
+	cursor:pointer;
+}
+
+.moreList {
+	display:none;
+}
+
+ul.approvalList > li {
+	cursor:pointer;
+}
+
+.modal-body ul {
+      padding-left: 20px; /* 중첩된 목록에 대한 기본 들여쓰기 */
+}
+
+
 </style>
 
 
@@ -194,18 +225,66 @@ table.left_table input{
 	     
 	    });
  	     
-	    
- 	     
+	    // **** !!!! 중요 !!!! **** //
+		 /*
+		    선택자를 잡을때 선택자가 <body>태그에 직접 기술한 것이라면 선택자를 제대로 잡을수가 있으나
+		    스크립트내에서 기술한 것이라면 선택자를 못 잡아올수도 있다.
+		    이러한 경우는 아래와 해야만 된다.
+		    $(document).on("이벤트종류", "선택자", function(){}); 으로 한다.
+		 */
+		$(document).on("click", "div.openList > img", function(){
+			var $ul = $(this).parent().next("ul");
+			
+			if ($ul.is(".moreList")) {
+				// ul에 moreList 클래스가 있는 경우
+				$ul.removeClass("moreList");
+				$(this).attr("src", "<%= ctxPath %>/resources/images/common/Approval/minus.png");
+			}
+			else{
+				// moreList 클래스가 없는 경우
+				$ul.addClass("moreList");
+				$(this).attr("src", "<%= ctxPath %>/resources/images/common/Approval/plus.png");
+			} 
+		});
+		    
+		    /*
+	         ===== 선택자의 class 명 알아오기 =====
+	              선택자.attr('class')  또는  선택자.prop('class')  
+	         
+	         ===== 선택자의 id 명 알아오기 =====
+	              선택자.attr('id')  또는  선택자.prop('id')
+	                  
+	         ===== 선택자의 name 명 알아오기 =====   
+	             선택자.attr('name')  또는  선택자.prop('name')
+	         
+	                     
+	          >>>> .prop() 와 .attr() 의 차이 <<<<            
+	         .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
+	         .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
+
+	         */
+
+
+	    /*   
+	       선택자.toggleClass("클래스명1");
+	         ==> 이것은 선택자에 "클래스명1" 이 이미 적용되어 있으면 선택자에 "클래스명1" 을 제거해주고, 
+	             만약에 선택자에 "클래스명1" 이 적용되어 있지 않으면 선택자에 "클래스명1" 을 추가해주는 것.
+	             
+	         한마디로 addClass("클래스명1") 와 removeClass("클래스명1") 를 합친것 이라고 보면 된다.     
+	     */  
+
+	  //      $(e.target).toggleClass("changeCSSname");
+
+	    // label 태그에 클릭을 했을때에 label 태그에 CSS 클래스 changeCSSname 이 
+	       // 적용이 안되어진 상태이라면 label 태그에 CSS 클래스 changeCSSname 을 적용시켜주고,
+	       // 이미 적용이 되어진 상태이라면 label 태그에 CSS 클래스 changeCSSname 을 해제시켜준다.
+		$(document).on("click", "ul.approvalList > li", function(){
+				
+		});
+		     
 		
 	});// end of $(document).ready(function(){})-----------
 	
-	
-	function selectLine(){
-		
-		
-		
-		
-	}
 	
    ///////////////////////////////////////////////////////////////////////
 
@@ -267,30 +346,44 @@ table.left_table input{
 		      		</div>
 		      
 		      <!-- Modal body -->
-		      		<div class="modal-body">
-		        		<ul>
-		        			<li class="dept"><a>test</a>
-		        				<ul>
-		        					<li>1</li>
-		        					<li>2</li>
-		        					<li>3</li>
-		        					<li>4</li>
-		        					<li>5</li>
-		        				</ul>
-		        			</li>
-		        			
-		        			<li class="dept"><a>test2</a>
-		        				<ul>
-		        					<li>1</li>
-		        					<li>2</li>
-		        					<li>3</li>
-		        					<li>4</li>
-		        					<li>5</li>
-		        				</ul>
-		        			</li>
-		        		</ul>	
+		      		<div class="modal-body row">
+		      			<div class="modal_left col-md-5">
+			        		<ul>
+			        			<li class="dept"><div class="openList" style="border: solid 1px red;"><img src="<%= ctxPath%>/resources/images/common/Approval/plus.png" />마케팅부서</div>
+			        				<ul class="moreList approvalList">
+			        					<li>김모씨</li>
+			        					<li>박모씨</li>
+			        					<li>이모씨</li>
+			        					<li>최모씨</li>
+			        					<li>제갈모씨</li>
+			        				</ul>
+			        			</li>
+			        			
+			        			<li class="dept">
+			        				<div class="openList"><img src="<%= ctxPath%>/resources/images/common/Approval/plus.png" />test2</div>
+			        				<ul class="moreList approvalList">
+			        					<li>1</li>
+			        					<li>2</li>
+			        					<li>3</li>
+			        					<li>4</li>
+			        					<li>5</li>
+			        				</ul>
+			        			</li>
+			        		</ul>	
+		      			</div>	
+		      			<div class="modal_right col-md-7">
+		      				<table class="table">
+		      					<tr style="text-align:center;">
+									<th>순서</th>
+									<th>소속</th>
+									<th>직급</th>
+									<th>성명</th>
+								</tr>
+		      					
+		      				</table>
+		      			
+		      			</div>
 		      		</div>
-		      
 		      		<!-- Modal footer -->
 		      		<div class="modal-footer">
 		        		<button type="button" class="btn btn-danger" data-dismiss="modal">취소</button>
