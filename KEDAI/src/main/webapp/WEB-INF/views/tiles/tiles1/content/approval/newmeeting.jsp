@@ -75,6 +75,7 @@ div.openList img{
 
 ul.approvalList > li {
 	cursor:pointer;
+	
 }
 
 .modal-body ul {
