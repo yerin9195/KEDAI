@@ -290,7 +290,7 @@
 	        b_idcheck_click = true;
 	      
 	        $.ajax({
-	            url: "<%= ctxPath%>/idDuplicateCheck.kedai", 
+	            url: "<%= ctxPath%>/admin/idDuplicateCheck.kedai", 
 	            data: {"empid":$("input#empid").val()}, 
 	            type: "post", 
 	            async: true, 
@@ -318,7 +318,7 @@
 	        b_emailcheck_click = true;
 	
 	        $.ajax({
-	            url: "<%= ctxPath%>/emailDuplicateCheck.kedai", 
+	            url: "<%= ctxPath%>/admin/emailDuplicateCheck.kedai", 
 	            data: {"email":$("input#email").val()}, 
 	            type: "post", 
 	            async: true,  
