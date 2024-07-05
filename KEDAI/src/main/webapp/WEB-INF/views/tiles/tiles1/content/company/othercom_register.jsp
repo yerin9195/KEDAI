@@ -189,225 +189,210 @@ div#register_com {
 	let comAddr_chk = false;
 	let partnerNo_chk = false;
 	
+	const _onSubmit = () => {
+		let validateChk = false;
+		console.log("등록 버튼 누름");
+			
+		
+		// 유효성 검사 통과 시 submit 호출
+		if (_validate()) {
+			$("#registerForm").submit();
+		}
+	};
+	
+	const _validate = () => {
+		let result = true;
+		const partner_name = $("input#partner_name").val().trim();
+		if (partner_name == "") {
+			// 입력하지 않거나 공백만 입력했을 경우 
+            /*	
+			   >>>> .prop() 와 .attr() 의 차이 <<<<	         
+		            .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
+		            .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
+			*/
+			$(".clientWrap :input").prop("disabled" ,true);
+		            $("input#partner_name").prop("disabled", false);
+		            $("input#partner_name").val("");
+		    
+		//  $(e.target).next().show();
+	    //  또는
+	        $("input#partner_name").parent().find("span.error").show();
+	    result = false;
+		} else {
+			// 공백이 아닌 글자를 입력했을 경우
+			$(".clientWrap :input").prop("disabled" ,false);
+			
+			$("input#partner_name").parent().find("span.error").hide();
+		}
+		
+			
+			const partner_type = $("input#partner_type").val().trim();
+			if(partner_type == ""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+				$(".clientWrap :input").prop("disabled", true);
+				$("input#partner_type").prop("disabled", false);
+	            $("input#partner_type").val("").focus();
+	            
+       		//  $("input#partner_type").next().show();
+            //  또는
+	            $("input#partner_type").parent().find("span.error").show();
+            result = false;
+			}
+			else{
+				// 공백이 아닌 글자를 입력했을 경우
+				$(".clientWrap :input").prop("disabled",false);
+				$("input#partner_type").parent().find("span.error").hide();
+			}
+			
+			
+			const part_emp_name = $("input#part_emp_name").val().trim();
+			if(part_emp_name == ""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+				$(".clientWrap :input").prop("disabled", true);
+				$("input#part_emp_name").prop("disabled", false);
+	            $("input#part_emp_name").val("").focus();
+	            
+       		//  $("input#part_emp_name").next().show();
+            //  또는
+	            $("input#part_emp_name").parent().find("span.error").show();
+            result = false;
+			}
+			else{
+				// 공백이 아닌 글자를 입력했을 경우
+				$(".clientWrap :input").prop("disabled",false);
+				$("input#part_emp_name").parent().find("span.error").hide();
+			}
+			
+		
+		
+
+			
+		    const part_emp_email = $("input#part_emp_email").val().trim();
+		    if (part_emp_email == "") {
+		        // 입력하지 않거나 공백만 입력했을 경우 
+		        $(".clientWrap :input").prop("disabled", true);
+		        $("input#part_emp_email").prop("disabled", false);
+		        $("input#part_emp_email").focus();
+		        $("input#part_emp_email").parent().find("span#email_empty.error").show();
+		        // 중복된 숨기기 코드를 제거했습니다.
+		        result = false;
+		    } else {
+		        $(".clientWrap :input").prop("disabled", false);
+		        $("input#part_emp_email").parent().find("span#email_empty.error").hide();
+
+		        const regExp_part_emp_email = new RegExp(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i);
+		        const bool = regExp_part_emp_email.test(part_emp_email); // $("input#part_emp_email").val() 대신 part_emp_email 사용
+
+		        if (!bool) {
+		            $(".clientWrap :input").prop("disabled", true);
+		            $("input#part_emp_email").prop("disabled", false);
+		            $("input#part_emp_email").focus();
+		            $("input#part_emp_email").parent().find("span#email_format.error").show();
+		            $("input#part_emp_email").parent().find("span#email_empty.error").hide();
+		            result = false;
+		        } else {
+		            $(".clientWrap :input").prop("disabled", false);
+		            
+		            $("input#part_emp_email").parent().find("span#email_format.error").hide();
+		            $("input#part_emp_email").parent().find("span#email_empty.error").hide();
+		        }
+		    }
+		
+   		result = _validatePartnerNo();
+		
+			
+			const partner_url = $("input#partner_url").val().trim();
+			if(partner_url == ""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+				$(".clientWrap :input").prop("disabled", true);
+				$("input#partner_url").prop("disabled", false);
+	            $("input#partner_url").val("").focus();
+	            
+	            $("input#partner_url").parent().find("span.error").show();
+	            result = false;
+			}
+			else{
+				// 공백이 아닌 글자를 입력했을 경우
+				$(".clientWrap :input").prop("disabled",false);
+				$("input#partner_url").parent().find("span.error").hide();
+			}
+		
+			
+			const imgfilename = $("input#fileInput").val().trim();
+			if(imgfilename == ""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+				$(".clientWrap :input").prop("disabled", true);
+				$("input#fileInput").prop("disabled", false);
+	            $("input#fileInput").val("").focus();
+	            
+	            $("input#fileInput").parent().find("span.error").show();
+	            result = false;
+			}
+			else{
+				// 공백이 아닌 글자를 입력했을 경우
+				$(".clientWrap :input").prop("disabled",false);
+				$("input#fileInput").parent().find("span.error").hide();
+			}
+			
+		
+		return result;
+		
+	}
+	
+	const _validatePartnerNo = () => {
+		let result = true;
+		// 사업자등록번호 유효성검사 // 
+		   
+		   $("input#partner_no").parent().parent().find("span#format.error").hide();
+		   $("input#partner_no").parent().parent().find("span#empty.error").hide();
+    	$("span#partNoChkResult").html("");
+    
+    	
+			const partner_no = $("input#partner_no").val().trim();
+			
+			if(partner_no == ""){
+				
+				// 입력하지 않거나 공백만 입력했을 경우 
+				$(".clientWrap :input").prop("disabled", true);
+				$("input#partner_no").prop("disabled", false);
+	     		$("input#partner_no").focus();
+	        	$("input#partner_no").parent().parent().find("span#empty.error").show();
+	        	result = false;
+			}
+			else{
+				$(".clientWrap :input").prop("disabled", false);
+	    		$("input#partner_no").parent().parent().find("span#empty.error").hide();
+	    		
+	    		
+	    		const regExp_partner_no = new RegExp(/^[0-9]{3}-[0-9]{2}-[0-9]{5}$/);  
+	     		const bool = regExp_partner_no.test($("input#partner_no").val());
+	
+	    		if(!bool) {
+		           $(".clientWrap :input").prop("disabled", true);
+		           $("input#partner_no").prop("disabled", false);
+		           $("input#partner_no").focus();
+		           $("input#partner_no").parent().parent().find("span#format.error").show();
+		           result = false;
+	    	    }
+	    	    else {
+		           $(".clientWrap :input").prop("disabled", false);
+		           
+	    	    }
+	    		
+		    }
+			
+			// 성공
+			$(".clientWrap :input").prop("disabled", false);
+			partnerNo_chk = true; 
+			
+			return result;
+	}
 	
 	$(document).ready(function(){
 		
 		$("span.error").hide();
 		$("input#partner_part_emp_name").focus();
 		
-		$("input#partner_part_emp_name").on('input',(e)=>{
-			
-			const partner_part_emp_name = $(e.target).val().trim();
-			if(partner_part_emp_name ==""){
-				// 입력하지 않거나 공백만 입력했을 경우 
-	            /*	
-				   >>>> .prop() 와 .attr() 의 차이 <<<<	         
-			            .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
-			            .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
-				*/
-				$(".clientWrap :input").prop("disabled" ,true);
-			    $(e.target).prop("disabled", false);
-			    $(e.target).val("");
-			    
-			//  $(e.target).next().show();
-		    //  또는
-		        $(e.target).parent().find("span.error").show();
-			}
-			
-			else{
-				// 공백이 아닌 글자를 입력했을 경우
-				$(".clientWrap :input").prop("disabled" ,false);
-				
-				$(e.target).parent().find("span.error").hide();
-			}
-		
-		});  // id가 partner_part_emp_name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
-		
-		
-		$("input#partner_type").on('input',(e)=>{
-			
-			const partner_type = $(e.target).val().trim();
-			if(partner_type == ""){
-				// 입력하지 않거나 공백만 입력했을 경우 
-				$(".clientWrap :input").prop("disabled", true);
-				$(e.target).prop("disabled", false);
-	            $(e.target).val("").focus();
-	            
-       		//  $(e.target).next().show();
-            //  또는
-	            $(e.target).parent().find("span.error").show();
-			}
-			else{
-				// 공백이 아닌 글자를 입력했을 경우
-				$(".clientWrap :input").prop("disabled",false);
-				$(e.target).parent().find("span.error").hide();
-			}
-			
-		});// id가 partner_type 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
-		
-		$("input#part_emp_name").on('input',(e)=>{
-			
-			const part_emp_name = $(e.target).val().trim();
-			if(part_emp_name == ""){
-				// 입력하지 않거나 공백만 입력했을 경우 
-				$(".clientWrap :input").prop("disabled", true);
-				$(e.target).prop("disabled", false);
-	            $(e.target).val("").focus();
-	            
-       		//  $(e.target).next().show();
-            //  또는
-	            $(e.target).parent().find("span.error").show();
-			}
-			else{
-				// 공백이 아닌 글자를 입력했을 경우
-				$(".clientWrap :input").prop("disabled",false);
-				$(e.target).parent().find("span.error").hide();
-			}
-			
-		});	// id가 part_emp_name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.-------------------------------------------------------------
-		
-		$("input#part_emp_email").on('input',(e)=> {
-			
-		    const part_emp_email = $(e.target).val().trim();
-		    if (part_emp_email == "") {
-		        // 입력하지 않거나 공백만 입력했을 경우 
-		        $(".clientWrap :input").prop("disabled", true);
-		        $(e.target).prop("disabled", false);
-		        $(e.target).focus();
-		        $(e.target).parent().find("span#email_empty.error").show();
-		        // 중복된 숨기기 코드를 제거했습니다.
-		    } else {
-		        $(".clientWrap :input").prop("disabled", false);
-		        $(e.target).parent().find("span#email_empty.error").hide();
-
-		        const regExp_part_emp_email = new RegExp(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i);
-		        const bool = regExp_part_emp_email.test(part_emp_email); // $(e.target).val() 대신 part_emp_email 사용
-
-		        if (!bool) {
-		            $(".clientWrap :input").prop("disabled", true);
-		            $(e.target).prop("disabled", false);
-		            $(e.target).focus();
-		            $(e.target).parent().find("span#email_format.error").show();
-		            $(e.target).parent().find("span#email_empty.error").hide();
-		        } else {
-		            $(".clientWrap :input").prop("disabled", false);
-		            
-		            $(e.target).parent().find("span#email_format.error").hide();
-		            $(e.target).parent().find("span#email_empty.error").hide();
-		        }
-		    }
-		
-       });// 아이디가  part_emp_email인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다. --> 거래처담당자 이메일 확인-------------------------------------
-		
-       
-       // 사업자등록번호 유효성검사 // 
-	   $("input#partner_no").on('input',(e)=>{
-			const partner_no = $(e.target).val().trim();
-		
-			if(partnerNo == ""){
-				// 입력하지 않거나 공백만 입력했을 경우 
-				$(".clientWrap :input").prop("disabled", true);
-				$(e.target).prop("disabled", false);
-	     		$(e.target).focus();
-	        	$(e.target).parent().parent().find("span#empty.error").show();
-	        	
-	        	$(e.target).parent().parent().find("span#format.error").hide();
-			}
-			else{
-				$(".clientWrap :input").prop("disabled", false);
-	    		$(e.target).parent().parent().find("span#empty.error").hide();
-	    		
-	    		
-	    		const regExp_partner_no = new RegExp(/^[0-9]{3}-[0-9]{2}-[0-9]{5}$/);  
-	     		const bool = regExp_partner_no.test($(e.target).val());
-	
-	    		if(!bool) {
-		           $(".clientWrap :input").prop("disabled", true);
-		           $(e.target).prop("disabled", false);
-		           $(e.target).focus();
-		           $(e.target).parent().parent().find("span#format.error").show();
-		           
-		           $(e.target).parent().parent().find("span#empty.error").hide();
-	    	    }
-	    	    else {
-		           $(".clientWrap :input").prop("disabled", false);
-		           $(e.target).parent().parent().find("span#format.error").hide();
-		           $(e.target).parent().parent().find("span#empty.error").hide();
-	    	    }
-	    		
-		    }
-	   }); // 아이디가  comNumber인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.     */   
-		
-      ////////////////////////////////////////////////////////////////////////////////////
-	  
-      $("input#partnerNo_chk").click(function(){// "사업자 등록번호" 가 이미 있는지 확인하는 이벤트  
-    	  partnerNo_chk = true;
-      	   
-      	  $.ajax({
-      		  url:"<%=ctxPath%>/partnerNoCheck.kedai",
-      		  data:{"partner_no":$("input#partner_no").val()},
-      		  type:"post",
-      		  async: true,
-      		  dataType:"json",
-      		  success: function(json){
-      			  if(json.isExists){
-      				  $("span#partNoChkResult").html("&nbsp;이미 등록된 사업자등록번호 입니다.").css({"color":"red"});
-      			  	  $("input#partner_no").val("");
-      			  	  
-      			  }
-      			  else{
-      				  $("span#partNoChkResult").html("&nbsp;등록가능한 사업자등록번호입니다.").css({"color":"blue"});
-      			  }
-      		  },
-	      	  error: function(request, status, error){
-	          		alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	          }
-      	  });
-      		
-
-      });
-      
-	  ////////////////////////////////////////////////////////////////////////////////////////
-		
-		$("input#partner_url").on('input',(e)=>{
-			
-			const partner_url = $(e.target).val().trim();
-			if(partner_url == ""){
-				// 입력하지 않거나 공백만 입력했을 경우 
-				$(".clientWrap :input").prop("disabled", true);
-				$(e.target).prop("disabled", false);
-	            $(e.target).val("").focus();
-	            
-	            $(e.target).parent().find("span.error").show();
-			}
-			else{
-				// 공백이 아닌 글자를 입력했을 경우
-				$(".clientWrap :input").prop("disabled",false);
-				$(e.target).parent().find("span.error").hide();
-			}
-			
-		});	// id가 partner_url 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
-
-		/////////////////////////////////////////////////////////////////////////////
-		
-		$("input#fileInput").on('input',(e) => {
-			
-			const imgfilename = $(e.target).val().trim();
-			if(imgfilename == ""){
-				// 입력하지 않거나 공백만 입력했을 경우 
-				$(".clientWrap :input").prop("disabled", true);
-				$(e.target).prop("disabled", false);
-	            $(e.target).val("").focus();
-	            
-	            $(e.target).parent().find("span.error").show();
-			}
-			else{
-				// 공백이 아닌 글자를 입력했을 경우
-				$(".clientWrap :input").prop("disabled",false);
-				$(e.target).parent().find("span.error").hide();
-			}
-			
-		});	// id가 imgfilename 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 		
 		// 이미지 상자안에 이미지 파일이 아닌 다른 파일이 오면 리셋시키기
 		$("#fileInput").on('change', function(event){
@@ -445,10 +430,43 @@ div#register_com {
 			}
 			
 		})
+		
+		////////////////////////////////////////////////////////////////////////////////////
+	  
+      $("input#partnerNo_chk").click(function(){// "사업자 등록번호" 가 이미 있는지 확인하는 이벤트  
+    	 
+			
+			if(_validatePartnerNo() === false){
+				return;
+			}
+			
+      	  $.ajax({
+      		  url:"<%=ctxPath%>/partnerNoCheck.kedai",
+      		  data:{"partner_no":$("input#partner_no").val()},
+      		  type:"post",
+      		  async: true,
+      		  dataType:"json",
+      		  success: function(json){
+      			  if(json.isExists){
+      				  $("span#partNoChkResult").html("&nbsp;이미 등록된 사업자등록번호 입니다.").css({"color":"red"});
+      			  	  //$("input#partner_no").val("");
+      			  	  
+      			  }
+      			  else{
+      				  $("span#partNoChkResult").html("&nbsp;등록가능한 사업자등록번호입니다.").css({"color":"blue"});
+      			  }
+      		  },
+	      	  error: function(request, status, error){
+	          		alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	          }
+      	  });
+      		
+
+      });
 	
 	}); // end of $(document).ready(function(){}----------------------------
 	
-			
+	////////////////////////////////////////////////////////////////////////////////////////	
 	// Function Declaration		
 	// 주소찾기
 	$("input#partner_postcode").attr("readonly",true);
@@ -537,13 +555,10 @@ div#register_com {
 		
 	}	
 	
-	
-	
-	
 </script>
 
 <div id="register_com" style="padding-right:10%;">
-	<form name="" action="" class="clientWrap">
+	<form id="registerForm" name="" action="/othercom_register.kedai" method="POST" enctype="multipart/form-data" class="clientWrap">
 		<div class="clientHeader">
 			<button style="background-image: url(<%=ctxPath%>/resources/images/common/arrow-left-solid.svg)">
 			</button>
@@ -627,7 +642,7 @@ div#register_com {
 			</div>
 		</div>
 		<div class="clientConfirm">
-			<input type="reset" value="취소"><input type="submit" value="등록">
+			<input type="reset" value="취소"><input type="button" onclick="_onSubmit()" value="등록">
 		</div>
 	</form>
 	<!--//들고가야함  -->

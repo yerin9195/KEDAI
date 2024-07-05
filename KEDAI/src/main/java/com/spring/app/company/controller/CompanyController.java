@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -57,6 +58,31 @@ public class CompanyController {
 		mav.setViewName("tiles1/company/othercom_register.tiles");
 		
 		return mav;
+	}
+	
+	public static class OtherCom {
+		
+	}
+	
+	@PostMapping(value="/othercom_register.kedai")
+	public ModelAndView other_comRegister_submit(@RequestBody OtherCom otherCom, HttpServletRequest request, ModelAndView mav) {
+		
+		String partner_no = request.getParameter("partner_no");
+		System.out.println("확인용 partner_no : " + partner_no);
+		
+		String searchPartnerNo = service.partnerNoDuplicateCheck(partner_no);
+		
+		boolean isExists = false;
+		
+		if(searchPartnerNo != null) {
+			isExists = true;
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("isExists", isExists);
+		
+		return jsonObj.toString();
+		
 	}
 	
 	@GetMapping(value="/employee.kedai")
