@@ -151,11 +151,48 @@
 	    
 	   $('#total_bth').click(function(e){
 		   $('#modal3').modal("show");
+		   salary_cal();
 	   })
 	    
 	});	//	end of $(document).ready(function(){--------
 		
+	//	전체 계산 
+	function salary_cal(){
+		 const basicSalary = annualSalary * 0.0833;  // 기본급은 연봉의 8.33%
+	    const mealAllowance = 100;  // 예: 식대는 고정 100원
+	    const annualLeaveAllowance = 50;  // 예: 연차수당 고정 50원
+	    const overtimeAllowance = 70;  // 예: 초과근무수당 고정 70원
+
+	    const totalEarnings = basicSalary + mealAllowance + annualLeaveAllowance + overtimeAllowance;
+
+	    const incomeTax = totalEarnings * 0.1;  // 예: 소득세는 총지급액의 10%
+	    const localIncomeTax = incomeTax * 0.1;  // 예: 지방소득세는 소득세의 10%
+	    const nationalPension = totalEarnings * 0.045;  // 예: 국민연금은 총지급액의 4.5%
+	    const healthInsurance = totalEarnings * 0.035;  // 예: 건강보험은 총지급액의 3.5%
+	    const employmentInsurance = totalEarnings * 0.01;  // 예: 고용보험은 총지급액의 1%
+
+	    const totalDeductions = incomeTax + localIncomeTax + nationalPension + healthInsurance + employmentInsurance;
+
+	    const netSalary = totalEarnings - totalDeductions;
+
+	    return {
+	        basicSalary,
+	        mealAllowance,
+	        annualLeaveAllowance,
+	        overtimeAllowance,
+	        totalEarnings,
+	        incomeTax,
+	        localIncomeTax,
+	        nationalPension,
+	        healthInsurance,
+	        employmentInsurance,
+	        totalDeductions,
+	        netSalary
+	    };	
+	}	//	end of function salary_cal(){----------------------
+	
 		
+	//	근무기록 확정 시 회원목록 조회하기
 	function Memberview(){
 		var tbody = $('#modal1table');
 		
