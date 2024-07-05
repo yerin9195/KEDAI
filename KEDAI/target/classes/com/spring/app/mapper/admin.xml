@@ -4,4 +4,46 @@
 
 <mapper namespace="admin">
 
+	<select id="dept_select" resultType="com.spring.app.domain.DeptVO">
+		select dept_code, dept_name
+		from tbl_dept
+		order by dept_code asc
+	</select>
+	
+	<select id="job_select" resultType="com.spring.app.domain.JobVO">
+		select job_code, job_name
+		from tbl_job
+		order by job_code asc
+	</select>
+	
+	<select id="idDuplicateCheck" resultType="String">
+		select empid
+		from tbl_employees
+		where empid = #{empid}
+	</select>
+	
+	<select id="emailDuplicateCheck" resultType="String">
+		select email
+		from tbl_employees
+		where email = #{email}
+	</select>
+	
+	<insert id="empRegister" parameterType="MemberVO">
+		insert into tbl_employees(empid, pwd, name, nickname, jubun, email, mobile, postcode, address, detailaddress, extraaddress, imgfilename, hire_date, salary, commission_pct, fk_dept_code, fk_job_code, dept_tel)
+		<choose>
+			<when test="(fk_dept_code == null and dept_tel == null) and fk_job_code == null">
+    			values(#{empid}, #{pwd}, #{name}, #{nickname}, #{jubun}, #{email}, #{mobile}, #{postcode}, #{address}, #{detailaddress}, #{extraaddress}, 'test.png', to_date(#{hire_date}, 'yyyy-mm-dd'), to_number(#{salary}), 0, null, null, null)
+	    	</when>
+	    	<when test="(fk_dept_code == null and dept_tel == null) and fk_job_code != null">
+    			values(#{empid}, #{pwd}, #{name}, #{nickname}, #{jubun}, #{email}, #{mobile}, #{postcode}, #{address}, #{detailaddress}, #{extraaddress}, 'test.png', to_date(#{hire_date}, 'yyyy-mm-dd'), to_number(#{salary}), 0, null, #{fk_job_code}, null)
+	    	</when>
+	    	<when test="(fk_dept_code != null and dept_tel != null) and fk_job_code == null">
+    			values(#{empid}, #{pwd}, #{name}, #{nickname}, #{jubun}, #{email}, #{mobile}, #{postcode}, #{address}, #{detailaddress}, #{extraaddress}, 'test.png', to_date(#{hire_date}, 'yyyy-mm-dd'), to_number(#{salary}), 0, #{fk_dept_code}, null, #{dept_tel})
+	    	</when>
+	    	<when test="(fk_dept_code != null and dept_tel != null) and fk_job_code != null">
+    			values(#{empid}, #{pwd}, #{name}, #{nickname}, #{jubun}, #{email}, #{mobile}, #{postcode}, #{address}, #{detailaddress}, #{extraaddress}, 'test.png', to_date(#{hire_date}, 'yyyy-mm-dd'), to_number(#{salary}), 0, #{fk_dept_code}, #{fk_job_code}, #{dept_tel})
+	    	</when>
+		</choose>
+	</insert>
+
 </mapper>

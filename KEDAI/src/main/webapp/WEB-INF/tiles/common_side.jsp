@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String ctxPath = request.getContextPath();
+	//     /KEDAI
 %>
 <style type="text/css">
 	.primary-nav {
@@ -128,19 +129,18 @@
 	  	z-index: -1;
 	  	display: block;
 	}
-	.menu a.logotype {
-	  	position: absolute!important;
+	.menu div.logotype {
+	  	position: absolute !important;
 	  	top: 11px;
 	  	left: 55px;
 	  	display: block;
-	  	text-transform: uppercase;
-	  	font-weight: 800;
+	  	font-weight: 400;
 	  	color: #363636;
 	  	font-size: 21px;
 	  	padding: 10px;
 	}
-	.menu a.logotype span {
-	  	font-weight: 400;
+	.menu div.logotype span {
+	  	font-weight: 800;
 	}
 	.menu:hover {
 		position: absolute;
@@ -164,11 +164,13 @@
 	</button>
 
 	<nav role="navigation" class="menu">
-		<a href="#" class="logotype">LOGO<span>TYPE</span></a>
+		<div class="logotype">
+			Hello, <span>${(sessionScope.loginuser).nickname}</span>&nbsp;:)
+		</div>
 		<div class="overflow-container">
 			<ul class="menu-dropdown">
 				<li>
-					<a href="#">전자결재</a>
+					<a href="<%=ctxPath%>/approval/main.kedai">전자결재</a>
 					<span class="icon"><i class="fa-regular fa-pen-to-square"></i></span>
 				</li>
 				<li>
@@ -192,11 +194,11 @@
 					<span class="icon"><i class="fa-solid fa-ranking-star"></i></span>
 				</li>
 				<li>
-					<a href="#">카쉐어</a>
+					<a href="<%=ctxPath%>/carShare.kedai">카쉐어</a>
 					<span class="icon"><i class="fa-solid fa-car"></i></span>
 				</li>
 				<li>
-					<a href="#">통근버스</a>
+					<a href="<%=ctxPath%>/bus.kedai">통근버스</a>
 					<span class="icon"><i class="fa-solid fa-bus-simple"></i></span>
 				</li>
 				<li>
@@ -207,6 +209,16 @@
 					<a href="#">거래처정보</a>
 					<span class="icon"><i class="fa-solid fa-store"></i></span>
 				</li>
+				<li>
+					<a href="#">일정관리</a>
+					<span class="icon"><i class="fa-regular fa-calendar-check"></i></span>
+				</li>
+				<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+					<li>
+						<a href="<%= ctxPath%>/admin/register.kedai">사원정보등록</a>
+						<span class="icon"><i class="fa-solid fa-user-plus"></i></span>
+					</li>
+				</c:if>
 			</ul>
 		</div>
 	</nav>

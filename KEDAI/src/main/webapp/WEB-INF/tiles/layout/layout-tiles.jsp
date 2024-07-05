@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%
-   String ctxPath = request.getContextPath();
+	String ctxPath = request.getContextPath();
+	//     /KEDAI
 %>      
 <!DOCTYPE html>
 <html>
@@ -28,7 +29,7 @@
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
 <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
 
-<%-- ajax로 파일을 업로드 할때 가장 널리 사용하는 방법 : ajaxForm --%> 
+<%-- jQuery 에서  ajax로 파일을 업로드 할때 가장 널리 사용하는 방법 : ajaxForm --%> 
 <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery.form.min.js"></script>
 
 <%-- 우편번호 API --%> 
@@ -41,7 +42,7 @@
 	  	padding: 0;
 	}
 	body {
-		font-family: "Noto Sans KR", sans-serif;
+		font-family: "Noto Sans KR", sans-serif !important;
 		color: #363636;
 		overflow-x: hidden;
 		overflow-y: hidden;
@@ -70,7 +71,7 @@
 	  	line-height: 0;
 	}
 	#myHeader {
-		min-height: 70px;	
+		min-height: 50px;	
 		background: #2c4459;
 		align-content: center;
 	}

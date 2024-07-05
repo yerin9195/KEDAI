@@ -28,6 +28,24 @@ public class MemberDAO_imple implements MemberDAO {
 		sqlsession.insert("member.insert_tbl_loginhistory", paraMap);	
 	}
 
+	@Override
+	public String idFind(Map<String, String> paraMap) {
+		String empId = sqlsession.selectOne("member.idFind", paraMap);
+		return empId;
+	}
+
+	@Override
+	public String pwdFind(Map<String, String> paraMap) {
+		String empPwd = sqlsession.selectOne("member.pwdFind", paraMap);
+		return empPwd;
+	}
+
+	@Override
+	public int pwdUpdateEnd(Map<String, String> paraMap) {
+		int n = sqlsession.update("member.pwdUpdateEnd", paraMap);
+		return n;
+	}
+
 	//	급여명세서 직원목록 불러오기
 	@Override
 	public List<MemberVO> memberListView() {

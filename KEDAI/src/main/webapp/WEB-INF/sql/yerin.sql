@@ -165,6 +165,7 @@ where table_name = 'TBL_EMPLOYEES';
 
 -----------------------------------------------------------------------
 
+-- 로그인 기록 테이블
 create table tbl_loginhistory
 (history_seq  NUMBER                not null
 ,fk_empid     VARCHAR2(30)          not null
@@ -208,34 +209,168 @@ where table_name = 'TBL_LOGINHISTORY';
 desc tbl_employees;
 desc tbl_loginhistory;
 
-SELECT empid, name, nickname, jubun, email, mobile, 
-       postcode, address, detailaddress, extraaddress,
-       imgfilename, hire_date, salary, commission_pct, point,
-       fk_dept_code, fk_job_code, dept_tel, sign_img, pwdchangegap, 
-       NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
+SELECT empid, name, nickname, jubun, gender, age, email, mobile
+     , postcode, address, detailaddress, extraaddress
+     , imgfilename, hire_date, salary, commission_pct, point
+     , fk_dept_code, dept_name, fk_job_code, job_name, dept_tel, sign_img, annual_leave, pwdchangegap
+     , NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
 FROM 
-( 
-    select empid, name, nickname, jubun, email, mobile, 
-           postcode, address, detailaddress, extraaddress,
-           imgfilename, hire_date, salary, commission_pct, point,
-           fk_dept_code, fk_job_code, dept_tel, sign_img,
-           trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
-    from tbl_employees 
-    where status = 1 and empid = #{empid} and pwd = #{pwd} 
-) E 
+(
+    select empid, name, nickname, jubun
+         , func_gender(jubun) AS gender
+         , func_age(jubun) AS age
+         , email, mobile, postcode, address, detailaddress, extraaddress
+         , imgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
+         , fk_dept_code, nvl(D.dept_name, '부서없음') AS dept_name
+         , fk_job_code, nvl(J.job_name, '직급없음') AS job_name
+         , dept_tel, sign_img, annual_leave
+         , trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap
+    from tbl_employees E1 
+    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+    where status = 1 and empid = '2010001-001' and pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
+) E2 
 CROSS JOIN 
 ( 
     select trunc(months_between(sysdate, max(logindate))) AS lastlogingap 
     from tbl_loginhistory 
-    where fk_empid = #{empid}
+    where fk_empid = '2010001-001'
 ) H
 
-insert into tbl_loginhistory(HISTORY_SEQ, FK_EMPID, logindate, clientip)
+insert into tbl_loginhistory(history_seq, fk_empid, logindate, clientip)
 values(loginhistory_seq.nextval, #{empid}, default, #{clientip})
 
+select empid 
+from tbl_employees
+where status = 1 and name = '관리자' and email = 'KmwWd6gn2fheAtIEcHhtdq4ZISt5PKTmXRFHRew2vWc=';
+
+-----------------------------------------------------------------------
+
+-- 아이디 찾기
+select empid
+from tbl_employees
+where status = 1 and name = ? and email = ?;
+
+-- 아이디 중복확인하기
+select empid
+from tbl_employees
+where empid = '2010001-001';
+
+-- 비밀번호 찾기
+select pwd
+from tbl_employees
+where status = 1 and empid = '2014100-004' and name = '이지은' and email = 'gpYWbUyoXF5e21I/zchLYZa5CieVh0uqW9c6k7/niIU=';
+
+-- 비밀번호 변경하기
+update tbl_employees set pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
+where empid = '2010001-001';
+
+commit;
+-- 커밋 완료.
+
+-----------------------------------------------------------------------
+
+select *
+from tbl_employees
+where fk_dept_code = '200'
+order by fk_job_code asc;   
+
+delete from tbl_employees
+where empid = '2010001-001'
+
+commit;
+-- 커밋 완료.
+
+select dept_code, dept_name
+from tbl_dept;
+/*
+    100	인사부
+    200	영업지원부
+    300	회계부
+    400	상품개발부
+    500	마케팅부
+    600	해외사업부
+    700	온라인사업부
+*/
+
+select job_code, job_name
+from tbl_job;
+/*
+    1   대표이사
+    2   전무
+    3   상무
+    4   부장
+    5	과장
+    6	차장
+    7	대리
+    8	사원
+*/
+
+update tbl_job set job_name = '대표이사'
+where job_code = 1;
+
+insert into tbl_job(job_code, job_name)
+values(8, '사원');
+
+commit;
+-- 커밋 완료.
+
+select *
+from tbl_employees
+where fk_dept_code = '200'
+order by fk_job_code;
+
+update tbl_employees set fk_job_code = 1
+where empid = '2010001-001';
+
+commit;
+-- 커밋 완료.
+
+-----------------------------------------------------------------------
+
+-- 주민번호를 입력받아서 성별을 알려주는 함수 func_gender(주민번호)을 생성 
+create or replace function func_gender 
+(p_jubun  IN  varchar2) 
+return varchar2         
+is
+    v_result varchar2(6); 
+begin
+    select case when substr(p_jubun, 7, 1) in('1', '3') then '남' else '여' end
+           INTO
+           v_result
+    from dual;
+    return v_result;
+end func_gender;
+-- Function FUNC_GENDER이(가) 컴파일되었습니다.
+
+-- 주민번호를 입력받아서 나이를 알려주는 함수 func_age(주민번호)을 생성
+create or replace function func_age
+(p_jubun  IN  varchar2) 
+return number         
+is
+    v_age number(3); 
+begin
+    select case when to_date(to_char(sysdate, 'yyyy')||substr(p_jubun, 3, 4), 'yyyymmdd') - to_date(to_char(sysdate, 'yyyymmdd'),'yyyymmdd') > 0 
+                then extract(year from sysdate) - (to_number(substr(p_jubun, 1, 2)) + case when substr(p_jubun, 7, 1) in('1', '2') then 1900 else 2000 end ) - 1 
+                else extract(year from sysdate) - (to_number(substr(p_jubun, 1, 2)) + case when substr(p_jubun, 7, 1) in('1', '2') then 1900 else 2000 end )
+           end
+           INTO
+           v_age
+    from dual;
+    return v_age;
+end func_age;
+-- Function FUNC_AGE이(가) 컴파일되었습니다.
+
+select jubun
+     , func_gender(jubun) AS gender
+     , func_age(jubun) AS age
+from tbl_employees;
+
+-----------------------------------------------------------------------
 
 
 
-        
-        
-        
+
+
+
+

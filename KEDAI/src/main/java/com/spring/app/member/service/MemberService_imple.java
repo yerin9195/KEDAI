@@ -24,6 +24,7 @@ public class MemberService_imple implements MemberService {
 	@Autowired
     private AES256 aES256;
 
+	// 로그인 처리하기
 	@Override
 	public MemberVO getLoginMember(Map<String, String> paraMap) {
 		MemberVO loginuser = dao.getLoginMember(paraMap);
@@ -49,11 +50,32 @@ public class MemberService_imple implements MemberService {
 		return loginuser;
 	}
 
+	// 아이디 찾기
+	@Override
+	public String idFind(Map<String, String> paraMap) {
+		String empId = dao.idFind(paraMap);
+		return empId;
+	}
+
+	// 비밀번호 찾기
+	@Override
+	public String pwdFind(Map<String, String> paraMap) {
+		String empPwd = dao.pwdFind(paraMap);
+		return empPwd;
+	}
+
+	// 비밀번호 변경하기
+	@Override
+	public int pwdUpdateEnd(Map<String, String> paraMap) {
+		int n = dao.pwdUpdateEnd(paraMap);
+		return n;
+	}
+
 	//	급여명세서 직원목록 불러오기
 	@Override
 	public List<MemberVO> memberListView() {
 		List<MemberVO> membervoList = dao.memberListView();
 		return membervoList;
 	}
-
+	
 }
