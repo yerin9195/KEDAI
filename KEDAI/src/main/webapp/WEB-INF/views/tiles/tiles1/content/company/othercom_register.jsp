@@ -344,7 +344,7 @@ div#register_com {
       		  success: function(json){
       			  if(json.isExists){
       				  $("span#partNoChkResult").html("&nbsp;이미 등록된 사업자등록번호 입니다.").css({"color":"red"});
-      			  	  $("input#partnerNo").val("");
+      			  	$("input#partnerNo").val("");
       			  	  
       			  }
       			  else{
@@ -358,11 +358,6 @@ div#register_com {
       		
 
       });
-      
-      
-      
-      
-      
       
 	  ////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -387,6 +382,20 @@ div#register_com {
 
 		/////////////////////////////////////////////////////////////////////////////
 		
+		// 이미지 상자안에 이미지 파일이 아닌 다른 파일이 오면 리셋시키기
+		$("#fileInput").on('change', function(event){
+			const file= this.files[0];
+			if(file && file.type.startsWith('image/*')){
+				// 파일이 이미지인 경우
+				console.log("이미지 파일이 선택되었습니다.");
+			}
+			else{
+				// 선택한 파일이 이미지가 아닌 경우
+				alert('이미지 파일을 선택해주세요!!');
+				$(this).val(''); // 입력 초기화
+			}
+		
+		})
 		
 	}); // end of $(document).ready(function(){}----------------------------
 	
@@ -465,16 +474,15 @@ div#register_com {
 	<form action="" class="clientWrap">
 		<div class="clientHeader">
 			<button style="background-image: url(<%=ctxPath%>/resources/images/common/arrow-left-solid.svg)">
-				<span hidden>뒤로가기</span>
 			</button>
 			<h3>거래처등록하기</h3>
 		</div>
 		<div class="clientRegister">
 			<div class="rgs-profile">
 				<div class="imgbox">
-					<img src="<%=ctxPath%>/resources/images/common/picture.png" alt="">
+					<img id="previewImg" width="300" src="<%=ctxPath%>/resources/images/common/picture.png" alt="">
 				</div>
-				<input type="file" value="" accept="img/*">
+				<input type="file" value="fileInput" accept="image/*">
 			</div>
 			<div class="rgs-body">
 				<div class="rgs-forms">
