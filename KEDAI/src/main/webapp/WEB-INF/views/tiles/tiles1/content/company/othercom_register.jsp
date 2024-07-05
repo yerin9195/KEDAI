@@ -90,10 +90,18 @@ div#register_com {
 
 .clientWrap .clientRegister .rgs-profile .imgbox {
 	background-color: #ffe9e9;
+	width:100%;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	overflow:hidden;
+	border:1px solid red;
+	
 }
 
 .clientWrap .clientRegister .rgs-profile .imgbox img {
 	width: 100%;
+	/* height:auto; */
 }
 
 .clientWrap .clientRegister .rgs-body {
@@ -185,12 +193,12 @@ div#register_com {
 	$(document).ready(function(){
 		
 		$("span.error").hide();
-		$("input#comName").focus();
+		$("input#partner_part_emp_name").focus();
 		
-		$("input#comName").blur((e) => {
+		$("input#partner_part_emp_name").on('input',(e)=>{
 			
-			const comName = $(e.target).val().trim();
-			if(comName ==""){
+			const partner_part_emp_name = $(e.target).val().trim();
+			if(partner_part_emp_name ==""){
 				// 입력하지 않거나 공백만 입력했을 경우 
 	            /*	
 				   >>>> .prop() 와 .attr() 의 차이 <<<<	         
@@ -213,13 +221,13 @@ div#register_com {
 				$(e.target).parent().find("span.error").hide();
 			}
 		
-		});  // id가 comName 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+		});  // id가 partner_part_emp_name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 		
 		
-		$("input#comType").blur((e) => {
+		$("input#partner_type").on('input',(e)=>{
 			
-			const comType = $(e.target).val().trim();
-			if(comType == ""){
+			const partner_type = $(e.target).val().trim();
+			if(partner_type == ""){
 				// 입력하지 않거나 공백만 입력했을 경우 
 				$(".clientWrap :input").prop("disabled", true);
 				$(e.target).prop("disabled", false);
@@ -235,12 +243,12 @@ div#register_com {
 				$(e.target).parent().find("span.error").hide();
 			}
 			
-		});// id가 comType 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+		});// id가 partner_type 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 		
-		$("input#Name").blur((e) => {
+		$("input#part_emp_name").on('input',(e)=>{
 			
-			const Name = $(e.target).val().trim();
-			if(Name == ""){
+			const part_emp_name = $(e.target).val().trim();
+			if(part_emp_name == ""){
 				// 입력하지 않거나 공백만 입력했을 경우 
 				$(".clientWrap :input").prop("disabled", true);
 				$(e.target).prop("disabled", false);
@@ -256,12 +264,12 @@ div#register_com {
 				$(e.target).parent().find("span.error").hide();
 			}
 			
-		});	// id가 Name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.-------------------------------------------------------------
+		});	// id가 part_emp_name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.-------------------------------------------------------------
 		
-		$("input#comEmail").blur( (e) => { 
+		$("input#part_emp_email").on('input',(e)=> {
 			
-		    const comEmail = $(e.target).val().trim();
-		    if (comEmail == "") {
+		    const part_emp_email = $(e.target).val().trim();
+		    if (part_emp_email == "") {
 		        // 입력하지 않거나 공백만 입력했을 경우 
 		        $(".clientWrap :input").prop("disabled", true);
 		        $(e.target).prop("disabled", false);
@@ -272,8 +280,8 @@ div#register_com {
 		        $(".clientWrap :input").prop("disabled", false);
 		        $(e.target).parent().find("span#email_empty.error").hide();
 
-		        const regExp_comEmail = new RegExp(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i);
-		        const bool = regExp_comEmail.test(comEmail); // $(e.target).val() 대신 comEmail 사용
+		        const regExp_part_emp_email = new RegExp(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i);
+		        const bool = regExp_part_emp_email.test(part_emp_email); // $(e.target).val() 대신 part_emp_email 사용
 
 		        if (!bool) {
 		            $(".clientWrap :input").prop("disabled", true);
@@ -289,12 +297,12 @@ div#register_com {
 		        }
 		    }
 		
-       });// 아이디가  comEmail인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다. --> 거래처담당자 이메일 확인-------------------------------------
+       });// 아이디가  part_emp_email인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다. --> 거래처담당자 이메일 확인-------------------------------------
 		
        
        // 사업자등록번호 유효성검사 // 
-	   $("input#partnerNo").blur( (e) => {
-			const comNumber = $(e.target).val().trim();
+	   $("input#partner_no").on('input',(e)=>{
+			const partner_no = $(e.target).val().trim();
 		
 			if(partnerNo == ""){
 				// 입력하지 않거나 공백만 입력했을 경우 
@@ -310,8 +318,8 @@ div#register_com {
 	    		$(e.target).parent().parent().find("span#empty.error").hide();
 	    		
 	    		
-	    		const regExp_partnerNo = new RegExp(/^[0-9]{3}-[0-9]{2}-[0-9]{5}$/);  
-	     		const bool = regExp_partnerNo.test($(e.target).val());
+	    		const regExp_partner_no = new RegExp(/^[0-9]{3}-[0-9]{2}-[0-9]{5}$/);  
+	     		const bool = regExp_partner_no.test($(e.target).val());
 	
 	    		if(!bool) {
 		           $(".clientWrap :input").prop("disabled", true);
@@ -337,14 +345,14 @@ div#register_com {
       	   
       	  $.ajax({
       		  url:"<%=ctxPath%>/partnerNoCheck.kedai",
-      		  data:{"partnerNo":$("input#partnerNo").val()},
+      		  data:{"partner_no":$("input#partner_no").val()},
       		  type:"post",
       		  async: true,
       		  dataType:"json",
       		  success: function(json){
       			  if(json.isExists){
       				  $("span#partNoChkResult").html("&nbsp;이미 등록된 사업자등록번호 입니다.").css({"color":"red"});
-      			  	$("input#partnerNo").val("");
+      			  	  $("input#partner_no").val("");
       			  	  
       			  }
       			  else{
@@ -361,10 +369,10 @@ div#register_com {
       
 	  ////////////////////////////////////////////////////////////////////////////////////////
 		
-		$("input#comWebsite").blur((e) => {
+		$("input#partner_url").on('input',(e)=>{
 			
-			const comWebsite = $(e.target).val().trim();
-			if(comWebsite == ""){
+			const partner_url = $(e.target).val().trim();
+			if(partner_url == ""){
 				// 입력하지 않거나 공백만 입력했을 경우 
 				$(".clientWrap :input").prop("disabled", true);
 				$(e.target).prop("disabled", false);
@@ -378,14 +386,33 @@ div#register_com {
 				$(e.target).parent().find("span.error").hide();
 			}
 			
-		});	// id가 comWebsite 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+		});	// id가 partner_url 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 
 		/////////////////////////////////////////////////////////////////////////////
+		
+		$("input#fileInput").on('input',(e) => {
+			
+			const imgfilename = $(e.target).val().trim();
+			if(imgfilename == ""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+				$(".clientWrap :input").prop("disabled", true);
+				$(e.target).prop("disabled", false);
+	            $(e.target).val("").focus();
+	            
+	            $(e.target).parent().find("span.error").show();
+			}
+			else{
+				// 공백이 아닌 글자를 입력했을 경우
+				$(".clientWrap :input").prop("disabled",false);
+				$(e.target).parent().find("span.error").hide();
+			}
+			
+		});	// id가 imgfilename 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 		
 		// 이미지 상자안에 이미지 파일이 아닌 다른 파일이 오면 리셋시키기
 		$("#fileInput").on('change', function(event){
 			const file= this.files[0];
-			if(file && file.type.startsWith('image/*')){
+			if(file && file.type.startsWith('image/')){
 				// 파일이 이미지인 경우
 				console.log("이미지 파일이 선택되었습니다.");
 			}
@@ -395,16 +422,38 @@ div#register_com {
 				$(this).val(''); // 입력 초기화
 			}
 		
-		})
+		})//이미지 상자안에 이미지 파일이 아닌 다른 파일이 오면 리셋시키기
 		
+		// ==> 거래처 대표 이미지 파일선택을 하면 화면에 이미지를 미리 보여주기 시작 <<=== //
+		$(document).on("change", "input#fileInput", function(e){
+			
+			const input_file = $(e.target).get(0);
+			
+			// 자바스크립트에서 file 객체의 실제 데이터(내용물)에 접근하기 위해 FileReader 객체를 생성하여 사용한다.
+			const fileReader = new FileReader();
+			
+			fileReader.readAsDataURL(input_file.files[0]);
+			// FileReader.readAsDataURL() --> 파일을 읽고, result속성에 파일을 나타내는 URL을 저장 시켜준다.
+			
+			fileReader.onload = function(){
+			// FileReader.onload --> 파일 읽기 완료 성공시에만 작동하도록 하는 것임.
+				
+				// img태그 무조건쓰고 순수 자바스크립트로만 넣어야한다 미리보기는 이렇게!
+				document.getElementById("previewImg").src = fileReader.result;
+			
+				console.log(fileReader.result)
+			}
+			
+		})
+	
 	}); // end of $(document).ready(function(){}----------------------------
 	
 			
 	// Function Declaration		
 	// 주소찾기
-	$("input#com_postcode").attr("readonly",true);
-	$("input#com_address").attr("readonly",true);
-	$("input#com_extraAddress").attr("readonly",true);
+	$("input#partner_postcode").attr("readonly",true);
+	$("input#partner_address").attr("readonly",true);
+	$("input#partner_extraaddress").attr("readonly",true);
 	
 	function comDaumPostcode() {
 		new daum.Postcode({
@@ -446,28 +495,51 @@ div#register_com {
 					}
 					// 조합된 참고항목을 해당 필드에 넣는다.
 					document
-							.getElementById("com_extraAddress").value = extraAddr;
+							.getElementById("partner_extraaddress").value = extraAddr;
 
 				} else {
 					document
-							.getElementById("com_extraAddress").value = '';
+							.getElementById("partner_extraaddress").value = '';
 				}
 
 				// 우편번호와 주소 정보를 해당 필드에 넣는다.
-				document.getElementById('com_postcode').value = data.zonecode;
-				document.getElementById("com_address").value = addr;
+				document.getElementById('partner_postcode').value = data.zonecode;
+				document.getElementById("partner_address").value = addr;
 				// 커서를 상세주소 필드로 이동한다.
-				document.getElementById("com_detailAddress").focus();
+				document.getElementById("partner_detailaddress").focus();
 			}
 		}).open();
 		
-		$("input#com_postcode").attr("readonly",true);
-		$("input#com_address").attr("readonly",true);
-		$("input#com_extraAddress").attr("readonly",true);
+		$("input#partner_postcode").attr("readonly",true);
+		$("input#partner_address").attr("readonly",true);
+		$("input#partner_extraaddress").attr("readonly",true);
 		
 		
 	}// end of function comDaumPostcode()-----------------------------			
-
+	
+	// Function Declaration (정보 등록)
+	function partnerRegister(){
+		
+		let partComReg = true;
+		
+		const partComReg_list = document.querySelectorAll("");
+		for(let i=0; i<partComReg_list.length; i++){
+			const val=partComReg_list[i].value.trim();
+			
+			if(val ==""){
+				alert("* 은 필수입력사항입니다.");
+				partComReg = false;
+				
+				break;
+			
+			}
+		} // end of for()-----------------------------------------
+		
+	}	
+	
+	
+	
+	
 </script>
 
 <div id="register_com" style="padding-right:10%;">
@@ -479,29 +551,32 @@ div#register_com {
 		</div>
 		<div class="clientRegister">
 			<div class="rgs-profile">
-				<div class="imgbox">
-					<img id="previewImg" width="300" src="<%=ctxPath%>/resources/images/common/picture.png" alt="">
+				<div class="imgbox" style="padding-bottom:10px width=25%;">
+					<div style="padding-bottom:10px; width=25%"></div>
+					<img id="previewImg" width="300" <%-- src="<%=ctxPath%>/resources/images/common/picture.png" alt="" --%>>
 				</div>
-				<input type="file" value="fileInput" accept="image/*">
+				<input type="file" id="fileInput" value="fileInput" accept="image/*">
+				<span style="font-style:italic; font-size:12px; color:fff;">대표사진을 등록하세요&nbsp;<span class="star">*</span></span> 
+				<span class="error">거래처명은 필수 입력사항입니다.</span>
 			</div>
 			<div class="rgs-body">
 				<div class="rgs-forms">
 					<div class="rgs-left">
 						<label> 
 							<span>거래처명&nbsp;<span class="star">*</span></span> 
-							<input type="text" class="comName" id="comName" placeholder="거래처명을 입력하세요.">
+							<input type="text" class="comName" id="partner_name" placeholder="거래처명을 입력하세요.">
 							<span class="error">거래처명은 필수 입력사항입니다.</span>
 						</label> 
 						<label> 
 							<span>거래처업종&nbsp;<span class="star">*</span></span> 
-							<input type="text" id="comType" placeholder="거래처업종을 입력하세요.">
+							<input type="text" id="partner_type" placeholder="거래처업종을 입력하세요.">
 							<span class="error">거래처업종은 필수 입력사항입니다.</span>
 						</label> 
 						<div class="chk_businum">
 						<label> 
 							<span>사업자등록번호&nbsp;<span class="star">*</span></span> 
 							<div style="display:flex;">
-								<input type="text" id="partnerNo" placeholder="사업자등록번호를 입력하세요."/>
+								<input type="text" name="partner_no" id="partner_no" class="" placeholder="사업자등록번호를 입력하세요."/>
 								<input type="button" id="partnerNo_chk" onclick="" value="중복확인"/> 
 								<span id="partNoChkResult"></span>
 							</div>
@@ -511,14 +586,14 @@ div#register_com {
 						</div> 
 						<label> 
 							<span>웹사이트&nbsp;<span class="star">*</span></span> 
-							<input type="text" id="comWebsite" placeholder="사이트주소를 입력하세요.">
+							<input type="text" id="partner_url" placeholder="사이트주소를 입력하세요.">
 							<span class="error">거래처 웹사이트는 필수 입력사항입니다.</span>
 						</label>
 					</div>
 					<div class="rgs-right">
 						<label> 
 							<span>담당자명&nbsp;<span class="star">*</span></span> 
-							<input type="text" id="Name" placeholder="담당자명을 입력하세요.">
+							<input type="text" id="part_emp_name" placeholder="담당자명을 입력하세요.">
 							<span class="error">담당자명은 필수 입력사항입니다.</span>
 						</label> 
 						<label> 
@@ -531,7 +606,7 @@ div#register_com {
 						</label> 
 						<label>
 							<span>담당자이메일&nbsp;<span class="star">*</span></span>
-							<input type="text" id="comEmail" placeholder="담당자이메일을 입력하세요.">
+							<input type="text" id="part_emp_email" placeholder="담당자이메일을 입력하세요.">
 							<span id="email_empty" class="error">담당자 이메일은 필수 입력사항입니다.</span>
 							<span id="email_format" class="error">이메일 형식이 잘못되었습니다.</span>
 						</label>
@@ -541,13 +616,13 @@ div#register_com {
 					<label>
 						<span>주소&nbsp;<span class="star">*</span></span><span class="error">거래처주소는 필수 입력사항입니다.</span>
 						<span>						
-							<input type="text" id="com_postcode" placeholder="우편번호">
+							<input type="text" id="partner_postcode" placeholder="우편번호">
 							<input type="button" id="comAddr_chk" onclick="comDaumPostcode()" value="우편번호 찾기"> 
 						</span>
 					</label>
-					<input class="addfield" type="text" id="com_address" placeholder="주소"> 
-					<input class="addfield" type="text" id="com_detailAddress" placeholder="상세주소"> 
-					<input class="addfield" type="text" id="com_extraAddress" placeholder="참고항목">
+					<input class="addfield" type="text" id="partner_address" placeholder="주소"> 
+					<input class="addfield" type="text" id="partner_detailaddress" placeholder="상세주소"> 
+					<input class="addfield" type="text" id="partner_extraaddress" placeholder="참고항목">
 				</div>
 			</div>
 		</div>

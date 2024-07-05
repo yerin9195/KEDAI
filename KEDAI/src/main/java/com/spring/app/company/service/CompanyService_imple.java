@@ -13,9 +13,9 @@ public class CompanyService_imple implements CompanyService{
 	
 	// 거래처 사업자등록번호 이미 있는지 중복확인
 	@Override
-	public String partnerNoDuplicateCheck(String partnerNo) {
+	public String partnerNoDuplicateCheck(String partner_no) {
 		
-		String searchPartnerNo = dao.partnerNoDuplicateCheck(partnerNo);
+		String searchPartnerNo = dao.partnerNoDuplicateCheck(partner_no);
 		
 		return searchPartnerNo;
 	}

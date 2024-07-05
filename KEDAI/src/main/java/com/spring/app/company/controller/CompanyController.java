@@ -28,10 +28,10 @@ public class CompanyController {
 	@PostMapping(value="/partnerNoCheck.kedai", produces="text/plain;charset=UTF-8")
 	public String partnerNoDuplicateCheck(HttpServletRequest request) {
 		
-		String partnerNo = request.getParameter("partnerNo");
-		System.out.println("확인용 partnerNo : " + partnerNo);
+		String partner_no = request.getParameter("partner_no");
+		System.out.println("확인용 partner_no : " + partner_no);
 		
-		String searchPartnerNo = service.partnerNoDuplicateCheck(partnerNo);
+		String searchPartnerNo = service.partnerNoDuplicateCheck(partner_no);
 		
 		boolean isExists = false;
 		
@@ -45,17 +45,6 @@ public class CompanyController {
 		return jsonObj.toString();
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
