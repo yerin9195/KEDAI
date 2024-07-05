@@ -165,6 +165,7 @@ where table_name = 'TBL_EMPLOYEES';
 
 -----------------------------------------------------------------------
 
+-- 로그인 기록 테이블
 create table tbl_loginhistory
 (history_seq  NUMBER                not null
 ,fk_empid     VARCHAR2(30)          not null
@@ -248,18 +249,27 @@ where status = 1 and name = '관리자' and email = 'KmwWd6gn2fheAtIEcHhtdq4ZISt
 -- 아이디 찾기
 select empid
 from tbl_employees
-where status = 1 and name = ? and email = ?
+where status = 1 and name = ? and email = ?;
+
+-- 아이디 중복확인하기
+select empid
+from tbl_employees
+where empid = '2010001-001';
 
 -- 비밀번호 찾기
 select pwd
 from tbl_employees
 where status = 1 and empid = '2014100-004' and name = '이지은' and email = 'gpYWbUyoXF5e21I/zchLYZa5CieVh0uqW9c6k7/niIU=';
 
--- 아이디 중복확인하기
-select empid
-from tbl_employees
-where empid = '2024100-001'
-      
+-- 비밀번호 변경하기
+update tbl_employees set pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
+where empid = '2010001-001';
+
+commit;
+-- 커밋 완료.
+
+-----------------------------------------------------------------------
+
 select *
 from tbl_employees
 where fk_dept_code = '200'

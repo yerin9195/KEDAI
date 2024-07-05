@@ -254,7 +254,7 @@
     	<!-- 비밀번호 찾기 -->
 		<div id="pwdFind" class="tabcontent tabPwd">
 			<form name="pwdFindFrm" style="width: 400px; margin: 0 auto;">
-	  			<div style="text-align: left;"><i class="fa-regular fa-circle-check"></i>&nbsp;&nbsp;사원아이디 & 이메일로 찾기</div>
+	  			<div style="text-align: left;"><i class="fa-regular fa-circle-check"></i>&nbsp;&nbsp;사원아이디 &amp; 이메일로 찾기</div>
 		  		<br>
 	        	<div class="form-row">    
 	            	<div class="form-group" style="margin-bottom: 3%;">

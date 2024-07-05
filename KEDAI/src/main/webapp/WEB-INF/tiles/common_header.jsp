@@ -36,6 +36,39 @@
 		border: none; 
 		box-shadow: none; 
 	}
+	/* tooltip */
+	.tooltipbottom {
+  		position: relative;
+	}
+	.tooltiptext {
+  		width: 80px;
+  		background-color: #e68c0e;
+  		font-size: 10pt;
+  		color: #fff;
+  		text-align: center;
+  		border-radius: 5px;
+  		padding: 5px 0;
+  		position: absolute;
+  		z-index: 1;
+  		bottom: -70%;
+  		left: 65%;
+ 	 	margin-left: -50px;
+  		opacity: 0;
+  		transition: opacity 0.3s;
+	}
+	.tooltiptext::after {
+  		content: "";
+  		position: absolute;
+  		top: -28%;
+  		left: 50%;
+  		margin-left: -5px;
+  		border-width: 5px;
+  		border-style: solid;
+  		border-color: transparent transparent #e68c0e transparent;
+	}
+	.tooltipbottom:hover .tooltiptext {
+  		opacity: 1;
+	}
 </style>
 
 <%-- header start --%>
@@ -49,13 +82,16 @@
 	    	</form>
 	    	&nbsp;&nbsp;
 	    	<ul class="navbar-nav">
-		    	<li class="nav-item">
-		        	<a class="nav-link" href="#" style="text-align: center;"><img alt="login" src="<%= ctxPath%>/resources/images/common/login.png" width="60%" /></a>
+		    	<li class="nav-item justify-content-end tooltipbottom">
+		        	<span class="tooltiptext">로그아웃</span>
+		        	<a class="nav-link" href="<%= ctxPath%>/logout.kedai" style="text-align: center;"><img alt="login" src="<%= ctxPath%>/resources/images/common/login.png" width="60%" /></a>
 		      	</li>
-		      	<li class="nav-item">
+		      	<li class="nav-item justify-content-end tooltipbottom">
+		      		<span class="tooltiptext">메일</span>
 		        	<a class="nav-link" href="#" style="text-align: center;"><img alt="mail" src="<%= ctxPath%>/resources/images/common/mail.png" width="60%" /></a>
 		      	</li>
-		      	<li class="nav-item">
+		      	<li class="nav-item justify-content-end tooltipbottom">
+		      		<span class="tooltiptext">알림</span>
 		        	<a class="nav-link" href="#" style="text-align: center;"><img alt="alarm" src="<%= ctxPath%>/resources/images/common/alarm.png" width="60%" /></a>
 		      	</li>
 		    </ul>

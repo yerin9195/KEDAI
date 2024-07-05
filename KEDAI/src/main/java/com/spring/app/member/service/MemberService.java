@@ -15,4 +15,7 @@ public interface MemberService {
 	// 비밀번호 찾기
 	String pwdFind(Map<String, String> paraMap);
 
+	// 비밀번호 변경하기
+	int pwdUpdateEnd(Map<String, String> paraMap);
+
 }
