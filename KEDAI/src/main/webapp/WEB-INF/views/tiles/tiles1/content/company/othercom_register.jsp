@@ -543,7 +543,7 @@ div#register_com {
 </script>
 
 <div id="register_com" style="padding-right:10%;">
-	<form action="" class="clientWrap">
+	<form name="" action="" class="clientWrap">
 		<div class="clientHeader">
 			<button style="background-image: url(<%=ctxPath%>/resources/images/common/arrow-left-solid.svg)">
 			</button>
