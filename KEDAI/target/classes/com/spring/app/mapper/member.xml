@@ -3,6 +3,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="member">
+<!--  -->
+	<resultMap id="CurriculumJoinDepartment" type="com.sooRyeo.app.domain.Curriculum">
+        <id property="curriculum_seq" column="curriculum_seq"/>
+        <result property="fk_department_seq" column="fk_department_seq"/>
+        <result property="grade" column="grade"/>
+        <result property="name" column="name"/>
+        <result property="credit" column="credit"/>
+        <result property="required" column="required"/>
+        <association property="department" javaType="com.sooRyeo.app.domain.Department">
+            <id property="department_seq" column="department_seq"/>
+            <result property="department_name" column="department_name"/>
+        </association>
+    </resultMap>
 
 	<select id="getLoginMember" resultType="MemberVO" parameterType="HashMap">
 		SELECT empid, name, nickname, jubun, gender, age, email, mobile
