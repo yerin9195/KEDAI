@@ -23,7 +23,4 @@ public interface AdminDAO {
 	// 사원정보 등록하기
 	int empRegister(MemberVO mvo);
 
-	
-	
-
 }

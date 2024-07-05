@@ -57,7 +57,8 @@
 		cursor: pointer;
 	}
 	.idFind_btn:hover,
-	.pwdFind_btn:hover {
+	.pwdFind_btn:hover,
+	.certification_btn:hover {
 		background: #e68c0e;
 	}
 	a {
@@ -72,7 +73,7 @@
 		height: 40px;
 		font-size: 15px;
 		border: none;
-		background: #e68c0e;
+		background: #2c4459;
 		color: #fff;
 		cursor: pointer;
 	}
@@ -96,7 +97,7 @@
 			$("input:text[name='name']").val("${requestScope.name}");
 			$("input:text[name='email']").val("${requestScope.email}");
 			
-			if(${requestScope.isExist == true && requestScope.sendMailSuccess == true}){
+			if(${requestScope.isEmpExist == true && requestScope.sendMailSuccess == true}){
 				$("button#btnSubmitPwd").hide();
 			}
 		}
@@ -106,8 +107,7 @@
 	    }); 
 		
 		$("button#btnSubmitPwd").click(function(){
-			goPwdFind(); 
-			
+			goPwdFind();
 	    });
 		
 		$("input:text[name='email']").keydown(function(e){
@@ -211,14 +211,14 @@
 </script>	
 </head>
 <body>
-	<div style="margin: 5% auto; text-align: center;">
+	<div style="margin: 4% auto; text-align: center;">
 		<div style="width: 400px; margin: 0 auto; margin-bottom: 3%;">
 			<img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver4.png" width="100%" class="img-fluid" />
 		</div>
 		
 		<div class="tab" style="width: 400px; margin: 0 auto;">
 			<button type="button" class="tablinks idBtn" onclick="openForm(event, 'idFind')">아이디 찾기</button>
-		  	<button type="button" class="tablinks pwBtn" onclick="openForm(event, 'pwdFind')">비밀번호 찾기</button>
+		  	<button type="button" class="tablinks pwdBtn" onclick="openForm(event, 'pwdFind')">비밀번호 찾기</button>
 		</div>
 		
 		<!-- 아이디 찾기 -->
@@ -283,7 +283,7 @@
 			   	<c:if test="${requestScope.isEmpExist == true && requestScope.sendMailSuccess == true}">
 		   			<span>인증번호가 <span style="color: #e68c0e; font-size: 16pt; font-weight: bold;">${requestScope.email}</span> 로 발송되었습니다.<br>전송된 인증번호를 입력해주세요.</span>
 				   	<br><br>
-				   	<input type="text" name="input_confirmCode" style="height:30px; border-radius: 5px; outline: none; text-align: center;" />
+				   	<input type="text" name="input_confirmCode" style="height: 35px; border-radius: 5px; outline: none; text-align: center;" />
 				   	<br><br>
 				   	<button type="button" class="certification_btn">인증하기</button>
 			   	</c:if>

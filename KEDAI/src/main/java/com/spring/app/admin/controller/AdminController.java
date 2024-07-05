@@ -56,7 +56,7 @@ public class AdminController {
 	
 	// 아이디중복확인
 	@ResponseBody
-	@PostMapping(value="/idDuplicateCheck.kedai", produces="text/plain;charset=UTF-8")
+	@PostMapping(value="idDuplicateCheck.kedai", produces="text/plain;charset=UTF-8")
 	public String idDuplicateCheck(HttpServletRequest request) {
 		
 		String empid = request.getParameter("empid");
@@ -77,7 +77,7 @@ public class AdminController {
 	
 	// 이메일중복확인
 	@ResponseBody
-	@PostMapping(value="/emailDuplicateCheck.kedai", produces="text/plain;charset=UTF-8")
+	@PostMapping(value="emailDuplicateCheck.kedai", produces="text/plain;charset=UTF-8")
 	public String emailDuplicateCheck(HttpServletRequest request) {
 		
 		String email = request.getParameter("email");
@@ -155,23 +155,29 @@ public class AdminController {
 		String job_name = mrequest.getParameter("job_name");
 		String fk_job_code = "";
 		
-		if(job_name.equals("부장")) {
+		if(job_name.equals("대표이사")) {
 			fk_job_code = "1";
 		}
-		else if(job_name.equals("과장")) {
+		else if(job_name.equals("전무")) {
 			fk_job_code = "2";
 		}
-		else if(job_name.equals("차장")) {
+		else if(job_name.equals("상무")) {
 			fk_job_code = "3";
 		}
-		else if(job_name.equals("대리")) {
+		else if(job_name.equals("부장")) {
 			fk_job_code = "4";
 		}
-		else if(job_name.equals("주임")) {
+		else if(job_name.equals("과장")) {
 			fk_job_code = "5";
 		}
-		else if(job_name.equals("사원")) {
+		else if(job_name.equals("차장")) {
 			fk_job_code = "6";
+		}
+		else if(job_name.equals("대리")) {
+			fk_job_code = "7";
+		}
+		else if(job_name.equals("사원")) {
+			fk_job_code = "8";
 		}
 		else {
 			fk_job_code = "";
