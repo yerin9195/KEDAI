@@ -55,7 +55,7 @@ public class GoogleMail {
 		MimeMessage msg = new MimeMessage(ses);
 
 		// 메일 제목 설정
-		String subject = "[ KEDAI ] " + name + " 님, 요청하신 본인확인 인증번호 입니다.";
+		String subject = "[ KEDAI ] " + name + "님, 요청하신 본인확인 인증코드 입니다.";
 		msg.setSubject(subject);
 	               
 		// 보내는 사람의 메일주소
@@ -68,8 +68,22 @@ public class GoogleMail {
 		msg.addRecipient(Message.RecipientType.TO, toAddr);
 	               
 		// 메시지 본문의 내용과 형식, 캐릭터 셋 설정
-		msg.setContent("발송된 인증코드 : <span style='font-size:14pt; color:red;'>"+certification_code+"</span>", "text/html;charset=UTF-8");
-		// 세미프로젝트 때 table 또는 div 태그로 다시 만들기!!
+		msg.setContent("<div style='width: 50%; margin: 3% auto; padding: 3% 5%; border: 1px solid #ddd;'>" + 
+					   "        <div>" + 
+					   "            <div style='color: #2c4459; font-size: 50px; font-weight: bold;'>KEDAI</div>" + 
+					   "            <div style='border-top: 3px solid #2c4459; text-align: center; padding-top: 5%;'>" + 
+					   "                <h2 style='color: #e68c0e;'>비밀번호 재설정하기</h2>" + 
+					   "                <h4 style='font-weight: 100;'>" + 
+					   "                    안녕하세요 <span style='font-weight: bold;'>"+name+"("+empid+")</span> 님,<br>" + 
+					   "                    이메일 주소 인증을 요청하셨습니다.<br>" + 
+					   "                    아래의 인증코드를 입력 후 새로운 비밀번호를 설정해주세요." + 
+					   "                </h4>" + 
+					   "                <input type='text' value='"+certification_code+"' style='border: 1px solid #ccc; border-radius: 25px; width: 40%; height: 30px; text-align: center; outline: none;' readonly />" + 
+					   "                <br>" + 
+					   "                <h5>&#42;&nbsp;인증코드 입력창에 인증코드를 정확하게 입력해주세요.&nbsp;&#42;</h5>" + 
+					   "            </div>" + 
+					   "        </div>" + 
+					   "</div>", "text/html;charset=UTF-8");
                
 		// 메일 발송하기
 		Transport.send(msg);

@@ -50,5 +50,10 @@
 		from tbl_employees
 		where status = 1 and empid = #{empid} and name = #{name} and email = #{email}
 	</select>
+	
+	<update id="pwdUpdateEnd" parameterType="HashMap">
+		update tbl_employees set pwd = #{new_pwd}
+		where empid = #{empid}
+	</update>
 
 </mapper>

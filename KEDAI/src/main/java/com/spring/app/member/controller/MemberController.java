@@ -46,7 +46,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("/index.kedai")
-	public ModelAndView index(ModelAndView mav) { // http://localhost:9099/KEDAI/index.kedai
+	public ModelAndView index(ModelAndView mav) {
 		
 		mav.setViewName("tiles1/index.tiles"); 
 		
@@ -112,7 +112,7 @@ public class MemberController {
 	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {
 		
 		HttpSession session = request.getSession();	
-		session.invalidate();
+		session.invalidate(); // WAS 메모리 상에서 session 에 저장된 모든 데이터 삭제하기
 		
 		String message = "정상적으로 로그아웃 되었습니다.";
 		String loc = request.getContextPath()+"/login.kedai";
@@ -207,12 +207,14 @@ public class MemberController {
 				Random rnd = new Random();
 				String certification_code = "";
 
+				// 랜덤한 문자 생성
 				char randchar = ' ';
 				for (int i=0; i<5; i++) {
 					randchar = (char) (rnd.nextInt('z' - 'a' + 1) + 'a');
 					certification_code += randchar;
 				} // end of for ---------- 
 
+				// 랜덤한 정수 생성
 				int randnum = 0;
 				for (int i=0; i<7; i++) {
 					randnum = rnd.nextInt(9 - 0 + 1) + 0;
@@ -277,25 +279,62 @@ public class MemberController {
 			mav.addObject("loc", loc);
 	       
 			mav.setViewName("msg");
+			
+			// 세션에 저장된 인증코드 삭제하기
 			session.removeAttribute("certification_code");
 		}
 		
 		return mav;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	// 비밀번호 변경하기
+	@GetMapping("/login/pwdUpdateEnd.kedai")
+	public ModelAndView pwdUpdateEnd(ModelAndView mav, HttpServletRequest request) {
+		
+		String method = request.getMethod();
+		String empid = request.getParameter("empid");
+		
+		if("POST".equalsIgnoreCase(method)) {
+			
+			String new_pwd = request.getParameter("pwd");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("empid", empid);
+			paraMap.put("new_pwd", Sha256.encrypt(new_pwd));
+			
+			int n = 0;
+			
+			try {
+				n = service.pwdUpdateEnd(paraMap);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			String message = "";
+			String loc = "";
+			
+			if(n == 1) {
+				message = empid+" 님의 비밀번호가 변경되었습니다.\\n다시 로그인 해주세요.";
+                loc = request.getContextPath()+"/login.kedai";
+			}
+			else {
+				message = "SQL구문 오류가 발생되어 비밀번호 변경을 할 수 없습니다.\\n다시 시도해주세요.";
+                loc = request.getContextPath()+"/login/pwdFind.kedai";
+			}
+			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+	       
+			mav.setViewName("msg");
+		}
+		else { // "GET" 방식인 경우
+			mav.addObject("method", method);
+			mav.addObject("empid", empid);
+		
+			mav.setViewName("pwdUpdate");
+		}
+		
+		return mav;
+	}
 	
 }

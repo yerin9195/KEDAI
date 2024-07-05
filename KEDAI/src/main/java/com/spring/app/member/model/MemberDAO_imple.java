@@ -39,6 +39,10 @@ public class MemberDAO_imple implements MemberDAO {
 		return empPwd;
 	}
 
-	
+	@Override
+	public int pwdUpdateEnd(Map<String, String> paraMap) {
+		int n = sqlsession.update("member.pwdUpdateEnd", paraMap);
+		return n;
+	}
 	
 }

@@ -209,6 +209,10 @@
 					<a href="#">거래처정보</a>
 					<span class="icon"><i class="fa-solid fa-store"></i></span>
 				</li>
+				<li>
+					<a href="#">일정관리</a>
+					<span class="icon"><i class="fa-regular fa-calendar-check"></i></span>
+				</li>
 				<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
 					<li>
 						<a href="<%= ctxPath%>/admin/register.kedai">사원정보등록</a>

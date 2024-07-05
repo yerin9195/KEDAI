@@ -24,7 +24,7 @@
 <%-- content start --%>
 <div class="container-fluid">
 	<section class="row justify-content-between">
-		<div class="col-8" style="border: 1px solid red;">
+		<div class="col-9" style="border: 1px solid red;">
 			<div class="row justify-content-between mt-2">
 				<div class="col-5 pl-5 pr-2" style="height: 100px; display: flex; align-items: center;">
 					<div style="width: 60%">
@@ -63,7 +63,7 @@
 			</div>
 		</div>
 		
-		<div class="col-4" style="border: 1px solid red; background: #2c4459; text-align: center; color: #fff;">
+		<div class="col-3" style="border: 1px solid red; background: #2c4459; text-align: center; color: #fff;">
 			<div class="mt-5" style="width: 150px; height: 150px; border-radius: 50%; background: #fff; display: inline-block;">
 			
 			</div>

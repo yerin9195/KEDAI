@@ -117,7 +117,7 @@
          	<div style="text-align: left;">
          		<input type="checkbox" id="idSave" />&nbsp;<label for="idSave">아이디 저장하기</label>
          		<div style="border: 0px solid red; float: right;">
-         			<span><a href="<%= ctxPath%>/login/idPwdFind.kedai">[ 사원아이디 & 비밀번호 찾기 ]</a></span>
+         			<span><a href="<%= ctxPath%>/login/idPwdFind.kedai">[ 사원아이디 &amp; 비밀번호 찾기 ]</a></span>
          		</div>
          	</div>
          </div>        
