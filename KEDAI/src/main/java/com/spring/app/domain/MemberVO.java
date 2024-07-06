@@ -1,5 +1,7 @@
 package com.spring.app.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class MemberVO {
 
 	private String empid;              
@@ -13,7 +15,8 @@ public class MemberVO {
 	private String address;            
 	private String detailaddress;      
 	private String extraaddress;       
-	private String imgfilename;        
+	private String imgfilename; 
+	private String orgimgfilename;
 	private String hire_date;          
 	private String salary;             
 	private String commission_pct;     
@@ -38,6 +41,8 @@ public class MemberVO {
 
 	private DeptVO dvo;
 	private JobVO  jvo;
+	
+	private MultipartFile attach; // form 태그에서 type="file" 인 파일을 받아서 저장되는 필드
 	
 	// getters & setters
 	public String getEmpid() {
@@ -134,6 +139,14 @@ public class MemberVO {
 
 	public void setImgfilename(String imgfilename) {
 		this.imgfilename = imgfilename;
+	}
+	
+	public String getOrgimgfilename() {
+		return orgimgfilename;
+	}
+
+	public void setOrgimgfilename(String orgimgfilename) {
+		this.orgimgfilename = orgimgfilename;
 	}
 
 	public String getHire_date() {
@@ -278,6 +291,14 @@ public class MemberVO {
 
 	public void setJvo(JobVO jvo) {
 		this.jvo = jvo;
+	}
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
 	}
 	
 }

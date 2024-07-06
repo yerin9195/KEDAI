@@ -163,6 +163,15 @@ select column_name, comments
 from user_col_comments
 where table_name = 'TBL_EMPLOYEES';
 
+-- 컬럼 추가하기
+alter table tbl_employees
+add orgimgfilename VARCHAR2(100);
+-- Table TBL_EMPLOYEES이(가) 변경되었습니다.
+
+comment on column tbl_employees.imgfilename is 'WAS(톰캣)에저장될이미지파일명'; 
+comment on column tbl_employees.orgimgfilename is '실제이미지파일명'; 
+-- Comment이(가) 생성되었습니다.
+
 -----------------------------------------------------------------------
 
 -- 로그인 기록 테이블

@@ -1,5 +1,6 @@
 package com.spring.app.admin.controller;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -104,8 +106,47 @@ public class AdminController {
 	
 	// 사원정보 등록하기
 	@PostMapping("empRegister.kedai")
-	public ModelAndView empRegister(ModelAndView mav, MultipartHttpServletRequest mrequest, MemberVO mvo) {
-
+	public ModelAndView empRegister(ModelAndView mav, MemberVO mvo, MultipartHttpServletRequest mrequest) {
+		
+		MultipartFile attach = mvo.getAttach();
+		
+		if(attach != null) { // 첨부파일이 있는 경우
+			
+			// WAS 의 webapp 의 절대경로 알아오기
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/"); 
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
+			
+			String path = root+"resources"+File.separator+"files";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			
+			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
+			byte[] bytes = null;     // 첨부파일의 내용물을 담는 것
+			
+			try {
+				bytes = attach.getBytes(); // 첨부파일의 내용물을 읽어오는 것
+				
+				String originalFilename = attach.getOriginalFilename(); // 첨부파일명의 파일명
+				
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+				
+				
+				
+				
+				
+			} catch (Exception e) {
+				e.printStackTrace(); 
+			}
+			
+			
+			
+			
+			
+			
+		}
+		
+		
 		String jubun1 = mrequest.getParameter("jubun1");
 		String jubun2 = mrequest.getParameter("jubun2");
 		String jubun = jubun1 + jubun2;
@@ -209,7 +250,7 @@ public class AdminController {
 		mvo.setFk_dept_code(fk_dept_code);
 		mvo.setFk_job_code(fk_job_code);
 		mvo.setDept_tel(dept_tel);
-		
+	/*	
 		try {
 			int n = service.empRegister(mvo);
 			
@@ -232,7 +273,7 @@ public class AdminController {
            
 			mav.setViewName("msg"); 
 		}
-
+*/
 		return mav;
 	}
 	
