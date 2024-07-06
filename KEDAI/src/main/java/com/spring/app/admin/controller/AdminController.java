@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.admin.service.AdminService;
 import com.spring.app.common.AES256;
+import com.spring.app.common.FileManager;
 import com.spring.app.common.Sha256;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.JobVO;
@@ -35,6 +35,9 @@ public class AdminController {
 	
 	@Autowired
 	private AES256 aES256;
+	
+	@Autowired
+	private FileManager fileManager;
 
 	// 부서&직급 목록 조회하기
 	@RequestMapping("register.kedai")
@@ -129,23 +132,16 @@ public class AdminController {
 				
 				String originalFilename = attach.getOriginalFilename(); // 첨부파일명의 파일명
 				
-				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path); // 첨부되어진 파일을 업로드
 				
-				
-				
-				
+				mvo.setImgfilename(newFileName);
+				mvo.setOrgimgfilename(originalFilename);
 				
 			} catch (Exception e) {
 				e.printStackTrace(); 
 			}
 			
-			
-			
-			
-			
-			
-		}
-		
+		} // end of if(attach != null) ----------
 		
 		String jubun1 = mrequest.getParameter("jubun1");
 		String jubun2 = mrequest.getParameter("jubun2");
@@ -224,8 +220,6 @@ public class AdminController {
 			fk_job_code = "";
 		}
 		
-		mvo = new MemberVO();
-	//	mvo.setImgfilename(imgfilename);
 		mvo.setEmpid(mrequest.getParameter("empid"));
 		mvo.setPwd(Sha256.encrypt(mrequest.getParameter("pwd")));
 		mvo.setName(mrequest.getParameter("name"));
@@ -250,7 +244,7 @@ public class AdminController {
 		mvo.setFk_dept_code(fk_dept_code);
 		mvo.setFk_job_code(fk_job_code);
 		mvo.setDept_tel(dept_tel);
-	/*	
+		
 		try {
 			int n = service.empRegister(mvo);
 			
@@ -273,7 +267,7 @@ public class AdminController {
            
 			mav.setViewName("msg"); 
 		}
-*/
+
 		return mav;
 	}
 	

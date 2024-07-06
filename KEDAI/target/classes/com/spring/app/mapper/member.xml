@@ -18,6 +18,7 @@
         <result property="detailaddress"  column="detailaddress"/>
         <result property="extraaddress"   column="extraaddress"/>
         <result property="imgfilename" 	  column="imgfilename"/>
+        <result property="orgimgfilename" column="orgimgfilename"/>
         <result property="hire_date" 	  column="hire_date"/>
         <result property="salary" 		  column="salary"/>
         <result property="commission_pct" column="commission_pct"/>
@@ -44,7 +45,7 @@
 	<select id="getLoginMember" resultType="MemberVO" parameterType="HashMap" resultMap="MemberJoinDeptJob">
 		SELECT empid, name, nickname, jubun, gender, age, email, mobile
 		     , postcode, address, detailaddress, extraaddress
-		     , imgfilename, hire_date, salary, commission_pct, point
+		     , imgfilename, orgimgfilename, hire_date, salary, commission_pct, point
 		     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel, sign_img, annual_leave, pwdchangegap
 		     , NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
 		FROM 
@@ -53,7 +54,7 @@
 		         , func_gender(jubun) AS gender
 		         , func_age(jubun) AS age
 		         , email, mobile, postcode, address, detailaddress, extraaddress
-		         , imgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
+		         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
 		         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
 		         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
 		         , dept_tel, sign_img, annual_leave
