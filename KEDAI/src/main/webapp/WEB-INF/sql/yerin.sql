@@ -212,7 +212,7 @@ desc tbl_loginhistory;
 SELECT empid, name, nickname, jubun, gender, age, email, mobile
      , postcode, address, detailaddress, extraaddress
      , imgfilename, hire_date, salary, commission_pct, point
-     , fk_dept_code, dept_name, fk_job_code, job_name, dept_tel, sign_img, annual_leave, pwdchangegap
+     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel, sign_img, annual_leave, pwdchangegap
      , NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
 FROM 
 (
@@ -221,8 +221,8 @@ FROM
          , func_age(jubun) AS age
          , email, mobile, postcode, address, detailaddress, extraaddress
          , imgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
-         , fk_dept_code, nvl(D.dept_name, '부서없음') AS dept_name
-         , fk_job_code, nvl(J.job_name, '직급없음') AS job_name
+         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
          , dept_tel, sign_img, annual_leave
          , trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap
     from tbl_employees E1 
@@ -317,7 +317,7 @@ commit;
 
 select *
 from tbl_employees
-where fk_dept_code = '200'
+where fk_dept_code = '100'
 order by fk_job_code;
 
 update tbl_employees set fk_job_code = 1

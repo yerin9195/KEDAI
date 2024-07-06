@@ -27,8 +27,11 @@ public class MemberVO {
 	private int    annual_leave;
 
 	// select 용
-	private int pwdchangegap; // 마지막으로 암호를 변경한지가 몇개월인지 알려주는 개월수(3개월 동안 암호를 변경 안 했을시 암호를 변경하라는 메시지를 보여주기 위함이다.)
-
+	private String gender;    // 성별
+	private String age;       // 나이
+	private int pwdchangegap; // 마지막으로 암호를 변경한지가 몇개월인지 알려주는 개월수
+	private int lastlogingap; // 마지막으로 로그인한지가 몇개월인지 알려주는 개월수
+	
 	// alert 용
 	private boolean requirePwdChange = false; // 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지났으면 true
 											  // 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지나지 않았으면 false
@@ -213,12 +216,44 @@ public class MemberVO {
 		this.sign_img = sign_img;
 	}   
 
+	public int getAnnual_leave() {
+		return annual_leave;
+	}
+
+	public void setAnnual_leave(int annual_leave) {
+		this.annual_leave = annual_leave;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
+	}
+	
 	public int getPwdchangegap() {
 		return pwdchangegap;
 	}
 
 	public void setPwdchangegap(int pwdchangegap) {
 		this.pwdchangegap = pwdchangegap;
+	}
+	
+	public int getLastlogingap() {
+		return lastlogingap;
+	}
+
+	public void setLastlogingap(int lastlogingap) {
+		this.lastlogingap = lastlogingap;
 	}
 
 	public boolean isRequirePwdChange() {
@@ -227,14 +262,6 @@ public class MemberVO {
 
 	public void setRequirePwdChange(boolean requirePwdChange) {
 		this.requirePwdChange = requirePwdChange;
-	}
-
-	public int getAnnual_leave() {
-		return annual_leave;
-	}
-
-	public void setAnnual_leave(int annual_leave) {
-		this.annual_leave = annual_leave;
 	}
 
 	public DeptVO getDvo() {
