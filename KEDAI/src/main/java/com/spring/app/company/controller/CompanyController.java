@@ -1,19 +1,32 @@
 package com.spring.app.company.controller;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.AES256;
 import com.spring.app.company.service.CompanyService;
+import com.spring.app.domain.PartnerVO;
 
 @Controller
 public class CompanyController {
@@ -45,10 +58,72 @@ public class CompanyController {
 		
 		return jsonObj.toString();
 		
+	} // end of public String partnerNoDuplicateCheck()--------------------------------------
+	
+	public static class OtherCom {
+		
+	}
+	
+	@PostMapping(path = "othercom_register.kedai", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+	public ModelAndView other_comRegister_submit(@ModelAttribute PartnerVO partvo, ModelAndView mav, MultipartHttpServletRequest mrequest) {
+		partvo.getPartner_no();
+		partvo.getPart_emp_email();
+		
+		MultipartFile imageFile = partvo.getImgfilename();
+		
+		try {
+			String ext = imageFile.getOriginalFilename().substring(
+					imageFile.getOriginalFilename().lastIndexOf("."));
+			Files.copy(imageFile.getInputStream(), 
+					Paths.get("C:\\SW\\cdn\\" + imageFile.getOriginalFilename() + "_" + System.nanoTime() + ext), 
+					StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return mav;
+		
+		
 	}
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	 * private String extractFileName(String )
+	 */
 	
 	//////////////////////////////////////////////////////////////////////////
 		
@@ -60,30 +135,9 @@ public class CompanyController {
 		return mav;
 	}
 	
-	public static class OtherCom {
-		
-	}
 	
-	@PostMapping(value="/othercom_register.kedai")
-	public ModelAndView other_comRegister_submit(@RequestBody OtherCom otherCom, HttpServletRequest request, ModelAndView mav) {
-		
-		String partner_no = request.getParameter("partner_no");
-		System.out.println("확인용 partner_no : " + partner_no);
-		
-		String searchPartnerNo = service.partnerNoDuplicateCheck(partner_no);
-		
-		boolean isExists = false;
-		
-		if(searchPartnerNo != null) {
-			isExists = true;
-		}
-		
-		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("isExists", isExists);
-		
-		return jsonObj.toString();
-		
-	}
+	
+	
 	
 	@GetMapping(value="/employee.kedai")
 	public ModelAndView employee(ModelAndView mav) {
