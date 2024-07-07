@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,16 +41,16 @@ public class MemberController {
 	}	
 
 	@RequestMapping("/login.kedai") 
-	public String login(HttpServletRequest request) { // http://localhost:9099/KEDAI/login.kedai
+	public String login(HttpServletRequest request) { 
 
 		return "login";
 	}
 	
 	@GetMapping("/index.kedai")
-	public ModelAndView index(ModelAndView mav) {
-		
+	public ModelAndView requiredLogin_index(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+
 		mav.setViewName("tiles1/index.tiles"); 
-		
+
 		return mav;
 	}
 
@@ -336,5 +337,30 @@ public class MemberController {
 		
 		return mav;
 	}
+	
+	@RequestMapping("/member/memberEdit.kedai")
+	public ModelAndView memberEditEnd(ModelAndView mav, HttpServletRequest request) {	
+	
+		String method = request.getMethod();
+		
+		if("GET".equalsIgnoreCase(method)) {
+			mav.setViewName("tiles1/member/memberEdit.tiles");
+		}
+		else {
+			
+			
+			
+			
+		}
+		
+		return mav;
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 }

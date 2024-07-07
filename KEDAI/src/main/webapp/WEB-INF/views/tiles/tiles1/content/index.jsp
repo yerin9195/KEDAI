@@ -70,7 +70,7 @@
 		</div>
 		
 		<div class="col-3" style="border: 1px solid red; background: #2c4459; text-align: center; color: #fff;">
-			<div class="mt-5" style="width: 180px; height: 180px; display: inline-block;">
+			<div class="mt-5" style="width: 180px; height: 180px; overflow: hidden; display: inline-block;">
 				<img alt="img" style="width: 100%; height: 100%; border-radius: 50%;" src="<%= ctxPath%>/resources/images/common/member/${(sessionScope.loginuser).orgimgfilename}">
 			</div>
 			<div class="mt-3">
@@ -79,7 +79,7 @@
 			
 				<span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp;<fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###" /> POINT
 				<br><br>
-				[&nbsp;<a href="javascript:goEditMyInfo('${(sessionScope.loginuser).empid}','<%= ctxPath%>')">마이페이지</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;
+				[&nbsp;<a href="<%= ctxPath%>/member/memberEdit.kedai">마이페이지</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;
                	[&nbsp;<a href="javascript:goCoinPurchaseTypeChoice('${(sessionScope.loginuser).empid}','<%= ctxPath%>')">포인트충전</a>&nbsp;]
 			</div>
 		</div>
