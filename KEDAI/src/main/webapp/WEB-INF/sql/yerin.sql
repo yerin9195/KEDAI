@@ -163,6 +163,15 @@ select column_name, comments
 from user_col_comments
 where table_name = 'TBL_EMPLOYEES';
 
+-- 컬럼 추가하기
+alter table tbl_employees
+add orgimgfilename VARCHAR2(100);
+-- Table TBL_EMPLOYEES이(가) 변경되었습니다.
+
+comment on column tbl_employees.imgfilename is 'WAS(톰캣)에저장될이미지파일명'; 
+comment on column tbl_employees.orgimgfilename is '실제이미지파일명'; 
+-- Comment이(가) 생성되었습니다.
+
 -----------------------------------------------------------------------
 
 -- 로그인 기록 테이블
@@ -211,8 +220,8 @@ desc tbl_loginhistory;
 
 SELECT empid, name, nickname, jubun, gender, age, email, mobile
      , postcode, address, detailaddress, extraaddress
-     , imgfilename, hire_date, salary, commission_pct, point
-     , fk_dept_code, dept_name, fk_job_code, job_name, dept_tel, sign_img, annual_leave, pwdchangegap
+     , imgfilename, orgimgfilename, hire_date, salary, commission_pct, point
+     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel, sign_img, annual_leave, pwdchangegap
      , NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
 FROM 
 (
@@ -220,9 +229,9 @@ FROM
          , func_gender(jubun) AS gender
          , func_age(jubun) AS age
          , email, mobile, postcode, address, detailaddress, extraaddress
-         , imgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
-         , fk_dept_code, nvl(D.dept_name, '부서없음') AS dept_name
-         , fk_job_code, nvl(J.job_name, '직급없음') AS job_name
+         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
+         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
          , dept_tel, sign_img, annual_leave
          , trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap
     from tbl_employees E1 

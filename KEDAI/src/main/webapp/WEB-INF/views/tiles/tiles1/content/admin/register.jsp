@@ -70,6 +70,21 @@
 		$("span.error").hide();
 		$("input#empid").focus();
 	
+		// 이미지 미리 보여주기
+		$(document).on("change", "input.img_file", function(e){
+			const input_file = $(e.target).get(0);
+		
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(input_file.files[0]); 
+			
+			fileReader.onload = function(){
+				document.getElementById("previewImg").src = fileReader.result;
+			};
+			
+		}); // end of $(document).on("change", "input.img_file", function(e){}) ----------
+		
+		///////////////////////////////////////////////////////////////
+		
 		$("input#pwd").blur( (e) => { 
 
 	        const regExp_pwd = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
@@ -424,10 +439,10 @@
 		<div class="col-2" style="border: 0px solid blue;">
 			<h6>사진등록</h6>
 			<div style="width: 200px; height: 230px; border: 1px solid #ddd;">
-				<img id="previewImg" />
+				<img id="previewImg" style="width: 200px; height: 230px;" />
 			</div>
 			<br>
-	   <%-- <input type="file" name="imgfilename" class="infoData img_file" accept='image/*' /> --%>
+	   		<input type="file" name="attach" class="infoData img_file" accept='image/*' />
 		</div>
 		
 		<div class="col-10 row" id="empRegister">

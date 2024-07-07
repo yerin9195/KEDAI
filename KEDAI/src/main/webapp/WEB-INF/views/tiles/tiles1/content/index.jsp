@@ -21,6 +21,12 @@
 	}
 </style>
 
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		
+	}); // end of $(document).ready(function(){}) ----------
+</script>
 <%-- content start --%>
 <div class="container-fluid">
 	<section class="row justify-content-between">
@@ -64,12 +70,12 @@
 		</div>
 		
 		<div class="col-3" style="border: 1px solid red; background: #2c4459; text-align: center; color: #fff;">
-			<div class="mt-5" style="width: 150px; height: 150px; border-radius: 50%; background: #fff; display: inline-block;">
-			
+			<div class="mt-5" style="width: 180px; height: 180px; display: inline-block;">
+				<img alt="img" style="width: 100%; height: 100%; border-radius: 50%;" src="<%= ctxPath%>/resources/images/common/member/${(sessionScope.loginuser).orgimgfilename}">
 			</div>
 			<div class="mt-3">
 				<h4>${(sessionScope.loginuser).name}&nbsp;[ ${(sessionScope.loginuser).nickname} ]</h4>
-				<h5>${(sessionScope.loginuser).fk_job_code}</h5>
+				<h5>${(sessionScope.loginuser).jvo.job_name}</h5>
 			
 				<span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp;<fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###" /> POINT
 				<br><br>
