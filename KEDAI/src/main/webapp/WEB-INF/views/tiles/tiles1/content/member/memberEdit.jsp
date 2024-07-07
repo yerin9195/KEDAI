@@ -59,8 +59,8 @@
 </style>
 
 <script type="text/javascript">
-	let b_emailcheck_click = false; 
-	let b_zipcodeSearch_click = false;
+	let b_emailcheck_click = true; 
+	let b_zipcodeSearch_click = true;
 	
 	$(document).ready(function(){
 		
@@ -297,8 +297,6 @@
 	        return;
 	    }
 	    
-	    
-	    // 이따 지우기
 	    if(!b_emailcheck_click){ // "이메일중복확인" 을 클릭하지 않았을 경우
 	        alert("이메일 중복확인을 클릭하셔야 합니다.");
 	        return; 
@@ -319,7 +317,7 @@
 	    }
 	    
 	    const frm = document.editFrm;
-     	frm.action = "<%= ctxPath%>/member/memberEdit.kedai";
+     	frm.action = "<%= ctxPath%>/member/memberEditEnd.kedai";
      	frm.method = "post";
     	frm.submit();
      	
@@ -328,7 +326,6 @@
 	// Function Declaration
 	function goReset(){
 
-	    $("span#idcheckResult").empty();
 	    $("span#emailCheckResult").empty();
 
 	} // end of function goReset() ----------
