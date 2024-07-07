@@ -377,6 +377,19 @@ from tbl_employees;
 
 -----------------------------------------------------------------------
 
+update tbl_employees set pwd = #{pwd}
+                       , name = #{name}
+                       , nickname = #{nickname}
+                       , email = #{email}
+                       , mobile = #{mobile}
+                       , postcode = #{postcode}
+                       , address = #{address}
+                       , detailaddress = #{detailaddress}
+                       , extraaddress = #{extraaddress}
+                       , newFileName = #{newFileName}
+                       , originalFilename = #{originalFilename}
+where empid = #{empid};
+
 
 
 

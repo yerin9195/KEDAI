@@ -44,5 +44,14 @@ public class MemberDAO_imple implements MemberDAO {
 		int n = sqlsession.update("member.pwdUpdateEnd", paraMap);
 		return n;
 	}
+
+	@Override
+	public int memberEditEnd(Map<String, String> paraMap) {
+		int n = sqlsession.update("member.memberEditEnd", paraMap);
+		return n;
+	}
+
+	
+
 	
 }
