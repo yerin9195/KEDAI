@@ -39,6 +39,8 @@ $(document).ready(function(){
 		alert("이메일은 변경 불가합니다.");
 	})
 	
+
+	
 // === "출발지 우편번호찾기"를 클릭했을 때 이벤트 처리하기 === //
    $("button#departure_zipcodeSearch").click(function(){
 	
@@ -223,7 +225,7 @@ $("button#arrive_zipcodeSearch").click(function(){
            $(e.target).next().hide();
        }
    });
-
+	
 ///////////////////////////////////////////////////////
 });//end of $(document).ready(function(){})---------------------------------------
 
@@ -234,6 +236,8 @@ function goRegister() {
  // *** 필수입력사항에 모두 입력이 되었는지 검사하기 시작 *** //
  let b_requiredInfo = true;
 
+	var datepicker1 =  document.getElementById('datepicker1').value;
+	alert("~~~확인용 : "+datepicker1);
 /*   
  $("input.requiredInfo").each(function(index, elmt){
      const data = $(elmt).val().trim();
@@ -380,7 +384,9 @@ function goRegister() {
          <tr>
             <td width="25%" class="prodInputName">도착지</td>
             <td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;">
-               <input type="text" name="postcode" id="arrive_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="우편번호" readonly/>&nbsp;&nbsp;
+               <!-- <input type="text" name="postcode" id="arrive_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="출발지 이름"/>
+               <span class="hint">ex)여의도역, 사옥 A건물 B2층 주차장</span><br>
+                --><input type="text" name="postcode" id="arrive_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="우편번호" readonly/>&nbsp;&nbsp;
                     <%-- 우편번호 찾기 --%>
                     <button type="button" style="background-color: white; padding: 5px;" id="arrive_zipcodeSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
                     <span class="error">우편번호 형식에 맞지 않습니다.</span><br>
@@ -399,7 +405,7 @@ function goRegister() {
          </tr>
          <tr style="height: 70px;">
             <td colspan="2" align="center" style="border-left: hidden; border-bottom: hidden; border-right: hidden; padding: 1%;">
-                <input type="button" value="등록하기" id="btnRegister" style="width: 120px; background-color:#2c4459; color: white;" class="btn btn-lg mr-5" /> 
+                <input type="button" value="등록하기" id="btnRegister" onclick="goRegister()" style="width: 120px; background-color:#2c4459; color: white;" class="btn btn-lg mr-5" /> 
                 <input type="reset" value="뒤로가기" onclick="cancel()" style="width: 120px; background-color: #2c4459; color: white;" class="btn btn-lg" />   
             </td>
          </tr>
