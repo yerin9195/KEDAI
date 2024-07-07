@@ -202,11 +202,11 @@
 					<span class="icon"><i class="fa-solid fa-bus-simple"></i></span>
 				</li>
 				<li>
-					<a href="#">사내연락망</a>
+					<a href="<%=ctxPath%>/employee.kedai">사내연락망</a>
 					<span class="icon"><i class="fa-solid fa-address-book"></i></span>
 				</li>
 				<li>
-					<a href="#">거래처정보</a>
+					<a href="<%=ctxPath%>/othercom_list.kedai">거래처정보</a>
 					<span class="icon"><i class="fa-solid fa-store"></i></span>
 				</li>
 				<li>
