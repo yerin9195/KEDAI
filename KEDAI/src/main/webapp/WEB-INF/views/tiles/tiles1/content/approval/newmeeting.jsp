@@ -73,13 +73,25 @@ div.openList img{
 	display:none;
 }
 
-ul.approvalList > li {
+ul.approvalList > li > label:hover {
+	background-color:#EBEBEB;	
+}
+
+ul.approvalList > li > label{
+	margin: 0 3%;
 	cursor:pointer;
-	
 }
 
 .modal-body ul {
       padding-left: 20px; /* 중첩된 목록에 대한 기본 들여쓰기 */
+}
+
+.bold_text {
+  font-weight: bold;
+}
+
+.addApproval{
+	text-align : center;
 }
 
 
@@ -279,8 +291,35 @@ ul.approvalList > li {
 	    // label 태그에 클릭을 했을때에 label 태그에 CSS 클래스 changeCSSname 이 
 	       // 적용이 안되어진 상태이라면 label 태그에 CSS 클래스 changeCSSname 을 적용시켜주고,
 	       // 이미 적용이 되어진 상태이라면 label 태그에 CSS 클래스 changeCSSname 을 해제시켜준다.
-		$(document).on("click", "ul.approvalList > li", function(){
+
+	       
+       
+		$(document).on("click", "ul.approvalList > li > input:checkbox[name='person']", function(){
+			// name이 person인 체크박스에 대해서 클릭하면
+
+	        const bool = $(this).prop("checked");
+	        // 클릭한 체크박스의 체크유무를 알아온다.
+			if(bool){
+				 $(this).next().addClass("bold_text");
 				
+			}
+			else{
+				$(this).next().removeClass("bold_text");
+			 }
+		  /* 	let name = $(this).text();
+		    let htmlAList = "";
+		        
+
+		   
+		    htmlAList += `<tr>
+		                     <td>1</td>
+		                     <td>인사부</td>
+		                     <td>부장</td>
+		                     <td>\${name}</td>
+		                  </tr>`;
+		    $("table.addApproval").append(htmlAList);
+ */
+        
 		});
 		     
 		
@@ -352,11 +391,11 @@ ul.approvalList > li {
 			        		<ul>
 			        			<li class="dept"><div class="openList" style="border: solid 1px red;"><img src="<%= ctxPath%>/resources/images/common/Approval/plus.png" />마케팅부서</div>
 			        				<ul class="moreList approvalList">
-			        					<li>김모씨</li>
-			        					<li>박모씨</li>
-			        					<li>이모씨</li>
-			        					<li>최모씨</li>
-			        					<li>제갈모씨</li>
+			        					<li><input type="checkbox" name="person" id="person0" value="일순신" /><label for="person0">김모씨</label></li>
+			        					<li><input type="checkbox" name="person" id="person1" value="일순신" /><label for="person1">박모씨</label></li>
+			        					<li><input type="checkbox" name="person" id="person2" value="일순신" /><label for="person2">이모씨</label></li>
+			        					<li><input type="checkbox" name="person" id="person3" value="일순신" /><label for="person3">최모씨</label></li>
+			        					<li><input type="checkbox" name="person" id="person4" value="일순신" /><label for="person4">제갈모씨</label></li>
 			        				</ul>
 			        			</li>
 			        			
@@ -373,8 +412,8 @@ ul.approvalList > li {
 			        		</ul>	
 		      			</div>	
 		      			<div class="modal_right col-md-7">
-		      				<table class="table">
-		      					<tr style="text-align:center;">
+		      				<table class="table addApproval">
+		      					<tr>
 									<th>순서</th>
 									<th>소속</th>
 									<th>직급</th>
