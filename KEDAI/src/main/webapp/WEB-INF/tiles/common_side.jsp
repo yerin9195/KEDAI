@@ -130,11 +130,10 @@
 	  	display: block;
 	}
 	.menu div.logotype {
-	  	position: absolute!important;
+	  	position: absolute !important;
 	  	top: 11px;
 	  	left: 55px;
 	  	display: block;
-	  	text-transform: uppercase;
 	  	font-weight: 400;
 	  	color: #363636;
 	  	font-size: 21px;
@@ -166,7 +165,7 @@
 
 	<nav role="navigation" class="menu">
 		<div class="logotype">
-			
+			Hello, <span>${(sessionScope.loginuser).nickname}</span>&nbsp;:)
 		</div>
 		<div class="overflow-container">
 			<ul class="menu-dropdown">
@@ -203,14 +202,18 @@
 					<span class="icon"><i class="fa-solid fa-bus-simple"></i></span>
 				</li>
 				<li>
-					<a href="#">사내연락망</a>
+					<a href="<%=ctxPath%>/employee.kedai">사내연락망</a>
 					<span class="icon"><i class="fa-solid fa-address-book"></i></span>
 				</li>
 				<li>
-					<a href="#">거래처정보</a>
+					<a href="<%=ctxPath%>/othercom_list.kedai">거래처정보</a>
 					<span class="icon"><i class="fa-solid fa-store"></i></span>
 				</li>
-				<c:if test="${(sessionScope.loginuser).nickname == 'Admin'}">
+				<li>
+					<a href="#">일정관리</a>
+					<span class="icon"><i class="fa-regular fa-calendar-check"></i></span>
+				</li>
+				<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
 					<li>
 						<a href="<%= ctxPath%>/admin/register.kedai">사원정보등록</a>
 						<span class="icon"><i class="fa-solid fa-user-plus"></i></span>

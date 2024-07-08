@@ -211,8 +211,7 @@ create table tbl_minutes
 ,host_dept       NVARCHAR2(50)      not null    -- 회의 주관부서
 ,constraint PK_tbl_minutes_minutes_code primary key(minutes_code)
 ,constraint FK_tbl_minutes_fk_doc_no foreign key(fk_doc_no) references tbl_doc(doc_no)
-);
-,                 
+);             
 
 ALTER TABLE tbl_minutes ADD host_dept NVARCHAR2(50) not null;
 

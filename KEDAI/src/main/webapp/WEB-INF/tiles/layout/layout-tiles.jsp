@@ -42,7 +42,7 @@
 	  	padding: 0;
 	}
 	body {
-		font-family: "Noto Sans KR", sans-serif;
+		font-family: "Noto Sans KR", sans-serif !important;
 		color: #363636;
 		overflow-x: hidden;
 		overflow-y: hidden;

@@ -26,8 +26,8 @@
 	span#emailCheckResult {
 		font-size: 12pt;
 	}
-	button#emailcheck,
 	button#idcheck,
+	button#emailcheck,
 	button#zipcodeSearch {
 		border: solid 1px #2c4459;
 		border-radius: 25px;
@@ -38,8 +38,8 @@
 		height: 40px;
 		margin-left: 10px;
 	}
-	button#emailcheck:hover,
 	button#idcheck:hover,
+	button#emailcheck:hover,
 	button#zipcodeSearch:hover {
 		border: none;
 		background: #e68c0e;
@@ -70,6 +70,21 @@
 		$("span.error").hide();
 		$("input#empid").focus();
 	
+		// 이미지 미리 보여주기
+		$(document).on("change", "input.img_file", function(e){
+			const input_file = $(e.target).get(0);
+		
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(input_file.files[0]); 
+			
+			fileReader.onload = function(){
+				document.getElementById("previewImg").src = fileReader.result;
+			};
+			
+		}); // end of $(document).on("change", "input.img_file", function(e){}) ----------
+		
+		///////////////////////////////////////////////////////////////
+		
 		$("input#pwd").blur( (e) => { 
 
 	        const regExp_pwd = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
@@ -270,6 +285,8 @@
 
 	    }); // end of $("img#zipcodeSearch").click() ----------
 	    
+		//////////////////////////////////////////////////////////////
+	    
 	 	// === jQuery UI 의 datepicker === //
 	    $('input#datepicker').datepicker({
 	        dateFormat: 'yy-mm-dd'    // Input Display Format 변경
@@ -290,7 +307,7 @@
 	        b_idcheck_click = true;
 	      
 	        $.ajax({
-	            url: "<%= ctxPath%>/idDuplicateCheck.kedai", 
+	            url: "<%= ctxPath%>/admin/idDuplicateCheck.kedai", 
 	            data: {"empid":$("input#empid").val()}, 
 	            type: "post", 
 	            async: true, 
@@ -318,7 +335,7 @@
 	        b_emailcheck_click = true;
 	
 	        $.ajax({
-	            url: "<%= ctxPath%>/emailDuplicateCheck.kedai", 
+	            url: "<%= ctxPath%>/admin/emailDuplicateCheck.kedai", 
 	            data: {"email":$("input#email").val()}, 
 	            type: "post", 
 	            async: true,  
@@ -423,11 +440,11 @@
 	<form name="registerFrm" enctype="multipart/form-data" class="row mt-5" style="border: 0px solid green;">
 		<div class="col-2" style="border: 0px solid blue;">
 			<h6>사진등록</h6>
-			<div style="width: 200px; height: 230px; border: 1px solid #ddd;">
-				<img id="previewImg" />
+			<div style="width: 200px; height: 230px; overflow: hidden; border: 1px solid #ddd;">
+				<img id="previewImg" style="width: 100%; height: 100%;" />
 			</div>
 			<br>
-	   <%-- <input type="file" name="imgfilename" class="infoData img_file" accept='image/*' /> --%>
+	   		<input type="file" name="attach" class="infoData img_file" accept='image/*' />
 		</div>
 		
 		<div class="col-10 row" id="empRegister">

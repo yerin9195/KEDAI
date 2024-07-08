@@ -15,4 +15,13 @@ public interface MemberDAO {
 	// 아이디 찾기
 	String idFind(Map<String, String> paraMap);
 
+	// 비밀번호 찾기
+	String pwdFind(Map<String, String> paraMap);
+
+	// 비밀번호 변경하기
+	int pwdUpdateEnd(Map<String, String> paraMap);
+
+	// 나의 정보 수정하기
+	int memberEditEnd(Map<String, String> paraMap);
+
 }

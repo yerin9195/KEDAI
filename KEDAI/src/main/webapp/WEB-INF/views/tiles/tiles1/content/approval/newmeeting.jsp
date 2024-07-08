@@ -198,6 +198,14 @@ table.left_table input{
  	     
 		
 	});// end of $(document).ready(function(){})-----------
+	
+	
+	function selectLine(){
+		
+		
+		
+		
+	}
    ///////////////////////////////////////////////////////////////////////
 
 </script>	
@@ -209,17 +217,15 @@ table.left_table input{
 		<table class="table left_table" id="title_table" >
 			<tr>
 				<th>문서번호</th>
-				<td>${requestScope.doc_no}</td>
+				<td></td>
 				<th>기안일자</th>
-				<td>
-					<input type="text" name="created_date" id="datepicker" maxlength="8" size="8" />
-                </td>
+				<td>${requestScope.str_now}</td>
 			</tr>
 			<tr>
 				<th>기안자</th>
-				<td><input type="text" name="name" value="${sessionScope.loginuser.name}" size="5" readonly /></td>
+				<td>${sessionScope.loginuser.name}</td>
 				<th>부서</th>
-				<td><input type="text" name="dept" value="${sessionScope.loginuser.name}" size="5"  readonly /> </td>		
+				<td>${requestScope.dept_name}</td>		
 			</tr>
 		</table>
 		<table class="table left_table" id="meeting" >
@@ -243,7 +249,10 @@ table.left_table input{
 			</tr>
 		</table>
 		
-		<div id="title2"> 결제라인 &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; <button type="button" class="btn btn-outline-secondary btn-sm">선택하기</button></div> 
+		<div id="title2"> 결제라인
+			<button type="button" class="btn btn-outline-secondary btn-sm" style="margin-left:20%;" onclick="selectLine()">선택하기</button>
+		
+		</div> 
 		<table class="table left_table" id="approval">
 			<tr style="text-align:center;">
 				<th>순서</th>
