@@ -281,7 +281,7 @@ commit;
 
 select *
 from tbl_employees
-where fk_dept_code = '200'
+where fk_dept_code = '100'
 order by fk_job_code asc;   
 
 delete from tbl_employees
@@ -377,18 +377,7 @@ from tbl_employees;
 
 -----------------------------------------------------------------------
 
-update tbl_employees set pwd = #{pwd}
-                       , name = #{name}
-                       , nickname = #{nickname}
-                       , email = #{email}
-                       , mobile = #{mobile}
-                       , postcode = #{postcode}
-                       , address = #{address}
-                       , detailaddress = #{detailaddress}
-                       , extraaddress = #{extraaddress}
-                       , newFileName = #{newFileName}
-                       , originalFilename = #{originalFilename}
-where empid = #{empid};
+
 
 
 

@@ -429,11 +429,11 @@
 				</div>
 				<div class="mt-3">
 					<h6>부서</h6>
-					<input type="text" name="dept_name" id="dept_name" class="requiredInfo" value="${sessionScope.loginuser.dvo.dept_name}" readonly />
+					<input type="text" name="dept_name" id="dept_name" value="${sessionScope.loginuser.dvo.dept_name}" readonly />
 				</div>
 				<div class="mt-3">
 					<h6>직급</h6>
-					<input type="text" name="job_name" id="job_name" class="requiredInfo" value="${sessionScope.loginuser.jvo.job_name}" readonly />
+					<input type="text" name="job_name" id="job_name" value="${sessionScope.loginuser.jvo.job_name}" readonly />
 				</div>
 				<div class="btnEdit" style="position: absolute; bottom: 0;">
 			        <button type="button" onclick="goEdit()">수정하기</button>

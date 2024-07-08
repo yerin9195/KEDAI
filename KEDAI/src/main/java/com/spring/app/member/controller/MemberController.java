@@ -354,7 +354,6 @@ public class MemberController {
 		return mav;
 	}
 	
-	
 	// 나의 정보 수정하기
 	@PostMapping("/member/memberEditEnd.kedai")
 	public ModelAndView memberEditEnd(ModelAndView mav, MemberVO mvo, MultipartHttpServletRequest mrequest) {	
@@ -384,11 +383,8 @@ public class MemberController {
 				
 				newFileName = fileManager.doFileUpload(bytes, originalFilename, path); // 첨부되어진 파일을 업로드
 				
-				paraMap.put("newFileName", newFileName);
-				paraMap.put("originalFilename", originalFilename);
-				
-				System.out.println("~~~ 확인용 newFileName =>"+newFileName);
-				System.out.println("~~~ 확인용 originalFilename =>"+originalFilename);
+				paraMap.put("imgfilename", newFileName);
+				paraMap.put("orgimgfilename", originalFilename);
 				
 			} catch (Exception e) {
 				e.printStackTrace(); 
@@ -420,22 +416,12 @@ public class MemberController {
 		String detailaddress = mrequest.getParameter("detailaddress");
 		String extraaddress = mrequest.getParameter("extraaddress");
 		
-		System.out.println("~~~ 확인용 empid =>"+empid);
-		System.out.println("~~~ 확인용 pwd =>"+pwd);
-		System.out.println("~~~ 확인용 name =>"+name);
-		System.out.println("~~~ 확인용 nickname =>"+nickname);
-		System.out.println("~~~ 확인용 email =>"+email);
-		System.out.println("~~~ 확인용 postcode =>"+postcode);
-		System.out.println("~~~ 확인용 address =>"+address);
-		System.out.println("~~~ 확인용 detailaddress =>"+detailaddress);
-		System.out.println("~~~ 확인용 extraaddress =>"+extraaddress);
-		
-		
 		paraMap.put("empid", empid);
 		paraMap.put("pwd", pwd);
 		paraMap.put("name", name);
 		paraMap.put("nickname", nickname);
 		paraMap.put("email", email);
+		paraMap.put("mobile", mobile);
 		paraMap.put("postcode", postcode);
 		paraMap.put("address", address);
 		paraMap.put("detailaddress", detailaddress);
@@ -445,7 +431,7 @@ public class MemberController {
 			int n = service.memberEditEnd(paraMap);
 			
 			if(n == 1) {
-				String message = "나의 정보가 정상적으로 수정되었습니다.";
+				String message = name+"님의 정보가 정상적으로 수정되었습니다.";
 				String loc = mrequest.getContextPath()+"/index.kedai";
 	           
 				mav.addObject("message", message);

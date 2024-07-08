@@ -15,8 +15,8 @@ public class MemberVO {
 	private String address;            
 	private String detailaddress;      
 	private String extraaddress;       
-	private String imgfilename; 
 	private String orgimgfilename;
+	private String imgfilename; 
 	private String hire_date;          
 	private String salary;             
 	private String commission_pct;     
@@ -133,20 +133,20 @@ public class MemberVO {
 		this.extraaddress = extraaddress;
 	}
 
-	public String getImgfilename() {
-		return imgfilename;
-	}
-
-	public void setImgfilename(String imgfilename) {
-		this.imgfilename = imgfilename;
-	}
-	
 	public String getOrgimgfilename() {
 		return orgimgfilename;
 	}
 
 	public void setOrgimgfilename(String orgimgfilename) {
 		this.orgimgfilename = orgimgfilename;
+	}
+	
+	public String getImgfilename() {
+		return imgfilename;
+	}
+
+	public void setImgfilename(String imgfilename) {
+		this.imgfilename = imgfilename;
 	}
 
 	public String getHire_date() {

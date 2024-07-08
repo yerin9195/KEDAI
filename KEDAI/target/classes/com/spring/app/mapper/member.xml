@@ -104,8 +104,8 @@
 		                       , address = #{address}
 		                       , detailaddress = #{detailaddress}
 		                       , extraaddress = #{extraaddress}
-		                       , newFileName = #{newFileName}
-		                       , originalFilename = #{originalFilename}
+		                       , imgfilename = #{imgfilename}
+		                       , orgimgfilename = #{orgimgfilename}
 		where empid = #{empid}
 	</update>
 
