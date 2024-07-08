@@ -92,7 +92,7 @@ public class MemberController {
 			
 			if(loginuser.isRequirePwdChange() == true) {
 				String message = "비밀번호를 변경하신지 3개월이 지났습니다.\\n비밀번호를 변경하는 페이지로 이동합니다.";
-				String loc = request.getContextPath()+"/index.kedai"; // 비밀번호 변경하는 페이지 만들기!!!
+				String loc = request.getContextPath()+"/login/pwdUpdateEnd.kedai?empid="+empid;
                
 				mav.addObject("message", message);
 				mav.addObject("loc", loc);

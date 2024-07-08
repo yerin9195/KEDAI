@@ -338,7 +338,7 @@
 		<div class="col-2" style="border: 0px solid blue;">
 			<h6>사진등록</h6>
 			<div style="width: 200px; height: 230px; overflow: hidden; border: 1px solid #ddd;">
-				<img id="previewImg" style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/images/common/member/${(sessionScope.loginuser).orgimgfilename}" />
+				<img id="previewImg" style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/images/member/${(sessionScope.loginuser).orgimgfilename}" />
 			</div>
 			<br>
 	   		<input type="file" name="attach" class="infoData img_file" accept='image/*' />
