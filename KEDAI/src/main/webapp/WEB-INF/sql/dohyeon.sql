@@ -565,5 +565,5 @@ SELECT
 FROM
     current_times;
     
-select *
-from tbl_employees
+    select *
+    from tbl_dept;
