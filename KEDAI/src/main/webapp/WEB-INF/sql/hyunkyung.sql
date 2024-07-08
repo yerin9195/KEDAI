@@ -273,5 +273,13 @@ desc tbl_job
 select *
 from tbl_job
 
+SELECT *
+FROM tbl_employees
+
+
+from tbl_employees E
+JOIN tbl_job J
+ON E.fk_job_code = J.job_code
+
     
     

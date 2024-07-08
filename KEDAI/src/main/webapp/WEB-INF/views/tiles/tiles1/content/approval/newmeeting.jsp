@@ -245,6 +245,7 @@ ul.approvalList > li > label{
 		    이러한 경우는 아래와 해야만 된다.
 		    $(document).on("이벤트종류", "선택자", function(){}); 으로 한다.
 		 */
+		 
 		$(document).on("click", "div.openList > img", function(){
 			var $ul = $(this).parent().next("ul");
 			
@@ -292,38 +293,71 @@ ul.approvalList > li > label{
 	       // 적용이 안되어진 상태이라면 label 태그에 CSS 클래스 changeCSSname 을 적용시켜주고,
 	       // 이미 적용이 되어진 상태이라면 label 태그에 CSS 클래스 changeCSSname 을 해제시켜준다.
 
-	       
-       
+	        /*
+            ==== jQuery 에서 라디오 또는 체크박스에 선택을 했는지를 알아오는 2가지 방법 ====
+                
+             1. $(라디오 또는 체크박스의 선택자).prop("checked") 
+                ==> 선택을 했으면 true, 선택을 안했으면 false
+                
+             2. $(라디오 또는 체크박스의 선택자).is(":checked")   
+                ==> 선택을 했으면 true, 선택을 안했으면 false
+         */
+
+           // console.log("라디오 선택여부 => ", $(elmt).prop("checked"));
+            // 또는
+           // console.log("라디오 선택여부 => ", $(elmt).is(":checked"));
+            /*
+		            라디오 선택여부 =>  false
+		            라디오 선택여부 =>  true
+		            라디오 선택여부 =>  false
+		             라디오 선택여부 =>  false
+            */
+		       
 		$(document).on("click", "ul.approvalList > li > input:checkbox[name='person']", function(){
 			// name이 person인 체크박스에 대해서 클릭하면
-
+			var order;
+			let htmlAList = "";
 	        const bool = $(this).prop("checked");
 	        // 클릭한 체크박스의 체크유무를 알아온다.
-			if(bool){
-				 $(this).next().addClass("bold_text");
+			if(bool){// 체크 박스가 선택되어 있으면
 				
+				order = $("ul.approvalList > li input:checkbox[name='person']:checked").length;
+				if(order > 3){
+					alert("결제자는 3명 이상 선택 불가합니다.");
+					$(this).prop("checked", false);
+					return;//종료
+				}
+				$(this).next().addClass("bold_text");
+			    htmlAList += `<tr>
+			            	   	 <td>\${order}</td>
+			                	    <td>인사부</td>
+			                        <td>부장</td>
+			                        <td>하하호호</td>
+			                  </tr>`;
+			    console.log(htmlAList);
+			    $("table.addApproval").append(htmlAList);     		        
 			}
-			else{
+			else{// 체크박스가 선택되어 있지 않으면
 				$(this).next().removeClass("bold_text");
-			 }
-		  /* 	let name = $(this).text();
-		    let htmlAList = "";
-		        
-
-		   
-		    htmlAList += `<tr>
-		                     <td>1</td>
-		                     <td>인사부</td>
-		                     <td>부장</td>
-		                     <td>\${name}</td>
-		                  </tr>`;
-		    $("table.addApproval").append(htmlAList);
- */
-        
+				var tblRow = document.querySelectorAll("ul.addApproval tr");
+				
+				for(i=0; i<)
+				
+				for(int i=0;  )
+			 }        
 		});
 		     
+	    
+		$("button.my_close").on("click", function(){
+			/*const modal_frmArr = document.querySelectorAll("form.my_form");
+		  	for(let i=0; i<modal_frmArr.length; i++) {
+		  		modal_frmArr[i].reset();
+		  	}*/
+		});
 		
 	});// end of $(document).ready(function(){})-----------
+	
+	
 	
 	
    ///////////////////////////////////////////////////////////////////////
@@ -419,14 +453,13 @@ ul.approvalList > li > label{
 									<th>직급</th>
 									<th>성명</th>
 								</tr>
-		      					
 		      				</table>
 		      			
 		      			</div>
 		      		</div>
 		      		<!-- Modal footer -->
 		      		<div class="modal-footer">
-		        		<button type="button" class="btn btn-danger" data-dismiss="modal">취소</button>
+		        		<button type="button" class="btn btn-danger my_close" data-dismiss="modal">취소</button>
 		        		<button type="button" class="btn btn-primary">확인</button>
 		      		</div>
 		    	</div>

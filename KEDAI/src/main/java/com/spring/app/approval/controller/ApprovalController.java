@@ -3,6 +3,7 @@ package com.spring.app.approval.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,31 +40,35 @@ public class ApprovalController {
 		String doc_type = request.getParameter("doc_type");
 
 		Map<String, String> paraMap = new HashMap<>();
-		/*
+		
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		
-			paraMap.put("dept_code", loginuser.getFk_dept_code());
+		paraMap.put("dept_code", loginuser.getFk_dept_code());
+		
+		Date now = new Date(); // 현재시각
+		SimpleDateFormat sdfmt = new SimpleDateFormat("yyyy-MM-dd");
+		String str_now = sdfmt.format(now); // "2024-07-04"
+		String dept_name = service.getDeptNumber(paraMap); // DB에서 부서번호 구해오기
+		mav.addObject("str_now", str_now);
+		mav.addObject("dept_name", dept_name);
+		
+		List<Map<String, String>> allEmployeeList = service.allEmployeeList();
+		
+		
+		
+		if(doc_type.equals("newdayoff")) {
+			mav.setViewName("tiles1/approval/newdayoff.tiles");
+		}
+		else if(doc_type.equals("newmeeting")){
 			
-			Date now = new Date(); // 현재시각
-			SimpleDateFormat sdfmt = new SimpleDateFormat("yyyy-MM-dd");
-			String str_now = sdfmt.format(now); // "2024-07-04"
-			String dept_name = service.getDeptNumber(paraMap);
-			mav.addObject("str_now", str_now);
-			mav.addObject("dept_name", dept_name);
-			
-			if(doc_type.equals("newdayoff")) {
-				mav.setViewName("tiles1/approval/newdayoff.tiles");
-			}
-			else if(doc_type.equals("newmeeting")){
-				
-				mav.setViewName("tiles1/approval/newmeeting.tiles");
-			}
+			mav.setViewName("tiles1/approval/newmeeting.tiles");
+		}
 			
 		//	/WEB-INF/views/tiles/tiles1/content/approval/newdoc.jsp 페이지를 만들어야 한다.
 
 		else {
-	*/		
+		
 			if(doc_type.equals("newdayoff")) {
 				mav.setViewName("tiles1/approval/newdayoff.tiles");
 			}
@@ -71,7 +76,7 @@ public class ApprovalController {
 				
 				mav.setViewName("tiles1/approval/newmeeting.tiles");
 			}		
-	//	}
+		}
 		return mav;
 	}
 	
@@ -81,7 +86,6 @@ public class ApprovalController {
 		
 		
 		mav.setViewName("tiles1/approval/newDocEnd.tiles");
-		
 		return mav;
 	}
 

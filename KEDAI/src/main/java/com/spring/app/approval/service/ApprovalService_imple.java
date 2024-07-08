@@ -1,5 +1,6 @@
 package com.spring.app.approval.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,13 @@ public class ApprovalService_imple implements ApprovalService {
 	public String getDeptNumber(Map<String, String> paraMap) {
 		String deptNumber = dao.getDeptNumber(paraMap);
 		return deptNumber;
+	}
+	
+	// 결재 라인에서 찾을 모든 사원 목록 보기
+	@Override
+	public List<Map<String, String>> allEmployeeList() {
+		List<Map<String, String>> allEmployeeList = dao.allEmployeeList();
+		return allEmployeeList;
 	}
 
 }

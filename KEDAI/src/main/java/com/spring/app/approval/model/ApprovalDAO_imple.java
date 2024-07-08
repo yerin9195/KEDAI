@@ -1,5 +1,6 @@
 package com.spring.app.approval.model;
 
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -23,6 +24,14 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	public String getDeptNumber(Map<String, String> paraMap) {
 		String deptNumber = sqlsession.selectOne("approval.getDeptNumber", paraMap);
 		return deptNumber;
+	}
+
+
+	// 결재 라인에서 찾을 모든 사원 목록 보기
+	@Override
+	public List<Map<String, String>> allEmployeeList() {
+		List<Map<String, String>> allEmployeeList = sqlsession.selectList("approval.allEmployeeList");
+		return allEmployeeList;
 	}
 
 }
