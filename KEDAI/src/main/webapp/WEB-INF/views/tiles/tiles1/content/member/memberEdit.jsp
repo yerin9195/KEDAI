@@ -9,7 +9,7 @@
 %>
 <style type="text/css">
 	.edit input {
-		width: 400px;
+		width: 360px;
 		border: none;
 		border-bottom: 1px solid #2c4459;
 		margin-top: 8px;
@@ -330,7 +330,8 @@
 
 	} // end of function goReset() ----------
 </script>
-	
+
+<%-- content start --%>	
 <div style="border: 0px solid red; padding: 1% 0;">
 	<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;나의 정보 수정하기<span style="font-size: 12pt; color: #e68c0e;">&nbsp;&nbsp;* 표시는 필수입력 사항입니다.</span></h3>
 	
@@ -341,7 +342,7 @@
 				<img id="previewImg" style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/images/member/${(sessionScope.loginuser).orgimgfilename}" />
 			</div>
 			<br>
-	   		<input type="file" name="attach" class="infoData img_file" accept='image/*' />
+	   <%-- <input type="file" name="attach" class="infoData img_file" accept='image/*' /> --%>
 		</div>
 		
 		<div class="col-10 row" id="memberEdit">
@@ -352,7 +353,7 @@
 				</div>
 				<div class="mt-3">
 					<h6>비밀번호&nbsp;<span class="star">*</span></h6>
-					<input type="password" name="pwd" id="pwd" maxlength="15" class="requiredInfo" placeholder="영문자,숫자,특수기호가 혼합된 8~15 글자로 입력하세요." />
+					<input type="password" name="pwd" id="pwd" maxlength="15" class="requiredInfo" placeholder="영문자,숫자,특수기호가 혼합된 8~15 글자" />
 	            	<span class="error">&nbsp;&nbsp;비밀번호 형식에 맞지 않습니다.</span>
 	            </div>
 	            <div class="mt-3">
@@ -372,18 +373,18 @@
 					<h6>주민등록번호&nbsp;<span class="star">*</span></h6>
 					<div style="display: flex;">
 						<div>
-	                         <input type="text" name="jubun1" id="jubun1" size="6" maxlength="6" class="requiredInfo" style="width: 180px;" value="${fn:substring(sessionScope.loginuser.jubun, 0, 6)}" readonly>
+	                         <input type="text" name="jubun1" id="jubun1" size="6" maxlength="6" class="requiredInfo" style="width: 155px;" value="${fn:substring(sessionScope.loginuser.jubun, 0, 6)}" readonly>
 	                         &nbsp;&nbsp;<i class="fa-solid fa-minus"></i>&nbsp;&nbsp;
                      	</div>
                      	<div>
-	                         <input type="text" name="jubun2" id="jubun2" size="7" maxlength="7" class="requiredInfo" style="width: 180px;" value="${fn:substring(sessionScope.loginuser.jubun, 6, 13)}" readonly>
+	                         <input type="text" name="jubun2" id="jubun2" size="7" maxlength="7" class="requiredInfo" style="width: 155px;" value="${fn:substring(sessionScope.loginuser.jubun, 6, 13)}" readonly>
                      	</div>
 					</div>
 				</div>
 	            <div class="mt-3" style="position: relative;">
 					<h6>이메일&nbsp;<span class="star">*</span></h6>
 					<input type="text" name="email" id="email" maxlength="60" class="requiredInfo" value="${sessionScope.loginuser.email}" />
-	                <button type="button" id="emailcheck" style="position: absolute; bottom: 5px; left: 280px;">이메일 중복확인</button>
+	                <button type="button" id="emailcheck" style="position: absolute; bottom: 5px; left: 230px;">이메일 중복확인</button>
 	                <span class="error">&nbsp;&nbsp;이메일 형식에 맞지 않습니다.</span>
 	                <span id="emailCheckResult"></span>
 	            </div>
@@ -391,15 +392,15 @@
 					<h6>연락처&nbsp;<span class="star">*</span></h6>
 					<div style="display: flex;">
 	                     <div>
-	                         <input type="text" name="hp1" id="hp1" size="6" maxlength="3" value="010" style="width: 110px;" readonly>
+	                         <input type="text" name="hp1" id="hp1" size="6" maxlength="3" value="010" style="width: 93px;" readonly>
 	                         &nbsp;&nbsp;<i class="fa-solid fa-minus"></i>&nbsp;&nbsp;
 	                     </div>
 	                     <div>
-	                         <input type="text" name="hp2" id="hp2" class="requiredInfo" size="6" maxlength="4" style="width: 110px; text-align: center;" value="${fn:substring(sessionScope.loginuser.mobile, 3, 7)}">
+	                         <input type="text" name="hp2" id="hp2" class="requiredInfo" size="6" maxlength="4" style="width: 93px; text-align: center;" value="${fn:substring(sessionScope.loginuser.mobile, 3, 7)}">
 	                         &nbsp;&nbsp;<i class="fa-solid fa-minus"></i>&nbsp;&nbsp;
 	                     </div>
 	                     <div>
-	                         <input type="text" name="hp3" id="hp3" class="requiredInfo" size="6" maxlength="4" style="width: 110px; text-align: center;" value="${fn:substring(sessionScope.loginuser.mobile, 7, 11)}">
+	                         <input type="text" name="hp3" id="hp3" class="requiredInfo" size="6" maxlength="4" style="width: 93px; text-align: center;" value="${fn:substring(sessionScope.loginuser.mobile, 7, 11)}">
 	                     </div>
 	                     <span class="error" style="display: block; align-content: end;">&nbsp;&nbsp;휴대폰 형식에 맞지 않습니다.</span>
 	                 </div>
@@ -410,7 +411,7 @@
 				<div style="position: relative;">
 					<h6>우편번호&nbsp;<span class="star">*</span></h6>
 					<input type="text" name="postcode" id="postcode" size="6" maxlength="5" class="requiredInfo" value="${sessionScope.loginuser.postcode}" />
-					<button type="button" id="zipcodeSearch" style="position: absolute; bottom: 5px; left: 280px;">우편번호 찾기</button><br>
+					<button type="button" id="zipcodeSearch" style="position: absolute; bottom: 5px; left: 230px;">우편번호 찾기</button><br>
 				</div>
 				<div class="mt-3">
 					<h6>주소&nbsp;<span class="star">*</span></h6>
@@ -425,7 +426,7 @@
 				<div class="mt-3" style="position: relative;">
 					<h6>급여&nbsp;<span class="star">*</span></h6>
 					<input type="text" name="salary" id="salary" maxlength="10" class="requiredInfo" value="${sessionScope.loginuser.salary}" readonly />
-					<span style="position: absolute; bottom: 5px; left: 360px;">만원</span>
+					<span style="position: absolute; bottom: 5px; left: 340px;">원</span>
 				</div>
 				<div class="mt-3">
 					<h6>부서</h6>
@@ -443,3 +444,4 @@
 		</div>
 	</form>
 </div>
+<%-- content end --%>

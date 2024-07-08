@@ -27,6 +27,7 @@
 		
 	}); // end of $(document).ready(function(){}) ----------
 </script>
+
 <%-- content start --%>
 <div class="container-fluid">
 	<section class="row justify-content-between">
@@ -92,10 +93,10 @@
 					<a class="nav-link active" data-toggle="tab" href="#home">사내공지</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#menu1">식단표</a>
+					<a class="nav-link" data-toggle="tab" href="#menu1">팝업일정</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#menu2">팝업일정</a>
+					<a class="nav-link" data-toggle="tab" href="#menu2">식단표</a>
 				</li>
 			</ul>
 		

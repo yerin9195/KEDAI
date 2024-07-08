@@ -73,7 +73,7 @@
 
 <%-- header start --%>
 <div class="container-fluid">
-	<nav class="navbar navbar-expand-lg">
+	<nav class="navbar navbar-expand-lg" style="padding: 0;">
 		<a class="navbar-brand" href="<%= ctxPath%>/index.kedai"><img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver2.png" width="30%" /></a>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<form class="form-inline ml-auto my-2 mr-3 my-lg-0" style="position: relative;">

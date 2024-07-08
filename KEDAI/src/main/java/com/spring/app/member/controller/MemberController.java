@@ -296,7 +296,7 @@ public class MemberController {
 	}
 	
 	// 비밀번호 변경하기
-	@GetMapping("/login/pwdUpdateEnd.kedai")
+	@RequestMapping("/login/pwdUpdateEnd.kedai")
 	public ModelAndView pwdUpdateEnd(ModelAndView mav, HttpServletRequest request) {
 		
 		String method = request.getMethod();

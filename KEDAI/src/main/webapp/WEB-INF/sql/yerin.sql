@@ -263,7 +263,7 @@ where status = 1 and name = ? and email = ?;
 -- 아이디 중복확인하기
 select empid
 from tbl_employees
-where empid = '2010001-001';
+where empid = '2012100-001';
 
 -- 비밀번호 찾기
 select pwd
@@ -272,7 +272,7 @@ where status = 1 and empid = '2014100-004' and name = '이지은' and email = 'g
 
 -- 비밀번호 변경하기
 update tbl_employees set pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
-where empid = '2010001-001';
+where empid = '2012100-001';
 
 commit;
 -- 커밋 완료.
@@ -326,7 +326,7 @@ commit;
 
 select *
 from tbl_employees
-where fk_dept_code = '200'
+where fk_dept_code = '100'
 order by fk_job_code;
 
 update tbl_employees set fk_job_code = 1
@@ -377,11 +377,113 @@ from tbl_employees;
 
 -----------------------------------------------------------------------
 
+-- 카테고리 테이블
+create table tbl_category
+(category_code  NUMBER(4)      not null
+,category_name  VARCHAR2(100)  not null
+,constraint PK_tbl_category_category_code primary key(category_code)
+);
+-- Table TBL_CATEGORY이(가) 생성되었습니다.
 
+comment on table tbl_category 
+is '카테고리 정보가 들어있는 테이블';
+-- Comment이(가) 생성되었습니다.
 
+comment on column tbl_category.category_code is '카테고리코드'; 
+comment on column tbl_category.category_name is '카테고리명'; 
+-- Comment이(가) 생성되었습니다.
 
+select *
+from user_tab_comments
+where table_name = 'TBL_CATEGORY';
 
+select column_name, comments
+from user_col_comments
+where table_name = 'TBL_CATEGORY';
 
+insert into tbl_category(category_code, category_name)
+values(1, '사내공지');
+-- 1 행 이(가) 삽입되었습니다.
 
+insert into tbl_category(category_code, category_name)
+values(2, '팝업일정');
+-- 1 행 이(가) 삽입되었습니다.
 
+insert into tbl_category(category_code, category_name)
+values(3, '식단표');
+-- 1 행 이(가) 삽입되었습니다.
+
+commit;
+-- 커밋 완료.
+
+select *
+from tbl_category;
+
+-----------------------------------------------------------------------
+
+-- 게시판 테이블
+create table tbl_board
+(board_seq         NUMBER                not null
+,fk_category_code  NUMBER(4)             not null
+,fk_empid          VARCHAR2(30)          not null
+,name              VARCHAR2(30)          not null
+,subject           NVARCHAR2(200)        not null
+,content           CLOB                  not null
+,pwd               VARCHAR2(20)          not null
+,read_count        NUMBER DEFAULT 0      not null
+,registerday       DATE DEFAULT SYSDATE  not null
+,status            NUMBER(1) DEFAULT 1   not null
+,groupno           NUMBER                not null
+,fk_seq            NUMBER DEFAULT 0      not null
+,depthno           NUMBER DEFAULT 0      not null
+,orgfilename       VARCHAR2(255)
+,filename          VARCHAR2(255)
+,filesize          NUMBER
+,constraint PK_tbl_board_board_seq        primary key(board_seq)
+,constraint FK_tbl_board_fk_category_code foreign key(fk_category_code) references tbl_category(category_code)
+,constraint FK_tbl_board_fk_empid         foreign key(fk_empid) references tbl_employees(empid)
+,constraint CK_tbl_board_status           check(status in(0,1))
+);
+-- Table TBL_BOARD이(가) 생성되었습니다.
+
+create sequence board_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence BOARD_SEQ이(가) 생성되었습니다.
+
+comment on table tbl_board
+is '게시판 정보가 들어있는 테이블';
+-- Comment이(가) 생성되었습니다.
+
+comment on column tbl_board.board_seq is '글번호'; 
+comment on column tbl_board.fk_category_code is '카테고리코드'; 
+comment on column tbl_board.fk_empid is '사원아이디'; 
+comment on column tbl_board.name is '글쓴이'; 
+comment on column tbl_board.subject is '글제목'; 
+comment on column tbl_board.content is '글내용'; 
+comment on column tbl_board.pwd is '글암호'; 
+comment on column tbl_board.read_count is '글조회수'; 
+comment on column tbl_board.registerday is '작성일자'; 
+comment on column tbl_board.status is '글삭제여부'; 
+comment on column tbl_board.groupno is '그룹번호'; 
+comment on column tbl_board.fk_seq is '원글번호'; 
+comment on column tbl_board.depthno is '답변글들여쓰기'; 
+comment on column tbl_board.orgfilename is '원본파일명'; 
+comment on column tbl_board.filename is '저장파일명'; 
+comment on column tbl_board.filesize is '파일크기'; 
+-- Comment이(가) 생성되었습니다.
+
+select *
+from user_tab_comments
+where table_name = 'TBL_BOARD';
+
+select column_name, comments
+from user_col_comments
+where table_name = 'TBL_BOARD';
+
+-----------------------------------------------------------------------
 
