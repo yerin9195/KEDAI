@@ -116,4 +116,21 @@ public class CarController {
 		
 	}
 	
+	// 마이페이지에서 나의 차량 정보 등록 클릭시 들어가는 페이지 만들기
+	@GetMapping("/myCar.kedai")
+	public ModelAndView requiredLogin_myCar(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
+		
+		mav.setViewName("tiles1/reservation/myCar.tiles"); 
+		return mav;
+		
+	}
+	
+	// 마이페이지에서 나의 차량 정보 등록 클릭시 들어가는 페이지 만들기
+	@GetMapping("/myCarReserveAndPay.kedai")
+	public ModelAndView requiredLogin_myCarReserveAndPay(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
+		
+		mav.setViewName("tiles1/reservation/myCarReserveAndPay.tiles"); 
+		return mav;
+		
+	}
 }
