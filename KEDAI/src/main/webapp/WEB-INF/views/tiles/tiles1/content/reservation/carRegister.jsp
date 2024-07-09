@@ -8,6 +8,18 @@
    String ctxPath = request.getContextPath();
 
 %>
+<!-- jQuery CSS -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<!-- DateTimePicker CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+<!-- jQuery JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<!-- DateTimePicker JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+
 <style type="text/css">
    table#tblProdInput {border: solid #2c4459; 1px; 
                        border-collapse: collapse; }
@@ -174,7 +186,7 @@ $("button#arrive_zipcodeSearch").click(function(){
    
    ///////////////////////////////////////////////////////////////////////
    //=== jQuery UI 의 datepicker === //
-   $('input#datepicker1').datepicker({
+   $('input#datepicker1').datetimepicker({
         dateFormat: 'yy-mm-dd'  //Input Display Format 변경
        ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
        ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
@@ -199,7 +211,7 @@ $("button#arrive_zipcodeSearch").click(function(){
    
 
    //=== jQuery UI 의 datepicker === //
-   $('input#datepicker2').datepicker({
+   $('input#datepicker2').datetimepicker({
         dateFormat: 'yy-mm-dd'  //Input Display Format 변경
        ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
        ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
@@ -236,8 +248,10 @@ function goRegister() {
  // *** 필수입력사항에 모두 입력이 되었는지 검사하기 시작 *** //
  let b_requiredInfo = true;
 
-	var datepicker1 =  document.getElementById('datepicker1').value;
-	alert("~~~확인용 : "+datepicker1);
+	var datetimepicker1 =  document.getElementById('datetimepicker1').value;
+	var datetimepicker2 =  document.getElementById('datetimepicker2').value;
+//	alert("~~~확인용 : "+datepicker1);
+//	alert("~~~확인용 : "+datepicker2);
 /*   
  $("input.requiredInfo").each(function(index, elmt){
      const data = $(elmt).val().trim();
