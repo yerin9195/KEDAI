@@ -7,7 +7,9 @@
 	//     /KEDAI
 %>
 <style type="text/css">
-	.btnAdd {
+	.boardAdd {
+		text-align: center;
+		align-content: center;
 		border: solid 1px #2c4459;
 		background: none;
 		color: #2c4459;
@@ -16,7 +18,8 @@
 		height: 40px;
 		margin-left: 10px;
 	}
-	.btnAdd:hover {
+	.boardAdd:hover {
+		text-decoration: none;
 		border: none;
 		background: #e68c0e;
 		color: #fff;
@@ -42,6 +45,7 @@
 		
 		$("div#displayList").hide();
 		
+		
 	}); // end of $(document).ready(function(){}) ----------
 </script>
 
@@ -52,7 +56,7 @@
 	<section style="width: 95%;">
 		<div class="d-md-flex justify-content-md-end">
 			<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-				<button type="button" class="btnAdd" onclick="goAdd()">등록하기</button>
+				<a href="<%= ctxPath%>/board/add.kedai" class="boardAdd">등록하기</a>
 			</c:if>
 		</div>
 	

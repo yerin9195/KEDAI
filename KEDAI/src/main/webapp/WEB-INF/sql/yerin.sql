@@ -416,8 +416,9 @@ values(3, '식단표');
 commit;
 -- 커밋 완료.
 
-select *
-from tbl_category;
+select category_code, category_name
+from tbl_category
+order by category_code asc;
 
 -----------------------------------------------------------------------
 
@@ -486,4 +487,8 @@ from user_col_comments
 where table_name = 'TBL_BOARD';
 
 -----------------------------------------------------------------------
+
+
+
+
 

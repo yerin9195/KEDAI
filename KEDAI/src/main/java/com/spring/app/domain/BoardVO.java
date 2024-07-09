@@ -1,5 +1,7 @@
 package com.spring.app.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class BoardVO {
 
 	private String board_seq;     
@@ -18,6 +20,8 @@ public class BoardVO {
 	private String orgfilename;       
 	private String filename;          
 	private String filesize;
+	
+	private MultipartFile attach; // form 태그에서 type="file" 인 파일을 받아서 저장되는 필드
 	
 	// getters & setters
 	public String getBoard_seq() {
@@ -146,6 +150,14 @@ public class BoardVO {
 	
 	public void setFilesize(String filesize) {
 		this.filesize = filesize;
+	}
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
 	}
 	
 }
