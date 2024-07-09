@@ -36,17 +36,17 @@
 
 <script type="text/javascript">
 
-//"우편번호찾기" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도  
-let b_zipcodeSearch_click = false;
+//각 항목 검사 용도  
+let b_zipcodedeparture_click = false;
+let b_zipcodearrive_click = false;
+let b_start_click = false;
+let b_end_click = false;
 
 $(document).ready(function(){
    
    // 모든 에러 메세지는 숨긴 상태에서 하나씩 show 해줄거임
-   $('span.error').hide();
-	
-	$("input:text[name='name']").click(function(){
-		alert("사원명은 변경 불가합니다.");
-	})
+    $('span.error').hide();
+
 	$("input:text[name='email']").click(function(){
 		alert("이메일은 변경 불가합니다.");
 	})
@@ -102,7 +102,7 @@ $(document).ready(function(){
            }
        }).open();
    
-
+       b_zipcodedeparture_click = true;
    
 });// end of $("img#zipcodeSearch").click()------------
 
@@ -155,7 +155,7 @@ $("button#arrive_zipcodeSearch").click(function(){
         }
     }).open();
 
-
+    b_zipcodearrive_click = true;
 
 });// end of $("img#zipcodeSearch").click()------------
 
@@ -186,7 +186,7 @@ $("button#arrive_zipcodeSearch").click(function(){
    
    ///////////////////////////////////////////////////////////////////////
    //=== jQuery UI 의 datepicker === //
-   $('input#datepicker1').datetimepicker({
+   $('input#datetimepicker1').datetimepicker({
         dateFormat: 'yy-mm-dd'  //Input Display Format 변경
        ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
        ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
@@ -205,13 +205,9 @@ $("button#arrive_zipcodeSearch").click(function(){
    //  ,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
    });
    
-   // 시작 값이 오늘보다 이전인 경우 오류 메세지 띄우기 수정
-   // $('input#datepicker1').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
    
-   
-
    //=== jQuery UI 의 datepicker === //
-   $('input#datepicker2').datetimepicker({
+   $('input#datetimepicker2').datetimepicker({
         dateFormat: 'yy-mm-dd'  //Input Display Format 변경
        ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
        ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
@@ -232,7 +228,7 @@ $("button#arrive_zipcodeSearch").click(function(){
 
    ///////////////////////////////////////////////////////////////////////
    
-   $('input#datepicker2').bind("change", (e) => {
+   $('input#datetimepicker2').bind("change", (e) => {
        if( $(e.target).val() != "") {
            $(e.target).next().hide();
        }
@@ -244,99 +240,116 @@ $("button#arrive_zipcodeSearch").click(function(){
 //Function Declaration
 //"등록하기" 버튼 클릭시 호출되는 함수
 function goRegister() {
-// 등록하기 버튼 클릭시 정원,기간이 제대로 입력되었는지 출발지, 도착지를 검사한다.
- // *** 필수입력사항에 모두 입력이 되었는지 검사하기 시작 *** //
- let b_requiredInfo = true;
-
-	var datetimepicker1 =  document.getElementById('datetimepicker1').value;
-	var datetimepicker2 =  document.getElementById('datetimepicker2').value;
-//	alert("~~~확인용 : "+datepicker1);
-//	alert("~~~확인용 : "+datepicker2);
-/*   
- $("input.requiredInfo").each(function(index, elmt){
-     const data = $(elmt).val().trim();
-     if(data == ""){
-         alert("*표시된 필수입력사항은 모두 입력하셔야 합니다.");
-         b_requiredInfo = false;
-         return false; // break; 라는 뜻이다.
-     }
- });
-*/
-
-// 또는
- const requiredInfo_list = document.querySelectorAll("input.requiredInfo"); 
- for(let i=0; i<requiredInfo_list.length; i++){
-     const val = requiredInfo_list[i].value.trim();
-     if(val == ""){
-         alert("모든 항목을 입력하셔야 합니다.");
-         b_requiredInfo = false;
-         break; 
-     }
- }// end of for-----------------
-
- if(!b_requiredInfo) {
-     return; // goRegister() 함수를 종료한다.
- }
- // *** 필수입력사항에 모두 입력이 되었는지 검사하기 끝 *** //
-
-
- // *** "우편번호찾기" 를 클릭했는지 검사하기 시작 *** //
- if(!b_zipcodeSearch_click) {
-     // "우편번호찾기" 를 클릭 안 했을 경우
-      alert("우편번호찾기를 클릭하셔서 우편번호를 입력하셔야 합니다.");
-      return; // goRegister() 함수를 종료한다.
- }
- // *** "우편번호찾기" 를 클릭했는지 검사하기 끝 *** //
-
- // *** 우편번호 및 주소에 값을 입력했는지 검사하기 시작 *** //
-   const postcode = $("input#departurepostcode").val().trim();
-   const address = $("input#address").val().trim();
-   const detailAddress = $("input#detailAddress").val().trim();
-   const extraAddress = $("input#extraAddress").val().trim();
-   
-   if(postcode == "" || address == "" || detailAddress == "" || extraAddress == "") {
-      alert("우편번호 및 주소를 입력하셔야 합니다.");
-      return; // goRegister() 함수를 종료한다.
-   }
-   // *** 우편번호 및 주소에 값을 입력했는지 검사하기 끝 *** //
-
-
-
-
-
- // *** 생년월일 값을 입력했는지 검사하기 시작 *** //
- const birthday = $('input#datepicker').val().trim();
-
- if(birthday == ""){
-     alert("생년월일을 입력하셔야 합니다.");
-      return; // goRegister() 함수를 종료한다.
- }
- // *** 생년월일 값을 입력했는지 검사하기 끝 *** //
-
-
- // *** 약관에 동의를 했는지 검사하기 시작 *** //
- const checkbox_checked_length = $("input:checkbox[id='agree']:checked").length; 
-
- if(checkbox_checked_length == 0) {
-     alert("이용약관에 동의하셔야 합니다.");
-      return; // goRegister() 함수를 종료한다.
- }
- // *** 약관에 동의를 했는지 검사하기 끝 *** //
-
- 
- const frm = document.registerFrm;
- frm.action = "memberRegister.up";
- frm.method = "post";
- frm.submit();
+	// 등록하기 버튼 클릭시 정원,기간이 제대로 입력되었는지 출발지, 도착지를 검사한다.
+	// *** 필수입력사항에 모두 입력이 되었는지 검사하기 시작 *** //
+	let b_requiredInfo = true;
+	
+	var datetimepicker1 =  document.getElementById('datetimepicker1').value;		//7.17
+	var datetimepicker2 =  document.getElementById('datetimepicker2').value;		//7.18
+	//	alert("~~~확인용 : "+datetimepicker1);
+	//	alert("~~~확인용 : "+datetimepicker2);
+	
+	// 기간 제약조건(시작일자가 끝나는 일자보다 이전이면 안된다.)
+	if(datetimepicker1 > datetimepicker2){
+		$('span.period').show();
+		$('input#datetimepicker1').val("");
+		$('input#datetimepicker2').val("");
+		$('input#datetimepicker1').focus();
+		return;
+	}
+	
+	
+	 const requiredInfo_list = document.querySelectorAll("input.requiredInfo"); 
+	 for(let i=0; i<requiredInfo_list.length; i++){
+	     const val = requiredInfo_list[i].value.trim();
+	     if(val == ""){
+	         alert("모든 항목을 입력하셔야 합니다.");
+	         b_requiredInfo = false;
+	         break; 
+	     }
+	 }// end of for-----------------
+	
+	 if(!b_requiredInfo) {
+	     return; // goRegister() 함수를 종료한다.
+	 }
+	 // *** 필수입력사항에 모두 입력이 되었는지 검사하기 끝 *** //
+	
+	
+	 // *** "우편번호찾기" 를 클릭했는지 검사하기 시작 *** //
+	 if(!b_zipcodedeparture_click) {
+	     // "우편번호찾기" 를 클릭 안 했을 경우
+	      alert("우편번호찾기를 클릭하셔서 출발지의 우편번호를 입력하셔야 합니다.");
+	      return; // goRegister() 함수를 종료한다.
+	 }
+	 if(!b_zipcodearrive_click) {
+	     // "우편번호찾기" 를 클릭 안 했을 경우
+	      alert("우편번호찾기를 클릭하셔서 도착지의 우편번호를 입력하셔야 합니다.");
+	      return; // goRegister() 함수를 종료한다.
+	 }
+	 // *** "우편번호찾기" 를 클릭했는지 검사하기 끝 *** //
+	
+	 // *** 우편번호 및 주소에 값을 입력했는지 검사하기 시작 *** //
+	   const departure_postcode = $("input#departure_postcode").val().trim();
+	   const departure_address = $("input#departure_address").val().trim();
+	   const departure_detailAddress = $("input#departure_detailAddress").val().trim();
+	   const departure_extraAddress = $("input#departure_extraAddress").val().trim();
+	   const arrive_postcode = $("input#arrive_postcode").val().trim();
+	   const arrive_address = $("input#arrive_address").val().trim();
+	   const arrive_detailAddress = $("input#arrive_detailAddress").val().trim();
+	   const arrive_extraAddress = $("input#arrive_extraAddress").val().trim();
+	   
+	   if(departure_postcode == "" || departure_address == "" || departure_extraAddress == "" ||
+	      arrive_postcode == "" || arrive_address == "" || arrive_extraAddress == "") {
+	      alert("우편번호 및 주소를 입력하셔야 합니다.");
+	      return; // goRegister() 함수를 종료한다.
+	   }
+	 // *** 우편번호 및 주소에 값을 입력했는지 검사하기 끝 *** //
+	 
+	 // *** 출발지, 도착지 이름을 입력했는지 검사하기 시작 *** //
+	
+     const departure_name = $("input#departure_name").val().trim();
+     const arrive_name = $("input#arrive_name").val().trim();
+  	 
+     if(departure_name == "") {
+   	      alert("출발지 이름을 입력해야합니다.");
+   	      return; // goRegister() 함수를 종료한다.
+   	 }
+     if(arrive_name == "") {
+  	      alert("도착지 이름을 입력해야합니다.");
+  	      return; // goRegister() 함수를 종료한다.
+  	 }
+    // *** 출발지, 도착지 이름을 입력했는지 검사하기 끝 *** //
+ 	
+	
+	 // *** 약관에 동의를 했는지 검사하기 시작 *** //
+	 const checkbox_checked_length = $("input:checkbox[id='agree']:checked").length; 
+	
+	 if(checkbox_checked_length == 0) {
+	     alert("이용약관에 동의하셔야 합니다.");
+	     return; // goRegister() 함수를 종료한다.
+	 }
+	 // *** 약관에 동의를 했는지 검사하기 끝 *** //
+	
+	 
+	 const frm = document.prodInputFrm;
+	 frm.action = "carRegister.kedai";
+	 frm.method = "post";
+	 frm.submit();
 
 }// end of function goRegister()---------------------
 
+function cancel(){
+	
+	// 이전 페이지로 가기
+	location.href="javascript:history.back();"
+	
+}//end of function cancel()----------------------------
 
 </script>
 <div align="center" style="margin-bottom: 20px;">
 
    <div style="border: solid #2c4459; 2px; width: 250px; margin-top: 20px; padding-top: 8px; padding-bottom: 8px; border-left: hidden; border-right: hidden;">       
-      <span style="font-size: 15pt; font-weight: bold;">카셰어링&nbsp;등록</span>   
+      <span style="font-size: 15pt; font-weight: bold;">${sessionScope.loginuser.name}님의 카셰어링&nbsp;등록</span>   
    </div>
    <br/>
    
@@ -362,35 +375,31 @@ function goRegister() {
                <span class="error compulsory">필수입력</span>
             </td>   
          </tr>
-         <tr>
-            <td width="25%" class="prodInputName">사원명</td>      <!-- readonly로 받아올것 -->
-            <td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;" >
-               <input type="text" name="name" style="padding: 5px;" value="${sessionScope.loginuser.name}" readonly />
-            </td>
-         </tr>
           <tr>
-                <td class="prodInputName">이메일&nbsp;</td>
-                <td style="border-top: hidden; border-bottom: hidden;">
-               <input type="text" name="email" style="padding: 5px;" value="${sessionScope.loginuser.email}" readonly />
-                </td>
+             <td class="prodInputName">이메일&nbsp;</td>
+             <td style="border-top: hidden; border-bottom: hidden;">
+            	<input type="text" name="email" style="padding: 5px;" size="25" value="${sessionScope.loginuser.email}" readonly />
+             </td>
           </tr>
             <tr>
                 <td class="prodInputName">기간</td>
                 <td>
-                   <input type="text" name="start" id="datepicker1" maxlength="10" value="" style="padding: 5px;" placeholder = "시작일자" readonly/><span>&nbsp;~&nbsp;</span>
-                   <input type="text" name="last" id="datepicker2" maxlength="10" value="" style="padding: 5px;" placeholder = "종료일자" readonly/>
+                   <input type="text" name="start" id="datetimepicker1" maxlength="10" value="" style="padding: 5px;" placeholder = "시작일자" readonly/><span>&nbsp;~&nbsp;</span>
+                   <input type="text" name="last" id="datetimepicker2" maxlength="10" value="" style="padding: 5px;" placeholder = "종료일자" readonly/>
                    <span class="error period">종료일자가 시작일자보다 이전이면 안됩니다.</span>
                 </td>
             </tr>
          <tr>
             <td width="25%" class="prodInputName">출발지</td>
             <td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;">
+               <input type="text" name="departure_name" id="departure_name" size="40" maxlength="40" style="padding: 5px;" placeholder="출발지 이름" />&nbsp;&nbsp;
+               <span class="hint">ex)여의도역 1번출구, 사옥A건물 지하2층 입구</span><br>
                <input type="text" name="postcode" id="departure_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="우편번호" readonly/>&nbsp;&nbsp;
                     <%-- 우편번호 찾기 --%>
                     <button type="button" style="background-color: white; padding: 5px;" id="departure_zipcodeSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
                     <span class="error">우편번호 형식에 맞지 않습니다.</span><br>
                <input type="text" name="address" id="departure_address" size="40" maxlength="200" style="padding: 5px;" placeholder="주소" readonly/><br>
-                    <input type="text" name="detailaddress" id="departure_detailAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="상세주소" />&nbsp;
+                    <input type="text" name="detailaddress" id="departure_detailAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="상세주소(선택)" />&nbsp;
                     <input type="text" name="extraaddress" id="departure_extraAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="참고항목" value="" readonly/>                            
                     <span class="error">주소를 입력하세요.</span><span class="error compulsory">필수입력</span>
             </td>
@@ -398,14 +407,14 @@ function goRegister() {
          <tr>
             <td width="25%" class="prodInputName">도착지</td>
             <td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;">
-               <!-- <input type="text" name="postcode" id="arrive_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="출발지 이름"/>
-               <span class="hint">ex)여의도역, 사옥 A건물 B2층 주차장</span><br>
-                --><input type="text" name="postcode" id="arrive_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="우편번호" readonly/>&nbsp;&nbsp;
+               <input type="text" name="postcode" id="arrive_name" size="40" maxlength="40" style="padding: 5px;" placeholder="도착지 이름"/>&nbsp;&nbsp;
+               <span class="hint">ex)여의도역 1번출구, 사옥 A건물 B2층 주차장</span><br>
+               <input type="text" name="postcode" id="arrive_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="우편번호" readonly/>&nbsp;&nbsp;
                     <%-- 우편번호 찾기 --%>
                     <button type="button" style="background-color: white; padding: 5px;" id="arrive_zipcodeSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
                     <span class="error">우편번호 형식에 맞지 않습니다.</span><br>
                <input type="text" name="address" id="arrive_address" size="40" maxlength="200" style="padding: 5px;" placeholder="주소" readonly/><br>
-                    <input type="text" name="detailaddress" id="arrive_detailAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="상세주소" />&nbsp;
+                    <input type="text" name="detailaddress" id="arrive_detailAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="상세주소(선택)" />&nbsp;
                     <input type="text" name="extraaddress" id="arrive_extraAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="참고항목" value="" readonly/>                            
                     <span class="error">주소를 입력하세요.</span><span class="error compulsory">필수입력</span>
             </td>
@@ -413,7 +422,7 @@ function goRegister() {
          <tr>
             <td width="25%" class="prodInputName">약관동의</td>
             <td width="75%" align="left" >
-               <iframe src="<%= ctxPath%>/iframe_agree/agree.html" width="100%" height="100px" style="border: solid 1px navy;"></iframe>
+               <iframe src="<%= ctxPath%>/iframe_agree/agree.html" width="100%" height="85px" style="border: solid 1px navy;"></iframe>
                <label for="agree">이용약관에 동의합니다.(필수)</label>&nbsp;&nbsp;<input type="checkbox" id="agree" />
             </td>
          </tr>
