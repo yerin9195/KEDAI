@@ -3,6 +3,7 @@ package com.spring.app.reservation.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,7 +24,7 @@ public class CarController {
 	
 	// sidebar에서 카쉐어 클릭시 이동하는 페이지 만들기
 	@GetMapping("/carShare.kedai")
-	public ModelAndView carShare(ModelAndView mav) { // http://localhost:9099/final_project/carShare.kedai
+	public ModelAndView requiredLogin_carShare(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/carShare.kedai
 		
 		mav.setViewName("tiles1/reservation/carShare.tiles"); 
 		return mav;
@@ -32,7 +33,7 @@ public class CarController {
 	
 	// 카쉐어 페이지에서 등록하기 버튼시 이동하는 페이지 만들기
 	@GetMapping("/carRegister.kedai")
-	public ModelAndView carRegister(ModelAndView mav) { // http://localhost:9099/final_project/carRegister.kedai
+	public ModelAndView requiredLogin_carRegister(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/carRegister.kedai
 		
 		mav.setViewName("tiles1/reservation/carRegister.tiles"); 
 		return mav;
@@ -41,7 +42,7 @@ public class CarController {
 	
 	// sidebar에서 통근버스 클릭시 이동하는 페이지 만들기
 	@GetMapping("/bus.kedai")
-	public ModelAndView bus(ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
+	public ModelAndView requiredLogin_bus(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
 		
 		mav.setViewName("tiles1/reservation/bus.tiles"); 
 		return mav;
@@ -51,7 +52,7 @@ public class CarController {
 	
 	@ResponseBody			
 	@GetMapping("/bus_select.kedai")
-	public String bus(HttpServletRequest request) { // http://localhost:9099/final_project/bus.kedai
+	public String requiredLogin_bus(HttpServletRequest request, HttpServletResponse response) { // http://localhost:9099/final_project/bus.kedai
 
 		String bus_no = request.getParameter("bus_no");
 		String pf_station_id = request.getParameter("pf_station_id");
@@ -84,7 +85,7 @@ public class CarController {
 	
 	@ResponseBody
 	@GetMapping("/station_select.kedai")
-	public String station(HttpServletRequest request) { // http://localhost:9099/final_project/bus.kedai
+	public String requiredLogin_station(HttpServletRequest request, HttpServletResponse response) { // http://localhost:9099/final_project/bus.kedai
 		String bus_no = request.getParameter("bus_no");
 		String pf_station_id = request.getParameter("pf_station_id");
 		System.out.println("~~~ 확인용 pf_station_id : "+ pf_station_id);

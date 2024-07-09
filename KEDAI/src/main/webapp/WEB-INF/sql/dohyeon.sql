@@ -567,3 +567,11 @@ FROM
     
 select *
 from tbl_employees
+
+delete from tbl_employees
+where empid = '2010400-001';
+
+update tbl_employees set orgimgfilename = 'DORY.jpg'
+where empid = '2010400-001';
+
+commit;
