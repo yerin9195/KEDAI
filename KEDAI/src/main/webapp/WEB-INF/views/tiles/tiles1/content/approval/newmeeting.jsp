@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% String ctxPath = request.getContextPath(); %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"  %>
 
 <%-- Bootstrap CSS --%>
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/bootstrap-4.6.2-dist/css/bootstrap.min.css" > 
@@ -69,9 +70,6 @@ div.openList img{
 	cursor:pointer;
 }
 
-.moreList {
-	display:none;
-}
 
 ul.approvalList > li > label:hover {
 	background-color:#EBEBEB;	
@@ -247,18 +245,46 @@ ul.approvalList > li > label{
 		 */
 		 
 		$(document).on("click", "div.openList > img", function(){
-			var $ul = $(this).parent().next("ul");
+			if($(this).is(".plus")) {
+				const $img = $(this); // 현재 클릭된 img 요소를 변수에 저장
+				
+				// img에  plus 클래스가 있는 경우
+				$img.removeClass("plus");
+				$img.attr("src", "<%= ctxPath %>/resources/images/common/Approval/minus.png");
+				var str_dept_code = $(this).next("input#deptCode").val();
+				var loginuser_id = "${sessionScope.loginuser.empid}";
+				console.log(str_dept_code);
+				var v_html = "";
+				$.ajax({
+					url:"${pageContext.request.contextPath}/approval/deptEmpListJSON.kedai",
+					data:{"dept_code":str_dept_code,
+						"loginuser_id":loginuser_id},
+					dataType:"json",
+					type:"post",
+					success:function(json){
+						//console.log(JSON.stringify(json));
+						//[{"empid":"2010001-001","job_name":"대표이사","name":"관리자","dept_name":" ","fk_dept_code":" ","job_code":"1"}]
+						//[{"empid":"2011300-001","job_name":"전무","name":"이주빈","dept_name":"회계부","fk_dept_code":"300","job_code":"2"}]
+						v_html = "";
+						
+						if(json.length >0){
+							$.each(json, function(index, item){
+								v_html += "<li><input type='checkbox' name='submitList"+index+"' id='"+item.empid+"' value='"+item.empid+"' /><label for='"+item.empid+"'>"+item.name+"&nbsp;"+item.job_name +"</label></li>";
+							});
+						}
+						console.log(v_html);
+						$(this).parent().slibling().find("ul.moreList").html(v_html);
+						//
+						//event.target.innerHTML = v_html;
+					},
+					error: function(request, status, error){
+			        	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			        }
+					
+				});	
+				$(this).parent().next().find("ul.moreList").html(v_html);
+			}// end of if-------------
 			
-			if ($ul.is(".moreList")) {
-				// ul에 moreList 클래스가 있는 경우
-				$ul.removeClass("moreList");
-				$(this).attr("src", "<%= ctxPath %>/resources/images/common/Approval/minus.png");
-			}
-			else{
-				// moreList 클래스가 없는 경우
-				$ul.addClass("moreList");
-				$(this).attr("src", "<%= ctxPath %>/resources/images/common/Approval/plus.png");
-			} 
 		});
 		    
 		    /*
@@ -341,9 +367,6 @@ ul.approvalList > li > label{
 				$(this).next().removeClass("bold_text");
 				var tblRow = document.querySelectorAll("ul.addApproval tr");
 				
-				for(i=0; i<)
-				
-				for(int i=0;  )
 			 }        
 		});
 		     
@@ -422,29 +445,32 @@ ul.approvalList > li > label{
 		      <!-- Modal body -->
 		      		<div class="modal-body row">
 		      			<div class="modal_left col-md-5">
-			        		<ul>
-			        			<li class="dept"><div class="openList" style="border: solid 1px red;"><img src="<%= ctxPath%>/resources/images/common/Approval/plus.png" />마케팅부서</div>
-			        				<ul class="moreList approvalList">
-			        					<li><input type="checkbox" name="person" id="person0" value="일순신" /><label for="person0">김모씨</label></li>
-			        					<li><input type="checkbox" name="person" id="person1" value="일순신" /><label for="person1">박모씨</label></li>
-			        					<li><input type="checkbox" name="person" id="person2" value="일순신" /><label for="person2">이모씨</label></li>
-			        					<li><input type="checkbox" name="person" id="person3" value="일순신" /><label for="person3">최모씨</label></li>
-			        					<li><input type="checkbox" name="person" id="person4" value="일순신" /><label for="person4">제갈모씨</label></li>
-			        				</ul>
-			        			</li>
-			        			
+		      				<ul>
 			        			<li class="dept">
-			        				<div class="openList"><img src="<%= ctxPath%>/resources/images/common/Approval/plus.png" />test2</div>
-			        				<ul class="moreList approvalList">
-			        					<li>1</li>
-			        					<li>2</li>
-			        					<li>3</li>
-			        					<li>4</li>
-			        					<li>5</li>
-			        				</ul>
+			        				<c:forEach var="deptList" items="${requestScope.allDeptList}">
+			        					<c:choose>
+			        						<c:when test="${deptList.dept_name == ' '}">
+			        							<div class="openList">
+			        								<img src="<%= ctxPath%>/resources/images/common/Approval/plus.png" class="plus"/>대표이사
+			        								<input type="hidden" value="${deptList.dept_code}" id="deptCode">
+			        							</div>
+			        							<ul class="moreList approvalList">
+			        								
+			        							</ul>		      
+			        						</c:when>
+			        						<c:otherwise>
+			        							<div class="openList">
+			        								<img src="<%= ctxPath%>/resources/images/common/Approval/plus.png" class="plus" />${deptList.dept_name}
+			        								<input type="hidden" value="${deptList.dept_code}" id="deptCode">
+			        							</div>
+			        							<ul class="moreList approvalList">
+			        							</ul>
+			        						</c:otherwise>
+			        					</c:choose>
+			        				</c:forEach>
 			        			</li>
 			        		</ul>	
-		      			</div>	
+			     		</div>	
 		      			<div class="modal_right col-md-7">
 		      				<table class="table addApproval">
 		      					<tr>
@@ -454,7 +480,6 @@ ul.approvalList > li > label{
 									<th>성명</th>
 								</tr>
 		      				</table>
-		      			
 		      			</div>
 		      		</div>
 		      		<!-- Modal footer -->
