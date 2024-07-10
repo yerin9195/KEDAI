@@ -4,10 +4,40 @@
 
 <mapper namespace="company">
 	
+	<!-- 사업자등록번호 중복확인  -->
 	<select id="partnerNoDuplicateCheck" resultType="String">
-	select partner_no
-	from tbl_business_part
-	where partner_no = #{partner_no}
+		select partner_no
+		from tbl_business_part
+		where partner_no = #{partner_no}
 	</select>
-
+	
+	<!-- 사원정보 등록하기 -->
+	<insert id="othercomRegister_submit" parameterType="PartnerVO">
+		insert into tbl_business_part(
+			partner_no, partner_type, partner_name, partner_url, partner_postcode, partner_address,
+			partner_detailaddress, partner_extraaddress, imgfilename, originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept)
+		<choose>
+			<when test="part_emp_tel == null and part_emp_dept == null"><!-- 값이 널인 컬럼을 아예 지우고 값도 날리니까 가능해짐  -->
+				values(
+					#{partner_no}, #{partner_type}, #{partner_name}, #{partner_url}, #{partner_postcode}, #{partner_address},
+					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, null, #{part_emp_email}, null)
+			</when>
+			<when test="part_emp_tel != null and part_emp_dept == null">
+				values(
+					#{partner_no}, #{partner_type}, #{partner_name}, #{partner_url}, #{partner_postcode}, #{partner_address},
+					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, #{part_emp_tel}, #{part_emp_email}, null)
+			</when>
+			<when test="part_emp_tel == null and part_emp_dept != null">
+				values(
+					#{partner_no}, #{partner_type}, #{partner_name}, #{partner_url}, #{partner_postcode}, #{partner_address},
+					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, null, #{part_emp_email}, #{part_emp_dept})
+			</when>
+			<when test="part_emp_tel != null and part_emp_dept != null">
+				values(
+					#{partner_no}, #{partner_type}, #{partner_name}, #{partner_url}, #{partner_postcode}, #{partner_address},
+					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, #{part_emp_tel}, #{part_emp_email}, #{part_emp_dept})
+			</when>
+		</choose>
+	</insert>
+	
 </mapper>
