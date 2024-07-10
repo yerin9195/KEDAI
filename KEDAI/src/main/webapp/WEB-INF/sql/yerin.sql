@@ -488,7 +488,11 @@ where table_name = 'TBL_BOARD';
 
 -----------------------------------------------------------------------
 
+select nvl(max(groupno), 0)
+from tbl_board
 
-
+select *
+from tbl_employees
+where fk_dept_code is null;
 
 

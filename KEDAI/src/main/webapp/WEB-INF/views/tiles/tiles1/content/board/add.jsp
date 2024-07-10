@@ -53,7 +53,15 @@
             obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
            	<%-- === 스마트 에디터 구현 끝 === --%>
            	
-         	// 제목 유효성 검사하기
+         	// 카테고리 유효성 검사하기
+         	const category_name = $("select[name='category_name']").val();
+         	if(category_name == ""){
+         		alert("카테고리를 선택하세요.");
+         		$("select[name='category_name']").focus();
+         		return; // 종료
+         	}
+           	
+           	// 제목 유효성 검사하기
      		const subject = $("input:text[name='subject']").val().trim();
      		if(subject == ""){
      			alert("제목을 입력하세요.");
@@ -137,7 +145,7 @@
 	     	
 	     		<%-- === 답변글쓰기인 경우 === --%>
 				<c:if test='${requestScope.fk_seq ne ""}'>
-	     			<input type="text" name="subject" id="subject" size="100" style="width: 50%; height: 30px;" value="${requestScope.subject}" readonly /> 
+	     			<input type="text" name="subject" id="subject" size="100" style="width: 50%; height: 30px;" value="${requestScope.subject}"  /> 
 	     		</c:if>
 	   		</div>
 	   		<div class="mb-3">

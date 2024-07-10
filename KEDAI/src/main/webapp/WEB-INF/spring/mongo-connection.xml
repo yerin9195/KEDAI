@@ -14,7 +14,7 @@
 	-->
 	<mongo:mongo-client id="mongoClient" host="localhost" port="27017"/>
 	<mongo:db-factory id="mongoDbFactory" dbname="mydb" mongo-client-ref="mongoClient" />
-	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate"> <!-- 이것은 Spring 에서 제공하는 것이다. -->
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
 		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
 	</bean>
 	<!-- 

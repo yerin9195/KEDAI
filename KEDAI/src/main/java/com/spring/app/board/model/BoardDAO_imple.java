@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.spring.app.domain.BoardVO;
 import com.spring.app.domain.CategoryVO;
 
 @Repository
@@ -24,8 +25,39 @@ public class BoardDAO_imple implements BoardDAO {
 	}
 
 	@Override
+	public int getGroupnoMax() {
+		int maxgrouno = sqlsession.selectOne("board.getGroupnoMax");
+		return maxgrouno;
+	}
+	
+	@Override
+	public int add(BoardVO bvo) {
+		int n = sqlsession.insert("board.add", bvo);
+		return n;
+	}
+
+	@Override
+	public int add_withFile(BoardVO bvo) {
+		int n = sqlsession.insert("board.add_withFile", bvo);
+		return n;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Override
 	public void pointPlus(Map<String, String> paraMap) {
 		sqlsession.update("board.pointPlus", paraMap);
 	}
 
+	
+
+	
 }
