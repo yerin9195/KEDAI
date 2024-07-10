@@ -80,9 +80,6 @@
 	.menu a:hover {
 		color: #e68c0e;
 	}
-	.menu {
-		margin-bottom: 3em;
-	}
 	.menu-dropdown li .icon {
 		color: #fff;
 	}
@@ -123,7 +120,7 @@
 	}
 	.overflow-container {
 	 	position: relative;
-	  	height: calc(100vh - 73px) !important;
+	  	height: calc(100vh - 60px) !important;
 	  	overflow-y: auto;
 	  	border-top: 73px solid #fff;
 	  	z-index: -1;
@@ -182,7 +179,7 @@
 					<span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
 				</li>
 				<li>
-					<a href="#">게시판</a>
+					<a href="<%= ctxPath%>/board/list.kedai">게시판</a>
 					<span class="icon"><i class="fa-solid fa-chalkboard-user"></i></span>
 				</li>
 				<li>

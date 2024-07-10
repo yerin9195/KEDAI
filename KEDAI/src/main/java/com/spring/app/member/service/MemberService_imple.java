@@ -69,5 +69,15 @@ public class MemberService_imple implements MemberService {
 		int n = dao.pwdUpdateEnd(paraMap);
 		return n;
 	}
+
+	// 나의 정보 수정하기
+	@Override
+	public int memberEditEnd(Map<String, String> paraMap) {
+		int n = dao.memberEditEnd(paraMap);
+		return n;
+	}
+
+	
+
 	
 }

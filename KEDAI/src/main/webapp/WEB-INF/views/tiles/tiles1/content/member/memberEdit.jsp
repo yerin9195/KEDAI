@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn"  uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%
 	String ctxPath = request.getContextPath();
 	//     /KEDAI
 %>
 <style type="text/css">
-	.register input {
+	.edit input {
 		width: 360px;
 		border: none;
 		border-bottom: 1px solid #2c4459;
@@ -22,11 +23,9 @@
 		font-size: 12pt;
 		color: #e68c0e;
 	}
-	span#idCheckResult,
 	span#emailCheckResult {
 		font-size: 12pt;
 	}
-	button#idcheck,
 	button#emailcheck,
 	button#zipcodeSearch {
 		border: solid 1px #2c4459;
@@ -38,37 +37,35 @@
 		height: 40px;
 		margin-left: 10px;
 	}
-	button#idcheck:hover,
 	button#emailcheck:hover,
 	button#zipcodeSearch:hover {
 		border: none;
 		background: #e68c0e;
 		color: #fff;
 	}
-	.btnRegister button {
+	.btnEdit button {
 		border-radius: 25px;
 		color: #fff;
 		width: 200px;
 		height: 50px;
 	}
-	.btnRegister button:nth-child(1) {
+	.btnEdit button:nth-child(1) {
 		background: #2c4459;
 		margin-right: 10px;
 	}
-	.btnRegister button:nth-child(2) {
+	.btnEdit button:nth-child(2) {
 		background: #e68c0e;
 	}
 </style>
 
 <script type="text/javascript">
-	let b_idcheck_click = false; 
-	let b_emailcheck_click = false; 
-	let b_zipcodeSearch_click = false;
+	let b_emailcheck_click = true; 
+	let b_zipcodeSearch_click = true;
 	
 	$(document).ready(function(){
 		
 		$("span.error").hide();
-		$("input#empid").focus();
+		$("input#pwd").focus();
 	
 		// 이미지 미리 보여주기
 		$(document).on("change", "input.img_file", function(e){
@@ -122,50 +119,6 @@
 	            $(e.target).parent().find("span.error").hide();
 	        }
 
-	    });
-		
-		///////////////////////////////////////////////////////////////
-		
-		$("input#jubun1").blur( (e) => {
-      
-	        const regExp_jubun1 = new RegExp(/^([0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1,2][0-9]|3[0,1]))$/);
-	     	// 생년월일을 검사해주는 정규표현식 객체 생성
-	        
-	        const bool = regExp_jubun1.test($(e.target).val());   
-	        
-	        if(!bool) { // 생년월일이 정규표현식에 위배된 경우
-	            $("div#empRegister :input").prop("disabled", true);  
-	            $(e.target).prop("disabled", false); 
-	            $(e.target).parent().siblings("span.error").show();
-	            $(e.target).val("").focus(); 
-	        }
-	        else { 
-	            $("div#empRegister :input").prop("disabled", false);
-	            $(e.target).parent().siblings("span.error").hide();
-	        }
-	        
-	    });
-		
-		///////////////////////////////////////////////////////////////
-		
-		$("input#jubun2").blur( (e) => {
-      
-	        const regExp_jubun2 = new RegExp(/^[1-4]\d{6}$/);
-	     	// 주민등록번호 7자리를 검사해주는 정규표현식 객체 생성
-	        
-	        const bool = regExp_jubun2.test($(e.target).val());   
-	        
-	        if(!bool) { // 주민등록번호 7자리가 정규표현식에 위배된 경우
-	            $("div#empRegister :input").prop("disabled", true);  
-	            $(e.target).prop("disabled", false); 
-	            $(e.target).parent().siblings("span.error").show();
-	            $(e.target).val("").focus(); 
-	        }
-	        else { 
-	            $("div#empRegister :input").prop("disabled", false);
-	            $(e.target).parent().siblings("span.error").hide();
-	        }
-	        
 	    });
 		
 		///////////////////////////////////////////////////////////////
@@ -286,50 +239,6 @@
 	    }); // end of $("img#zipcodeSearch").click() ----------
 	    
 		//////////////////////////////////////////////////////////////
-	    
-	 	// === jQuery UI 의 datepicker === //
-	    $('input#datepicker').datepicker({
-	        dateFormat: 'yy-mm-dd'    // Input Display Format 변경
-	        ,showOtherMonths: true    // 빈 공간에 현재월의 앞뒤월의 날짜를 표시
-	        ,showMonthAfterYear: true // 년도 먼저 나오고, 뒤에 월 표시
-	        ,changeYear: true         // 콤보박스에서 년 선택 가능
-	        ,changeMonth: true        // 콤보박스에서 월 선택 가능                             
-	        ,yearSuffix: "년"          // 달력의 년도 부분 뒤에 붙는 텍스트
-	        ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] // 달력의 월 부분 텍스트
-	        ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] // 달력의 월 부분 Tooltip 텍스트
-	        ,dayNamesMin: ['일','월','화','수','목','금','토'] // 달력의 요일 부분 텍스트
-	        ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] // 달력의 요일 부분 Tooltip 텍스트             
-	    });
-	    
-		//////////////////////////////////////////////////////////////
-	    
-	    $("button#idcheck").click(function(){ // "아이디중복확인" 을 클릭했을 때 이벤트 처리
-	        b_idcheck_click = true;
-	      
-	        $.ajax({
-	            url: "<%= ctxPath%>/admin/idDuplicateCheck.kedai", 
-	            data: {"empid":$("input#empid").val()}, 
-	            type: "post", 
-	            async: true, 
-	            dataType: "json", 
-	            success: function(json){ 
-	            //	console.log(JSON.stringify(json));
-	            	
-	            	if(json.isExists){ 
-	                    $("span#idCheckResult").html("&nbsp;&nbsp;이미 사용 중인 아이디입니다.").css({"color":"#e68c0e"});
-	                    $("input#empid").val(""); 
-	                }
-	                else{ 
-	                    $("span#idCheckResult").html("&nbsp;&nbsp;사용 가능한 아이디입니다.").css({"color":"#2c4459"});
-	                }
-	            },
-	            error: function(request, status, error){
-	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	            }
-	        });
-	    });
-		
-		//////////////////////////////////////////////////////////////
 		
 		$("button#emailcheck").click(function(){ // "이메일중복확인" 을 클릭했을 때 이벤트 처리
 	        b_emailcheck_click = true;
@@ -359,12 +268,6 @@
 		
 		//////////////////////////////////////////////////////////////
 
-	    // 아이디값이 변경되면 등록하기 버튼을 클릭 시 
-	    // "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도 초기화 시키기 
-	    $("input#empid").bind("change", function(){
-	        b_idcheck_click = false;
-	    });
-	  
 	    // 이메일값이 변경되면 등록하기 버튼을 클릭 시 
 	    // "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기 위한 용도 초기화 시키기 
 	    $("input#email").bind("change", function(){
@@ -374,7 +277,7 @@
 	}); // end of $(document).ready(function(){}) ----------
 	
 	// Function Declaration
-	function goRegister(){
+	function goEdit(){
 		
 		let b_requiredInfo = true;
 		
@@ -392,11 +295,6 @@
 	    
 	    if(!b_requiredInfo){
 	        return;
-	    }
-		
-	    if(!b_idcheck_click){ // "아이디중복확인" 을 클릭하지 않았을 경우
-	        alert("아이디 중복확인을 클릭하셔야 합니다.");
-	        return; 
 	    }
 	    
 	    if(!b_emailcheck_click){ // "이메일중복확인" 을 클릭하지 않았을 경우
@@ -418,8 +316,8 @@
 	        return; 
 	    }
 	    
-	    const frm = document.registerFrm;
-     	frm.action = "<%= ctxPath%>/admin/empRegister.kedai";
+	    const frm = document.editFrm;
+     	frm.action = "<%= ctxPath%>/member/memberEditEnd.kedai";
      	frm.method = "post";
     	frm.submit();
      	
@@ -428,7 +326,6 @@
 	// Function Declaration
 	function goReset(){
 
-	    $("span#idcheckResult").empty();
 	    $("span#emailCheckResult").empty();
 
 	} // end of function goReset() ----------
@@ -436,27 +333,23 @@
 
 <%-- content start --%>	
 <div style="border: 0px solid red; padding: 1% 0;">
-	<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;사원정보 등록하기<span style="font-size: 12pt; color: #e68c0e;">&nbsp;&nbsp;* 표시는 필수입력 사항입니다.</span></h3>
+	<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;나의 정보 수정하기<span style="font-size: 12pt; color: #e68c0e;">&nbsp;&nbsp;* 표시는 필수입력 사항입니다.</span></h3>
 	
-	<form name="registerFrm" enctype="multipart/form-data" class="row mt-5" style="border: 0px solid green;">
+	<form name="editFrm" enctype="multipart/form-data" class="row mt-5" style="border: 0px solid green;">
 		<div class="col-2" style="border: 0px solid blue;">
 			<h6>사진등록</h6>
 			<div style="width: 200px; height: 230px; overflow: hidden; border: 1px solid #ddd;">
-				<img id="previewImg" style="width: 100%; height: 100%;" />
+				<img id="previewImg" style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/images/member/${(sessionScope.loginuser).orgimgfilename}" />
 			</div>
 			<br>
-	   		<input type="file" name="attach" class="infoData img_file" accept='image/*' />
+	   <%-- <input type="file" name="attach" class="infoData img_file" accept='image/*' /> --%>
 		</div>
 		
-		<div class="col-10 row" id="empRegister">
-			<div class="col-6 register" style="border: 0px solid blue;">
+		<div class="col-10 row" id="memberEdit">
+			<div class="col-6 edit" style="border: 0px solid blue;">
 				<div style="position: relative;">
 					<h6>사원아이디&nbsp;<span class="star">*</span></h6>
-					<input type="text" name="empid" id="empid" maxlength="30" class="requiredInfo" placeholder="AAAABBB-CCC" />
-					<button type="button" id="idcheck" style="position: absolute; bottom: 28px; left: 230px;">아이디 중복확인</button>
-	                <span id="idCheckResult"></span>
-	                <br>
-	                <span style="font-size: 10pt; font-weight: bold; color: #bbb;">AAAA : 입사연도, BBB : 부서코드, CCC : 입사순서</span>
+					<input type="text" name="empid" id="empid" maxlength="30" class="requiredInfo" value="${sessionScope.loginuser.empid}" readonly />
 				</div>
 				<div class="mt-3">
 					<h6>비밀번호&nbsp;<span class="star">*</span></h6>
@@ -470,28 +363,27 @@
 	            </div>
 				<div class="mt-3">
 					<h6>성명&nbsp;<span class="star">*</span></h6>
-					<input type="text" name="name" id="name" maxlength="30" class="requiredInfo" placeholder="성명" />
+					<input type="text" name="name" id="name" maxlength="30" class="requiredInfo" value="${sessionScope.loginuser.name}" />
 				</div>
 				<div class="mt-3">
 					<h6>닉네임&nbsp;</h6>
-					<input type="text" name="nickname" id="nickname" maxlength="30" placeholder="닉네임" />
+					<input type="text" name="nickname" id="nickname" maxlength="30" value="${sessionScope.loginuser.nickname}" />
 				</div>
 				<div class="mt-3">
 					<h6>주민등록번호&nbsp;<span class="star">*</span></h6>
 					<div style="display: flex;">
 						<div>
-	                         <input type="text" name="jubun1" id="jubun1" size="6" maxlength="6" class="requiredInfo" style="width: 155px;">
-	                         &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-minus"></i>&nbsp;&nbsp;&nbsp;
+	                         <input type="text" name="jubun1" id="jubun1" size="6" maxlength="6" class="requiredInfo" style="width: 155px;" value="${fn:substring(sessionScope.loginuser.jubun, 0, 6)}" readonly>
+	                         &nbsp;&nbsp;<i class="fa-solid fa-minus"></i>&nbsp;&nbsp;
                      	</div>
                      	<div>
-	                         <input type="text" name="jubun2" id="jubun2" size="7" maxlength="7" class="requiredInfo" style="width: 155px;">
+	                         <input type="text" name="jubun2" id="jubun2" size="7" maxlength="7" class="requiredInfo" style="width: 155px;" value="${fn:substring(sessionScope.loginuser.jubun, 6, 13)}" readonly>
                      	</div>
-						<span class="error" style="display: block; align-content: end;">&nbsp;&nbsp;주민등록번호 형식에 맞지 않습니다.</span>
 					</div>
 				</div>
 	            <div class="mt-3" style="position: relative;">
 					<h6>이메일&nbsp;<span class="star">*</span></h6>
-					<input type="text" name="email" id="email" maxlength="60" class="requiredInfo" placeholder="이메일 주소" />
+					<input type="text" name="email" id="email" maxlength="60" class="requiredInfo" value="${sessionScope.loginuser.email}" />
 	                <button type="button" id="emailcheck" style="position: absolute; bottom: 5px; left: 230px;">이메일 중복확인</button>
 	                <span class="error">&nbsp;&nbsp;이메일 형식에 맞지 않습니다.</span>
 	                <span id="emailCheckResult"></span>
@@ -504,62 +396,48 @@
 	                         &nbsp;&nbsp;<i class="fa-solid fa-minus"></i>&nbsp;&nbsp;
 	                     </div>
 	                     <div>
-	                         <input type="text" name="hp2" id="hp2" class="requiredInfo" size="6" maxlength="4" placeholder="1234" style="width: 93px; text-align: center;">
+	                         <input type="text" name="hp2" id="hp2" class="requiredInfo" size="6" maxlength="4" style="width: 93px; text-align: center;" value="${fn:substring(sessionScope.loginuser.mobile, 3, 7)}">
 	                         &nbsp;&nbsp;<i class="fa-solid fa-minus"></i>&nbsp;&nbsp;
 	                     </div>
 	                     <div>
-	                         <input type="text" name="hp3" id="hp3" class="requiredInfo" size="6" maxlength="4" placeholder="5678" style="width: 93px; text-align: center;">
+	                         <input type="text" name="hp3" id="hp3" class="requiredInfo" size="6" maxlength="4" style="width: 93px; text-align: center;" value="${fn:substring(sessionScope.loginuser.mobile, 7, 11)}">
 	                     </div>
 	                     <span class="error" style="display: block; align-content: end;">&nbsp;&nbsp;휴대폰 형식에 맞지 않습니다.</span>
 	                 </div>
 				</div>
 			</div>
 			
-			<div class="col-6 register" style="border: 0px solid blue; position: relative;">
+			<div class="col-6 edit" style="border: 0px solid blue; position: relative;">
 				<div style="position: relative;">
 					<h6>우편번호&nbsp;<span class="star">*</span></h6>
-					<input type="text" name="postcode" id="postcode" size="6" maxlength="5" class="requiredInfo" placeholder="우편번호" />
+					<input type="text" name="postcode" id="postcode" size="6" maxlength="5" class="requiredInfo" value="${sessionScope.loginuser.postcode}" />
 					<button type="button" id="zipcodeSearch" style="position: absolute; bottom: 5px; left: 230px;">우편번호 찾기</button><br>
 				</div>
 				<div class="mt-3">
 					<h6>주소&nbsp;<span class="star">*</span></h6>
-					<input type="text" name="address" id="address" size="40" maxlength="200" class="requiredInfo" placeholder="주소" /><br>
-	                <input type="text" name="detailaddress" id="detailAddress" size="40" maxlength="200" class="requiredInfo" placeholder="상세주소" />&nbsp;
-	                <input type="text" name="extraaddress" id="extraAddress" size="40" maxlength="200" placeholder="참고항목" />            
+					<input type="text" name="address" id="address" size="40" maxlength="200" class="requiredInfo" value="${sessionScope.loginuser.address}" /><br>
+	                <input type="text" name="detailaddress" id="detailAddress" size="40" maxlength="200" class="requiredInfo" value="${sessionScope.loginuser.detailaddress}" />&nbsp;
+	                <input type="text" name="extraaddress" id="extraAddress" size="40" maxlength="200" value="${sessionScope.loginuser.extraaddress}" />            
 	            </div>
 				<div class="mt-3">
 					<h6>입사일자&nbsp;<span class="star">*</span></h6>
-					<input type="text" name="hire_date" id="datepicker" maxlength="10" class="requiredInfo" placeholder="입사일자는 마우스로만 클릭하세요." />
+					<input type="text" name="hire_date" id="datepicker" maxlength="10" class="requiredInfo" value="${sessionScope.loginuser.hire_date}" readonly />
 				</div>
 				<div class="mt-3" style="position: relative;">
 					<h6>급여&nbsp;<span class="star">*</span></h6>
-					<input type="text" name="salary" id="salary" maxlength="10" class="requiredInfo" />
+					<input type="text" name="salary" id="salary" maxlength="10" class="requiredInfo" value="${sessionScope.loginuser.salary}" readonly />
 					<span style="position: absolute; bottom: 5px; left: 340px;">원</span>
 				</div>
-				<div class="mt-3" style="display: flex;">
-					<div>
-						<h6>부서</h6>
-						<select name="dept_name" class="infoData" style="width: 170px;">
-							<option value="">부서</option>
-							<c:forEach var="dvo" items="${requestScope.deptList}">
-		                  		<option value="${dvo.dept_name}">${dvo.dept_name}</option>
-                  			</c:forEach>
-						</select>
-					</div>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<div>
-						<h6>직급</h6>
-						<select name="job_name" class="infoData" style="width: 170px;">
-							<option value="">직급</option>
-							<c:forEach var="jvo" items="${requestScope.jobList}">
-		                  		<option value="${jvo.job_name}">${jvo.job_name}</option>
-                  			</c:forEach>
-						</select>
-					</div>
+				<div class="mt-3">
+					<h6>부서</h6>
+					<input type="text" name="dept_name" id="dept_name" value="${sessionScope.loginuser.dvo.dept_name}" readonly />
 				</div>
-				
-				<div class="btnRegister" style="position: absolute; bottom: 0;">
-			        <button type="button" onclick="goRegister()">등록하기</button>
+				<div class="mt-3">
+					<h6>직급</h6>
+					<input type="text" name="job_name" id="job_name" value="${sessionScope.loginuser.jvo.job_name}" readonly />
+				</div>
+				<div class="btnEdit" style="position: absolute; bottom: 0;">
+			        <button type="button" onclick="goEdit()">수정하기</button>
 			        <button type="reset" onclick="goReset()">취소하기</button>
 			    </div>
 			</div>
