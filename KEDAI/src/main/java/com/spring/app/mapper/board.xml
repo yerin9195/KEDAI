@@ -4,5 +4,15 @@
 
 <mapper namespace="board">
 
+	<select id="category_select" resultType="com.spring.app.domain.CategoryVO">
+		select category_code, category_name
+		from tbl_category
+		order by category_code asc
+	</select>
+	
+	<update id="pointPlus" parameterType="HashMap">
+		update tbl_employees set point = point + to_number(#{point})
+		where empid = #{empid}
+	</update>
 	
 </mapper>
