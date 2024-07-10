@@ -272,7 +272,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	 <a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처등록하기</a>
 </c:if>	
 </div>
-
+sfsffdsfssdfsdfsd
 <div id="othercom_list" style="border: solid 0px red;">
 	
   <section class="artWrap">
