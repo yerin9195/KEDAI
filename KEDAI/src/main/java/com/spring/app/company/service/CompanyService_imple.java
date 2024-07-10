@@ -1,5 +1,7 @@
 package com.spring.app.company.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,17 @@ public class CompanyService_imple implements CompanyService{
 		int n = dao.othercomRegister_submit(partvo);
 		return n;
 	}
+
+	// 거래처 정보 가져오기
+	@Override
+	public List<PartnerVO> otherCom_list_select() {
+		List<PartnerVO> partnervoList = dao.otherCom_list_select();
+		return partnervoList;
+	}
+
+	
+
+
 
 	
 	

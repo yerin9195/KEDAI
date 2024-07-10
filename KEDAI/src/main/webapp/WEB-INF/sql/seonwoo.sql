@@ -126,16 +126,36 @@ where partner_no = '123-15-59011';
 select *
 from tbl_business_part;
 
+alter table tbl_business_part add part_emp_rank varchar(200);
+alter table tbl_business_part add part_emp_rank varchar(200) not null;
+
+update tbl_business_part
+set part_emp_rank = ''
+where part_emp_rank is not null;
+
+alter table tbl_business_part
+modify part_emp_rank varchar(200) not null;
+
+truncate table tbl_business_part;
+
+commit;
+
+
+desc tbl_business_part;
+
+select *
+from tbl_business_part;
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+select *
+from tbl_employees;
 
 
 
-
-
-
-
-
-
-
+select PARTNER_NO, PARTNER_TYPE, PARTNER_NAME, PARTNER_URL, PARTNER_POSTCODE, PARTNER_ADDRESS, PARTNER_DETAILADDRESS, PARTNER_EXTRAADDRESS,
+IMGFILENAME, PART_EMP_NAME, PART_EMP_TEL, PART_EMP_EMAIL, PART_EMP_DEPT, PART_EMP_RANK
+from tbl_business_part
+where PARTNER_NO ='111-11-11111';
 
 
 

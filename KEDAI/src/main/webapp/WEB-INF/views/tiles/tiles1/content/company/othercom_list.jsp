@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 
@@ -268,17 +268,18 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 
 
 <div class="reg">
-	 <a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">
-		거래처등록하기
-	</a>
+<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+	 <a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처등록하기</a>
+</c:if>	
 </div>
 
 <div id="othercom_list" style="border: solid 0px red;">
 	
   <section class="artWrap">
     <article>
+    <c:forEach var="partvo" items="${requestScope.partnervoList}">
       <div class="cardHead pl-5">
-        <div class="h5 pt-3 ">거래처명&nbsp;&nbsp;&nbsp;<span class="h6">업종:</span></div>
+        <div class="h5 pt-3">${partvo.partner_no}&nbsp;&nbsp;&nbsp;<span class="h6">업종:</span></div>
         <button><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt=""></button>
       </div>
       <ul class="cardBody">
@@ -304,7 +305,9 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
           <div class="listTxt">email@domain.name</div>
         </li>
       </ul>
+    </c:forEach>  
     </article>
+    
     <article>
       <div class="cardHead pl-5">
         <div class="h5 pt-3">거래처명&nbsp;&nbsp;&nbsp;<span class="h6">업종:</span></div>
@@ -510,10 +513,12 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
           </li>
         </ul>
       </div>
-      <div class="buttonContainer" style="width: 200px; margin: 1% auto; border:solid 0px blue;">
-     	<button class="editcom" style="border: solid 0px red; float: left; margin-right: 10px;">수정하기</button>
-     	<button class="delcom" style="border: solid 0px red; float: left;">삭제하기</button>
-      </div>
+      <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+	      <div class="buttonContainer" style="width: 200px; margin: 1% auto; border:solid 0px blue;">
+	     	<button class="editcom" style="border: solid 0px red; float: left; margin-right: 10px;">수정하기</button>
+	     	<button class="delcom" style="border: solid 0px red; float: left;">삭제하기</button>
+	      </div>
+      </c:if>
     </div>
   </div>
 </div>

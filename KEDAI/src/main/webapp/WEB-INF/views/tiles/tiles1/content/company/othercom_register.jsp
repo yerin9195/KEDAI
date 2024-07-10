@@ -120,6 +120,19 @@ div#register_com {
 	padding: 0 10px;
 }
 
+.clientWrap .clientRegister .rgs-right .partnameflex .partnameinfo {
+	width: 49%;
+	padding: 0 auto;
+	MARGIN:0 auto;
+}
+
+
+.clientWrap .clientRegister .rgs-right .partnameflex{
+	display:flex;
+}
+
+
+
 .clientWrap .clientRegister .rgs-body .rgs-address{
 	padding: 0 10px;
 }
@@ -259,6 +272,33 @@ div#register_com {
 				}
 			/* 거래처담당 직원 유효성 검사 시작 */
 		});
+		
+		$("input#part_emp_rank").blur( (e) => {
+			/* 거래처담당 직원 직급 유효성검사 끝 */
+			const part_emp_rank = $("input#part_emp_rank").val().trim();
+				
+				if(part_emp_rank == ""){
+			  // 입력하지 않거나 공백만 입력했을 경우 
+			  $(".clientWrap :input").prop("disabled", true);
+			  $("input#part_emp_rank").prop("disabled", false);
+		    $("input#part_emp_rank").val("").focus();
+		            
+	      // $("input#part_emp_rank").next().show();
+	      // 또는
+		    $("input#part_emp_rank").parent().find("span.error").show();
+				}
+				else{
+					// 공백이 아닌 글자를 입력했을 경우
+					$(".clientWrap :input").prop("disabled",false);
+					$("input#part_emp_rank").parent().find("span.error").hide();
+				}
+			/* 거래처담당 직원 직급 유효성검사 끝 */
+		});
+		
+		
+		
+		
+		
 		
 		$("input#part_emp_email").blur( (e) => {
 			/* 거래처 담당직원 이메일 유효성검사 시작 */
@@ -433,7 +473,16 @@ div#register_com {
 				alert("거래처담당 직원을 입력하셔야 합니다.");
 		        return false;
 			}
-		/* 거래처담당 직원 유효성 검사 시작 */
+		/* 거래처담당 직원 유효성 검사 끝 */
+		
+		/* 거래처담당 직원 직급유효성 검사 시작 */
+		const part_emp_rank = $("input#part_emp_rank").val().trim();
+			if(part_emp_rank == ""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+				alert("거래처 직원 직급을 입력하셔야 합니다.");
+		        return false;
+		}
+		/* 거래처담당 직원 직급 유효성 검사 끝 */
 
 		/* 거래처 담당직원 이메일 유효성검사 시작 */
 		const part_emp_email = $("input#part_emp_email").val().trim();
@@ -764,11 +813,19 @@ div#register_com {
 						</label>
 					</div>
 					<div class="rgs-right">
-						<label> 
-							<span>담당자명&nbsp;<span class="star">*</span></span> 
-							<input type="text" name="part_emp_name" id="part_emp_name" placeholder="담당자명을 입력하세요.">
-							<span class="error">담당자명은 필수 입력사항입니다.</span>
-						</label> 
+						<div class="partnameflex">
+							<label class="partnameinfo"> 
+								<span>담당자명&nbsp;<span class="star">*</span></span>
+								<input type="text" name="part_emp_name" id="part_emp_name" placeholder="담당자명을 입력하세요.">
+								<span class="error">담당자명은 필수 입력사항입니다.</span>
+							</label> 
+							<label class="partnameinfo"> 
+								<span>담당자직급&nbsp;<span class="star">*</span></span>
+								<input type="text" name="part_emp_rank" id="part_emp_rank" placeholder="담당자직급을 입력하세요.">
+								<span class="error">담당자직급은 필수 입력사항입니다.</span>
+							</label> 
+						</div>
+						
 						<label> 
 							<span>담당자부서</span> 
 							<input type="text" name="part_emp_dept" placeholder="담당자부서를 입력하세요.">
