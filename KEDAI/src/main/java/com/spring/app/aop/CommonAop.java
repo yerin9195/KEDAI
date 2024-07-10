@@ -95,6 +95,7 @@ public class CommonAop {
 	
 	// After Advice(공통관심사, 보조업무)를 구현
 	// 사원의 포인트를 특정점수(예: 100점, 200점, 300점) 만큼 증가시키는 메소드
+	@SuppressWarnings("unchecked")
 	@After("pointPlus()")
 	public void pointPlus(JoinPoint joinpoint) {
 		
