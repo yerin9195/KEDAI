@@ -128,7 +128,7 @@ public class AdminController {
 			byte[] bytes = null;     // 첨부파일의 내용물을 담는 것
 			
 			try {
-				bytes = attach.getBytes(); // 첨부파일의 내용물을 읽어오는 것
+				bytes = attach.getBytes(); 
 				
 				String originalFilename = attach.getOriginalFilename(); // 첨부파일명의 파일명
 				

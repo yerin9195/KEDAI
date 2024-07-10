@@ -340,8 +340,8 @@ div#register_com {
 	  
 		$("input#fileInput").change( (e) => {
 			/* 이미지 파일이름 유효성검사 시작 */	
-			const imgfilename = $("input#fileInput").val().trim();
-			if(imgfilename == ""){
+			const fileInput = $("input#fileInput").val().trim();
+			if(fileInput == ""){
 					// 입력하지 않거나 공백만 입력했을 경우 
 				$(".clientWrap :input").prop("disabled", true);
 				$("input#fileInput").prop("disabled", false);
@@ -483,8 +483,8 @@ div#register_com {
      	}
 			
 		/* 이미지 파일이름 유효성검사 시작 */	
-		const imgfilename = $("input#fileInput").val().trim();
-		if(imgfilename == ""){
+		const fileInput = $("input#fileInput").val().trim();
+		if(fileInput == ""){
 			// 입력하지 않거나 공백만 입력했을 경우 
 			alert("이미지 파일을 등록하셔야 합니다.");
 			return false;
@@ -726,7 +726,7 @@ div#register_com {
 					<img id="previewImg" style="width: 100%; height: 100%;" />
 				</div>
 				<br>
-				<input type="file" name="imgfilename" id="fileInput" value="fileInput" accept="image/*" />
+				<input type="file" name="attach" id="fileInput" value="fileInput" accept="image/*" />
 				<span id="showPhoto" style="font-style:italic; font-size:12px; color:fff;">대표사진을 등록하세요&nbsp;<span class="star">*</span></span>
 				<br> 
 				<span class="error">대표사진은 필수 입력사항입니다.</span>
