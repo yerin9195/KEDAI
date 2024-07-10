@@ -126,10 +126,30 @@ public class CarController {
 	}
 	
 	// 마이페이지에서 나의 차량 정보 등록 클릭시 들어가는 페이지 만들기
+	@GetMapping("/myCarEdit.kedai")
+	public ModelAndView requiredLogin_myCarEdit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
+		
+		mav.setViewName("tiles1/reservation/myCarEdit.tiles"); 
+		return mav;
+		
+	}
+	
+
+	// 마이페이지에서 나의 카셰어링 예약 및 결제내역 클릭시 들어가는 페이지 만들기
 	@GetMapping("/myCarReserveAndPay.kedai")
 	public ModelAndView requiredLogin_myCarReserveAndPay(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
 		
 		mav.setViewName("tiles1/reservation/myCarReserveAndPay.tiles"); 
+		return mav;
+		
+	}
+	
+	
+	// 마이페이지에서 나의 카셰어링 예약 및 결제내역 클릭시 들어가는 페이지 만들기
+	@GetMapping("/carApply_detail.kedai")
+	public ModelAndView requiredLogin_carApply_detail(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
+		
+		mav.setViewName("tiles1/reservation/carApply_detail.tiles"); 
 		return mav;
 		
 	}
