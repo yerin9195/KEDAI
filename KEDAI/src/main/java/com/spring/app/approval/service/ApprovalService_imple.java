@@ -1,11 +1,13 @@
 package com.spring.app.approval.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.app.approval.model.ApprovalDAO;
+import com.spring.app.domain.DeptVO;
 
 @Service
 public class ApprovalService_imple implements ApprovalService {
@@ -22,5 +24,33 @@ public class ApprovalService_imple implements ApprovalService {
 		String deptNumber = dao.getDeptNumber(paraMap);
 		return deptNumber;
 	}
+	
+	// 결재 라인에서 찾을 모든 사원 목록 보기
+	@Override
+	public List<Map<String, String>> allEmployeeList(String login_empid) {
+		List<Map<String, String>> allEmployeeList = dao.allEmployeeList(login_empid);
+		return allEmployeeList;
+	}
+
+	// 현재 근무중인 사원이 있는 모든 부서 가져오기
+	@Override
+	public List<DeptVO> allDeptList() {
+		List<DeptVO> allDeptList = dao.allDeptList();
+		return allDeptList;
+	}
+
+	// 해당 부서에 근무중인 사원 정보 가져오기
+	@Override
+	public List<Map<String, String>> deptEmpList(Map<String, String> paraMap) {
+		List<Map<String, String>> deptEmpList = dao.deptEmpList(paraMap);
+		return deptEmpList;
+	}
+	
+	/*
+	 * // 각 부서별 당 인원수 가져오기
+	 * 
+	 * @Override public List<Map<String, String>> numByDept() { List<Map<String,
+	 * String>> numByDept = dao.numByDept(); return numByDept; }
+	 */
 
 }

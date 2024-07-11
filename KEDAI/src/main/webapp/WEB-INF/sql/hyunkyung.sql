@@ -268,8 +268,70 @@ COMMENT ON COLUMN tbl_approval.approval_date IS '결재일자 ';
 
 --- 문서번호 추가하기
 
+desc tbl_job
 
+select *
+from tbl_job
+
+SELECT *
+FROM tbl_employees
+
+select E.empid, E.name, J.job_code, J.job_name, CASE WHEN D.dept_code IS NULL THEN ' ' ELSE TO_CHAR(D.dept_code) END AS dept_code,
+       nvl(D.dept_name, ' ') as dept_name
+from tbl_employees E
+JOIN tbl_job J
+ON E.fk_job_code = J.job_code
+LEFT JOIN tbl_dept D
+ON E.fk_dept_code = D.dept_code
+order by dept_name asc, job_code desc
 
 
     
-    
+SELECT D.dept_name, COUNT(E.empid) AS employee_count
+FROM tbl_employees E
+LEFT JOIN tbl_dept D
+ON E.fk_dept_code = D.dept_code
+GROUP BY E.fk_dept_code, D.dept_name
+ORDER BY D.dept_name DESC;
+
+
+SELECT E.empid, E.name, E.fk_dept_code, J.job_code, J.job_name, D.dept_name
+FROM  tbl_employees E
+JOIN tbl_job J
+ON  E.fk_job_code = J.job_code
+LEFT JOIN tbl_dept D
+ON E.fk_dept_code = D.dept_code
+where empid !='2018100-007' and fk_dept_code = '100'
+ORDER BY D.dept_code DESC, J.job_code ASC;   
+
+SELECT E.empid, E.name, E.fk_dept_code, J.job_code, J.job_name, D.dept_name
+FROM  tbl_employees E
+JOIN tbl_job J
+ON  E.fk_job_code = J.job_code
+LEFT JOIN tbl_dept D
+ON E.fk_dept_code = D.dept_code
+ORDER BY D.dept_code DESC, J.job_code ASC;
+
+where fk_dept_code = (null)
+
+select *
+from tbl_dept;
+
+
+SELECT NVL(to_char(D.dept_code, ' ')) AS dept_code, D.dept_name
+FROM tbl_dept D
+RIGHT JOIN tbl_employees E ON E.fk_dept_code = D.dept_code
+GROUP BY D.dept_code, D.dept_name
+ORDER BY D.dept_code ASC;
+
+--ORA-00909: invalid number of arguments
+
+SELECT CASE WHEN D.dept_code IS NULL THEN '0' ELSE TO_CHAR(D.dept_code) END AS dept_code,
+       nvl(D.dept_name, ' ')
+FROM tbl_dept D
+RIGHT JOIN tbl_employees E ON E.fk_dept_code = D.dept_code
+GROUP BY D.dept_code, D.dept_name
+ORDER BY D.dept_code desc;
+
+select *
+from tbl_employees
