@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.AES256;
 import com.spring.app.domain.MemberVO;
+import com.spring.app.domain.SalaryVO;
 import com.spring.app.member.model.MemberDAO;
 
 @Service
@@ -76,6 +77,13 @@ public class MemberService_imple implements MemberService {
 	public List<MemberVO> memberListView() {
 		List<MemberVO> membervoList = dao.memberListView();
 		return membervoList;
+	}
+
+	//	급여 전체 계산
+	@Override
+	public int salaryCal(SalaryVO salaryvo) {
+		int n = dao.salaryCal(salaryvo);
+		return n;
 	}
 	
 }

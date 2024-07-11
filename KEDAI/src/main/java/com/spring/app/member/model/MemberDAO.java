@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.spring.app.domain.MemberVO;
+import com.spring.app.domain.SalaryVO;
 
 public interface MemberDAO {
 
@@ -24,4 +25,7 @@ public interface MemberDAO {
 
 	//	급여명세서 직원목록 불러오기
 	List<MemberVO> memberListView();
+
+	//	급여 전체 계산
+	int salaryCal(SalaryVO salaryvo);
 }

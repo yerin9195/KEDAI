@@ -75,6 +75,10 @@
 	$(document).ready(function(){
 		const modalClose = document.querySelector('.close_btn');
 		
+		$("#workdaySmt").click(function(e){	
+			salary_submit();
+		});
+		
 		$("#workListcom_btn").click(function(e){
 			 $('#modal1').modal("show");
 			 Memberview();
@@ -401,9 +405,46 @@
 	    
 	}
 	
-	
-	
-	
+	//	근로 일수 저장에 따른 급여명세서 계산
+	function salary_submit(){
+		var workdayval = $("#weekdayCount").val();
+		var empidval = [];
+		
+		 $(".checkbox-member:checked").each(function() {
+		        var empid = $(this).closest('tr').find('.empid').text();
+		        empidval.push(empid.trim()); // empid 값을 배열에 추가
+		    });
+		
+		 console.log(empidval);
+		 
+		
+        $.ajax({
+        	 url: "<%= ctxPath%>/salaryCal.kedai",
+        	 type : "post",
+             data: { "workday" : workdayval, "empid[]" : empidval},
+             dataType: 'json', // 서버에서 반환되는 데이터 형식을 JSON으로 설정
+             success: function(json) {
+                 // 정상적으로 JSON 데이터를 받았는지 확인
+                 //	console.log(JSON.stringify(json));
+                 if (workdayval > 0) {
+                     for (var i = 0; i < json.length; i++) {
+                         console.log("사원번호: " + json[i].empid);
+                         console.log("성명: " + json[i].name);
+                         console.log("부서: " + json[i].fk_dept_code);
+                         // 필요한 작업 수행
+                     }
+                 } else {
+                     alert("근로 일자를 확정하여 주시기 바랍니다.")
+                 }
+             },
+            error: function(request, status, error){
+                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+        });
+		
+	}	//	end of function salary_submit(){---------
+		
+		
 </script>
 
 <div class="header">
@@ -485,7 +526,7 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end mt-3">
-                    <button class="btn mr-2">저장</button>
+                    <button class="btn mr-2" id="workdaySmt">저장</button>
                     <button class="btn" type="button" data-dismiss="modal">닫기</button>
                     <button>삭제</button>
                 </div>
