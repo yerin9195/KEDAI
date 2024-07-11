@@ -23,14 +23,6 @@ public class CompanyService_imple implements CompanyService{
 		return searchPartnerNo;
 	}
 	
-	
-	//@Override
-	//public int othercom_register(PartnerVO partvo) {
-		
-	//	int n = dao.othercom_register(partvo);
-	//	return 0;
-	// }
-	
 	// 거래처 정보 등록하기
 	@Override
 	public int othercomRegister_submit(PartnerVO partvo) {
@@ -44,6 +36,17 @@ public class CompanyService_imple implements CompanyService{
 		List<PartnerVO> partnervoList = dao.otherCom_list_select();
 		return partnervoList;
 	}
+
+	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 
+	@Override
+	public List<PartnerVO> partnerPopupClick(PartnerVO patvo) {
+		System.out.println("test " +patvo.getPartner_name());
+		List<PartnerVO> partnervoList = dao.partnerPopupClick(patvo.getPartner_name());
+		return partnervoList;
+	}
+	
+
+
 
 	
 

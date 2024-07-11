@@ -14,6 +14,10 @@ public interface CompanyDAO {
 	
 	// 거래처 정보 가져오기
 	List<PartnerVO> otherCom_list_select();
+
+	// 거래처 상세보기 어떤거 선택했는지 알아오기
+	List<PartnerVO> partnerPopupClick(String partner_name);
+	
 	
 	
 

@@ -23,12 +23,11 @@ div#row{
 }
 
 div#othercom_list{
-	width: calc(100vw - 250px);
-	/* height: calc(100vh - 80px); */
-	
-	  display: flex;
-	  justify-content: center;
-	  align-items: center;
+	width:100%;
+	/* width: calc(100vw - 250px); */
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 /* 여기서부터 시작 */
@@ -38,32 +37,39 @@ div#othercom_list .artWrap {
   flex-wrap: wrap;
   width: 80%;
   padding-right:10%;
-	
+  gap: 20px;
 }
+
 div#othercom_list .artWrap article {
   width: calc(33.33% - 20px);
   background-color: #fff;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
   padding-bottom: 20px;
   border-radius: 10px;
-  overflow: hidden;
+  flex: 1 1 calc(33.33% - 20px);
 }
+
 div#othercom_list .artWrap article:nth-of-type(3) ~ article {
   margin-top: 20px;
 }
+
 div#othercom_list .artWrap article .cardHead {
+
+  color: white;
+  background-color:#2C4459;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2C4459;
-  color: #fff;
-  padding-right: 20px;
+  padding: 10px 10px 10px 30px;
+  
 }
+
 div#othercom_list .artWrap article .cardHead h4 {
   font-size: 18px;
   font-weight: 700;
   line-height: 40px;
   text-indent: 40px;
+
 }
 div#othercom_list .artWrap article .cardHead h6 {
 	font-size:14px;
@@ -71,6 +77,7 @@ div#othercom_list .artWrap article .cardHead h6 {
 	color: #e68c0e; 
 	padding-right:50%;
 	font-style: italic;
+	
 }
 
 div#othercom_list .artWrap article .cardHead button {
@@ -81,10 +88,13 @@ div#othercom_list .artWrap article .cardHead button {
 div#othercom_list .artWrap article .cardHead button img {
   height: 16px;
 }
-div#othercom_list .artWrap article .cardBody {
-  margin-top: 20px;
+.cardBody {
+  list-style-type: none;
+  padding: 0;
 }
 div#othercom_list .artWrap article .cardBody li {
+  padding-top:3%;
+  padding-left: 5%;
   display: flex;
 }
 div#othercom_list .artWrap article .cardBody li .listImg {
@@ -248,226 +258,102 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 </style>
 
 <script type="text/javascript">
-	/* 카드 팝업 열고 닫기 시작  */
-	$(function(){
-	  $('.cardHead button').click(
-	    function(){
-	      $('.popupWrap').css({display : 'flex'})
-	    }
-	  );
-	  $('.popupHead button').click(
-	    function(){
-	      $('.popupWrap').css({display : 'none'})
-	    }
-	  );
-	})
-	/* 카드 팝업 열고 닫기 끝  */
+
+$(function(){
+	  $('.cardHead button').click(function(){
+		  var partner_name = $(this).closest('article').find('.h5 span').first().text().trim();
+		  console.log(partner_name)
+	    // 클릭한 거래처 정보 상세보기
+	    $.ajax({
+	      url: "<%= ctxPath%>/partnerPopupClick.kedai",
+	      type: "post",
+	      async: true,
+	      data: {
+	        "partner_name": partner_name
+	      },
+	      dataType: "json",
+	      success: function(json){
+	        // 서버에서 거래처이름으로 정보 얻어오기
+	        console.log("??", json[0].partner_name)
+	        if(json[0].partner_name != null){
+	          $("#partnerNameContainer").html(json[0].partner_name);
+	        } else {
+	          $("#partnerNameContainer").html("거래처이름을 불러오지 못했습니다.");
+	        }
+	      },
+	      error: function(request, status, error) {
+	        alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+	      }
+	    });
+		  $('.popupWrap').css({display: 'flex'});
+	  });
+	 
+	  
+	  
+	  $('.popupHead button').click(function(){
+	    $('.popupWrap').css({display: 'none'});
+	  });
+	});
+	/* 카드 팝업 열고 닫기 끝 */
+
+	$(".cardHead button").click(function(){
+	  // 필요한 추가 작업이 있으면 여기에 작성
+	});
 	
 
+
+	
 </script>
 
 
 <div class="reg">
-<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-	 <a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처등록하기</a>
-</c:if>	
+    <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+         <a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처등록하기</a>
+    </c:if>    
 </div>
-sfsffdsfssdfsdfsd
-<div id="othercom_list" style="border: solid 0px red;">
-	
-  <section class="artWrap">
-    <article>
+
+<div id="othercom_list">
+  <div class="artWrap">
     <c:forEach var="partvo" items="${requestScope.partnervoList}">
-      <div class="cardHead pl-5">
-        <div class="h5 pt-3">${partvo.partner_no}&nbsp;&nbsp;&nbsp;<span class="h6">업종:</span></div>
-        <button><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt=""></button>
-      </div>
-      <ul class="cardBody">
-        <li>
-          <div class="listImg">
-            <img src="<%= ctxPath%>/resources/images/common/team.svg" alt="">
-          </div>
-          <div class="listTxt">담당자부서</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
-          <div class="listTxt">
-            <span>홍길동</span>
-            <span>직급</span>
-          </div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
-          <div class="listTxt">010-0000-0000</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
-          <div class="listTxt">email@domain.name</div>
-        </li>
-      </ul>
-    </c:forEach>  
-    </article>
-    
-    <article>
-      <div class="cardHead pl-5">
-        <div class="h5 pt-3">거래처명&nbsp;&nbsp;&nbsp;<span class="h6">업종:</span></div>
-        <button><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt=""></button>
-      </div>
-      <ul class="cardBody">
-        <li>
-          <div class="listImg">
-            <img src="<%= ctxPath%>/resources/images/common/team.svg" alt="">
-          </div>
-          <div class="listTxt">담당자부서</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
-          <div class="listTxt">
-            <span>홍길동</span>
-            <span>직급</span>
-          </div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
-          <div class="listTxt">010-0000-0000</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
-          <div class="listTxt">email@domain.name</div>
-        </li>
-      </ul>
-    </article>
-    <article>
-      <div class="cardHead pl-5">
-        <div class="h5 pt-3 ">거래처명&nbsp;&nbsp;&nbsp;<span class="h6">업종:</span></div>
-        <button><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt=""></button>
-      </div>
-      <ul class="cardBody">
-        <li>
-          <div class="listImg">
-            <img src="<%= ctxPath%>/resources/images/common/team.svg" alt="">
-          </div>
-          <div class="listTxt">담당자부서</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
-          <div class="listTxt">
-            <span>홍길동</span>
-            <span>직급</span>
-          </div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
-          <div class="listTxt">010-0000-0000</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
-          <div class="listTxt">email@domain.name</div>
-        </li>
-      </ul>
-    </article>
-    <article>
-      <div class="cardHead pl-5">
-        <div class="h5 pt-3 ">거래처명&nbsp;&nbsp;&nbsp;<span class="h6">업종:</span></div>
-        <button><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt=""></button>
-      </div>
-      <ul class="cardBody">
-        <li>
-          <div class="listImg">
-            <img src="<%= ctxPath%>/resources/images/common/team.svg" alt="">
-          </div>
-          <div class="listTxt">담당자부서</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
-          <div class="listTxt">
-            <span>홍길동</span>
-            <span>직급</span>
-          </div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
-          <div class="listTxt">010-0000-0000</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
-          <div class="listTxt">email@domain.name</div>
-        </li>
-      </ul>
-    </article>
-    <article>
-      <div class="cardHead pl-5">
-        <div class="h5 pt-3 ">거래처명&nbsp;&nbsp;&nbsp;<span class="h6">업종:</span></div>
-        <button><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt=""></button>
-      </div>
-      <ul class="cardBody">
-        <li>
-          <div class="listImg">
-            <img src="<%= ctxPath%>/resources/images/common/team.svg" alt="">
-          </div>
-          <div class="listTxt">담당자부서</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
-          <div class="listTxt">
-            <span>홍길동</span>
-            <span>직급</span>
-          </div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
-          <div class="listTxt">010-0000-0000</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
-          <div class="listTxt">email@domain.name</div>
-        </li>
-      </ul>
-    </article>
-    <article>
-      <div class="cardHead pl-5">
-        <div class="h5 pt-3 ">거래처명&nbsp;&nbsp;&nbsp;<span class="h6">업종:</span></div>
-        <button><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt=""></button>
-      </div>
-      <ul class="cardBody">
-        <li>
-          <div class="listImg">
-            <img src="<%= ctxPath%>/resources/images/common/team.svg" alt="">
-          </div>
-          <div class="listTxt">담당자부서</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
-          <div class="listTxt">
-            <span>홍길동</span>
-            <span>직급</span>
-          </div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
-          <div class="listTxt">010-0000-0000</div>
-        </li>
-        <li>
-          <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
-          <div class="listTxt">email@domain.name</div>
-        </li>
-      </ul>
-    </article>
-  </section>
+      <article>
+        <div class="cardHead">
+          <div class="h5"><span id="asdasd">${partvo.partner_name}</span>&nbsp;&nbsp;&nbsp;<span class="h6">업종:${partvo.partner_type}</span></div>
+          <button class="detailbtn"><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt="" id="detailbtn"></button>
+        </div>
+        <ul class="cardBody">
+          <li>
+            <div class="listImg">
+              <img src="<%= ctxPath%>/resources/images/common/team.svg" alt="">
+            </div>
+            <div class="listTxt">${partvo.part_emp_dept}</div>
+          </li>
+          <li>
+            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
+            <div class="listTxt">
+              <span>${partvo.part_emp_name}</span>
+              <span>${partvo.part_emp_rank}</span>
+            </div>
+          </li>
+          <li>
+            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
+            <div class="listTxt">${partvo.part_emp_tel}</div>
+          </li>
+          <li>
+            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
+            <div class="listTxt">${partvo.partner_url}</div>
+          </li>
+        </ul>
+      </article>
+    </c:forEach>
+  </div>
 </div>
-
-
-
-
-
 
 
 <!-- popup area -->
 <div class="popupWrap">
   <div class="popup">
     <div class="popupHead">
-      <h4>거래처명</h4>
-     <!--  <button id="edit_com" style="display: flex;">수정하기</button> -->
+      <h4 id="partnerNameContainer"></h4>
       <button class="close"><img src="<%= ctxPath%>/resources/images/common/xmark.svg" alt=""></button>
     </div>
     <div class="popupBody">
@@ -514,14 +400,11 @@ sfsffdsfssdfsdfsd
         </ul>
       </div>
       <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-	      <div class="buttonContainer" style="width: 200px; margin: 1% auto; border:solid 0px blue;">
-	     	<button class="editcom" style="border: solid 0px red; float: left; margin-right: 10px;">수정하기</button>
-	     	<button class="delcom" style="border: solid 0px red; float: left;">삭제하기</button>
-	      </div>
+        <div class="buttonContainer" style="width: 200px; margin: 1% auto; border:solid 0px blue;">
+          <button class="editcom" style="border: solid 0px red; float: left; margin-right: 10px;">수정하기</button>
+          <button class="delcom" style="border: solid 0px red; float: left;">삭제하기</button>
+        </div>
       </c:if>
     </div>
   </div>
 </div>
-
-
-

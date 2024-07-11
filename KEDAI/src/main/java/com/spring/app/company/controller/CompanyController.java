@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -69,7 +70,7 @@ public class CompanyController {
 	
 	
 	// 거래처 정보 등록하기
-	@PostMapping("othercom_register.kedai")
+	@RequestMapping("othercom_register.kedai")
 	public ModelAndView othercomRegister_submit(ModelAndView mav, PartnerVO partvo, MultipartHttpServletRequest mrequest) {
 		
 		MultipartFile attach = partvo.getAttach();
@@ -173,9 +174,54 @@ public class CompanyController {
 		return mav;
 	}
 	
+	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 
+	@ResponseBody
+	@PostMapping(value="/partnerPopupClick.kedai", produces="text/plain;charset=UTF-8")
+	public String partnerPopupClick(PartnerVO patvo) {
+		System.out.println("testss: " + patvo.getPartner_name());
+		List<PartnerVO> partnervoList = service.partnerPopupClick(patvo); 
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		if(partnervoList != null) {
+			
+			for(PartnerVO partvo:partnervoList) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("partner_no",partvo.getPartner_no());
+				jsonObj.put("partner_name",partvo.getPartner_name());
+				jsonObj.put("partner_type",partvo.getPartner_type());
+				jsonObj.put("partner_url",partvo.getPartner_url());
+				jsonObj.put("partner_postcode",partvo.getPartner_postcode());
+				jsonObj.put("partner_address",partvo.getPartner_address());
+				jsonObj.put("partner_detailaddress",partvo.getPartner_detailaddress());
+				jsonObj.put("partner_extraaddress",partvo.getPartner_extraaddress());
+				jsonObj.put("imgfilename",partvo.getImgfilename());
+				jsonObj.put("originalfilename", partvo.getOriginalfilename());
+				jsonObj.put("part_emp_name",partvo.getPart_emp_name());
+				jsonObj.put("part_emp_tel",partvo.getPart_emp_tel());
+				jsonObj.put("part_emp_email",partvo.getPart_emp_email());
+				jsonObj.put("part_emp_dept",partvo.getPart_emp_dept());
+				jsonObj.put("part_emp_rank",partvo.getPart_emp_rank());
+				
+				System.out.println("~~~확인용 partner_no : " + partvo.getPartner_no());
+				
+				
+				jsonArr.put(jsonObj);
+			}// end of for()------------------------------------------------
+		
+		}
+		
+		String jsonString = jsonArr.toString();
+		System.out.println("~~~확인용2222 jsonString : " + jsonString);
+		
+		
+		/* return jsonString; */
+		return jsonString;
+		
+		
+		
+	} // end of public String partnerPopupClick(HttpServletRequest request) {
 
-	
-	
 	
 	
 	

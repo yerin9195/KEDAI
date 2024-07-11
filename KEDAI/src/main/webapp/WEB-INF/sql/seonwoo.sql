@@ -151,11 +151,16 @@ select *
 from tbl_employees;
 
 
+select partner_name
+		from tbl_business_part
+		where partner_name = '(주)에이티에스인코'
 
-select PARTNER_NO, PARTNER_TYPE, PARTNER_NAME, PARTNER_URL, PARTNER_POSTCODE, PARTNER_ADDRESS, PARTNER_DETAILADDRESS, PARTNER_EXTRAADDRESS,
-IMGFILENAME, PART_EMP_NAME, PART_EMP_TEL, PART_EMP_EMAIL, PART_EMP_DEPT, PART_EMP_RANK
-from tbl_business_part
-where PARTNER_NO ='111-11-11111';
+SELECT partner_name
+FROM tbl_business_part;
 
 
 
+select partner_no, partner_type, partner_name, partner_url, partner_postcode, partner_address, partner_detailaddress, partner_extraaddress,
+		       originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank
+		from tbl_business_part
+        where partner_name = '(주)에이티에스인코';
