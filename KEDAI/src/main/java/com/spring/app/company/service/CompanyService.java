@@ -16,7 +16,9 @@ public interface CompanyService {
 	List<PartnerVO> otherCom_list_select();
 	
 	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 
-	List<PartnerVO> partnerPopupClick(PartnerVO patvo);
+	List<PartnerVO> partnerPopupClick(PartnerVO partvo);
+
+	PartnerVO otherCom_get_select(String partner_no);
 	
 	
 	

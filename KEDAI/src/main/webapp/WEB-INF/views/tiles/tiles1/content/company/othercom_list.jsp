@@ -261,22 +261,44 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 
 $(function(){
 	  $('.cardHead button').click(function(){
-		  var partner_name = $(this).closest('article').find('.h5 span').first().text().trim();
-		  console.log(partner_name)
+		  var partner_no = $(this).closest('article').attr('partner_no');
+		  console.log(partner_no)
 	    // 클릭한 거래처 정보 상세보기
 	    $.ajax({
-	      url: "<%= ctxPath%>/partnerPopupClick.kedai",
-	      type: "post",
+	      url: "<%= ctxPath%>/partnerPopupClick.kedai?partner_no=" + partner_no,
+	      type: "get",
 	      async: true,
-	      data: {
+/* 	      data: {
 	        "partner_name": partner_name
 	      },
-	      dataType: "json",
+ */	      dataType: "json",
 	      success: function(json){
 	        // 서버에서 거래처이름으로 정보 얻어오기
-	        console.log("??", json[0].partner_name)
-	        if(json[0].partner_name != null){
-	          $("#partnerNameContainer").html(json[0].partner_name);
+	        console.log("??", json.partner_name)
+	        if(json.partner_name != null){
+	          $("#pop_partnerName").html(json.partner_name);
+	          $("#pop_partnerNo").html(json.partner_no);
+	          $("#pop_partnerImg").attr("src", "./resources/files/" + json.imgfilename);
+	          $("#pop_partnerAddress").html(json.partner_address);
+	          
+	      
+	          
+	          /*
+	private String partner_type;
+	private String partner_url; 
+	private String partner_postcode;
+	private String partner_detailaddress;
+	private String partner_extraaddress;
+	private String imgfilename;
+	private String originalfilename;
+	private String part_emp_name;
+	private String part_emp_tel;
+	private String part_emp_email;
+	private String part_emp_dept;
+	private String part_emp_rank;
+	          */
+	          
+	          
 	        } else {
 	          $("#partnerNameContainer").html("거래처이름을 불러오지 못했습니다.");
 	        }
@@ -300,6 +322,10 @@ $(function(){
 	  // 필요한 추가 작업이 있으면 여기에 작성
 	});
 	
+	function editPopup() {
+		const partner_no = $("#pop_partnerNo").html();
+		location.assign("othercom_modify.kedai?partner_no=" + partner_no);
+	}
 
 
 	
@@ -315,7 +341,7 @@ $(function(){
 <div id="othercom_list">
   <div class="artWrap">
     <c:forEach var="partvo" items="${requestScope.partnervoList}">
-      <article>
+      <article partner_no="${partvo.partner_no}">
         <div class="cardHead">
           <div class="h5"><span id="asdasd">${partvo.partner_name}</span>&nbsp;&nbsp;&nbsp;<span class="h6">업종:${partvo.partner_type}</span></div>
           <button class="detailbtn"><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt="" id="detailbtn"></button>
@@ -353,26 +379,27 @@ $(function(){
 <div class="popupWrap">
   <div class="popup">
     <div class="popupHead">
-      <h4 id="partnerNameContainer"></h4>
+      <h4 id="pop_partnerName"></h4>
       <button class="close"><img src="<%= ctxPath%>/resources/images/common/xmark.svg" alt=""></button>
     </div>
     <div class="popupBody">
       <div class="forAlign">
         <div class="popupImg">
-
+          <img id="pop_partnerImg" src="" alt="">
+			<!-- 사진들어오는곳  -->
         </div>
         <ul class="popupList">
           <li>
             <div class="listImg">
               <img src="<%= ctxPath%>/resources/images/common/business_num.svg" alt="">
             </div>
-            <div class="listTxt">123-45-6789</div>
+            <div id="pop_partnerNo" class="listTxt"></div>
           </li>
           <li>
             <div class="listImg">
               <img src="<%= ctxPath%>/resources/images/common/comp.svg" alt="">
             </div>
-            <div class="listTxt">강남구 도곡동</div>
+            <div id="pop_partnerAddress" class="listTxt"></div>
           </li>
           <li>
             <div class="listImg">
@@ -401,7 +428,7 @@ $(function(){
       </div>
       <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
         <div class="buttonContainer" style="width: 200px; margin: 1% auto; border:solid 0px blue;">
-          <button class="editcom" style="border: solid 0px red; float: left; margin-right: 10px;">수정하기</button>
+          <button onclick="editPopup()" class="editcom" style="border: solid 0px red; float: left; margin-right: 10px;">수정하기</button>
           <button class="delcom" style="border: solid 0px red; float: left;">삭제하기</button>
         </div>
       </c:if>

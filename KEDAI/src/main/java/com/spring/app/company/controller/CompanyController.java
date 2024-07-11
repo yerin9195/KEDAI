@@ -21,12 +21,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.app.common.AES256;
 import com.spring.app.common.FileManager;
 import com.spring.app.company.service.CompanyService;
@@ -43,6 +46,9 @@ public class CompanyController {
 	
 	@Autowired
 	private FileManager fileManager;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	// 거래처 사업자등록번호 이미 있는지 중복확인
 	@ResponseBody
@@ -68,9 +74,16 @@ public class CompanyController {
 	} // end of public String partnerNoDuplicateCheck()--------------------------------------
 
 	
+	@GetMapping(value="/othercom_register.kedai")	// http://localhost:9099/KEDAI/othercom_list.kedai
+	public ModelAndView other_comRegister(ModelAndView mav) {
+			
+		mav.setViewName("tiles1/company/othercom_register.tiles");
+		
+		return mav;
+	}
 	
 	// 거래처 정보 등록하기
-	@RequestMapping("othercom_register.kedai")
+	@PostMapping("othercom_register.kedai")
 	public ModelAndView othercomRegister_submit(ModelAndView mav, PartnerVO partvo, MultipartHttpServletRequest mrequest) {
 		
 		MultipartFile attach = partvo.getAttach();
@@ -140,6 +153,16 @@ public class CompanyController {
 	
 	// end of public ModelAndView othercomRegister_submit(ModelAndView mav, PartnerVO partvo, MultipartHttpServletRequest mrequest) {}-----------------------------------------------------
 	
+	@GetMapping(value="/othercom_modify.kedai")	// http://localhost:9099/KEDAI/othercom_list.kedai
+	public ModelAndView other_comModify(@RequestParam("partner_no") String partnerNo, ModelAndView mav) {
+		PartnerVO partnerVO = service.otherCom_get_select(partnerNo);
+			
+		mav.setViewName("tiles1/company/othercom_register.tiles");
+		mav.addObject("partvo", partnerVO);
+		
+		return mav;
+	}
+	
 	
 	
 	// 거래처 정보 조회하기 #######################################################
@@ -176,32 +199,46 @@ public class CompanyController {
 	
 	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 
 	@ResponseBody
+	@GetMapping(value="/partnerPopupClick.kedai", produces="text/plain;charset=UTF-8")
+	public String otherCom_get_select(String partner_no) throws JsonProcessingException {
+		System.out.println("partner_no: " + partner_no);
+		PartnerVO partnerVO = service.otherCom_get_select(partner_no);
+		
+		String jsonString = objectMapper.writeValueAsString(partnerVO); // toObject => PartnerVO partnerVO = objectMapper.readValue(jsonString, PartnerVO.class)
+		System.out.println("~~~확인용2222 jsonString : " + jsonString);
+		
+		/* return jsonString; */
+		return jsonString;
+	} // end of public String partnerPopupClick(HttpServletRequest request) {
+	
+	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 
+	@ResponseBody
 	@PostMapping(value="/partnerPopupClick.kedai", produces="text/plain;charset=UTF-8")
-	public String partnerPopupClick(PartnerVO patvo) {
-		System.out.println("testss: " + patvo.getPartner_name());
-		List<PartnerVO> partnervoList = service.partnerPopupClick(patvo); 
+	public String partnerPopupClick(PartnerVO partvo) {
+		System.out.println("testss: " + partvo.getPartner_name());
+		List<PartnerVO> partnervoList = service.partnerPopupClick(partvo); 
 		
 		JSONArray jsonArr = new JSONArray();
 		
 		if(partnervoList != null) {
 			
-			for(PartnerVO partvo:partnervoList) {
+			for(PartnerVO pvo:partnervoList) {
 				JSONObject jsonObj = new JSONObject();
-				jsonObj.put("partner_no",partvo.getPartner_no());
-				jsonObj.put("partner_name",partvo.getPartner_name());
-				jsonObj.put("partner_type",partvo.getPartner_type());
-				jsonObj.put("partner_url",partvo.getPartner_url());
-				jsonObj.put("partner_postcode",partvo.getPartner_postcode());
-				jsonObj.put("partner_address",partvo.getPartner_address());
-				jsonObj.put("partner_detailaddress",partvo.getPartner_detailaddress());
-				jsonObj.put("partner_extraaddress",partvo.getPartner_extraaddress());
-				jsonObj.put("imgfilename",partvo.getImgfilename());
-				jsonObj.put("originalfilename", partvo.getOriginalfilename());
-				jsonObj.put("part_emp_name",partvo.getPart_emp_name());
-				jsonObj.put("part_emp_tel",partvo.getPart_emp_tel());
-				jsonObj.put("part_emp_email",partvo.getPart_emp_email());
-				jsonObj.put("part_emp_dept",partvo.getPart_emp_dept());
-				jsonObj.put("part_emp_rank",partvo.getPart_emp_rank());
+				jsonObj.put("partner_no",pvo.getPartner_no());
+				jsonObj.put("partner_name",pvo.getPartner_name());
+				jsonObj.put("partner_type",pvo.getPartner_type());
+				jsonObj.put("partner_url",pvo.getPartner_url());
+				jsonObj.put("partner_postcode",pvo.getPartner_postcode());
+				jsonObj.put("partner_address",pvo.getPartner_address());
+				jsonObj.put("partner_detailaddress",pvo.getPartner_detailaddress());
+				jsonObj.put("partner_extraaddress",pvo.getPartner_extraaddress());
+				jsonObj.put("imgfilename",pvo.getImgfilename());
+				jsonObj.put("originalfilename", pvo.getOriginalfilename());
+				jsonObj.put("part_emp_name",pvo.getPart_emp_name());
+				jsonObj.put("part_emp_tel",pvo.getPart_emp_tel());
+				jsonObj.put("part_emp_email",pvo.getPart_emp_email());
+				jsonObj.put("part_emp_dept",pvo.getPart_emp_dept());
+				jsonObj.put("part_emp_rank",pvo.getPart_emp_rank());
 				
 				System.out.println("~~~확인용 partner_no : " + partvo.getPartner_no());
 				

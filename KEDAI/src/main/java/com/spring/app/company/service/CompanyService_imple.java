@@ -39,12 +39,20 @@ public class CompanyService_imple implements CompanyService{
 
 	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 
 	@Override
-	public List<PartnerVO> partnerPopupClick(PartnerVO patvo) {
-		System.out.println("test " +patvo.getPartner_name());
-		List<PartnerVO> partnervoList = dao.partnerPopupClick(patvo.getPartner_name());
-		return partnervoList;
+	public PartnerVO otherCom_get_select(String partner_no) {
+		PartnerVO parterVO = dao.otherCom_get_select(partner_no);
+		
+		return parterVO;
 	}
 	
+	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 
+	@Override
+	public List<PartnerVO> partnerPopupClick(PartnerVO partvo) {
+		System.out.println("test " +partvo.getPartner_name());
+		List<PartnerVO> partnervoList = dao.partnerPopupClick(partvo.getPartner_name());
+		return partnervoList;
+	}
+
 
 
 

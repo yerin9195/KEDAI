@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@page import="com.spring.app.domain.PartnerVO"%>
 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -7,6 +8,10 @@
 
 <%
 	String ctxPath = request.getContextPath();
+
+	PartnerVO partVO = (PartnerVO)request.getAttribute("partvo");
+	Boolean isModify = (partVO != null);
+	request.setAttribute("isModify", isModify);
 %>
 
 <style type="text/css">
@@ -198,6 +203,10 @@ div#register_com {
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <script type="text/javascript">
+	const partvo_partner_no = "${partvo.partner_no}";
+	const isModify = (partvo_partner_no !== "");
+	console.log("isModify : " + isModify);
+	console.log("java - isModify : ${isModify}");
 		
 	let comAddr_chk = false;
 	let partnerNo_chk = false;
@@ -772,7 +781,8 @@ div#register_com {
 		<div class="clientRegister">
 			<div class="rgs-profile">
 				<div class="imgbox" style="width: 230px; height: 200px;">
-					<img id="previewImg" style="width: 100%; height: 100%;" />
+					<c:if test="${!isModify}"><img id="previewImg" style="width: 100%; height: 100%;" /></c:if>
+					<c:if test="${isModify}"><img src="./resources/files/${partvo.imgfilename}" id="previewImg" style="width: 100%; height: 100%;" /></c:if>
 				</div>
 				<br>
 				<input type="file" name="attach" id="fileInput" value="fileInput" accept="image/*" />
@@ -785,7 +795,7 @@ div#register_com {
 					<div class="rgs-left">
 						<label> 
 							<span>거래처명&nbsp;<span class="star">*</span></span> 
-							<input type="text" class="comName" name="partner_name" id="partner_name" placeholder="거래처명을 입력하세요.">
+							<input type="text" class="comName" name="partner_name" id="partner_name" value="${partvo.partner_name}" placeholder="거래처명을 입력하세요.">
 							<span class="error">거래처명은 필수 입력사항입니다.</span>
 						</label> 
 						<label> 
@@ -798,7 +808,7 @@ div#register_com {
 							<span>사업자등록번호&nbsp;<span class="star">*</span></span> 
 							<div style="display:flex;">
 								<input type="text" name="partner_no" id="partner_no" class="" placeholder="사업자등록번호를 입력하세요."/>
-								<input type="button" id="partnerNo_chk" onclick="" value="중복확인"/> 
+								<c:if test="${not isModify}"><input type="button" id="partnerNo_chk" onclick="" value="중복확인"/></c:if>
 								<span id="partNoChkResult"></span>
 							</div>
 							<span id="empty" class="error">사업자등록번호는 필수 입력사항입니다.</span> 
