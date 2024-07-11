@@ -7,6 +7,8 @@
 	<typeAliases>
 		<typeAlias type="com.spring.app.domain.MemberVO" alias="MemberVO" />
 		<typeAlias type="com.spring.app.domain.BusVO" alias="BusVO" />
+		<typeAlias type="com.spring.app.domain.PartnerVO" alias="PartnerVO" />
+		<typeAlias type="com.spring.app.domain.BoardVO" alias="BoardVO" />
 	</typeAliases>		
 
 </configuration>

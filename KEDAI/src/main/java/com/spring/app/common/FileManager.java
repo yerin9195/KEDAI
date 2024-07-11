@@ -63,15 +63,14 @@ public class FileManager {
 		// 자바에서는 File 클래스를 사용하여 폴더 또는 파일을 생성 및 관리를 하게 된다.
 		
 		if(!dir.exists()) { // 만약에 파일을 저장할 경로인 폴더가 실제로 존재하지 않는다면 
-			
 			dir.mkdirs(); // 파일을 저장할 경로인 폴더를 생성한다.
 		}
 		
-		String pathname = path + File.separator + newFileName; // path + filename
+		String pathname = path + File.separator + newFileName; // path+filename
 		/* 
 			File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
-		          운영체제가 Windows 이라면 File.separator 는  "\" 이고,
-		          운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+          	운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+          	운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
 		*/
 		// 해당경로에 \ 를 더하고 파일명을 더한 경로까지 나타내어준 파일명(문자열)을 만든다.
 		// pathname 은 예를 들면, C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files\2024062709291535243254235235234.png 이다.      
@@ -88,7 +87,7 @@ public class FileManager {
 		
 		return newFileName;
 		// 파일을 업로드 한 이후에 
-		// 업로드 되어진 파일명(현재의 년월일시분초에다가 현재 나노세컨즈nanoseconds 값을 결합하여 확장자를 붙여서 만든것)을 알아온다.
+		// 업로드 되어진 파일명(현재의 년월일시분초에다가 현재 나노세컨즈nanoseconds 값을 결합하여 확장자를 붙여서 만든 것)을 알아온다.
 		
 	} // end of public String doFileUpload(byte[] bytes, String originalFilename, String path) ----------
 
@@ -114,7 +113,6 @@ public class FileManager {
 			
 		//	originalFilename = new String(originalFilename.getBytes("EUC-KR"), "8859_1");  
 		//  또는	
-			
 			originalFilename = new String(originalFilename.getBytes("UTF-8"), "8859_1");  
 			// originalFilename.getBytes("UTF-8") 은 UTF-8 형태로 되어진 문자열 originalFilename 을 byte 형태로 변경한 후
 	       	// byte 형태로 되어진 것을 표준인 ISO-Latin1(혹은 Latin1 또는 8859_1) 형태로 인코딩한 문자열로 만든다.
@@ -153,12 +151,12 @@ public class FileManager {
 				
 				while( (length = bfin.read(readByte, 0, 4096)) != -1 ) {
 				/*
-				    bfin.read(readByte, 0, 4096) 은 
-				          다운로드 해주어야할 file에서 0(처음) 부터 4096 byte 만큼 읽어들인 후 
+			    	bfin.read(readByte, 0, 4096) 은 
+	          		다운로드 해주어야할 file 에서 0(처음) 부터 4096 byte 만큼 읽어들인 후 
 				    readByte 라는 변수에 읽어들인 내용을 저장시킨다.
-				          그런데 다운로드 해주어야할 file에서 읽어들인 내용이 없다라면 bfin.read(readByte, 0, 4096) 은 -1 을 리턴시켜준다. 
-				          그러므로  while( (length = bfin.read(readByte, 0, 4096)) != -1  ) 말은 
-				          다운로드 해주어야할 file 을 매번 4096 byte 씩 읽어들인다는 말이다.      	
+		          	그런데 다운로드 해주어야할 file 에서 읽어들인 내용이 없다라면 bfin.read(readByte, 0, 4096) 은 -1 을 리턴시켜준다. 
+		          	그러므로  while( (length = bfin.read(readByte, 0, 4096)) != -1  ) 말은 
+		         	다운로드 해주어야할 file 을 매번 4096 byte 씩 읽어들인다는 말이다.      	
 				*/
 					
 					souts.write(readByte, 0, length);
@@ -206,7 +204,7 @@ public class FileManager {
 		String newFilename = null;
 
 		// 클라이언트가 업로드한 파일의 이름
-		if(originalFilename==null || originalFilename.equals(""))
+		if(originalFilename == null || originalFilename.equals(""))
 			return null;
 		
 		// 확장자

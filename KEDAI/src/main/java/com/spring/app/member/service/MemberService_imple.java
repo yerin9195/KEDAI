@@ -52,8 +52,32 @@ public class MemberService_imple implements MemberService {
 	// 아이디 찾기
 	@Override
 	public String idFind(Map<String, String> paraMap) {
-		String empid = dao.idFind(paraMap);
-		return empid;
+		String empId = dao.idFind(paraMap);
+		return empId;
 	}
+
+	// 비밀번호 찾기
+	@Override
+	public String pwdFind(Map<String, String> paraMap) {
+		String empPwd = dao.pwdFind(paraMap);
+		return empPwd;
+	}
+
+	// 비밀번호 변경하기
+	@Override
+	public int pwdUpdateEnd(Map<String, String> paraMap) {
+		int n = dao.pwdUpdateEnd(paraMap);
+		return n;
+	}
+
+	// 나의 정보 수정하기
+	@Override
+	public int memberEditEnd(Map<String, String> paraMap) {
+		int n = dao.memberEditEnd(paraMap);
+		return n;
+	}
+
+	
+
 	
 }

@@ -94,7 +94,7 @@
 </script>	
 </head>
 <body>
-	<div style="margin: 5% auto; text-align: center;">
+	<div style="margin: 4% auto; text-align: center;">
 		<div style="width: 400px; margin: 0 auto; margin-bottom: 3%;">
 			<img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver1.png" width="60%" class="img-fluid" />
 		</div>
@@ -117,8 +117,7 @@
          	<div style="text-align: left;">
          		<input type="checkbox" id="idSave" />&nbsp;<label for="idSave">아이디 저장하기</label>
          		<div style="border: 0px solid red; float: right;">
-         			<span><a href="<%= ctxPath%>/login/idFind.kedai">[ 아이디 찾기 ]</a></span>
-         			<span><a href="<%= ctxPath%>/login/pwdFind.kedai">[ 비밀번호 찾기 ]</a></span>
+         			<span><a href="<%= ctxPath%>/login/idPwdFind.kedai">[ 사원아이디 &amp; 비밀번호 찾기 ]</a></span>
          		</div>
          	</div>
          </div>        

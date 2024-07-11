@@ -29,13 +29,19 @@
 	</select>
 	
 	<insert id="empRegister" parameterType="MemberVO">
-		insert into tbl_employees(empid, pwd, name, nickname, jubun, email, mobile, postcode, address, detailaddress, extraaddress, imgfilename, hire_date, salary, commission_pct, fk_dept_code, fk_job_code, dept_tel)
+		insert into tbl_employees(empid, pwd, name, nickname, jubun, email, mobile, postcode, address, detailaddress, extraaddress, imgfilename, orgimgfilename, hire_date, salary, commission_pct, fk_dept_code, fk_job_code, dept_tel)
 		<choose>
 			<when test="(fk_dept_code == null and dept_tel == null) and fk_job_code == null">
-    			values(#{empid}, #{pwd}, #{name}, #{nickname}, #{jubun}, #{email}, #{mobile}, #{postcode}, #{address}, #{detailaddress}, #{extraaddress}, 'test.png', to_date(#{hire_date}, 'yyyy-mm-dd'), to_number(#{salary}), 0, null, null, null)
+    			values(#{empid}, #{pwd}, #{name}, #{nickname}, #{jubun}, #{email}, #{mobile}, #{postcode}, #{address}, #{detailaddress}, #{extraaddress}, #{imgfilename}, #{orgimgfilename}, to_date(#{hire_date}, 'yyyy-mm-dd'), to_number(#{salary}), 0, null, null, null)
+	    	</when>
+	    	<when test="(fk_dept_code == null and dept_tel == null) and fk_job_code != null">
+    			values(#{empid}, #{pwd}, #{name}, #{nickname}, #{jubun}, #{email}, #{mobile}, #{postcode}, #{address}, #{detailaddress}, #{extraaddress}, #{imgfilename}, #{orgimgfilename}, to_date(#{hire_date}, 'yyyy-mm-dd'), to_number(#{salary}), 0, null, #{fk_job_code}, null)
+	    	</when>
+	    	<when test="(fk_dept_code != null and dept_tel != null) and fk_job_code == null">
+    			values(#{empid}, #{pwd}, #{name}, #{nickname}, #{jubun}, #{email}, #{mobile}, #{postcode}, #{address}, #{detailaddress}, #{extraaddress}, #{imgfilename}, #{orgimgfilename}, to_date(#{hire_date}, 'yyyy-mm-dd'), to_number(#{salary}), 0, #{fk_dept_code}, null, #{dept_tel})
 	    	</when>
 	    	<when test="(fk_dept_code != null and dept_tel != null) and fk_job_code != null">
-    			values(#{empid}, #{pwd}, #{name}, #{nickname}, #{jubun}, #{email}, #{mobile}, #{postcode}, #{address}, #{detailaddress}, #{extraaddress}, 'test.png', to_date(#{hire_date}, 'yyyy-mm-dd'), to_number(#{salary}), 0, #{fk_dept_code}, #{fk_job_code}, #{dept_tel})
+    			values(#{empid}, #{pwd}, #{name}, #{nickname}, #{jubun}, #{email}, #{mobile}, #{postcode}, #{address}, #{detailaddress}, #{extraaddress}, #{imgfilename}, #{orgimgfilename}, to_date(#{hire_date}, 'yyyy-mm-dd'), to_number(#{salary}), 0, #{fk_dept_code}, #{fk_job_code}, #{dept_tel})
 	    	</when>
 		</choose>
 	</insert>

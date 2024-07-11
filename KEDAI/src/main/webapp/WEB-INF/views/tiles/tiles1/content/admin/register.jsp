@@ -8,7 +8,7 @@
 %>
 <style type="text/css">
 	.register input {
-		width: 400px;
+		width: 360px;
 		border: none;
 		border-bottom: 1px solid #2c4459;
 		margin-top: 8px;
@@ -26,8 +26,8 @@
 	span#emailCheckResult {
 		font-size: 12pt;
 	}
-	button#emailcheck,
 	button#idcheck,
+	button#emailcheck,
 	button#zipcodeSearch {
 		border: solid 1px #2c4459;
 		border-radius: 25px;
@@ -38,8 +38,8 @@
 		height: 40px;
 		margin-left: 10px;
 	}
-	button#emailcheck:hover,
 	button#idcheck:hover,
+	button#emailcheck:hover,
 	button#zipcodeSearch:hover {
 		border: none;
 		background: #e68c0e;
@@ -70,6 +70,21 @@
 		$("span.error").hide();
 		$("input#empid").focus();
 	
+		// 이미지 미리 보여주기
+		$(document).on("change", "input.img_file", function(e){
+			const input_file = $(e.target).get(0);
+		
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(input_file.files[0]); 
+			
+			fileReader.onload = function(){
+				document.getElementById("previewImg").src = fileReader.result;
+			};
+			
+		}); // end of $(document).on("change", "input.img_file", function(e){}) ----------
+		
+		///////////////////////////////////////////////////////////////
+		
 		$("input#pwd").blur( (e) => { 
 
 	        const regExp_pwd = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
@@ -270,6 +285,8 @@
 
 	    }); // end of $("img#zipcodeSearch").click() ----------
 	    
+		//////////////////////////////////////////////////////////////
+	    
 	 	// === jQuery UI 의 datepicker === //
 	    $('input#datepicker').datepicker({
 	        dateFormat: 'yy-mm-dd'    // Input Display Format 변경
@@ -290,7 +307,7 @@
 	        b_idcheck_click = true;
 	      
 	        $.ajax({
-	            url: "<%= ctxPath%>/idDuplicateCheck.kedai", 
+	            url: "<%= ctxPath%>/admin/idDuplicateCheck.kedai", 
 	            data: {"empid":$("input#empid").val()}, 
 	            type: "post", 
 	            async: true, 
@@ -318,7 +335,7 @@
 	        b_emailcheck_click = true;
 	
 	        $.ajax({
-	            url: "<%= ctxPath%>/emailDuplicateCheck.kedai", 
+	            url: "<%= ctxPath%>/admin/emailDuplicateCheck.kedai", 
 	            data: {"email":$("input#email").val()}, 
 	            type: "post", 
 	            async: true,  
@@ -416,31 +433,34 @@
 
 	} // end of function goReset() ----------
 </script>
-	
+
+<%-- content start --%>	
 <div style="border: 0px solid red; padding: 1% 0;">
 	<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;사원정보 등록하기<span style="font-size: 12pt; color: #e68c0e;">&nbsp;&nbsp;* 표시는 필수입력 사항입니다.</span></h3>
 	
 	<form name="registerFrm" enctype="multipart/form-data" class="row mt-5" style="border: 0px solid green;">
 		<div class="col-2" style="border: 0px solid blue;">
 			<h6>사진등록</h6>
-			<div style="width: 200px; height: 230px; border: 1px solid #ddd;">
-				<img id="previewImg" />
+			<div style="width: 200px; height: 230px; overflow: hidden; border: 1px solid #ddd;">
+				<img id="previewImg" style="width: 100%; height: 100%;" />
 			</div>
 			<br>
-	   <%-- <input type="file" name="imgfilename" class="infoData img_file" accept='image/*' /> --%>
+	   		<input type="file" name="attach" class="infoData img_file" accept='image/*' />
 		</div>
 		
 		<div class="col-10 row" id="empRegister">
 			<div class="col-6 register" style="border: 0px solid blue;">
 				<div style="position: relative;">
 					<h6>사원아이디&nbsp;<span class="star">*</span></h6>
-					<input type="text" name="empid" id="empid" maxlength="30" class="requiredInfo" placeholder="사원아이디" />
-					<button type="button" id="idcheck" style="position: absolute; bottom: 5px; left: 280px;">아이디 중복확인</button>
+					<input type="text" name="empid" id="empid" maxlength="30" class="requiredInfo" placeholder="AAAABBB-CCC" />
+					<button type="button" id="idcheck" style="position: absolute; bottom: 28px; left: 230px;">아이디 중복확인</button>
 	                <span id="idCheckResult"></span>
+	                <br>
+	                <span style="font-size: 10pt; font-weight: bold; color: #bbb;">AAAA : 입사연도, BBB : 부서코드, CCC : 입사순서</span>
 				</div>
 				<div class="mt-3">
 					<h6>비밀번호&nbsp;<span class="star">*</span></h6>
-					<input type="password" name="pwd" id="pwd" maxlength="15" class="requiredInfo" placeholder="영문자,숫자,특수기호가 혼합된 8~15 글자로 입력하세요." />
+					<input type="password" name="pwd" id="pwd" maxlength="15" class="requiredInfo" placeholder="영문자,숫자,특수기호가 혼합된 8~15 글자" />
 	            	<span class="error">&nbsp;&nbsp;비밀번호 형식에 맞지 않습니다.</span>
 	            </div>
 	            <div class="mt-3">
@@ -460,11 +480,11 @@
 					<h6>주민등록번호&nbsp;<span class="star">*</span></h6>
 					<div style="display: flex;">
 						<div>
-	                         <input type="text" name="jubun1" id="jubun1" size="6" maxlength="6" class="requiredInfo" style="width: 180px;">
-	                         &nbsp;&nbsp;<i class="fa-solid fa-minus"></i>&nbsp;&nbsp;
+	                         <input type="text" name="jubun1" id="jubun1" size="6" maxlength="6" class="requiredInfo" style="width: 155px;">
+	                         &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-minus"></i>&nbsp;&nbsp;&nbsp;
                      	</div>
                      	<div>
-	                         <input type="text" name="jubun2" id="jubun2" size="7" maxlength="7" class="requiredInfo" style="width: 180px;">
+	                         <input type="text" name="jubun2" id="jubun2" size="7" maxlength="7" class="requiredInfo" style="width: 155px;">
                      	</div>
 						<span class="error" style="display: block; align-content: end;">&nbsp;&nbsp;주민등록번호 형식에 맞지 않습니다.</span>
 					</div>
@@ -472,7 +492,7 @@
 	            <div class="mt-3" style="position: relative;">
 					<h6>이메일&nbsp;<span class="star">*</span></h6>
 					<input type="text" name="email" id="email" maxlength="60" class="requiredInfo" placeholder="이메일 주소" />
-	                <button type="button" id="emailcheck" style="position: absolute; bottom: 5px; left: 280px;">이메일 중복확인</button>
+	                <button type="button" id="emailcheck" style="position: absolute; bottom: 5px; left: 230px;">이메일 중복확인</button>
 	                <span class="error">&nbsp;&nbsp;이메일 형식에 맞지 않습니다.</span>
 	                <span id="emailCheckResult"></span>
 	            </div>
@@ -480,15 +500,15 @@
 					<h6>연락처&nbsp;<span class="star">*</span></h6>
 					<div style="display: flex;">
 	                     <div>
-	                         <input type="text" name="hp1" id="hp1" size="6" maxlength="3" value="010" style="width: 110px;" readonly>
+	                         <input type="text" name="hp1" id="hp1" size="6" maxlength="3" value="010" style="width: 93px;" readonly>
 	                         &nbsp;&nbsp;<i class="fa-solid fa-minus"></i>&nbsp;&nbsp;
 	                     </div>
 	                     <div>
-	                         <input type="text" name="hp2" id="hp2" class="requiredInfo" size="6" maxlength="4" placeholder="1234" style="width: 110px; text-align: center;">
+	                         <input type="text" name="hp2" id="hp2" class="requiredInfo" size="6" maxlength="4" placeholder="1234" style="width: 93px; text-align: center;">
 	                         &nbsp;&nbsp;<i class="fa-solid fa-minus"></i>&nbsp;&nbsp;
 	                     </div>
 	                     <div>
-	                         <input type="text" name="hp3" id="hp3" class="requiredInfo" size="6" maxlength="4" placeholder="5678" style="width: 110px; text-align: center;">
+	                         <input type="text" name="hp3" id="hp3" class="requiredInfo" size="6" maxlength="4" placeholder="5678" style="width: 93px; text-align: center;">
 	                     </div>
 	                     <span class="error" style="display: block; align-content: end;">&nbsp;&nbsp;휴대폰 형식에 맞지 않습니다.</span>
 	                 </div>
@@ -499,7 +519,7 @@
 				<div style="position: relative;">
 					<h6>우편번호&nbsp;<span class="star">*</span></h6>
 					<input type="text" name="postcode" id="postcode" size="6" maxlength="5" class="requiredInfo" placeholder="우편번호" />
-					<button type="button" id="zipcodeSearch" style="position: absolute; bottom: 5px; left: 280px;">우편번호 찾기</button><br>
+					<button type="button" id="zipcodeSearch" style="position: absolute; bottom: 5px; left: 230px;">우편번호 찾기</button><br>
 				</div>
 				<div class="mt-3">
 					<h6>주소&nbsp;<span class="star">*</span></h6>
@@ -514,12 +534,12 @@
 				<div class="mt-3" style="position: relative;">
 					<h6>급여&nbsp;<span class="star">*</span></h6>
 					<input type="text" name="salary" id="salary" maxlength="10" class="requiredInfo" />
-					<span style="position: absolute; bottom: 5px; left: 360px;">만원</span>
+					<span style="position: absolute; bottom: 5px; left: 340px;">원</span>
 				</div>
 				<div class="mt-3" style="display: flex;">
 					<div>
 						<h6>부서</h6>
-						<select name="dept_name" class="infoData" style="width: 180px;">
+						<select name="dept_name" class="infoData" style="width: 170px;">
 							<option value="">부서</option>
 							<c:forEach var="dvo" items="${requestScope.deptList}">
 		                  		<option value="${dvo.dept_name}">${dvo.dept_name}</option>
@@ -529,7 +549,7 @@
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<div>
 						<h6>직급</h6>
-						<select name="job_name" class="infoData" style="width: 180px;">
+						<select name="job_name" class="infoData" style="width: 170px;">
 							<option value="">직급</option>
 							<c:forEach var="jvo" items="${requestScope.jobList}">
 		                  		<option value="${jvo.job_name}">${jvo.job_name}</option>
@@ -546,3 +566,4 @@
 		</div>
 	</form>
 </div>
+<%-- content end --%>

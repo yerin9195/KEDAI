@@ -21,10 +21,17 @@
 	}
 </style>
 
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		
+	}); // end of $(document).ready(function(){}) ----------
+</script>
+
 <%-- content start --%>
 <div class="container-fluid">
 	<section class="row justify-content-between">
-		<div class="col-8" style="border: 1px solid red;">
+		<div class="col-9" style="border: 1px solid red;">
 			<div class="row justify-content-between mt-2">
 				<div class="col-5 pl-5 pr-2" style="height: 100px; display: flex; align-items: center;">
 					<div style="width: 60%">
@@ -50,7 +57,7 @@
 				</div>
 			</div>
 			
-			<div class="row justify-content-between mt-2" style="border: 1px solid red; height: 200px;">
+			<div class="row justify-content-between mt-2" style="border: 1px solid red; height: 300px;">
 				<div class="col-4" style="border: 1px solid red;">
 					날씨
 				</div>
@@ -63,37 +70,33 @@
 			</div>
 		</div>
 		
-		<div class="col-4" style="border: 1px solid red; background: #2c4459; text-align: center; color: #fff;">
-			<div class="mt-3" style="width: 120px; height: 120px; border-radius: 50%; background: #fff; display: inline-block;">
-			
+		<div class="col-3" style="border: 1px solid red; background: #2c4459; text-align: center; color: #fff;">
+			<div class="mt-5" style="width: 180px; height: 180px; overflow: hidden; display: inline-block;">
+				<img alt="img" style="width: 100%; height: 100%; border-radius: 50%;" src="<%= ctxPath%>/resources/images/member/${(sessionScope.loginuser).orgimgfilename}">
 			</div>
 			<div class="mt-3">
 				<h4>${(sessionScope.loginuser).name}&nbsp;[ ${(sessionScope.loginuser).nickname} ]</h4>
-				<c:if test="${(sessionScope.loginuser).nickname eq 'Admin'}">
-					<h5>대표이사</h5>
-				</c:if>
-				<c:if test="${(sessionScope.loginuser).nickname ne 'Admin'}">
-					<h5>${(sessionScope.loginuser).fk_dept_code}</h5>
-				</c:if>
+				<h5>${(sessionScope.loginuser).jvo.job_name}</h5>
+			
 				<span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp;<fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###" /> POINT
 				<br><br>
-				[&nbsp;<a href="javascript:goEditMyInfo('${(sessionScope.loginuser).empid}','<%= ctxPath%>')">마이페이지</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;
+				[&nbsp;<a href="<%= ctxPath%>/member/memberEdit.kedai">마이페이지</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;
                	[&nbsp;<a href="javascript:goCoinPurchaseTypeChoice('${(sessionScope.loginuser).empid}','<%= ctxPath%>')">포인트충전</a>&nbsp;]
 			</div>
 		</div>
 	</section>
 	
 	<section class="row justify-content-between mt-2">
-		<div class="col-8 pl-0" style="border: 1px solid red; height: 300px;">
+		<div class="col-8 pl-0" style="border: 1px solid red; height: 250px;">
 			<ul class="nav nav-tabs">
 				<li class="nav-item">
 					<a class="nav-link active" data-toggle="tab" href="#home">사내공지</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#menu1">식단표</a>
+					<a class="nav-link" data-toggle="tab" href="#menu1">팝업일정</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#menu2">팝업일정</a>
+					<a class="nav-link" data-toggle="tab" href="#menu2">식단표</a>
 				</li>
 			</ul>
 		

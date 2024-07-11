@@ -3,7 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="reservation">
-		<resultMap id="stationList" type="BusVO">
+	<resultMap id="stationList" type="BusVO">
 	    <result property="bus_no" column="bus_no" javaType="String"/>
 	    <result property="pf_station_id" column="pf_station_id"	javaType="String"/>
 	    <result property="pk_station_id" column="pk_station_id"	javaType="String"/>
@@ -30,12 +30,12 @@
 	</select>
 	
 	<resultMap id="stationTime" type="BusVO">
-       <result property="bus_no"                   column="bus_no"             javaType="String"/>
-       <result property="pf_station_id"             column="pf_station_id"         javaType="String"/>
-       <result property="station_name"             column="station_name"         javaType="String"/>
-       <result property="way"                      column="way"               javaType="String"/>
-       <result property="zindex"                   column="zindex"               javaType="int"/>
-       <result property="minutes_until_next_bus"       column="minutes_until_next_bus"   javaType="int"/>
+       <result property="bus_no"                   column="bus_no"                   javaType="String"/>
+       <result property="pf_station_id"            column="pf_station_id"            javaType="String"/>
+       <result property="station_name"             column="station_name"             javaType="String"/>
+       <result property="way"                      column="way"                      javaType="String"/>
+       <result property="zindex"                   column="zindex"             		 javaType="int"/>
+       <result property="minutes_until_next_bus"   column="minutes_until_next_bus"   javaType="int"/>
    </resultMap>
    <select id="getStationTimeList" parameterType="HashMap" resultMap="stationTime">      
      WITH current_times
