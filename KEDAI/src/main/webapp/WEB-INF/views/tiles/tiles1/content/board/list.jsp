@@ -39,14 +39,67 @@
 	.search_btn:hover {
 		background: #e68c0e;
 	}
+	.subjectStyle {
+		color: #e68c0e;
+		cursor: pointer;
+	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
 		
+		$("span.subject").hover(function(e){ // mouseover
+			$(e.target).addClass("subjectStyle");
+		}, function(e){ // mouseout
+			$(e.target).removeClass("subjectStyle");
+		});
+		
+		$("input:text[name='searchWord']").bind("keydown", function(e){
+			if(e.keyCode == 13){
+				goSearch();
+			}
+		});
+		
+		// 검색 시 검색조건 및 검색어 값 유지시키기
+		if(${not empty requestScope.paraMap}){ // paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다.
+			$("select[name='searchType']").val("${requestScope.paraMap.searchType}");
+			$("input[name='searchWord']").val("${requestScope.paraMap.searchWord}");
+		}
+		
+		// 검색어 입력 시 자동글 완성하기 
 		$("div#displayList").hide();
+		
+		$("input[name='searchWord']").keyup(function(){
+			const wordLength = $(this).val().trim().length;
+			
+			if(wordLength == 0){
+				$("div#displayList").hide();
+			}
+			else {
+				if($("select[name='searchType']").val() == "subject" ||
+				   $("select[name='searchType']").val() == "name"){
+					
+					$.ajax({
+						url: "<%= ctxPath%>board/wordSearchShow.kedai",
+					});
+				}
+			}
+			
+			
+		}); // end of $("input[name='searchWord']").keyup(function(){}) ----------
+		
 		
 		
 	}); // end of $(document).ready(function(){}) ----------
+	
+	function goSearch(){
+		
+		const frm = document.searchFrm;
+		
+		frm.method = "get";
+		frm.action = "<%= ctxPath%>/board/list.kedai";
+		frm.submit();
+		
+	} // end of function goSearch(){} ----------
 </script>
 
 <%-- content start --%>
@@ -60,7 +113,7 @@
 			</c:if>
 		</div>
 	
-		<table class="table table-bordered table-hover mt-3" id="boardTbl">
+		<table class="table table-bordered mt-3" id="boardTbl">
 			<thead>
 	       		<tr>
 	          		<th style="width: 10%; text-align: center;">순번</th>
@@ -74,9 +127,45 @@
 	   		
 			<tbody>
 				<c:if test="${not empty requestScope.boardList}">
-					<c:forEach var="boardvo" items="${requestScope.boardList}" varStatus="status">
+					<c:forEach var="bvo" items="${requestScope.boardList}" varStatus="status">
 						<tr class="boardList">
-		      				
+		      				<td align="center">${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
+		      				<%-- 
+		      					>>> 페이징 처리시 보여주는 순번 공식 <<<
+		      					데이터개수-(페이지번호-1)*1페이지당보여줄개수-인덱스번호 => 순번
+		      				--%>
+		      				<td align="center">${bvo.board_seq}</td>
+		      				<td>
+		      					<%-- === 댓글쓰기 및 답변형 및 파일첨부가 있는 게시판 시작 === --%>
+			      				<%-- 첨부파일이 없는 경우 --%>
+			      				<c:if test="${empty boardvo.fileName}">
+			      					<%-- 원글인 경우  --%>
+		      						<c:if test="${boardvo.depthno == 0}">
+			      						<span class="subject" onclick="goView('${boardvo.seq}')">[ ${bvo.categoryvo.category_name} ]&nbsp;&nbsp;${boardvo.subject}</span>
+		      						</c:if>
+		      						<%-- 답변글인 경우  --%>
+		      						<c:if test="${boardvo.depthno > 0}">
+		      							<span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: #2c4459; font-style: italic; padding-left: ${boardvo.depthno*20}px;">└Re&nbsp;</span>${boardvo.subject}</span>
+		      						</c:if>
+			      				</c:if>
+			      				
+			      				<%-- 첨부파일이 있는 경우 --%>
+			      				<c:if test="${not empty boardvo.fileName}">
+			      					<%-- 원글인 경우  --%>
+		      						<c:if test="${boardvo.depthno == 0}">
+		      							<span class="subject" onclick="goView('${boardvo.seq}')">[ ${bvo.categoryvo.category_name} ]&nbsp;&nbsp;${boardvo.subject}&nbsp;<i class="fa-solid fa-paperclip"></i></span>
+		      						</c:if>
+		      						<%-- 답변글인 경우  --%>
+		      						<c:if test="${boardvo.depthno > 0}">
+		      							<span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">└Re&nbsp;</span>${boardvo.subject}&nbsp;<i class="fa-solid fa-paperclip"></i></span>
+		      						</c:if>
+			      				</c:if>
+	      						<%-- === 댓글쓰기 및 답변형 및 파일첨부가 있는 게시판 끝 === --%>
+		      					<span class="subject">[ ${bvo.categoryvo.category_name} ]&nbsp;&nbsp;${bvo.subject}</span>
+	      					</td>
+		      				<td align="center">${bvo.name}</td>
+		      				<td align="center">${bvo.registerday}</td>
+		      				<td align="center">${bvo.read_count}</td>
 		      			</tr>
 					</c:forEach>
 				</c:if>
@@ -89,7 +178,7 @@
 			</tbody>
 		</table>
  	
-		<div align="center" style="border: solid 1px gray; width: 50%; margin: 3% auto;">
+		<div align="center" style="border: solid 0px gray; width: 50%; margin: 3% auto;">
 			${requestScope.pageBar}
 		</div>
 		

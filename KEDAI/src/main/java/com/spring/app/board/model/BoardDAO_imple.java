@@ -42,19 +42,21 @@ public class BoardDAO_imple implements BoardDAO {
 		return n;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@Override
 	public void pointPlus(Map<String, String> paraMap) {
 		sqlsession.update("board.pointPlus", paraMap);
+	}
+
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("board.getTotalCount", paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<BoardVO> boardListSearch_withPaging(Map<String, String> paraMap) {
+		List<BoardVO> boardList = sqlsession.selectList("board.boardListSearch_withPaging", paraMap);
+		return boardList;
 	}
 
 	

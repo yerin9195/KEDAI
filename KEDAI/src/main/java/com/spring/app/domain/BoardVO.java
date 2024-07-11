@@ -21,7 +21,18 @@ public class BoardVO {
 	private String filename;          
 	private String filesize;
 	
-	private MultipartFile attach; // form 태그에서 type="file" 인 파일을 받아서 저장되는 필드
+	private CategoryVO categoryvo;
+
+	// select 용
+	private String previousseq;     // 이전글번호
+	private String previoussubject; // 이전글제목
+	private String nextseq;         // 다음글번호
+	private String nextsubject;     // 다음글제목
+	
+	// form 태그에서 type="file" 인 파일을 받아서 저장되는 필드
+	private MultipartFile attach;
+	
+	///////////////////////////////////////////////////////////////	
 	
 	// getters & setters
 	public String getBoard_seq() {
@@ -152,6 +163,46 @@ public class BoardVO {
 		this.filesize = filesize;
 	}
 
+	public CategoryVO getCategoryvo() {
+		return categoryvo;
+	}
+
+	public void setCategoryvo(CategoryVO categoryvo) {
+		this.categoryvo = categoryvo;
+	}
+
+	public String getPreviousseq() {
+		return previousseq;
+	}
+
+	public void setPreviousseq(String previousseq) {
+		this.previousseq = previousseq;
+	}
+
+	public String getPrevioussubject() {
+		return previoussubject;
+	}
+
+	public void setPrevioussubject(String previoussubject) {
+		this.previoussubject = previoussubject;
+	}
+
+	public String getNextseq() {
+		return nextseq;
+	}
+
+	public void setNextseq(String nextseq) {
+		this.nextseq = nextseq;
+	}
+
+	public String getNextsubject() {
+		return nextsubject;
+	}
+
+	public void setNextsubject(String nextsubject) {
+		this.nextsubject = nextsubject;
+	}
+	
 	public MultipartFile getAttach() {
 		return attach;
 	}

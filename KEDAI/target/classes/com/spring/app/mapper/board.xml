@@ -18,46 +18,118 @@
 	<insert id="add" parameterType="BoardVO">
 		<!-- 원글쓰기인 경우 -->
 		<if test='fk_seq.equals("")'>
-			insert into tbl_board(board_seq, to_number(fk_category_code), fk_empid, name, subject, content, pwd, read_count, registerday, status, groupno, fk_seq, depthno)
-			values(board_seq.nextval, #{fk_category_code}, #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, #{groupno}, default, default)
+			insert into tbl_board(board_seq, fk_category_code, fk_empid, name, subject, content, pwd, read_count, registerday, status, groupno, fk_seq, depthno)
+			values(board_seq.nextval, to_number(#{fk_category_code}), #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, #{groupno}, default, default)
 		</if>
 		
 		<!-- 답변글쓰기인 경우 -->
 		<if test='!fk_seq.equals("")'>
-			insert into tbl_board(board_seq, to_number(fk_category_code), fk_empid, name, subject, content, pwd, read_count, registerday, status, groupno, fk_seq, depthno)
-			values(board_seq.nextval, #{fk_category_code}, #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1)
+			insert into tbl_board(board_seq, fk_category_code, fk_empid, name, subject, content, pwd, read_count, registerday, status, groupno, fk_seq, depthno)
+			values(board_seq.nextval, to_number(#{fk_category_code}), #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1)
 		</if>
 	</insert>
 	
 	<insert id="add_withFile" parameterType="BoardVO">
 		<!-- 원글쓰기인 경우 -->
 		<if test='fk_seq.equals("")'>
-			insert into tbl_board(board_seq, to_number(fk_category_code), fk_empid, name, subject, content, pwd, read_count, registerday, status, groupno, fk_seq, depthno, orgfilename, filename, filesize)
-			values(board_seq.nextval, #{fk_category_code}, #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, #{groupno}, default, default, #{orgfilename}, #{filename}, #{filesize})
+			insert into tbl_board(board_seq, fk_category_code, fk_empid, name, subject, content, pwd, read_count, registerday, status, groupno, fk_seq, depthno, orgfilename, filename, filesize)
+			values(board_seq.nextval, to_number(#{fk_category_code}), #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, #{groupno}, default, default, #{orgfilename}, #{filename}, #{filesize})
 		</if>
 		
 		<!-- 답변글쓰기인 경우 -->
 		<if test='!fk_seq.equals("")'>
-			insert into tbl_board(board_seq, to_number(fk_category_code), fk_empid, name, subject, content, pwd, read_count, registerday, status, groupno, fk_seq, depthno, orgfilename, filename, filesize)
-			values(board_seq.nextval, #{fk_category_code}, #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{orgfilename}, #{filename}, #{filesize})
+			insert into tbl_board(board_seq, fk_category_code, fk_empid, name, subject, content, pwd, read_count, registerday, status, groupno, fk_seq, depthno, orgfilename, filename, filesize)
+			values(board_seq.nextval, to_number(#{fk_category_code}), #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{orgfilename}, #{filename}, #{filesize})
 		</if>
 	</insert>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	<update id="pointPlus" parameterType="HashMap">
 		update tbl_employees set point = point + to_number(#{point})
 		where empid = #{empid}
 	</update>
+	
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board
+		where status = 1
+		<choose>
+			<when test='searchType == "subject" and searchWord != ""'>
+				and lower(subject) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+			<when test='searchType == "content" and searchWord != ""'>
+				and lower(content) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+			<when test='searchType == "subject_content" and searchWord != ""'>
+				and (lower(subject) like '%' ||lower(#{searchWord})|| '%' or lower(content) like '%' ||lower(#{searchWord})|| '%')
+			</when>
+			<when test='searchType == "name" and searchWord != ""'>
+				and lower(name) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+			<otherwise></otherwise>
+		</choose>
+	</select>
+	
+	<resultMap id="BoardJoinCategory" type="BoardVO">
+        <id property="board_seq" 		  	column="board_seq"/>
+        <result property="fk_category_code" column="fk_category_code"/>
+        <result property="fk_empid" 	  	column="fk_empid"/>
+        <result property="name" 		  	column="name"/>
+        <result property="subject" 		  	column="subject"/>
+        <result property="read_count" 		column="read_count"/>
+       	<result property="registerday" 	 	column="registerday"/>
+        <result property="groupno" 		  	column="groupno"/>
+        <result property="fk_seq" 	 	  	column="fk_seq"/>
+        <result property="depthno" 	  		column="depthno"/>
+        <result property="filename" 		column="filename"/>
+        
+        <association property="categoryvo" javaType="com.spring.app.domain.CategoryVO">
+            <id property="category_code" 	 column="category_code"/>
+            <result property="category_name" column="category_name"/>
+        </association>
+    </resultMap>
+	
+	<select id="boardListSearch_withPaging" parameterType="HashMap" resultType="BoardVO" resultMap="BoardJoinCategory">
+		SELECT board_seq, fk_category_code, category_name, fk_empid, name, subject, read_count, registerday
+		     , groupno, fk_seq, depthno, filename
+		FROM
+		(
+		    SELECT rownum AS rno
+		         , board_seq, fk_category_code, category_name, fk_empid, name, subject, read_count, registerday
+		         , groupno, fk_seq, depthno, filename
+		    FROM
+		    (
+		        select board_seq, fk_category_code, C.category_name, fk_empid, name, subject
+		             , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday
+		             , groupno, fk_seq, depthno
+		             , filename
+		        from tbl_board B
+		        LEFT JOIN tbl_category C ON B.fk_category_code = C.category_code
+		        where status = 1
+		        <choose>
+					<when test='searchType == "subject" and searchWord != ""'>
+						and lower(subject) like '%' ||lower(#{searchWord})|| '%'
+					</when>
+					<when test='searchType == "content" and searchWord != ""'>
+						and lower(content) like '%' ||lower(#{searchWord})|| '%'
+					</when>
+					<when test='searchType == "subject_content" and searchWord != ""'>
+						and (lower(subject) like '%' ||lower(#{searchWord})|| '%' or lower(content) like '%' ||lower(#{searchWord})|| '%')
+					</when>
+					<when test='searchType == "name" and searchWord != ""'>
+						and lower(name) like '%' ||lower(#{searchWord})|| '%'
+					</when>
+					<otherwise></otherwise>
+				</choose>
+		        start with fk_seq = 0
+		        connect by prior board_seq = fk_seq
+		        order siblings by groupno desc, board_seq asc
+		    ) V
+		) T
+		WHERE RNO between #{startRno} and #{endRno}
+	</select>
+	<!-- 
+		order siblings by 각 계층별로 정렬을 하는 것이다. 
+		계층구조는 그대로 유지하면서 동일 부모를 가진 자식행들 끼리의 정렬 기준을 주는 것이 order siblings by 이다.
+	-->
 	
 </mapper>

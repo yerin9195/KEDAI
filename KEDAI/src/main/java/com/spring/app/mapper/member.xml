@@ -42,7 +42,7 @@
         </association>
     </resultMap>
 
-	<select id="getLoginMember" resultType="MemberVO" parameterType="HashMap" resultMap="MemberJoinDeptJob">
+	<select id="getLoginMember" parameterType="HashMap" resultType="MemberVO" resultMap="MemberJoinDeptJob">
 		SELECT empid, name, nickname, jubun, gender, age, email, mobile
 		     , postcode, address, detailaddress, extraaddress
 		     , imgfilename, orgimgfilename, hire_date, salary, commission_pct, point
