@@ -163,7 +163,7 @@ public class ApprovalController {
 //  	<put-attribute name="content" value="/WEB-INF/views/tiles/{1}/content/{2}/{3}/{4}.jsp"/>
 //	</definition>
 
-	
+	/*
 	// 스마트에디터 => 드래그앤드롭을 이용한 다중 사진 파일 업로드
 	   @PostMapping("/image/multiplePhotoUpload.kedai")
 	   public void multiplePhotoUpload(HttpServletRequest request, HttpServletResponse response) {
@@ -206,5 +206,5 @@ public class ApprovalController {
 	      }
 	      
 	   }
-
+*/
 }
