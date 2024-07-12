@@ -46,6 +46,13 @@ function goBack(){
 	location.href="javascript:history.back();"
 } // end of function goReset() ----------
 
+function goOwner(){
+	location.href=`<%= ctxPath%>/owner.kedai`;
+}
+function goCustomer(){
+	location.href=`<%= ctxPath%>/customer.kedai`;
+}
+
 </script>
 
 <%-- content start --%>	
@@ -77,7 +84,7 @@ function goBack(){
 				</span>
 			</div>
 		</div>
-		<div style=" display: flex; margin-top: 4%;">
+		<div style="display: flex; margin-top: 4%;">
 			<div class="col-6" style="border-right: 2px solid lightgray;">
 				<h4>보험가입여부</h4>
 				<span style="display:block; text-align: center; font-size: 30pt;"><i class="fa-solid fa-circle-check"></i></span>	
@@ -93,6 +100,8 @@ function goBack(){
 	<div class="btnRegister">
         <button type="button" onclick="goEdit()">수정하기</button>
         <button type="reset" onclick="goBack()">뒤로가기</button>
+        <button type="reset" onclick="goOwner()">카셰어링현황(차주)</button>
+        <button type="reset" onclick="goCustomer()">카셰어링신청현황(신청자)</button>
     </div>
 </div>
 </div>

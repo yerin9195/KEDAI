@@ -64,25 +64,7 @@
     overflow: hidden;
 }
 
- #bus_no,
- #bus_no_route{
-   margin:3%;
- } 
-.busStyle {font-weight: bold;
-           color: #2c4459;
-           cursor: pointer;
-           height:60px;
-           width: 100%;
-           background-color: white;
-           border: none;}
-.busStyle:hover
-{background-color: #2c4459;
- color: white;}
- 
- #showMap:hover{
-    font-weight: bold;
-    cursor: pointer;
- }
+	
 /* 지도 시작 */
    
 div#title {
@@ -124,85 +106,12 @@ div.mycontent {
 
   /* 지도 끝 */
 	
-  /* 달력 시작 */
-  body {
-      font-family: Arial, sans-serif;
-  }
-  .container {
-      width: 80%;
-      margin: 0 auto;
-      text-align: center;
-  }
-  #calendar {
-      max-width: 500px;
-      margin: 0 auto;
-  }    
-.fc .fc-daygrid-day-number, .fc .fc-col-header-cell-cushion {
-    color: #2c4459; /* 기본 날짜 및 요일 색상을 검정색으로 설정 */
-}
-.fc .fc-daygrid-day-frame {
-    height: 40px !important; /* 원하는 높이로 조절 */
-}
-.fc .fc-daygrid-day-top {
-    height: 15px !important; /* 날짜 숫자 부분의 높이 조절 */
-}
-.fc .fc-daygrid-day-events {
-    height: 35px !important; /* 이벤트 부분의 높이 조절 */
-}
-.fc .fc-daygrid-day:hover .fc-daygrid-day-number, .fc .fc-col-header-cell-cushion:hover {
-    font-weight: bold; /* hover 시 날짜 및 요일을 더 굵게 */
-    color: #e68c0e; /* hover 시 날짜 및 요일 색상을 오렌지색으로 변경 */
-} 
-.selected-date {
-    background-color: lightgray; !important; /* 클릭된 날짜의 배경색을 회색으로 설정 */
-} 
-  /* 달력 끝*/
-  
-.requiredInfo {
-    width: 360px;
-    border: none;
-    border-bottom: 1px solid #2c4459;
-    margin-top: 8px;
-}
-.btnRegister button {
-	border-radius: 25px;
-	color: #fff;
-	width: 100px;
-	height: 50px;
-}
-.btnRegister button:nth-child(1) {
-	background: #2c4459;
-	margin-right: 10px;
-}
-.btnRegister button:nth-child(2) {
-	background: #e68c0e;
-}
+
 </style>
 <script type="text/javascript">
 
 $(document).ready(function(){ 
-	/* 달력 시작 */
-    var calendarEl = document.getElementById('calendar');
-    var today = new Date();
-    var year = today.getFullYear();
-    var month = today.getMonth();
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',  // 월간 달력으로 표시
-        
-        dateClick: function(info) {
-//          alert('Date: ' + info.dateStr);
- 
-            $('.fc-daygrid-day').removeClass('selected-date');
-
-            // 선택된 날짜의 배경색을 회색으로 설정
-            $(info.dayEl).addClass('selected-date');
-        },
-        height: 'auto', // 달력 높이를 자동으로 조절
-        contentHeight: 'auto', // 달력 내용의 높이
-        aspectRatio: 1.5 // 달력의 가로 세로 비율
-    });
-    calendar.render();
-	/* 달력 끝*/
+	
     // 지도를 담을 영역의 DOM 레퍼런스
    var mapContainer = document.getElementById("map");
    
@@ -397,11 +306,6 @@ $(document).ready(function(){
     // ================== 지도에 클릭 이벤트를 등록하기 끝 ======================= //
    
    $('#startTime').timepicker();
-   // 해당 테그에 키보드로 입력 못하도록
-   // 키보드로 값을 입력했을 때 즉시 지우는 이벤트 핸들러
-   $('#startTime').on('input', function() {
-       $(this).val('');
-   });
 }); // end of $(document).ready(function(){})----------------------------------------------------
 
 //!! 인포윈도우를 표시하는 클로저(closure => 함수 내에서 함수를 정의하고 사용하도록 만든것)를 만드는 함수(카카오에서 제공해준것임)입니다 !! // 
@@ -428,32 +332,6 @@ $(document).ready(function(){
     <div id="map" style="margin-left:25%; width:75%; height:900px;"></div>
 
     <div id="in-container">
-        <div id="place" style="background-color:white; border: solid 0px red; margin: 3%;">
-         <h2 style="font-weight: 300; text-align:center;">날짜 선택<br><span style="font-size:8pt; text-align: center;">차주가 지정한 기간중에 날짜를 선택해주세요.</span></h2>
-         <div id="calendar"></div>	
-         
-         <h3 style="font-weight: 300; text-align:center; margin-top:4%;">탑승 정보</h3>
-  		 <div class="mt-3">
-			 <h6>출발지&nbsp;<span class="star">*</span></h6>
-			 <input type="text" name="carNum" id="departure" size="6" maxlength="20" class="requiredInfo" placeholder="경로에 많이 벗어날수록 거부 확률이 높아집니다." />	
-	     </div>
-         <div class="mt-3">
-			 <h6>도착지&nbsp;<span class="star">*</span></h6>
-			 <input type="text" name="carNum" id="arrive" size="6" maxlength="20" class="requiredInfo" placeholder="경로에 많이 벗어날수록 거부 확률이 높아집니다." />	
-	     </div>
-		 <div class="mt-3">
-			 <h6>출발시간&nbsp;<span class="star">* <span style="font-size:8pt;">수기로 값을 입력하지 마세요</span></span>
-			 </h6>
-			 <input type="text" name="carNum" id="startTime" size="6" maxlength="20" class="requiredInfo" placeholder="출발시간"/>	
-	     </div>      
-       </div>
-     		<div class="mt-3" style="position: relative; left: 90px">
-			<div class="btnRegister">
-	        <button type="button" onclick="goRegister()">신청하기</button>
-	        <button type="reset" onclick="goBack()">취소하기</button>
-	    </div>
-	   </div>
+
     </div>
 </div>
-
-<!-- 날짜 선택안한 경우, 출발지, 도착지, 출발시간 선택안된경우 전부다 입력해 달라는 alert문 띄우기 -->

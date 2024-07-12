@@ -58,6 +58,7 @@
 	.btnRegister button:nth-child(2) {
 		background: #e68c0e;
 	}
+
 </style>
 
 <script type="text/javascript">
