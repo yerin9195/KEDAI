@@ -56,7 +56,8 @@
 	</select>
  -->
  
-
+	
+	<!-- 결재라인 선택을 위해 모든 직원 리스트 불러오기 -->
  	<select id="allDeptList" resultType="com.spring.app.domain.DeptVO">
  		SELECT CASE WHEN D.dept_code IS NULL THEN ' ' ELSE TO_CHAR(D.dept_code) END AS dept_code,
        			nvl(D.dept_name, ' ') as dept_name
