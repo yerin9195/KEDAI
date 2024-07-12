@@ -878,6 +878,7 @@ div#register_com {
 		<div class="clientConfirm">
 			<input type="reset" id="resetButton" value="취소">
 			<input type="button" onclick="_onSubmit()" value="등록">
+			
 		</div>
 	</form>
 	<!--//들고가야함  -->
