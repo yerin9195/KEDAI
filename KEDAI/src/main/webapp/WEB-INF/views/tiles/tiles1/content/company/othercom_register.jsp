@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@page import="com.spring.app.domain.PartnerVO"%>
 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -7,6 +8,10 @@
 
 <%
 	String ctxPath = request.getContextPath();
+
+	PartnerVO partVO = (PartnerVO)request.getAttribute("partvo");
+	Boolean isModify = (partVO != null);
+	request.setAttribute("isModify", isModify);
 %>
 
 <style type="text/css">
@@ -120,6 +125,19 @@ div#register_com {
 	padding: 0 10px;
 }
 
+.clientWrap .clientRegister .rgs-right .partnameflex .partnameinfo {
+	width: 49%;
+	padding: 0 auto;
+	MARGIN:0 auto;
+}
+
+
+.clientWrap .clientRegister .rgs-right .partnameflex{
+	display:flex;
+}
+
+
+
 .clientWrap .clientRegister .rgs-body .rgs-address{
 	padding: 0 10px;
 }
@@ -185,6 +203,10 @@ div#register_com {
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <script type="text/javascript">
+	const partvo_partner_no = "${partvo.partner_no}";
+	const isModify = (partvo_partner_no !== "");
+	console.log("isModify : " + isModify);
+	console.log("java - isModify : ${isModify}");
 		
 	let comAddr_chk = false;
 	let partnerNo_chk = false;
@@ -259,6 +281,33 @@ div#register_com {
 				}
 			/* 거래처담당 직원 유효성 검사 시작 */
 		});
+		
+		$("input#part_emp_rank").blur( (e) => {
+			/* 거래처담당 직원 직급 유효성검사 끝 */
+			const part_emp_rank = $("input#part_emp_rank").val().trim();
+				
+				if(part_emp_rank == ""){
+			  // 입력하지 않거나 공백만 입력했을 경우 
+			  $(".clientWrap :input").prop("disabled", true);
+			  $("input#part_emp_rank").prop("disabled", false);
+		    $("input#part_emp_rank").val("").focus();
+		            
+	      // $("input#part_emp_rank").next().show();
+	      // 또는
+		    $("input#part_emp_rank").parent().find("span.error").show();
+				}
+				else{
+					// 공백이 아닌 글자를 입력했을 경우
+					$(".clientWrap :input").prop("disabled",false);
+					$("input#part_emp_rank").parent().find("span.error").hide();
+				}
+			/* 거래처담당 직원 직급 유효성검사 끝 */
+		});
+		
+		
+		
+		
+		
 		
 		$("input#part_emp_email").blur( (e) => {
 			/* 거래처 담당직원 이메일 유효성검사 시작 */
@@ -433,7 +482,16 @@ div#register_com {
 				alert("거래처담당 직원을 입력하셔야 합니다.");
 		        return false;
 			}
-		/* 거래처담당 직원 유효성 검사 시작 */
+		/* 거래처담당 직원 유효성 검사 끝 */
+		
+		/* 거래처담당 직원 직급유효성 검사 시작 */
+		const part_emp_rank = $("input#part_emp_rank").val().trim();
+			if(part_emp_rank == ""){
+				// 입력하지 않거나 공백만 입력했을 경우 
+				alert("거래처 직원 직급을 입력하셔야 합니다.");
+		        return false;
+		}
+		/* 거래처담당 직원 직급 유효성 검사 끝 */
 
 		/* 거래처 담당직원 이메일 유효성검사 시작 */
 		const part_emp_email = $("input#part_emp_email").val().trim();
@@ -709,7 +767,12 @@ div#register_com {
 		$('.clientWrap :input').prop('disabled', true);
 		
 	}
-		
+	
+	
+	
+	
+	
+	
 	
 </script>
 
@@ -718,12 +781,14 @@ div#register_com {
 		<div class="clientHeader">
 			<button style="background-image: url(<%=ctxPath%>/resources/images/common/arrow-left-solid.svg)">
 			</button>
-			<h3>거래처등록하기</h3>
+			<c:if test="${!isModify}"><h3>거래처등록하기</h3></c:if>
+			<c:if test="${isModify}"><h3>거래처수정하기</h3></c:if>
 		</div>
 		<div class="clientRegister">
 			<div class="rgs-profile">
 				<div class="imgbox" style="width: 230px; height: 200px;">
-					<img id="previewImg" style="width: 100%; height: 100%;" />
+					<c:if test="${!isModify}"><img id="previewImg" style="width: 100%; height: 100%;" /></c:if>
+					<c:if test="${isModify}"><img src="./resources/files/${partvo.imgfilename}" id="previewImg" style="width: 100%; height: 100%;" /></c:if>
 				</div>
 				<br>
 				<input type="file" name="attach" id="fileInput" value="fileInput" accept="image/*" />
@@ -736,20 +801,21 @@ div#register_com {
 					<div class="rgs-left">
 						<label> 
 							<span>거래처명&nbsp;<span class="star">*</span></span> 
-							<input type="text" class="comName" name="partner_name" id="partner_name" placeholder="거래처명을 입력하세요.">
+							<input type="text" name="partner_name" id="partner_name" value="${partvo.partner_name}" placeholder="거래처명을 입력하세요.">
 							<span class="error">거래처명은 필수 입력사항입니다.</span>
 						</label> 
 						<label> 
 							<span>거래처업종&nbsp;<span class="star">*</span></span> 
-							<input type="text" name="partner_type" id="partner_type" placeholder="거래처업종을 입력하세요.">
+							<input type="text" name="partner_type" id="partner_type" value="${partvo.partner_type}" placeholder="거래처업종을 입력하세요.">
 							<span class="error">거래처업종은 필수 입력사항입니다.</span>
 						</label> 
 						<div class="chk_businum">
 						<label> 
 							<span>사업자등록번호&nbsp;<span class="star">*</span></span> 
 							<div style="display:flex;">
-								<input type="text" name="partner_no" id="partner_no" class="" placeholder="사업자등록번호를 입력하세요."/>
-								<input type="button" id="partnerNo_chk" onclick="" value="중복확인"/> 
+								<input type="text" <c:if test="${isModify}">readonly="readonly"</c:if> name="partner_no" id="partner_no" value="${partvo.partner_no}" class="" placeholder="사업자등록번호를 입력하세요."/>
+								<%-- <c:if test="${isModify}" readonly /> --%>
+								<c:if test="${not isModify}"><input type="button" id="partnerNo_chk" onclick="" value="중복확인"/></c:if>
 								<span id="partNoChkResult"></span>
 							</div>
 							<span id="empty" class="error">사업자등록번호는 필수 입력사항입니다.</span> 
@@ -758,28 +824,36 @@ div#register_com {
 						</div> 
 						<label> 
 							<span>웹사이트&nbsp;<span class="star">*</span></span> 
-							<input type="text" name="partner_url" id="partner_url" placeholder="사이트주소를 입력하세요.">
+							<input type="text" name="partner_url" id="partner_url" value="${partvo.partner_url}" placeholder="사이트주소를 입력하세요.">
 							<span id="url_empty" class="error">거래처 웹사이트는 필수 입력사항입니다.</span>
 							<span id="url_format" class="error">웹사이트 형식이 잘못되었습니다.</span>
 						</label>
 					</div>
 					<div class="rgs-right">
-						<label> 
-							<span>담당자명&nbsp;<span class="star">*</span></span> 
-							<input type="text" name="part_emp_name" id="part_emp_name" placeholder="담당자명을 입력하세요.">
-							<span class="error">담당자명은 필수 입력사항입니다.</span>
-						</label> 
+						<div class="partnameflex">
+							<label class="partnameinfo"> 
+								<span>담당자명&nbsp;<span class="star">*</span></span>
+								<input type="text" name="part_emp_name" id="part_emp_name" value="${partvo.part_emp_name}" placeholder="담당자명을 입력하세요.">
+								<span class="error">담당자명은 필수 입력사항입니다.</span>
+							</label> 
+							<label class="partnameinfo"> 
+								<span>담당자직급&nbsp;<span class="star">*</span></span>
+								<input type="text" name="part_emp_rank" id="part_emp_rank" value="${partvo.part_emp_rank}" placeholder="담당자직급을 입력하세요.">
+								<span class="error">담당자직급은 필수 입력사항입니다.</span>
+							</label> 
+						</div>
+						
 						<label> 
 							<span>담당자부서</span> 
-							<input type="text" name="part_emp_dept" placeholder="담당자부서를 입력하세요.">
+							<input type="text" name="part_emp_dept" value="${partvo.part_emp_dept}" placeholder="담당자부서를 입력하세요.">
 						</label> 
 						<label> 
 							<span>담당자전화번호</span> 
-							<input type="text" name="part_emp_tel" placeholder="담당자연락처를 입력하세요">
+							<input type="text" name="part_emp_tel" value="${partvo.part_emp_tel}" placeholder="담당자연락처를 입력하세요">
 						</label> 
 						<label>
 							<span>담당자이메일&nbsp;<span class="star">*</span></span>
-							<input type="text" name="part_emp_email" id="part_emp_email" placeholder="담당자이메일을 입력하세요.">
+							<input type="text" name="part_emp_email" id="part_emp_email" value="${partvo.part_emp_email}" placeholder="담당자이메일을 입력하세요.">
 							<span id="email_empty" class="error">담당자 이메일은 필수 입력사항입니다.</span>
 							<span id="email_format" class="error">이메일 형식이 잘못되었습니다.</span>
 						</label>
@@ -790,14 +864,14 @@ div#register_com {
 						<span>주소&nbsp;<span class="star">*</span></span>
 						
 						<span>						
-							<input type="text" name="partner_postcode" id="partner_postcode" placeholder="우편번호">
+							<input type="text" name="partner_postcode" id="partner_postcode" value="${partvo.partner_postcode}" placeholder="우편번호">
 							<input type="button" id="comAddr_chk" onclick="comDaumPostcode()" value="우편번호 찾기"> 
 							<span class="error">거래처주소는 필수 입력사항입니다.</span>
 						</span>
 					</label>
-					<input class="addfield" type="text" name="partner_address" id="partner_address" placeholder="주소"> 
-					<input class="addfield" type="text" name="partner_detailaddress" id="partner_detailaddress" placeholder="상세주소"> 
-					<input class="addfield" type="text" name="partner_extraaddress" id="partner_extraaddress" placeholder="참고항목">
+					<input class="addfield" type="text" name="partner_address" id="partner_address" value="${partvo.partner_address}" placeholder="주소"> 
+					<input class="addfield" type="text" name="partner_detailaddress" id="partner_detailaddress" value="${partvo.partner_detailaddress}" placeholder="상세주소"> 
+					<input class="addfield" type="text" name="partner_extraaddress" id="partner_extraaddress" value="${partvo.partner_extraaddress}" placeholder="참고항목">
 				</div>
 			</div>
 		</div>

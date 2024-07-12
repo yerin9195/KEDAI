@@ -126,16 +126,41 @@ where partner_no = '123-15-59011';
 select *
 from tbl_business_part;
 
+alter table tbl_business_part add part_emp_rank varchar(200);
+alter table tbl_business_part add part_emp_rank varchar(200) not null;
+
+update tbl_business_part
+set part_emp_rank = ''
+where part_emp_rank is not null;
+
+alter table tbl_business_part
+modify part_emp_rank varchar(200) not null;
+
+truncate table tbl_business_part;
+
+commit;
+
+
+desc tbl_business_part;
+
+select *
+from tbl_business_part;
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+select *
+from tbl_employees;
+
+
+select partner_name
+		from tbl_business_part
+		where partner_name = '(주)에이티에스인코'
+
+SELECT partner_name
+FROM tbl_business_part;
 
 
 
-
-
-
-
-
-
-
-
-
-
+select partner_no, partner_type, partner_name, partner_url, partner_postcode, partner_address, partner_detailaddress, partner_extraaddress,
+		       originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank
+		from tbl_business_part
+        where partner_name = '(주)에이티에스인코';

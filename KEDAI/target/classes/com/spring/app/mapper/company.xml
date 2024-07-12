@@ -11,33 +11,65 @@
 		where partner_no = #{partner_no}
 	</select>
 	
-	<!-- 사원정보 등록하기 -->
+	<!-- 거래처 정보 상세정보 클릭했을때 어떤거 눌렀는지 알아오기 -->
+	<select id="partnerPopupClick" resultType="PartnerVO">
+		select partner_no, partner_type, partner_name, partner_url, partner_postcode, partner_address, partner_detailaddress, partner_extraaddress,
+		       originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank
+		from tbl_business_part
+        where partner_name = #{partner_name}
+	</select>
+	
+	
+	<!-- 거래처정보 등록하기 -->
 	<insert id="othercomRegister_submit" parameterType="PartnerVO">
 		insert into tbl_business_part(
 			partner_no, partner_type, partner_name, partner_url, partner_postcode, partner_address,
-			partner_detailaddress, partner_extraaddress, imgfilename, originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept)
+			partner_detailaddress, partner_extraaddress, imgfilename, originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank)
 		<choose>
 			<when test="part_emp_tel == null and part_emp_dept == null"><!-- 값이 널인 컬럼을 아예 지우고 값도 날리니까 가능해짐  -->
 				values(
 					#{partner_no}, #{partner_type}, #{partner_name}, #{partner_url}, #{partner_postcode}, #{partner_address},
-					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, null, #{part_emp_email}, null)
+					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, null, #{part_emp_email}, null ,#{part_emp_rank})
 			</when>
 			<when test="part_emp_tel != null and part_emp_dept == null">
 				values(
 					#{partner_no}, #{partner_type}, #{partner_name}, #{partner_url}, #{partner_postcode}, #{partner_address},
-					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, #{part_emp_tel}, #{part_emp_email}, null)
+					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, #{part_emp_tel}, #{part_emp_email}, null,#{part_emp_rank})
 			</when>
 			<when test="part_emp_tel == null and part_emp_dept != null">
 				values(
 					#{partner_no}, #{partner_type}, #{partner_name}, #{partner_url}, #{partner_postcode}, #{partner_address},
-					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, null, #{part_emp_email}, #{part_emp_dept})
+					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, null, #{part_emp_email}, #{part_emp_dept},#{part_emp_rank})
 			</when>
 			<when test="part_emp_tel != null and part_emp_dept != null">
 				values(
 					#{partner_no}, #{partner_type}, #{partner_name}, #{partner_url}, #{partner_postcode}, #{partner_address},
-					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, #{part_emp_tel}, #{part_emp_email}, #{part_emp_dept})
+					#{partner_detailaddress}, #{partner_extraaddress}, #{imgfilename}, #{originalfilename}, #{part_emp_name}, #{part_emp_tel}, #{part_emp_email}, #{part_emp_dept},#{part_emp_rank})
 			</when>
 		</choose>
 	</insert>
+	
+	<!-- 거래처정보 가져오기 -->
+	<select id="otherCom_list_select" resultType="PartnerVO">
+		select partner_no, partner_type, partner_name, partner_url, partner_postcode, partner_address, partner_detailaddress, partner_extraaddress,
+		       imgfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank
+		from tbl_business_part
+	</select>
+	
+	<!-- 거래처 정보 상세정보 클릭했을때 어떤거 눌렀는지 알아오기 -->
+	<select id="otherCom_get_select" parameterType="string" resultType="PartnerVO">
+		select partner_no, partner_type, partner_name, partner_url, partner_postcode, partner_address, partner_detailaddress, partner_extraaddress
+		       ,imgfilename, originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank
+		from tbl_business_part
+        where partner_no = #{partner_no}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
 	
 </mapper>

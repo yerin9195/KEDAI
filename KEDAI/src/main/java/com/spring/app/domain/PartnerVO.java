@@ -18,6 +18,7 @@ public class PartnerVO {
 	private String part_emp_tel;
 	private String part_emp_email;
 	private String part_emp_dept;
+	private String part_emp_rank;
 	
 	//////////////////////////////////////////////////////////////////////////////
 	
@@ -145,6 +146,14 @@ public class PartnerVO {
 
 	public void setAttach(MultipartFile attach) {
 		this.attach = attach;
+	}
+
+	public String getPart_emp_rank() {
+		return part_emp_rank;
+	}
+
+	public void setPart_emp_rank(String part_emp_rank) {
+		this.part_emp_rank = part_emp_rank;
 	}
 	
 	
