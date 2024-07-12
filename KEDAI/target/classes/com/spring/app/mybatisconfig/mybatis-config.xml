@@ -9,6 +9,9 @@
 		<typeAlias type="com.spring.app.domain.BusVO" alias="BusVO" />
 		<typeAlias type="com.spring.app.domain.PartnerVO" alias="PartnerVO" />
 		<typeAlias type="com.spring.app.domain.BoardVO" alias="BoardVO" />
+		<typeAlias type="com.spring.app.domain.SalaryVO" alias="SalaryVO" />
+		<typeAlias type="com.spring.app.domain.RoomMainVO" alias="RoomMainVO" />
+		<typeAlias type="com.spring.app.domain.RoomSubVO" alias="RoomSubVO" />
 	</typeAliases>	
 	
 </configuration>
