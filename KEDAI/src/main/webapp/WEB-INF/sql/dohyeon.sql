@@ -575,3 +575,7 @@ update tbl_employees set orgimgfilename = 'DORY.jpg'
 where empid = '2010400-001';
 
 commit;
+
+select *
+from tbl_loginhistory
+
