@@ -8,7 +8,7 @@
 %>
 
 
-<style type="text/css">>
+<style type="text/css">
 	#myContent > div{
 		border: solid 1px blue;
 		width: 80%;
