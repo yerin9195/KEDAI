@@ -59,6 +59,18 @@ public class BoardDAO_imple implements BoardDAO {
 		return boardList;
 	}
 
+	@Override
+	public List<String> wordSearchShow(Map<String, String> paraMap) {
+		List<String> wordList = sqlsession.selectList("board.wordSearchShow", paraMap);
+		return wordList;
+	}
+
+	@Override
+	public BoardVO getView(Map<String, String> paraMap) {
+		BoardVO bvo = sqlsession.selectOne("board.getView", paraMap);
+		return bvo;
+	}
+
 	
 
 	

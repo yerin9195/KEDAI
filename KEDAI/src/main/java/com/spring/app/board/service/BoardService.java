@@ -26,4 +26,10 @@ public interface BoardService {
 	// 글목록 가져오기(페이징처리를 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것)
 	List<BoardVO> boardListSearch_withPaging(Map<String, String> paraMap);
 
+	// 검색어 입력 시 자동글 완성하기 
+	List<String> wordSearchShow(Map<String, String> paraMap);
+
+	// 글 조회수 증가와 함께 글 1개를 조회하기
+	BoardVO getView(Map<String, String> paraMap);
+
 }

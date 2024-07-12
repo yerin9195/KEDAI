@@ -71,6 +71,20 @@ public class BoardService_imple implements BoardService {
 		return boardList;
 	}
 
+	// 검색어 입력 시 자동글 완성하기 
+	@Override
+	public List<String> wordSearchShow(Map<String, String> paraMap) {
+		List<String> wordList = dao.wordSearchShow(paraMap);
+		return wordList;
+	}
+
+	// 글 조회수 증가와 함께 글 1개를 조회하기
+	@Override
+	public BoardVO getView(Map<String, String> paraMap) {
+		BoardVO bvo = dao.getView(paraMap);
+		return bvo;
+	}
+
 	
 
 	
