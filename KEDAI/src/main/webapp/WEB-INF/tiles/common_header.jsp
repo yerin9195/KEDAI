@@ -87,10 +87,6 @@
 		        	<a class="nav-link" href="<%= ctxPath%>/logout.kedai" style="text-align: center;"><img alt="login" src="<%= ctxPath%>/resources/images/common/login.png" width="60%" /></a>
 		      	</li>
 		      	<li class="nav-item justify-content-end tooltipbottom">
-		      		<span class="tooltiptext">메일</span>
-		        	<a class="nav-link" href="#" style="text-align: center;"><img alt="mail" src="<%= ctxPath%>/resources/images/common/mail.png" width="60%" /></a>
-		      	</li>
-		      	<li class="nav-item justify-content-end tooltipbottom">
 		      		<span class="tooltiptext">알림</span>
 		        	<a class="nav-link" href="#" style="text-align: center;"><img alt="alarm" src="<%= ctxPath%>/resources/images/common/alarm.png" width="60%" /></a>
 		      	</li>
