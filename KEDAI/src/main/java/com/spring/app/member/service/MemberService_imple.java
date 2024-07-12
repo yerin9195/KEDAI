@@ -85,5 +85,5 @@ public class MemberService_imple implements MemberService {
 		int n = dao.salaryCal(salaryvo);
 		return n;
 	}
-	
+	//	test
 }
