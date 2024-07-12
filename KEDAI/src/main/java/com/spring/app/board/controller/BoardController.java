@@ -3,6 +3,8 @@ package com.spring.app.board.controller;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,14 +13,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.spring.app.board.service.BoardService;
 import com.spring.app.common.FileManager;
@@ -137,7 +143,7 @@ public class BoardController {
 	}
 	
 	// 스마트에디터 => 드래그앤드롭을 이용한 다중 사진 파일 업로드
-	@PostMapping("/image/multiplePhotoUpload.kedai")
+	@RequestMapping("/image/multiplePhotoUpload.kedai")
 	public void multiplePhotoUpload(HttpServletRequest request, HttpServletResponse response) {
 		
 		// WAS 의 webapp 의 절대경로 알아오기
@@ -309,6 +315,139 @@ public class BoardController {
 		
 		return mav;
 	}
+	
+	// 검색어 입력 시 자동글 완성하기
+	@ResponseBody
+	@GetMapping(value="/board/wordSearchShow.kedai", produces="text/plain;charset=UTF-8")
+	public String wordSearchShow(HttpServletRequest request) {
+		
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+		
+		List<String> wordList = service.wordSearchShow(paraMap);
+		
+		JSONArray jsonArr = new JSONArray(); // []
+		
+		if(wordList != null) {
+			for(String word : wordList) {
+				JSONObject jsonObj = new JSONObject();
+				
+				jsonObj.put("word", word);
+				
+				jsonArr.put(jsonObj); // [{}, {}, {}]
+			} // end of for ----------
+		}
+		
+		return jsonArr.toString();
+	}
+	
+	// 글 1개를 보여주는 페이지 요청
+	@RequestMapping("/board/view.kedai")
+	public ModelAndView view(ModelAndView mav, HttpServletRequest request) {
+		
+		String board_seq = "";
+		String goBackURL = "";
+		String searchType = "";
+		String searchWord = "";
+		
+		// redirect 되어서 넘어온 데이터가 있는지 꺼내어 와본다. => /board/view_2.kedai 에서 보내주었다.
+		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+		
+		if(inputFlashMap != null) {  // redirect 되어서 넘어온 데이터가 있는 경우
+			@SuppressWarnings("unchecked")
+			Map<String, String> redirect_map = (Map<String, String>)inputFlashMap.get("redirect_map");
+			// "redirect_map" 값은  /board/view_2.kedai 에서  redirectAttr.addFlashAttribute("키", 밸류값); 을 할 때 준 "키" 이다. 
+		
+			board_seq = redirect_map.get("board_seq");
+			
+			// 이전글제목, 다음글제목 보기
+			searchType = redirect_map.get("searchType");
+			
+			try { 
+				// sendredirect 되어서 넘어온 데이터를 한글로 복구한 후 mapper 로 넘겨줘야 한다.
+				searchWord = URLDecoder.decode(redirect_map.get("searchWord"), "UTF-8");
+				goBackURL = URLDecoder.decode(redirect_map.get("goBackURL"), "UTF-8");
+						
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		else { // redirect 되어서 넘어온 데이터가 아닌 경우 => sendRedirect 하지않고 직접 넘어온 경우
+			board_seq = request.getParameter("board_seq"); // 조회하고자 하는 글번호 받아오기
+			goBackURL = request.getParameter("goBackURL"); // 특정글을 조회한 후 "검색된결과목록보기" 버튼을 클릭했을 때 돌아갈 페이지를 만들기 위한 것
+			
+			// 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물 내의 이전글과 다음글이 나오도록 하기 위한 것
+			searchType = request.getParameter("searchType");
+			searchWord = request.getParameter("searchWord");
+			
+			if(searchType == null) { // 검색조건이 없는 경우 원복한다.
+				searchType = "";
+			}
+			
+			if(searchWord == null) { // 검색어가 없는 경우 원복한다.
+				searchWord = "";
+			}
+			
+		}
+		
+		mav.addObject("goBackURL", goBackURL);
+		
+		try {
+			Integer.parseInt(board_seq);
+			
+			HttpSession session = request.getSession();
+			MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+			
+			String login_empid = "";
+			if(loginuser != null) {
+				login_empid = loginuser.getEmpid();
+			}
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("board_seq", board_seq);
+			paraMap.put("login_empid", login_empid);
+					
+			// 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물 내의 이전글과 다음글이 나오도록 하기 위한 것
+			paraMap.put("searchType", searchType);
+			paraMap.put("searchWord", searchWord);
+			
+			// 웹브라우저에서 페이지 새로고침(F5)을 했을 때 select(글 1개 조회)만 해주고 DML문(글 조회수 증가인 update문)은 실행되지 않도록 하기
+			BoardVO bvo = null;
+			
+			if("yes".equals((String)session.getAttribute("readCountPermission"))) { // 글목록보기인 /board/list.kedai 페이지를 클릭한 다음에 특정글을 조회해온 경우
+				bvo = service.getView(paraMap); // 글 조회수 증가와 함께 글 1개를 조회해오는 것
+				
+				session.removeAttribute("readCountPermission"); // session 에 저장된 readCountPermission 을 삭제
+			}
+			else { // 글목록에서 특정 글제목을 클릭하여 본 상태에서 웹브라우저에서 새로고침(F5)을 클릭한 경우
+			//	bvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
+			
+				if(bvo == null) {
+					mav.setViewName("redirect:/board/list.kedai");
+					return mav;
+				}
+			}
+			
+			mav.addObject("bvo", bvo);
+			mav.addObject("paraMap", paraMap); // 이전글제목, 다음글제목 보기
+			
+			mav.setViewName("tiles1/board/view.tiles");
+			
+		} catch (NumberFormatException e) {
+			mav.setViewName("redirect:/board/list.kedai");
+		}
+		
+		return mav;
+	}
+	
+	
+	
+	
 	
 	
 	

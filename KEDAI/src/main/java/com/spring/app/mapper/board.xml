@@ -132,4 +132,33 @@
 		계층구조는 그대로 유지하면서 동일 부모를 가진 자식행들 끼리의 정렬 기준을 주는 것이 order siblings by 이다.
 	-->
 	
+	<select id="wordSearchShow" parameterType="HashMap" resultType="String">
+		<choose>
+			<when test='searchType == "subject"'>
+				select subject
+			</when>
+			<when test='searchType == "name"'>
+				select distinct name
+			</when>
+		</choose>
+		from tbl_board
+		where status = 1 
+		<choose>
+			<when test='searchType == "subject" and searchWord != ""'>
+				and lower(subject) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+			<when test='searchType == "name" and searchWord != ""'>
+				and lower(name) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+		</choose>
+		<choose>
+			<when test='searchType == "subject"'>
+				order by registerday desc
+			</when>
+			<when test='searchType == "name"'>
+				order by name asc
+			</when>
+		</choose>
+	</select>
+	
 </mapper>
