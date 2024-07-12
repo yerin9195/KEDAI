@@ -2,6 +2,7 @@ package com.spring.app.member.service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.AES256;
 import com.spring.app.domain.MemberVO;
+import com.spring.app.domain.SalaryVO;
 import com.spring.app.member.model.MemberDAO;
 
 @Service
@@ -80,4 +82,18 @@ public class MemberService_imple implements MemberService {
 	
 
 	
+	//	급여명세서 직원목록 불러오기
+	@Override
+	public List<MemberVO> memberListView() {
+		List<MemberVO> membervoList = dao.memberListView();
+		return membervoList;
+	}
+
+	//	급여 전체 계산
+	@Override
+	public int salaryCal(SalaryVO salaryvo) {
+		int n = dao.salaryCal(salaryvo);
+		return n;
+	}
+	//	
 }

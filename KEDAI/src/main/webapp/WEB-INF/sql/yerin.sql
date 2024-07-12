@@ -513,3 +513,19 @@ FROM
 ) T
 WHERE RNO between 1 and 10;
 
+-----------------------------------------------------------------------
+
+select *
+from tbl_board;
+
+select subject
+from tbl_board
+where status = 1 and lower(subject) like '%' ||lower('kedai')|| '%'
+order by registerday desc;
+
+select distinct name
+from tbl_board
+where status = 1 and lower(name) like '%' ||lower('관리자')|| '%'
+order by name asc;
+
+
