@@ -187,10 +187,6 @@
 					<span class="icon"><i class="fa-regular fa-comments"></i></span>
 				</li>
 				<li>
-					<a href="#">투표하기</a>
-					<span class="icon"><i class="fa-solid fa-ranking-star"></i></span>
-				</li>
-				<li>
 					<a href="<%=ctxPath%>/carShare.kedai">카쉐어</a>
 					<span class="icon"><i class="fa-solid fa-car"></i></span>
 				</li>

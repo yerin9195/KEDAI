@@ -58,13 +58,10 @@
 			</div>
 			
 			<div class="row justify-content-between mt-2" style="border: 1px solid red; height: 300px;">
-				<div class="col-4" style="border: 1px solid red;">
+				<div class="col-6" style="border: 1px solid red;">
 					날씨
 				</div>
-				<div class="col-3" style="border: 1px solid red;">
-					차트
-				</div>
-				<div class="col-5" style="border: 1px solid red;">
+				<div class="col-6" style="border: 1px solid red;">
 					달력
 				</div>
 			</div>
@@ -86,8 +83,8 @@
 		</div>
 	</section>
 	
-	<section class="row justify-content-between mt-2">
-		<div class="col-8 pl-0" style="border: 1px solid red; height: 250px;">
+	<section class="row justify-content-between mt-2" style="height: 350px;">
+		<div class="col-8 pl-0" style="border: 1px solid red;">
 			<ul class="nav nav-tabs">
 				<li class="nav-item">
 					<a class="nav-link active" data-toggle="tab" href="#home">사내공지</a>
@@ -114,27 +111,8 @@
 		</div>
 			
 		<div class="col-4 pl-0 pr-0" style="border: 1px solid red; text-align: center;">
-			<h4>식단표</h4>
+			<h4>chart</h4>
 			<img alt="menu" src="" width="100%" />
-		</div>
-	</section>
-
-	<section class="row justify-content-between mt-2">
-		<div class="col-4" style="border: 1px solid red;">
-			<h4>메모장</h4>
-		</div>
-		<div class="col-8" style="border: 1px solid red;">
-			<h4>투표하기</h4>
-			<div class="row">
-				<div class="col-6">
-					<h6>이달의 우수사원</h6>
-					<a href="" style="color: #363636;"><p>투표하러 가기&nbsp;&nbsp;<i class="fa-solid fa-angles-right"></i></p></a> 
-				</div>
-				<div class="col-6">
-					<h6>점심 메뉴 추천</h6>
-					<a href="" style="color: #363636;"><p>투표하러 가기&nbsp;&nbsp;<i class="fa-solid fa-angles-right"></i></p></a>
-				</div>
-			</div>
 		</div>
 	</section>
 </div>
