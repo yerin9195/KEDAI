@@ -244,7 +244,6 @@ public class CompanyController {
 				jsonObj.put("part_emp_dept",pvo.getPart_emp_dept());
 				jsonObj.put("part_emp_rank",pvo.getPart_emp_rank());
 				
-				
 				jsonArr.put(jsonObj);
 			}// end of for()------------------------------------------------
 		
