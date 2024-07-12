@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,7 +74,7 @@ public class CompanyController {
 		
 	} // end of public String partnerNoDuplicateCheck()--------------------------------------
 
-	
+	// 거래처 정보 등록하기 시작 
 	@GetMapping(value="/othercom_register.kedai")	// http://localhost:9099/KEDAI/othercom_list.kedai
 	public ModelAndView other_comRegister(ModelAndView mav) {
 			
@@ -82,7 +83,7 @@ public class CompanyController {
 		return mav;
 	}
 	
-	// 거래처 정보 등록하기
+	// 거래처 정보 등록하기 넘겨주기 
 	@PostMapping("othercom_register.kedai")
 	public ModelAndView othercomRegister_submit(ModelAndView mav, PartnerVO partvo, MultipartHttpServletRequest mrequest) {
 		
@@ -153,6 +154,8 @@ public class CompanyController {
 	
 	// end of public ModelAndView othercomRegister_submit(ModelAndView mav, PartnerVO partvo, MultipartHttpServletRequest mrequest) {}-----------------------------------------------------
 	
+	
+	// 거래처 수정하기 
 	@GetMapping(value="/othercom_modify.kedai")	// http://localhost:9099/KEDAI/othercom_list.kedai
 	public ModelAndView other_comModify(@RequestParam("partner_no") String partnerNo, ModelAndView mav) {
 		PartnerVO partnerVO = service.otherCom_get_select(partnerNo);
@@ -194,6 +197,7 @@ public class CompanyController {
 		
 		mav.setViewName("tiles1/company/othercom_list.tiles");
 		
+		
 		return mav;
 	}
 	
@@ -201,13 +205,13 @@ public class CompanyController {
 	@ResponseBody
 	@GetMapping(value="/partnerPopupClick.kedai", produces="text/plain;charset=UTF-8")
 	public String otherCom_get_select(String partner_no) throws JsonProcessingException {
-		System.out.println("partner_no: " + partner_no);
+	
 		PartnerVO partnerVO = service.otherCom_get_select(partner_no);
 		
 		String jsonString = objectMapper.writeValueAsString(partnerVO); // toObject => PartnerVO partnerVO = objectMapper.readValue(jsonString, PartnerVO.class)
-		System.out.println("~~~확인용2222 jsonString : " + jsonString);
+	
 		
-		/* return jsonString; */
+		
 		return jsonString;
 	} // end of public String partnerPopupClick(HttpServletRequest request) {
 	
@@ -215,7 +219,7 @@ public class CompanyController {
 	@ResponseBody
 	@PostMapping(value="/partnerPopupClick.kedai", produces="text/plain;charset=UTF-8")
 	public String partnerPopupClick(PartnerVO partvo) {
-		System.out.println("testss: " + partvo.getPartner_name());
+	
 		List<PartnerVO> partnervoList = service.partnerPopupClick(partvo); 
 		
 		JSONArray jsonArr = new JSONArray();
@@ -240,8 +244,6 @@ public class CompanyController {
 				jsonObj.put("part_emp_dept",pvo.getPart_emp_dept());
 				jsonObj.put("part_emp_rank",pvo.getPart_emp_rank());
 				
-				System.out.println("~~~확인용 partner_no : " + partvo.getPartner_no());
-				
 				
 				jsonArr.put(jsonObj);
 			}// end of for()------------------------------------------------
@@ -249,16 +251,13 @@ public class CompanyController {
 		}
 		
 		String jsonString = jsonArr.toString();
-		System.out.println("~~~확인용2222 jsonString : " + jsonString);
 		
 		
-		/* return jsonString; */
 		return jsonString;
 		
 		
 		
 	} // end of public String partnerPopupClick(HttpServletRequest request) {
-
 	
 	
 	
@@ -271,19 +270,7 @@ public class CompanyController {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	// 페이지바 만들기
 	
 	
 	

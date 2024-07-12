@@ -52,7 +52,7 @@ public class CompanyDAO_imple implements CompanyDAO{
 	@Override
 	public List<PartnerVO> partnerPopupClick(String partner_name) {
 		List<PartnerVO> partnervoList = sqlsession.selectList("company.partnerPopupClick", partner_name);
-		System.out.println("asd" + partnervoList.toString());
+	//	System.out.println("asd" + partnervoList.toString());
 		return partnervoList;
 	}
 

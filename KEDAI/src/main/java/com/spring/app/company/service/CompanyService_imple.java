@@ -48,7 +48,7 @@ public class CompanyService_imple implements CompanyService{
 	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 
 	@Override
 	public List<PartnerVO> partnerPopupClick(PartnerVO partvo) {
-		System.out.println("test " +partvo.getPartner_name());
+	//	System.out.println("test " +partvo.getPartner_name());
 		List<PartnerVO> partnervoList = dao.partnerPopupClick(partvo.getPartner_name());
 		return partnervoList;
 	}

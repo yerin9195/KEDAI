@@ -280,22 +280,26 @@ $(function(){
 	          $("#pop_partnerNo").html(json.partner_no);
 	          $("#pop_partnerImg").attr("src", "./resources/files/" + json.imgfilename);
 	          $("#pop_partnerAddress").html(json.partner_address);
-	          
+	          $("#pop_partnerUrl").html(json.partner_url);
+	          $("#pop_partEmpTel").html(json.part_emp_tel);
+	          $("#pop_partEmpEmail").html(json.part_emp_email);
+	          $("#pop_partEmpName").html(json.part_emp_name);
+	          $("#pop_partEmpRank").html(json.part_emp_rank);
 	      
 	          
 	          /*
-	private String partner_type;
-	private String partner_url; 
-	private String partner_postcode;
-	private String partner_detailaddress;
-	private String partner_extraaddress;
-	private String imgfilename;
-	private String originalfilename;
-	private String part_emp_name;
-	private String part_emp_tel;
-	private String part_emp_email;
-	private String part_emp_dept;
-	private String part_emp_rank;
+				private String partner_type;
+				private String partner_url; 
+				private String partner_postcode;
+				private String partner_detailaddress;
+				private String partner_extraaddress;
+				private String imgfilename;
+				private String originalfilename;
+				private String part_emp_name;
+				private String part_emp_tel;
+				private String part_emp_email;
+				private String part_emp_dept;
+				private String part_emp_rank;
 	          */
 	          
 	          
@@ -384,8 +388,8 @@ $(function(){
     </div>
     <div class="popupBody">
       <div class="forAlign">
-        <div class="popupImg">
-          <img id="pop_partnerImg" src="" alt="">
+        <div class="popupImg" style="width:200px; border: 1px solid red; height:200px; overflow: hidden;">
+          <img id="pop_partnerImg" src="" alt="" style="object-fit: cover;">
 			<!-- 사진들어오는곳  -->
         </div>
         <ul class="popupList">
@@ -405,24 +409,24 @@ $(function(){
             <div class="listImg">
               <img src="<%= ctxPath%>/resources/images/common/homepage.svg" alt="">
             </div>
-            <div class="listTxt">www.domain.com</div>
+            <div id="pop_partnerUrl" class="listTxt"></div>
           </li>
         </ul>
         <ul class="popupList">
           <li>
             <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
             <div class="listTxt">
-              <span>홍길동</span>
-              <span>직급</span>
+              <span id="pop_partEmpName">홍길동</span>
+              <span id="pop_partEmpRank">직급</span>
             </div>
           </li>
           <li>
             <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
-            <div class="listTxt">010-0000-0000</div>
+            <div id="pop_partEmpTel" class="listTxt"></div>
           </li>
           <li>
             <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
-            <div class="listTxt">email@domain.name</div>
+            <div id="pop_partEmpEmail" class="listTxt"></div>
           </li>
         </ul>
       </div>
