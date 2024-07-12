@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Room">
+	<resultMap type="HashMap" id="roomMainMap">
+		<result property="pk_rookmain_seq" column="pk_rookmain_seq" javaType="String" />
+		<result property="roommain_name" column="roommain_name" javaType="String" />
+		<result property="roommain_detail" column="roommain_detail" javaType="String" />
+	</resultMap>
+	
+	<select id="roomMainView" resultType="String" parameterType="RoomMainVO">
+		select pk_roommain_seq, roommain_name, roommain_detail from tbl_room_main
+	</select>
+
+</mapper>

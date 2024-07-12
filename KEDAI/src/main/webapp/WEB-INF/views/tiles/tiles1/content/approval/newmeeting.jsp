@@ -288,7 +288,8 @@ ul.approvalList>li>label {
 								v_html += 	`<li>
 								    			<input type='checkbox' name='submitList' id='\${item.empid}' value='\${item.empid}' />
 								    			<input type='hidden' id='deptName' value='\${item.dept_name}' />
-								    			<label for='\${item.empid}'><span id="emp_name">\${item.name}</span>&nbsp;<span id="emp_jobName">\${item.job_name}</span></label>
+								    			<input type='hidden' id='jobCode' value='\${item.job_code}'/>
+								    			<label for='\${item.empid}' id="labelBold"><span id="emp_name">\${item.name}</span>&nbsp;<span id="emp_jobName">\${item.job_name}</span></label>
 											</li>`;
 							});
 							v_html += "</ul>";
@@ -373,12 +374,7 @@ ul.approvalList>li>label {
 		        var empName = $li.find("#emp_name").text(); // #emp_name 요소의 텍스트 가져오기
 		        var empJobName = $li.find("#emp_jobName").text(); // #emp_jobName 요소의 텍스트 가져오기
 		        var deptName = $li.find("#deptName").val();
-
-		        //console.log("Employee Name:", empName);
-		        //console.log("Job Name:", empJobName);
-		        //console.log("deptCode :", deptCode);
-		        
-				
+		        var jobCode = $li.find("#jobCode").val();
 				
 				order = $("ul.approvalList > li input:checkbox:checked").length;
 				
@@ -387,32 +383,32 @@ ul.approvalList>li>label {
 					$(this).prop("checked", false);
 					return;//종료
 				}
-				$(this).next().next().addClass("bold_text");
 				
 			    htmlAList += `<tr class='oneRow'>
 			            	   	 <td class="td_order">\${order}</td>
 			                	 <td class="td_deptName">\${deptName}</td>
 			                     <td class="td_jobName">\${empJobName}</td>
-			                     <td class="td_empName">\${empName}<input type="hidden" class="empId" value="\${empId}" /> </td>
+			                     <td class="td_empName">\${empName}</td>
+			                     <td class ="empId" style="display:none;">\${empId}</td>
+			                     <td class ="jobCode" style="display:none;">\${jobCode}</td>
 			                  </tr>`;
-			    //console.log(htmlAList);
+
 			    $("table.addApproval").append(htmlAList);		    
-			    
-			 //   a_html = $("table.addApproval").html();
 			}
-			else{// 체크박스가 선택되어 있지 않으면
-				$(this).next().next().removeClass("bold_text");
+			else{// 체크박스가 선택되어 있지 않으면			
+			
 				var isRemoved = false;
 				$("tr.oneRow").each(function(index, item){
-					var td_empid = $(item).find(".empId").val();
-					if(td_empid == empId){
+					var td_empId = $(item).find("td.empId").text().trim();
+					console.log("~~확인용 td_empId : "+td_empId);
+					console.log("~~확인용 empId : "+empId)
+					if(td_empId == empId){
 						$(item).remove();
 						isRemoved = true;
 					}
 				});
 				if(isRemoved){
 					order = 1;
-					
 					$("tr.oneRow").each(function(index, row){
 						$(row).children().first().text(order);
 						order ++;
@@ -450,28 +446,44 @@ ul.approvalList>li>label {
 	});// end of $(document).ready(function(){})-----------
 	
 	function btnSubmit(){
-		
-		$("table#approval").find("tr:not(:first)").remove();
-			
-/* 		var v_html = $("table.addApproval").clone(); // 테이블을 복제하여 원본 유지
-		v_html.find("tr:first").siblings().remove(); // 첫 번째 <tr>을 제외한 나머지 <tr> 모두 제거
-		$("table#approval").append(v_html); */
-		
+
+		var login_jobCode = ${(sessionScope.loginuser).jvo.job_code}; // 로그인한 사람의 직급코드
 		var v_html ="";
+		
+		
+		$("table#approval").find("tr:not(:first)").remove(); // 회의록에 있는 결제 라인에 제목 부분 빼고 다 지우기
+		let approvalArr = [];
 		
 		$("table.addApproval tr").each(function(index, item) {
 			if(index > 0){
-				v_html += "<tr>"
-				v_html += "<td class='td_order'>" + $(item).find("td:eq(0)").html() + "</td>"; // 첫 번째 <td>의 html 가져오기
-				v_html += "<td class='td_deptName'>" + $(item).find("td:eq(1)").html() + "</td>"; // 두 번째 <td>의 html 가져오기
-				v_html += "<td class='td_jobName'>" + $(item).find("td:eq(2)").html() + "</td>"; // 세 번째 <td>의 html 가져오기
-				v_html += "<td class='td_empName'>"+$(item).find("td:eq(3)").html() + "</td>"; // 네 번째 <td>의 html 가져오기
-				v_html += "</tr>"
-			}
+				var getjobcode = $(item).find("td:eq(5)").text().trim();
+				if(login_jobCode <= getjobcode){
+					alert("결재자는 상위 직급만 선택 가능합니다.");
+					$("#selectLineModal").modal("hide"); // 모달 닫기
+					return false; // 함수 종료
+					 
+				}
+				else{
+					approvalArr[index] = Number(getjobcode);
+					v_html += "<tr>" + $(item).html() +"</tr>";
+				}
+			}// end of if(index > 0)--------------
 		});
-		console.log(v_html);
+		
+		for(let i=0; i<approvalArr.length-1; i++){
+			if(approvalArr.length > 1){
+				if(approvalArr[i] > approvalArr[i+1]){
+					alert("결재 순서가 잘못 되었습니다.");
+					$("#selectLineModal").modal("hide"); // 모달 닫기
+					return false; // 함수 종료
+				}
+			}
+		}
+		// 모든 조건에 부합했을 때
 		$("table#approval").append(v_html);
-	}
+		$("#selectLineModal").modal("hide"); // 모달 닫기
+		
+	}// end of function btnSubmit()------------------
 	
 
 ///////////////////////////////////////////////////////////////////////
@@ -581,7 +593,7 @@ ul.approvalList>li>label {
 						<button type="button" class="btn btn-danger my_close"
 							data-dismiss="modal">취소</button>
 						<button type="button" class="btn btn-primary btnSubmit"
-							onclick="btnSubmit()" data-dismiss="modal">확인</button>
+							onclick="btnSubmit()" >확인</button>
 					</div>
 				</div>
 			</div>
