@@ -353,6 +353,17 @@ public class MemberController {
 		return mav;
 	}
 	
+
+	// 마이페이지 클릭시 이동
+	@GetMapping("/member/memberMenu.kedai")
+	public ModelAndView memberMenu(ModelAndView mav) {
+		
+		mav.setViewName("tiles1/member/memberMenu.tiles");
+		
+		return mav;
+	}
+	
+	
 	// 나의 정보 수정하기 페이지 이동
 	@GetMapping("/member/memberEdit.kedai")
 	public ModelAndView memberEdit(ModelAndView mav) {

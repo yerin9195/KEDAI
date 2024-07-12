@@ -6,7 +6,6 @@
 <%
    // 컨텍스트 패스명(context path name)을 알아오고자 한다.
    String ctxPath = request.getContextPath();
-
 %>
 <!-- jQuery CSS -->
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -19,7 +18,9 @@
 
 <!-- DateTimePicker JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
-
+<!-- Kakao Maps API -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f8cd36a9ca80015c17a395ab719b2d8d&libraries=services,places"></script>
+    	
 <style type="text/css">
    table#tblProdInput {border: solid #2c4459; 1px; 
                        border-collapse: collapse; }
@@ -32,198 +33,202 @@
    
    .error {color: red; font-weight: bold; font-size: 9pt;}
 
+/* Modal styles */
+   .modal {
+       display: none; /* Hidden by default */
+       position: fixed; /* Stay in place */
+       z-index: 1; /* Sit on top */
+       left: 0;
+       top: 0;
+       width: 100%; /* Full width */
+       height: 100%; /* Full height */
+       overflow: auto; /* Enable scroll if needed */
+       background-color: rgb(0,0,0); /* Fallback color */
+       background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+       padding-top: 60px;
+   }
+   .modal-content {
+       background-color: #fefefe;
+       margin: 5% auto; /* 15% from the top and centered */
+       padding: 20px;
+       border: 1px solid #888;
+       width: 80%; /* Could be more or less, depending on screen size */
+   }
+   .close {
+       color: #aaa;
+       float: right;
+       font-size: 28px;
+       font-weight: bold;
+   }
+   .close:hover,
+   .close:focus {
+       color: black;
+       text-decoration: none;
+       cursor: pointer;
+   }
+   #map {
+       width: 100%;
+       height: 400px;
+       margin-top: 10px;
+   }
+   #results {
+       list-style: none;
+       padding: 0;
+       max-height: 200px;
+       overflow-y: auto;
+       margin-top: 10px;
+   }
+   #results li {
+       padding: 10px;
+       border-bottom: 1px solid #ddd;
+       cursor: pointer;
+   }
+   #results li:hover {
+       background-color: #f0f0f0;
+   }
 </style>
 
 <script type="text/javascript">
-
-//각 항목 검사 용도  
-let b_zipcodedeparture_click = false;
-let b_zipcodearrive_click = false;
-let b_start_click = false;
-let b_end_click = false;
-
 $(document).ready(function(){
    
-   // 모든 에러 메세지는 숨긴 상태에서 하나씩 show 해줄거임
     $('span.error').hide();
 
-	$("input:text[name='email']").click(function(){
-		alert("이메일은 변경 불가합니다.");
-	})
-	
+    $("input:text[name='email']").click(function(){
+        alert("이메일은 변경 불가합니다.");
+    });
+    
+    console.log("Window loaded");
 
-	
-// === "출발지 우편번호찾기"를 클릭했을 때 이벤트 처리하기 === //
-   $("button#departure_zipcodeSearch").click(function(){
-	
-       new daum.Postcode({
-           oncomplete: function(data) {
-               // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+    var modal = document.getElementById("mapModal");
+    var btn = document.getElementById("arrive_zipcodeSearch");
+    var span = document.getElementsByClassName("close")[0];
 
-               // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-               // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-               let addr = ''; // 주소 변수
-               let extraAddr = ''; // 참고항목 변수
+    btn.onclick = function() {
+        modal.style.display = "block";
+        initializeMap();
+    }
 
-               //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-               if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                   addr = data.roadAddress;
-               } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                   addr = data.jibunAddress;
-               }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
 
-               // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-               if(data.userSelectedType === 'R'){
-                   // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-                   // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-                   if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                       extraAddr += data.bname;
-                   }
-                   // 건물명이 있고, 공동주택일 경우 추가한다.
-                   if(data.buildingName !== '' && data.apartment === 'Y'){
-                       extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                   }
-                   // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-                   if(extraAddr !== ''){
-                       extraAddr = ' (' + extraAddr + ')';
-                   }
-                   // 조합된 참고항목을 해당 필드에 넣는다.
-                   document.getElementById("departure_extraAddress").value = extraAddr;
-               
-               } else {
-                   document.getElementById("departure_extraAddress").value = '';
-               }
-
-               // 우편번호와 주소 정보를 해당 필드에 넣는다.
-               document.getElementById('departure_postcode').value = data.zonecode;
-               document.getElementById("departure_address").value = addr;
-               // 커서를 상세주소 필드로 이동한다.
-               document.getElementById("departure_detailAddress").focus();
-           }
-       }).open();
-   
-       b_zipcodedeparture_click = true;
-   
-});// end of $("img#zipcodeSearch").click()------------
-
-//=== "도착지 우편번호찾기"를 클릭했을 때 이벤트 처리하기 === //
-$("button#arrive_zipcodeSearch").click(function(){
-	
-    new daum.Postcode({
-        oncomplete: function(data) {
-            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-            // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-            let addr = ''; // 주소 변수
-            let extraAddr = ''; // 참고항목 변수
-
-            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                addr = data.roadAddress;
-            } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                addr = data.jibunAddress;
-            }
-
-            // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-            if(data.userSelectedType === 'R'){
-                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                    extraAddr += data.bname;
-                }
-                // 건물명이 있고, 공동주택일 경우 추가한다.
-                if(data.buildingName !== '' && data.apartment === 'Y'){
-                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                }
-                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-                if(extraAddr !== ''){
-                    extraAddr = ' (' + extraAddr + ')';
-                }
-                // 조합된 참고항목을 해당 필드에 넣는다.
-                document.getElementById("arrive_extraAddress").value = extraAddr;
-            
-            } else {
-                document.getElementById("arrive_extraAddress").value = '';
-            }
-
-            // 우편번호와 주소 정보를 해당 필드에 넣는다.
-            document.getElementById('arrive_postcode').value = data.zonecode;
-            document.getElementById("arrive_address").value = addr;
-            // 커서를 상세주소 필드로 이동한다.
-            document.getElementById("arrive_detailAddress").focus();
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
         }
-    }).open();
+    }
 
-    b_zipcodearrive_click = true;
+    if (typeof kakao === 'undefined' || !kakao.maps) {
+        console.error('Failed to load Kakao Maps API');
+        return;
+    }
 
-});// end of $("img#zipcodeSearch").click()------------
+    console.log("Kakao Maps API loaded");
+
+    var map;
+    var ps;
+
+    function initializeMap() {
+        var mapContainer = document.getElementById('map'); 
+        var mapOption = { 
+            center: new kakao.maps.LatLng(37.566535, 126.97796919999996), 
+            level: 3 
+        }; 
+
+        map = new kakao.maps.Map(mapContainer, mapOption); 
+        console.log("Map initialized");
+
+        if (!kakao.maps.services) {
+            console.error('Kakao Maps services library not loaded');
+            return;
+        }
+
+        ps = new kakao.maps.services.Places(); 
+        console.log("Places service initialized");
+    }
+
+    document.getElementById('searchButton').onclick = function() {
+        var buildingName = document.getElementById('buildingName').value;
+        console.log('Searching for:', buildingName);
+        ps.keywordSearch(buildingName, placesSearchCB);
+    };
+
+    function placesSearchCB(data, status, pagination) {
+        if (status === kakao.maps.services.Status.OK) {
+            console.log('Search successful:', data);
+            var resultsList = document.getElementById('results');
+            resultsList.innerHTML = '';
+            data.forEach(function(place) {
+                var li = document.createElement('li');
+                li.textContent = place.place_name;
+                li.onclick = function() {
+                    map.setCenter(new kakao.maps.LatLng(place.y, place.x));
+                    displayMarker(place);
+                    // 모달창 닫기
+                    modal.style.display = "none";
+                };
+                resultsList.appendChild(li);
+            });
+        } else {
+            console.error('Failed to find the location:', status);
+        }
+    }
+
+    function displayMarker(place) {
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(place.y, place.x)
+        });
+
+        kakao.maps.event.addListener(marker, 'click', function() {
+            var infowindow = new kakao.maps.InfoWindow({
+                content: '<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>'
+            });
+            infowindow.open(map, marker);
+        });
+    }
 
    // === 전체 datepicker 옵션 일괄 설정하기 ===  
-   //     한번의 설정으로 $("input#fromDate"), $('input#toDate')의 옵션을 모두 설정할 수 있다.
    $(function() {
-       //모든 datepicker에 대한 공통 옵션 설정
        $.datepicker.setDefaults({
             dateFormat: 'yy-mm-dd' //Input Display Format 변경
            ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
            ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
            ,changeYear: true //콤보박스에서 년 선택 가능
            ,changeMonth: true //콤보박스에서 월 선택 가능                
-        // ,showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
-        // ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-        // ,buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-        // ,buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
            ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
            ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
            ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
            ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
            ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-        // ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-        // ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
        });
-   
     });
-   
+
    ///////////////////////////////////////////////////////////////////////
-   //=== jQuery UI 의 datepicker === //
    $('input#datetimepicker1').datetimepicker({
         dateFormat: 'yy-mm-dd'  //Input Display Format 변경
        ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
        ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
        ,changeYear: true        //콤보박스에서 년 선택 가능
        ,changeMonth: true       //콤보박스에서 월 선택 가능                
-   //  ,showOn: "both"          //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
-   //  ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-   //  ,buttonImageOnly: true   //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-   //  ,buttonText: "선택"       //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
        ,yearSuffix: "년"         //달력의 년도 부분 뒤에 붙는 텍스트
        ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
        ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
        ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
        ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-   //  ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-   //  ,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
    });
    
-   
-   //=== jQuery UI 의 datepicker === //
    $('input#datetimepicker2').datetimepicker({
         dateFormat: 'yy-mm-dd'  //Input Display Format 변경
        ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
        ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
        ,changeYear: true        //콤보박스에서 년 선택 가능
        ,changeMonth: true       //콤보박스에서 월 선택 가능                
-   //  ,showOn: "both"          //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
-   //  ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-   //  ,buttonImageOnly: true   //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-   //  ,buttonText: "선택"       //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
        ,yearSuffix: "년"         //달력의 년도 부분 뒤에 붙는 텍스트
        ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
        ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
        ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
        ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-   //  ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-   //  ,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
    });
 
    ///////////////////////////////////////////////////////////////////////
@@ -234,7 +239,6 @@ $("button#arrive_zipcodeSearch").click(function(){
        }
    });
 	
-///////////////////////////////////////////////////////
 });//end of $(document).ready(function(){})---------------------------------------
 
 //Function Declaration
@@ -244,10 +248,8 @@ function goRegister() {
 	// *** 필수입력사항에 모두 입력이 되었는지 검사하기 시작 *** //
 	let b_requiredInfo = true;
 	
-	var datetimepicker1 =  document.getElementById('datetimepicker1').value;		//7.17
-	var datetimepicker2 =  document.getElementById('datetimepicker2').value;		//7.18
-	//	alert("~~~확인용 : "+datetimepicker1);
-	//	alert("~~~확인용 : "+datetimepicker2);
+	var datetimepicker1 =  document.getElementById('datetimepicker1').value;
+	var datetimepicker2 =  document.getElementById('datetimepicker2').value;
 	
 	// 기간 제약조건(시작일자가 끝나는 일자보다 이전이면 안된다.)
 	if(datetimepicker1 > datetimepicker2){
@@ -375,6 +377,12 @@ function cancel(){
                <span class="error compulsory">필수입력</span>
             </td>   
          </tr>
+         <tr>
+             <td class="prodInputName">닉네임&nbsp;</td>
+             <td style="border-top: hidden; border-bottom: hidden;">
+            	<input type="text" name="email" style="padding: 5px;" size="25" value="${sessionScope.loginuser.nickname}" readonly />
+             </td>
+          </tr>
           <tr>
              <td class="prodInputName">이메일&nbsp;</td>
              <td style="border-top: hidden; border-bottom: hidden;">
@@ -393,30 +401,26 @@ function cancel(){
             <td width="25%" class="prodInputName">출발지</td>
             <td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;">
                <input type="text" name="departure_name" id="departure_name" size="40" maxlength="40" style="padding: 5px;" placeholder="출발지 이름" />&nbsp;&nbsp;
-               <span class="hint">ex)여의도역 1번출구, 사옥A건물 지하2층 입구</span><br>
-               <input type="text" name="postcode" id="departure_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="우편번호" readonly/>&nbsp;&nbsp;
-                    <%-- 우편번호 찾기 --%>
-                    <button type="button" style="background-color: white; padding: 5px;" id="departure_zipcodeSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <span class="error">우편번호 형식에 맞지 않습니다.</span><br>
-               <input type="text" name="address" id="departure_address" size="40" maxlength="200" style="padding: 5px;" placeholder="주소" readonly/><br>
-                    <input type="text" name="detailaddress" id="departure_detailAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="상세주소(선택)" />&nbsp;
-                    <input type="text" name="extraaddress" id="departure_extraAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="참고항목" value="" readonly/>                            
-                    <span class="error">주소를 입력하세요.</span><span class="error compulsory">필수입력</span>
+               <button type="button" style="background-color: white; padding: 5px;" id="arrive_zipcodeSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+                   <!-- The Modal start -->
+				    <div id="mapModal" class="modal">
+				        <!-- Modal content -->
+				        <div class="modal-content">
+				            <span class="close">&times;</span>
+				            <input type="text" id="buildingName" placeholder="Enter building name">
+				            <button id="searchButton">Search</button>
+				            <div id="map"></div>
+				            <ul id="results"></ul>
+				        </div>
+				    </div>
+				    <!-- The Modal end -->
             </td>
          </tr>
          <tr>
             <td width="25%" class="prodInputName">도착지</td>
             <td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;">
                <input type="text" name="postcode" id="arrive_name" size="40" maxlength="40" style="padding: 5px;" placeholder="도착지 이름"/>&nbsp;&nbsp;
-               <span class="hint">ex)여의도역 1번출구, 사옥 A건물 B2층 주차장</span><br>
-               <input type="text" name="postcode" id="arrive_postcode" size="6" maxlength="5" style="padding: 5px;" placeholder="우편번호" readonly/>&nbsp;&nbsp;
-                    <%-- 우편번호 찾기 --%>
-                    <button type="button" style="background-color: white; padding: 5px;" id="arrive_zipcodeSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <span class="error">우편번호 형식에 맞지 않습니다.</span><br>
-               <input type="text" name="address" id="arrive_address" size="40" maxlength="200" style="padding: 5px;" placeholder="주소" readonly/><br>
-                    <input type="text" name="detailaddress" id="arrive_detailAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="상세주소(선택)" />&nbsp;
-                    <input type="text" name="extraaddress" id="arrive_extraAddress" size="40" maxlength="200" style="padding: 5px;" placeholder="참고항목" value="" readonly/>                            
-                    <span class="error">주소를 입력하세요.</span><span class="error compulsory">필수입력</span>
+               <button type="button" style="background-color: white; padding: 5px;" id="arrive_zipcodeSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
             </td>
          </tr>
          <tr>

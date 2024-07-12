@@ -44,6 +44,9 @@
   	function goRegister(){
   		location.href=`<%= ctxPath%>/carRegister.kedai`;
   	}
+  	function goApply(){
+  		location.href=`<%= ctxPath%>/carApply_detail.kedai`;
+  	}
 </script>
     
 <div style="display: flex; width: 100%;">
@@ -72,7 +75,7 @@
           		<tr>
              		<th style="width: 70px;  text-align: center;">no</th>
             		<th style="width: 360px; text-align: center;">출발지 -> 도착지</th>
-            		<th style="width: 70px;  text-align: center;">사원명</th>
+            		<th style="width: 70px;  text-align: center;">차주 닉네임</th>
             		<th style="width: 150px; text-align: center;">셰어링 날짜</th>
             		<th style="width: 70px;  text-align: center;">신청가능여부</th>
             		<th style="width: 70px;  text-align: center;">조회수</th>
@@ -107,5 +110,6 @@
 		    </nav>
 	    </div>
 		<button class='btn btn-secondary btn-sm btnUpdateComment' onclick="goRegister()">등록하기</button>
+		<button class='btn btn-secondary btn-sm btnUpdateComment' onclick="goApply()">신청하기</button>
 	</div>
 </div>

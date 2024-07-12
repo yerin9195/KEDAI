@@ -80,7 +80,7 @@
 			
 				<span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp;<fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###" /> POINT
 				<br><br>
-				[&nbsp;<a href="<%= ctxPath%>/member/memberEdit.kedai">마이페이지</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;
+				[&nbsp;<a href="<%= ctxPath%>/member/memberMenu.kedai">마이페이지</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;
                	[&nbsp;<a href="javascript:goCoinPurchaseTypeChoice('${(sessionScope.loginuser).empid}','<%= ctxPath%>')">포인트충전</a>&nbsp;]
 			</div>
 		</div>
