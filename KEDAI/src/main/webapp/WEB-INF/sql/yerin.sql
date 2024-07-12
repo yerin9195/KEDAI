@@ -488,11 +488,44 @@ where table_name = 'TBL_BOARD';
 
 -----------------------------------------------------------------------
 
-select nvl(max(groupno), 0)
-from tbl_board
+desc tbl_board;
+
+SELECT board_seq, fk_category_code, category_name, fk_empid, name, subject, registerday
+     , groupno, fk_seq, depthno, filename
+FROM
+(
+    SELECT rownum AS rno
+         , board_seq, fk_category_code, category_name, fk_empid, name, subject, registerday
+         , groupno, fk_seq, depthno, filename
+    FROM
+    (
+        select board_seq, fk_category_code, C.category_name, fk_empid, name, subject
+             , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday
+             , groupno, fk_seq, depthno
+             , filename
+        from tbl_board B
+        LEFT JOIN tbl_category C ON B.fk_category_code = C.category_code
+        where status = 1
+        start with fk_seq = 0
+        connect by prior board_seq = fk_seq
+        order siblings by groupno desc, board_seq asc
+    ) V
+) T
+WHERE RNO between 1 and 10;
+
+-----------------------------------------------------------------------
 
 select *
-from tbl_employees
-where fk_dept_code is null;
+from tbl_board;
+
+select subject
+from tbl_board
+where status = 1 and lower(subject) like '%' ||lower('kedai')|| '%'
+order by registerday desc;
+
+select distinct name
+from tbl_board
+where status = 1 and lower(name) like '%' ||lower('관리자')|| '%'
+order by name asc;
 
 

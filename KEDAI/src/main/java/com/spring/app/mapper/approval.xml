@@ -9,5 +9,94 @@
 		from tbl_dept
 		where dept_code = to_number(#{dept_code})
 	</select>
+	
+	<!--  result가 3개인 이유 : 컬럼이 3개이기 때문!! -->
+		<!-- property는 key값을 의미함. 보통 column과 동일하게 쓰지만 이번에는 연습이니까 대문자로 표기해본다. -->
+		<!-- javaType 은 map의 value타입을 의미한다. -->
+	<resultMap type="HashMap" id="allEmpListMap">
+		<result property="empid" column="empid" javaType="String" ></result>
+		<result property="name" column="name" javaType="String" ></result>
+		<result property="fk_dept_code" column="fk_dept_code" javaType="String" ></result>
+		<result property="job_code" column="job_code" javaType="String" ></result>
+		<result property="job_name" column="job_name" javaType="String" ></result>
+		<result property="dept_name" column="dept_name" javaType="String" ></result>
+	<!--	<result property="cnt_bydept" column="cnt_bydept" javaType="String" ></result> -->
+	</resultMap>
+	
+	<!-- 결재라인 선택을 위해 모든 직원 리스트 불러오기 -->
+	<select id="allEmployeeList" resultMap="allEmpListMap">  <!-- resultMap의 이름을 위에 resultMap태그의 id로 넣어줘야 매핑이 된다 -->
+		SELECT E.empid, E.name, E.fk_dept_code, J.job_code, J.job_name, D.dept_name
+		FROM  tbl_employees E
+		JOIN tbl_job J
+		ON  E.fk_job_code = J.job_code
+		LEFT JOIN tbl_dept D
+		ON E.fk_dept_code = D.dept_code
+		LEFT JOIN (
+		    SELECT fk_dept_code, COUNT(empid) AS cnt_bydept
+		    FROM tbl_employees
+		    GROUP BY fk_dept_code
+		) C
+		ON E.fk_dept_code = C.fk_dept_code
+		where empid != #{login_empid}
+		ORDER BY D.dept_name DESC, J.job_code ASC
+	</select>
+	
+	<!-- 
+	<resultMap type="HashMap" id="">
+	
+	</resultMap>
+	
+	<select id="numByDept" resultMap="numDept" >
+		SELECT D.dept_name, COUNT(E.empid) AS employee_count
+		FROM tbl_employees E
+		LEFT JOIN tbl_dept D
+		ON E.fk_dept_code = D.dept_code
+		GROUP BY E.fk_dept_code, D.dept_name
+		ORDER BY D.dept_name DESC
+	</select>
+ -->
+ 
 
+ 	<select id="allDeptList" resultType="com.spring.app.domain.DeptVO">
+ 		SELECT CASE WHEN D.dept_code IS NULL THEN ' ' ELSE TO_CHAR(D.dept_code) END AS dept_code,
+       			nvl(D.dept_name, ' ') as dept_name
+		FROM tbl_dept D
+		RIGHT JOIN tbl_employees E ON E.fk_dept_code = D.dept_code
+		GROUP BY D.dept_code, D.dept_name
+		ORDER BY D.dept_code desc
+ 	</select>
+ 
+ 
+ 	<resultMap type="HashMap" id="deptEmpMap">
+ 		<result property="empid" column="empid" javaType="String" ></result>
+		<result property="name" column="name" javaType="String" ></result>
+		<result property="fk_dept_code" column="fk_dept_code" javaType="String" ></result>
+		<result property="dept_name" column="dept_name" javaType="String" ></result>
+		<result property="job_code" column="job_code" javaType="String" ></result>
+		<result property="job_name" column="job_name" javaType="String" ></result>
+ 	</resultMap>
+ 
+ 	<select id="deptEmpList" resultMap="deptEmpMap">
+ 		select E.empid, E.name, J.job_code, J.job_name, CASE WHEN D.dept_code IS NULL THEN ' ' ELSE TO_CHAR(D.dept_code) END AS fk_dept_code,
+       				nvl(D.dept_name, ' ') as dept_name
+		FROM  tbl_employees E
+		JOIN tbl_job J
+		ON  E.fk_job_code = J.job_code
+		LEFT JOIN tbl_dept D
+		ON E.fk_dept_code = D.dept_code
+		where empid != #{loginuser_id} 
+		<choose>
+        	<when test='dept_code == " "'>
+	   			and fk_dept_code is null	
+    		</when>
+ 			<otherwise>
+ 				and fk_dept_code = to_number(#{dept_code})
+ 			</otherwise>
+ 		</choose>
+		ORDER BY D.dept_code asc, J.job_code ASC
+	</select>
+		
+ 	
+ 
+ 	
 </mapper>

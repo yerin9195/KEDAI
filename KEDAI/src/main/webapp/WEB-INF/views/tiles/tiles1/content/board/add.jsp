@@ -101,7 +101,7 @@
 </script>
 
 <%-- content start --%>
-<div style="border: 1px solid red; padding: 1% 3% 1% 0;">
+<div style="border: 0px solid red; padding: 1% 3% 1% 0;">
 	<div>
 		<%-- === 원글쓰기인 경우 === --%>
 	   	<c:if test='${requestScope.fk_seq eq ""}'>

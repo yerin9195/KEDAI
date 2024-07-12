@@ -35,14 +35,17 @@ public class MemberVO {
 	private int pwdchangegap; // 마지막으로 암호를 변경한지가 몇개월인지 알려주는 개월수
 	private int lastlogingap; // 마지막으로 로그인한지가 몇개월인지 알려주는 개월수
 	
+	private DeptVO dvo;
+	private JobVO  jvo;
+	
 	// alert 용
 	private boolean requirePwdChange = false; // 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지났으면 true
 											  // 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지나지 않았으면 false
 
-	private DeptVO dvo;
-	private JobVO  jvo;
+	// form 태그에서 type="file" 인 파일을 받아서 저장되는 필드
+	private MultipartFile attach; 
 	
-	private MultipartFile attach; // form 태그에서 type="file" 인 파일을 받아서 저장되는 필드
+	///////////////////////////////////////////////////////////////	
 	
 	// getters & setters
 	public String getEmpid() {
@@ -269,14 +272,6 @@ public class MemberVO {
 		this.lastlogingap = lastlogingap;
 	}
 
-	public boolean isRequirePwdChange() {
-		return requirePwdChange;
-	}
-
-	public void setRequirePwdChange(boolean requirePwdChange) {
-		this.requirePwdChange = requirePwdChange;
-	}
-
 	public DeptVO getDvo() {
 		return dvo;
 	}
@@ -291,6 +286,14 @@ public class MemberVO {
 
 	public void setJvo(JobVO jvo) {
 		this.jvo = jvo;
+	}
+	
+	public boolean isRequirePwdChange() {
+		return requirePwdChange;
+	}
+
+	public void setRequirePwdChange(boolean requirePwdChange) {
+		this.requirePwdChange = requirePwdChange;
 	}
 
 	public MultipartFile getAttach() {
