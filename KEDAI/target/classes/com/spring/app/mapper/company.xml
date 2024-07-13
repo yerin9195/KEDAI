@@ -49,6 +49,31 @@
 		</choose>
 	</insert>
 	
+	<!-- 거래처정보 수정하기 -->
+	<update id="othercomModify_submit" parameterType="PartnerVO">
+		update tbl_business_part
+		set
+			partner_type = #{partner_type}, 
+			partner_name = #{partner_name}, 
+			partner_url = #{partner_url}, 
+			partner_postcode = #{partner_postcode}, 
+			partner_address = #{partner_address},
+			partner_detailaddress = #{partner_detailaddress}, 
+			partner_extraaddress = #{partner_extraaddress}, 
+		<choose>
+			<when test="imgfilename != null"><!-- 값이 널인 컬럼을 아예 지우고 값도 날리니까 가능해짐  -->
+			imgfilename = #{imgfilename}, 
+			originalfilename = #{originalfilename}, 
+			</when>
+		</choose>
+			part_emp_name = #{part_emp_name}, 
+			part_emp_tel = #{part_emp_tel}, 
+			part_emp_email = #{part_emp_email}, 
+			part_emp_dept = #{part_emp_dept}, 
+			part_emp_rank = #{part_emp_rank}
+		where partner_no = #{partner_no}
+	</update>
+	
 	<!-- 거래처정보 가져오기 -->
 	<select id="otherCom_list_select" resultType="PartnerVO">
 		select partner_no, partner_type, partner_name, partner_url, partner_postcode, partner_address, partner_detailaddress, partner_extraaddress,

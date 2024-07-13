@@ -86,8 +86,33 @@ public class CompanyController {
 	
 	// 거래처 정보 등록하기 넘겨주기 
 	@PostMapping("othercom_register.kedai")
-	public ModelAndView othercomRegister_submit(ModelAndView mav, PartnerVO partvo, MultipartHttpServletRequest mrequest) {
+	public ModelAndView othercomRegister_submit(PartnerVO partvo, @RequestParam("is_modify") Boolean isModify, ModelAndView mav, MultipartHttpServletRequest mrequest) {
 		
+		// 이미 파 업로드
+		imageFileUpload(partvo, mrequest);
+		
+		try {
+			int n = (isModify != true) ? 
+					service.othercomRegister_submit(partvo) // 등록 때  
+					: service.othercomModify_submit(partvo); // 수정  
+			if(n == 1) {
+				setModelView(mav, "거래처가 정상적으로 " + ((isModify != true)? "등록" : "수정") + "되었습니다!", 
+						mrequest.getContextPath()+"/othercom_list.kedai");
+			}
+		} catch (Exception e) {
+			setModelView(mav, "거래처 " + ((isModify != true)? "등록" : "수정") + "을 실패하였습니다.", "javascript:history.back()");
+		}
+		
+		return mav;
+	}
+
+	private void setModelView(ModelAndView mav, String message, String loc) {
+		mav.addObject("message",message);
+		mav.addObject("loc", loc);
+		mav.setViewName("msg");
+	}
+
+	private void imageFileUpload(PartnerVO partvo, MultipartHttpServletRequest mrequest) {
 		MultipartFile attach = partvo.getAttach();
 		
 		String imgfilename = "";
@@ -114,9 +139,9 @@ public class CompanyController {
 				bytes = attach.getBytes();	// 첨부파일의 내용물을 읽어오는 것
 				
 				originalFilename = attach.getOriginalFilename();		// 첨부파일명의 파일명
-				System.out.println("originalFilename"+originalFilename);
+				/* System.out.println("originalFilename"+originalFilename); */
 				imgfilename = fileManager.doFileUpload(bytes, originalFilename, path);
-				System.out.println("imgfilename" +imgfilename);
+				/* System.out.println("imgfilename" +imgfilename); */
 				partvo.setImgfilename(imgfilename);
 				partvo.setOriginalfilename(originalFilename);
 			} catch (Exception e) {
@@ -125,31 +150,6 @@ public class CompanyController {
  			
 			
 		} // end of if(attach != null) {}--------------------------------------------------------------
-		
-		try {
-			int n = service.othercomRegister_submit(partvo);
-		
-			if(n == 1) {
-				String message = "거래처가 정상적으로 등록되었습니다!";
-				String loc = mrequest.getContextPath()+"/othercom_list.kedai";
-				
-				mav.addObject("message",message);
-				mav.addObject("loc", loc);
-				System.out.println("n"+ n);
-				mav.setViewName("msg");
-			}
-			
-		} catch (Exception e) {
-			String message = "거래처 등록을 실패하였습니다. \n 다시 등록하여야 합니다.";
-			String loc = "javascript:history.back()";
-			
-			mav.addObject("message", message);
-			mav.addObject("loc", loc);
-			
-			mav.setViewName("msg");
-		}
-		return mav;
-		
 	}
 	
 	
@@ -258,8 +258,6 @@ public class CompanyController {
 		
 		
 	} // end of public String partnerPopupClick(HttpServletRequest request) {
-	
-	
 	
 	
 	// 거래처 정보 수정하기

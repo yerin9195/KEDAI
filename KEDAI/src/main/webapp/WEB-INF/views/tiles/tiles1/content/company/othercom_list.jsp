@@ -171,7 +171,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 .popupWrap .popup .popupBody .forAlign {
   display: flex;
   justify-content: center;
-  align-items: center;
+  
 }
 .popupWrap .popup .popupBody .popupImg {
   width: 180px;
@@ -307,8 +307,7 @@ $(function(){
 	          $("#pop_partnerName").html(json.partner_name);
 	          $("#pop_partnerNo").html(json.partner_no);
 	          $("#pop_partnerImg").attr("src", "./resources/files/" + json.imgfilename);
-	          $("#pop_partnerAddress").html(json.partner_address);
-	          $("#pop_partnerDetailaddress").html(json.partner_detailaddress);
+	          $("#pop_partnerAddress").html(json.partner_address + " " + json.partner_detailaddress);
 	          $("#pop_partnerUrl").html(json.partner_url);
 	          $("#pop_partEmpTel").html(json.part_emp_tel);
 	          $("#pop_partEmpEmail").html(json.part_emp_email);

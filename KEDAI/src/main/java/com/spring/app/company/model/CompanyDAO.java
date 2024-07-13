@@ -12,6 +12,9 @@ public interface CompanyDAO {
 	// 거래처 정보 등록하기
 	int othercomRegister_submit(PartnerVO partvo);
 	
+	// 거래처 정보 수정하기
+	int othercomModify_submit(PartnerVO partvo);
+	
 	// 거래처 정보 가져오기
 	List<PartnerVO> otherCom_list_select();
 

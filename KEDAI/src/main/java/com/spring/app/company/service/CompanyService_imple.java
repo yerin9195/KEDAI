@@ -30,6 +30,13 @@ public class CompanyService_imple implements CompanyService{
 		return n;
 	}
 
+	// 거래처 정보 수정하기
+	@Override
+	public int othercomModify_submit(PartnerVO partvo) {
+		int n = dao.othercomModify_submit(partvo);
+		return n;
+	}
+
 	// 거래처 정보 가져오기
 	@Override
 	public List<PartnerVO> otherCom_list_select() {

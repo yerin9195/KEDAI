@@ -28,8 +28,14 @@ public class CompanyDAO_imple implements CompanyDAO{
 	// 거래처 정보 등록하기
 	@Override
 	public int othercomRegister_submit(PartnerVO partvo) {
-		
 		int n = sqlsession.insert("company.othercomRegister_submit",partvo);
+		return n;
+	}
+	
+	// 거래처 정보 등록하기
+	@Override
+	public int othercomModify_submit(PartnerVO partvo) {
+		int n = sqlsession.update("company.othercomModify_submit",partvo);
 		return n;
 	}
 	
