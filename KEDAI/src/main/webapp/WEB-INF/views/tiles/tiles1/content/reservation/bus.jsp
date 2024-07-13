@@ -751,8 +751,8 @@ $(document).ready(function(){
     						           "    <span>"+json[0].station_name+"&nbsp;&nbsp;&nbsp;</span>"+  
     						           "  </div>"+
     						           "  <div class='desc'>"+ 
-    						           "    <span class='address'> "+ json[0].bus_no+ "</span><br>"+
-    						           "	<span class='address'> "+json[0].minutes_until_next_bus + "분뒤에도착</span>"	
+    						           "    <span class='address' style='font-size: 15pt;'> "+ json[0].bus_no+ "</span>:"+
+    						           "	<span class='address' style='font-size: 15pt;'> <span style='color:red; font-weight:bold; font-size: 15pt;'>"+json[0].minutes_until_next_bus + "</span>분뒤에도착</span>"	
     						           "  </div>"+ 
     						           "</div>";	
     						           
