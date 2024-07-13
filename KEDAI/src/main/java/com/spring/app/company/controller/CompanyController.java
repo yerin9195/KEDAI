@@ -261,14 +261,8 @@ public class CompanyController {
 	
 	
 	
-	// 거래처 삭제하는 페이지 요청
-	@GetMapping (value="partnercom_del.action")
-	public ModelAndView partnerCom_delete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav){
-		
-		// 삭제해야하는 거래처 사업자 등록번호 가져오기
-		String partner_no = request.getParameter()
-	}
 	
+	// 거래처 정보 수정하기
 	
 	
 	
