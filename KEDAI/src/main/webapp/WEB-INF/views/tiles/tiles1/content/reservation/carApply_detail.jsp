@@ -442,8 +442,7 @@ $(document).ready(function(){
 			 <input type="text" name="carNum" id="arrive" size="6" maxlength="20" class="requiredInfo" placeholder="경로에 많이 벗어날수록 거부 확률이 높아집니다." />	
 	     </div>
 		 <div class="mt-3">
-			 <h6>출발시간&nbsp;<span class="star">* <span style="font-size:8pt;">수기로 값을 입력하지 마세요</span></span>
-			 </h6>
+			 <h6>출발시간&nbsp;<span class="star">* <span style="font-size:8pt;">수기로 값을 입력하지 마세요</span></span></h6>
 			 <input type="text" name="carNum" id="startTime" size="6" maxlength="20" class="requiredInfo" placeholder="출발시간"/>	
 	     </div>      
        </div>

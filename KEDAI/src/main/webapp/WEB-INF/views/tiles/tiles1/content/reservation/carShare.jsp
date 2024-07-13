@@ -47,6 +47,10 @@
   	function goApply(){
   		location.href=`<%= ctxPath%>/carApply_detail.kedai`;
   	}
+  	function goTest(){
+  		location.href=`<%= ctxPath%>/test.kedai`;
+  	}
+  	
 </script>
     
 <div style="display: flex; width: 100%;">
@@ -111,5 +115,6 @@
 	    </div>
 		<button class='btn btn-secondary btn-sm btnUpdateComment' onclick="goRegister()">등록하기</button>
 		<button class='btn btn-secondary btn-sm btnUpdateComment' onclick="goApply()">신청하기</button>
+		<button class='btn btn-secondary btn-sm btnUpdateComment' onclick="goTest()">테스트</button>
 	</div>
 </div>
