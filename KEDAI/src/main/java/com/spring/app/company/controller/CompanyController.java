@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -260,6 +261,13 @@ public class CompanyController {
 	
 	
 	
+	// 거래처 삭제하는 페이지 요청
+	@GetMapping (value="partnercom_del.action")
+	public ModelAndView partnerCom_delete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav){
+		
+		// 삭제해야하는 거래처 사업자 등록번호 가져오기
+		String partner_no = request.getParameter()
+	}
 	
 	
 	

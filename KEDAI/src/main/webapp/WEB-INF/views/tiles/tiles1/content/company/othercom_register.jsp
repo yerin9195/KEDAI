@@ -451,6 +451,19 @@ div#register_com {
 		}
 	};
 	
+	function _onModify(){
+		let validateChk = false;
+		console.log("수정버튼 누름");
+		
+		// 유효성 검사 통과시 submit 호출
+		if(_validate()){
+			$("#partRegisterForm").submit();
+		}
+	}
+	
+	
+	
+	
 	function _validate() {
 		/* 거래처이름 유효성검사 시작 */
 		const partner_name = $("input#partner_name").val().trim();
@@ -877,8 +890,14 @@ div#register_com {
 		</div>
 		<div class="clientConfirm">
 			<input type="reset" id="resetButton" value="취소">
-			<input type="button" onclick="_onSubmit()" value="등록">
 			
+						
+			<c:if test="${!isModify}"><input type="button" onclick="_onSubmit()" value="등록"/></c:if>
+			<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+				<c:if test="${isModify}">
+					<input type="button" onclick="_onModify()" value="수정"/>
+				</c:if>
+			</c:if>
 		</div>
 	</form>
 	<!--//들고가야함  -->

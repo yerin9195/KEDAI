@@ -30,18 +30,27 @@ div#othercom_list{
 	align-items: center;
 }
 
-/* 여기서부터 시작 */
+/* 여기서부터 시작*/
 div#othercom_list .artWrap {
   display: flex;
   justify-content: space-around;
-  flex-wrap: wrap;
-  width: 80%;
-  padding-right:10%;
+  flex-wrap: wrap;  
   gap: 20px;
+  border: solid 1px orange;
+/*   margin: 2%; */
 }
 
+div#cover_all{
+  width: 80%;
+  border: solid 1px purple;
+  margin-left : 5%;
+
+}
+
+
 div#othercom_list .artWrap article {
-  width: calc(33.33% - 20px);
+	width: calc(33.33% - 20px);
+
   background-color: #fff;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
   padding-bottom: 20px;
@@ -217,21 +226,34 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 }
 
 .othercom-reg{
-	border-radius:3px;
-	width:50px;
-	height:400px;
 	background-color:#e68c0e;
-	color:#2C4459;
-	font-weight:700;
+	float:right;
+	font-size:17px;
+
+	
 }
 
 .othercom-reg:hover{
 	background-color:#2C4459;
 	color:#e68c0e;
 }
+ 
 .reg{
-	margin: 80px 0 50px 1200px;
+	border: 1px solid blue;
+	width:20%;
+	border-radius:3px;
+	color:#2C4459;
+	font-weight:700;
+	float:right;
+	
+	
 }
+
+.reg-search{
+	border:1px solid red;
+	margin : 20px 10px;
+}
+
 
 
 .editcom{
@@ -253,7 +275,13 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	margin: 0 auto;
 }
 
-
+.othercom_title{
+	font-size: 20px;
+	border: 1px solid blue;
+	font-weight: 700;
+	line-height: 40px;
+	margin-top: 3%;
+}
 
 </style>
 
@@ -280,6 +308,7 @@ $(function(){
 	          $("#pop_partnerNo").html(json.partner_no);
 	          $("#pop_partnerImg").attr("src", "./resources/files/" + json.imgfilename);
 	          $("#pop_partnerAddress").html(json.partner_address);
+	          $("#pop_partnerDetailaddress").html(json.partner_detailaddress);
 	          $("#pop_partnerUrl").html(json.partner_url);
 	          $("#pop_partEmpTel").html(json.part_emp_tel);
 	          $("#pop_partEmpEmail").html(json.part_emp_email);
@@ -333,16 +362,34 @@ $(function(){
 
 
 	
+	
+	
 </script>
 
 
-<div class="reg">
-    <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-         <a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처등록하기</a>
-    </c:if>    
+<div id="cover_all">
+<div class="othercom_title">
+		거래처 목록
 </div>
-
-<div id="othercom_list">
+<div class="reg-search">
+	
+    <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+        <div class="reg"><a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처등록하기</a></div>
+    </c:if> 
+	
+    <form name="employee_search_frm" style="display:flex;">
+		<select name ="searchType" style="margin-right:10px;">
+			<option value="">검색대상</option>
+			<option value="department">부서</option>
+			<option value="position">직위</option>
+			<option value="name">이름</option>
+		</select>
+		<input type="search" name="searchWord;" style="margin-right:10px"/>
+		<input type="button" name="searchWord;" onclick="goSearch()" value="검색"/>
+	</form>
+</div>  
+   
+<div id="othercom_list" class="othercom_list">
   <div class="artWrap">
     <c:forEach var="partvo" items="${requestScope.partnervoList}">
       <article partner_no="${partvo.partner_no}">
@@ -416,8 +463,8 @@ $(function(){
           <li>
             <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
             <div class="listTxt">
-              <span id="pop_partEmpName">홍길동</span>
-              <span id="pop_partEmpRank">직급</span>
+              <span id="pop_partEmpName"></span>
+              <span id="pop_partEmpRank"></span>
             </div>
           </li>
           <li>
@@ -433,9 +480,10 @@ $(function(){
       <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
         <div class="buttonContainer" style="width: 200px; margin: 1% auto; border:solid 0px blue;">
           <button onclick="editPopup()" class="editcom" style="border: solid 0px red; float: left; margin-right: 10px;">수정하기</button>
-          <button class="delcom" style="border: solid 0px red; float: left;">삭제하기</button>
+          <button onclick="delPopup()" class="delcom" style="border: solid 0px red; float: left;">삭제하기</button>
         </div>
       </c:if>
     </div>
   </div>
+</div>
 </div>
