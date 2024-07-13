@@ -108,6 +108,7 @@ $(document).ready(function(){
     var btn = document.getElementById("arrive_zipcodeSearch");
     var span = document.getElementsByClassName("close")[0];
     var searchButton = document.getElementById('searchButton');
+    var selectedPlace = null;
 
     // 모달 display 속성 변경 추적
     Object.defineProperty(modal.style, 'display', {
@@ -245,7 +246,7 @@ $(document).ready(function(){
         console.log(place);
         var place_name = place.place_name;
         var road_address_name = place.road_address_name;
-        $("input[name='depature_name']").val(place_name);		
+        $("input[name='departure_name']").val(place_name);		
 		$("input[name='departure_address']").val(road_address_name);
 
     }
