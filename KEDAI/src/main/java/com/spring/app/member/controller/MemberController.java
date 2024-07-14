@@ -14,9 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -352,17 +350,6 @@ public class MemberController {
 		
 		return mav;
 	}
-	
-
-	// 마이페이지 클릭시 이동
-	@GetMapping("/member/memberMenu.kedai")
-	public ModelAndView memberMenu(ModelAndView mav) {
-		
-		mav.setViewName("tiles1/member/memberMenu.tiles");
-		
-		return mav;
-	}
-	
 	
 	// 나의 정보 수정하기 페이지 이동
 	@GetMapping("/member/memberEdit.kedai")
