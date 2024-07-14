@@ -17,11 +17,18 @@ public interface CompanyDAO {
 	
 	// 거래처 정보 가져오기
 	List<PartnerVO> otherCom_list_select();
+	
+	PartnerVO otherCom_get_select(String partner_no);
 
 	// 거래처 상세보기 어떤거 선택했는지 알아오기
 	List<PartnerVO> partnerPopupClick(String partner_name);
+	
+	// 거래처 삭제하기(삭제할 거래처 사업자 번호 가져오기)
+	int delPartnerNo(String partner_no);
 
-	PartnerVO otherCom_get_select(String partner_no);
+	
+
+	
 	
 	
 	

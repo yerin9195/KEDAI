@@ -62,6 +62,14 @@ public class CompanyDAO_imple implements CompanyDAO{
 		return partnervoList;
 	}
 
+	// 삭제할 거래처 사업자 번호 알아오기
+	@Override
+	public int delPartnerNo(String partner_no) {
+		
+		int n = sqlsession.delete("company.delPartnerNo",partner_no);
+		return n;
+	}
+
 
 	
 	

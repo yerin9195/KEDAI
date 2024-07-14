@@ -59,6 +59,15 @@ public class CompanyService_imple implements CompanyService{
 		List<PartnerVO> partnervoList = dao.partnerPopupClick(partvo.getPartner_name());
 		return partnervoList;
 	}
+	
+	// 거래처 삭제하기 
+	@Override
+	public int delPartnerNo(String partner_no) {
+		
+		int n = dao.delPartnerNo(partner_no);
+		
+		return n;
+	}
 
 
 	

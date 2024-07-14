@@ -24,6 +24,9 @@ public interface CompanyService {
 	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 (거래처 사업자번호로 가져오기)
 	PartnerVO otherCom_get_select(String partner_no);
 
+	// 거래처 삭제하기
+	int delPartnerNo(String partner_no);
+
 
 	
 	

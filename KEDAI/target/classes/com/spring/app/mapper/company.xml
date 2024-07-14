@@ -89,7 +89,10 @@
         where partner_no = #{partner_no}
 	</select>
 	
-	
+	<delete id="delPartnerNo" parameterType="String">
+		delete from tbl_business_part
+		where partner_no = #{partner_no}
+	</delete>
 	
 	
 	

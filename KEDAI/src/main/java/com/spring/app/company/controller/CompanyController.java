@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +38,8 @@ import com.spring.app.common.AES256;
 import com.spring.app.common.FileManager;
 import com.spring.app.company.service.CompanyService;
 import com.spring.app.domain.PartnerVO;
+
+import jdk.nashorn.api.scripting.JSObject;
 
 @Controller
 public class CompanyController {
@@ -260,8 +264,29 @@ public class CompanyController {
 	} // end of public String partnerPopupClick(HttpServletRequest request) {
 	
 	
-	// 거래처 정보 수정하기
+	// 거래처 삭제하기 // 
+	@ResponseBody
+	@PostMapping("/delPartner_com.action")
+	public String delPartner_com(HttpServletRequest request) throws Throwable{
+		
+		String partner_no = request.getParameter("partner_no");
+		
+		int n = service.delPartnerNo(partner_no);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("n", n);
+		
+		
+		
+		
+		return jsObj.toString();
+		
 	
+		
+	}
+	
+		
+		
 	
 	
 	

@@ -287,7 +287,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 
 <script type="text/javascript">
 
-$(function(){
+	$(function(){
 	  $('.cardHead button').click(function(){
 		  var partner_no = $(this).closest('article').attr('partner_no');
 		  console.log(partner_no)
@@ -302,12 +302,11 @@ $(function(){
  */	      dataType: "json",
 	      success: function(json){
 	        // 서버에서 거래처이름으로 정보 얻어오기
-	        console.log("??", json.partner_name)
 	        if(json.partner_name != null){
 	          $("#pop_partnerName").html(json.partner_name);
 	          $("#pop_partnerNo").html(json.partner_no);
 	          $("#pop_partnerImg").attr("src", "./resources/files/" + json.imgfilename);
-	          $("#pop_partnerAddress").html(json.partner_address + " " + json.partner_detailaddress);
+	          $("#pop_partnerAddress").html(json.partner_address + " " + json.partner_detailaddress + " " + json.partner_extraaddress);
 	          $("#pop_partnerUrl").html(json.partner_url);
 	          $("#pop_partEmpTel").html(json.part_emp_tel);
 	          $("#pop_partEmpEmail").html(json.part_emp_email);
@@ -360,7 +359,36 @@ $(function(){
 	}
 
 
+	// 거래처 삭제하기
+	function delPopup(partner_no){
+		
+		var bool = confirm("정말 거래처를 삭제하시겠습니까?");
+		
+		if(bool){
+			$.ajax({
+				url: "<%=ctxPath%>/delPartner_com.action",
+				type: "post",
+				data:{"partner_no" :partner_no},
+				/* console.log("partner_no"), */
+				success: function(json){
+					if(json.n == 1){
+						alert("거래처를 삭제하였습니다.");
+					}
+					else{
+						alert("거래처를 삭제하지 못했습니다.");
+					}
+					
+					location.href="<%=ctxPath%>/kedai/othercom_list.kedai";
+				},
+				error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		        }
+			});
+		}
 	
+	}// end of function delPartnerCom(partner_no){}
+
+
 	
 	
 </script>
