@@ -28,9 +28,9 @@
       	cursor: pointer;
    	}
 	.search_btn {
-		width: 5%;
+		width: 60px;
 		height: 30px;
-		font-size: 14px;
+		font-size: 16px;
 		border: none;
 		background: #2c4459;
 		color: #fff;
@@ -159,11 +159,27 @@
 </script>
 
 <%-- content start --%>
-<div style="border: 1px solid red; padding: 1% 3% 3% 0;">
+<div style="border: 0px solid red; padding: 1% 3% 3% 0;">
 	<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;게시판</h3>
 
-	<section style="width: 95%;">
+	<section>
 		<div class="d-md-flex justify-content-md-end">
+			<form name="searchFrm" style="width: 37%; position: relative;">
+		   		<select name="searchType" style="height: 30px;">
+		      		<option value="subject">글제목</option>
+		      		<option value="content">글내용</option>
+		      		<option value="subject_content">글제목+글내용</option>
+		      		<option value="name">작성자</option>
+		   		</select>
+		   		
+		   		<input type="text" name="searchWord" size="40" width="500px" autocomplete="off" style="height: 30px;" /> 
+		   		<input type="text" style="display: none;"/> 
+		   		<button type="button" class="search_btn" onclick="goSearch()">검색</button>
+		   		
+		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 22.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
+				</div>
+			</form>
+			
 			<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
 				<a href="<%= ctxPath%>/board/add.kedai" class="btn add_btn">등록하기</a>
 			</c:if>
@@ -233,24 +249,8 @@
 			</tbody>
 		</table>
  	
-		<div align="center" style="border: solid 0px gray; width: 50%; margin: 3% auto;">
+		<div align="center" style="border: solid 0px gray; width: 50%; margin: 2% auto;">
 			${requestScope.pageBar}
-		</div>
-		
-		<form name="searchFrm">
-	   		<select name="searchType" style="height: 30px;">
-	      		<option value="subject">글제목</option>
-	      		<option value="content">글내용</option>
-	      		<option value="subject_content">글제목+글내용</option>
-	      		<option value="name">작성자</option>
-	   		</select>
-	   		
-	   		<input type="text" name="searchWord" size="40" width="500px" autocomplete="off" style="height: 30px;" /> 
-	   		<input type="text" style="display: none;"/> 
-	   		<button type="button" class="search_btn" onclick="goSearch()">검색</button>
-		</form>
-		
-		<div id="displayList" style="border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 8.9%; margin-top: 1px; margin-bottom: 30px; overflow: auto;">
 		</div>
 	</section>
 </div>

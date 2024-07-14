@@ -127,7 +127,7 @@
 			</div>
 
 			<div class="col-8">
-				<div style="word-break: break-all; border: 1px solid #2c4459; padding: 3%; height: 680px;">${requestScope.bvo.content}</div>
+				<div style="overflow: hidden; overflow-y: scroll; word-break: break-all; border: 1px solid #2c4459; padding: 3%; height: 680px;">${requestScope.bvo.content}</div>
 			</div>
 		</div>
 	</c:if>

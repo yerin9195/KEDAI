@@ -1,6 +1,7 @@
 package com.spring.app.board.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -242,7 +243,7 @@ public class BoardController {
 				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) { // "GET" 방식이므로 0 또는 음수나 실제 데이터베이스에 존재하는 페이지수 보다 더 큰값을 입력하여 장난친 경우
 					currentShowPageNo = 1;
 				}
-			} catch (Exception e) { // "GET" 방식이므로 숫자가 아닌 문자를 입력하여 장난친 경우
+			} catch (NumberFormatException e) { // "GET" 방식이므로 숫자가 아닌 문자를 입력하여 장난친 경우
 				currentShowPageNo = 1;
 			}
 		}
@@ -276,12 +277,12 @@ public class BoardController {
         // 세번째 블럭의 페이지번호 시작값(pageNo)은  11 => ((11-1)/5)*5+1 => 11
         
         String pageBar = "<ul style='list-style: none;'>";
-        String url = "board/list.kedai";
+        String url = "list.kedai";
         
         // [맨처음][이전] 만들기 
         if(pageNo != 1) { // 맨처음 페이지일 때는 보이지 않도록 한다.
-        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[처음]</a></li>";
-        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1' style='color: #2c4459;'>[처음]</a></li>";
+        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"' style='color: #2c4459;'>[이전]</a></li>";
         }
         
         while(!(loop > blockSize || pageNo > totalPage)) {
@@ -290,7 +291,7 @@ public class BoardController {
         		pageBar += "<li style='display: inline-block; width: 30px; height: 30px; align-content: center; color: #fff; font-size: 12pt; border-radius: 50%; background: #e68c0e'>"+pageNo+"</li>";
         	}
         	else {
-        		pageBar += "<li style='display: inline-block; width: 30px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+        		pageBar += "<li style='display: inline-block; width: 30px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"' style='color: #2c4459;'>"+pageNo+"</a></li>";
         	}
         	
         	loop++;
@@ -299,8 +300,8 @@ public class BoardController {
         
         // [다음][마지막] 만들기
         if(pageNo <= totalPage) { // 맨마지막 페이지일 때는 보이지 않도록 한다.
-        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
-        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
+        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"' style='color: #2c4459;'>[다음]</a></li>";
+        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"' style='color: #2c4459;'>[마지막]</a></li>";
         }
         
         pageBar += "</ul>";
@@ -672,9 +673,9 @@ public class BoardController {
 		
 		// 파일첨부가 된 글이라면 글 삭제 시 먼저 첨부파일을 삭제해주어야 한다.
 		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("board_seq", board_seq);
 		paraMap.put("searchType", "");
 		paraMap.put("searchWord", "");
-		paraMap.put("board_seq", board_seq);
 		
 		BoardVO bvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
 		
@@ -702,6 +703,66 @@ public class BoardController {
 		}
 		
 		return mav;
+	}
+	
+	// 첨부파일 다운로드 받기
+	@GetMapping("/board/download.kedai")
+	public void requiredLogin_download(HttpServletRequest request, HttpServletResponse response) {
+	
+		// 첨부파일이 있는 글번호
+		String board_seq = request.getParameter("board_seq");
+	
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("board_seq", board_seq);
+		paraMap.put("searchType", "");
+		paraMap.put("searchWord", "");
+		
+		// html 이 출력될 때 한글이 깨지지 않고 제대로 나올 수 있도록 설정하기
+		response.setContentType("text/html; charset=UTF-8");
+		
+		PrintWriter out = null; // out 은 웹브라우저에 기술하는 대상체
+		
+		try {
+			Integer.parseInt(board_seq);
+			BoardVO bvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
+			
+			if(bvo == null || (bvo != null && bvo.getFilename() == null)) { // DB 에서 파일을 삭제한 경우
+				out = response.getWriter();
+				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호 이거나 첨부파일이 없으므로 파일다운로드가 불가합니다.'); history.back();</script>");
+				return;
+			}
+			else { // 정상적으로 파일을 다운로드를 할 경우 
+				String fileName = bvo.getFilename();
+				String orgFilename = bvo.getOrgfilename();
+				
+				// WAS 의 webapp 의 절대경로 알아오기
+				HttpSession session = request.getSession();
+				String root = session.getServletContext().getRealPath("/"); 
+				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
+				
+				String path = root+"resources"+File.separator+"files";
+				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			
+				boolean flag = false;
+				flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+				// file 다운로드 성공시 flag 는 true, 실패시 flag 는 false
+				
+				if(!flag) {
+					out = response.getWriter();
+					out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+				}
+			
+			}
+			
+		} catch (NumberFormatException | IOException e) { // 숫자가 아닌 경우 => "GET" 방식으로 조작한 경우
+			try {
+				out = response.getWriter();
+				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+			} catch (IOException e2) {
+				e.printStackTrace();
+			}
+		}
+	
 	}
 	
 }
