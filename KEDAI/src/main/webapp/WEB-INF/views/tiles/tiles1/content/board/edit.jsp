@@ -10,11 +10,6 @@
 	input {
 		padding-left: 1%;
 	}
-	.add_btn button {
-		color: #fff;
-		width: 100px;
-		height: 40px;
-	}
 	.add_btn {
 		border: solid 1px #2c4459;
 		color: #2c4459;
@@ -50,8 +45,8 @@
       	});
      	<%-- === 스마트 에디터 구현 끝 === --%>
      	
-     	// 등록 버튼을 클릭한 경우
-     	$("button#btnWrite").click(function(){
+     	// 수정 버튼을 클릭한 경우
+     	$("button#btnUpdate").click(function(){
      		
      		<%-- === 스마트 에디터 구현 시작 === --%>
             // id 가  content 인 textarea 에 에디터에서 대입
@@ -94,11 +89,17 @@
      			alert("비밀번호를 입력하세요.");
      			return; // 종료
      		}
+     		else{
+     			if("${requestScope.bvo.pwd}" != pwd){
+     				alert("입력하신 비밀번호가 일치하지 않습니다.");
+         			return; // 종료
+     			}
+     		}
      		
      		// 폼(form)을 전송(submit)
-     		const frm = document.addFrm;
+     		const frm = document.editFrm;
      		frm.method = "post";
-     		frm.action = "<%= ctxPath%>/board/addEnd.kedai";
+     		frm.action = "<%= ctxPath%>/board/editEnd.kedai";
      		frm.submit();
      	});
 		
@@ -108,26 +109,21 @@
 <%-- content start --%>
 <div style="border: 0px solid red; padding: 1% 3% 3% 0;">
 	<div>
-		<%-- === 원글쓰기인 경우 === --%>
-	   	<c:if test='${requestScope.fk_seq eq ""}'>
-	   		<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;글쓰기</h3>
-	   	</c:if>
-	   	
-		<%-- === 답변글쓰기인 경우 === --%>
-		<c:if test='${requestScope.fk_seq ne ""}'>
-			<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;답변글쓰기</h3>
-	   	</c:if>
+   		<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;글수정하기</h3>
 	</div>
    	
-   	<form name="addFrm" enctype="multipart/form-data" class="row mt-5"> 
+   	<form name="editFrm" enctype="multipart/form-data" class="row mt-5"> 
    		<div class="col-4">
    			<div class="mb-3">
 	   			<label for="fk_empid" style="width: 30%;">사원아이디</label>
-	   			<input type="text" name="fk_empid" id="fk_empid" style="width: 180px; height: 30px;" value="${sessionScope.loginuser.empid}" />
+	   			<input type="text" name="fk_empid" id="fk_empid" style="width: 180px; height: 30px;" value="${sessionScope.loginuser.empid}" readonly />
 	   		</div>
 	   		<div class="mb-3">
 	   			<label for="name" style="width: 30%;">작성자</label>
 	   			<input type="text" name="name" id="name" style="width: 180px; height: 30px;" value="${sessionScope.loginuser.name}" readonly />
+	   			
+	   			<!-- 동일한 작성가가 글을 여러개 작성할 수도 있기 때문에 글번호를 넘겨줘야 한다. -->
+	   			<input type="hidden" name="board_seq" value="${requestScope.bvo.board_seq}" />
 	   		</div>
 	   		<div class="mb-3" style="display: flex;">
 				<label for="fk_empid" style="width: 30%;">카테고리</label>
@@ -143,18 +139,10 @@
    		<div class="col-8">
    			<div class="mb-3">
 	   			<label for="subject" style="width: 10%;">제목</label>
-	   			<%-- === 원글쓰기인 경우 === --%>
-    			<c:if test='${requestScope.fk_seq eq ""}'>
-	     			<input type="text" name="subject" id="subject" size="100" maxlength="200" style="width: 50%; height: 30px;" /> 
-	     		</c:if>
-	     	
-	     		<%-- === 답변글쓰기인 경우 === --%>
-				<c:if test='${requestScope.fk_seq ne ""}'>
-	     			<input type="text" name="subject" id="subject" size="100" style="width: 50%; height: 30px;" value="${requestScope.subject}" readonly /> 
-	     		</c:if>
+     			<input type="text" name="subject" id="subject" size="100" maxlength="200" style="width: 50%; height: 30px;" value="${requestScope.bvo.subject}" /> 
 	   		</div>
 	   		<div class="mb-3">
-   				<textarea style="width: 100%; height: 530px;" name="content" id="content"></textarea>
+   				<textarea style="width: 100%; height: 530px;" name="content" id="content">${requestScope.bvo.content}</textarea>
    			</div>
    			<div class="row">
    				<div class="col-6">
@@ -169,16 +157,11 @@
    				</div>
    				
    				<div class="col-6 d-md-flex justify-content-md-end">
-			   		<button type="button" class="btn add_btn mr-3" id="btnWrite">등록</button>
+			   		<button type="button" class="btn add_btn mr-3" id="btnUpdate">수정</button>
 			       	<button type="button" class="btn add_btn" onclick="javascript:history.back()">취소</button>
 			   	</div>
    			</div>
    		</div>
-   		
-   		<%-- 답변글쓰기가 추가된 경우 --%>
-		<input type="hidden" name="groupno" value="${requestScope.groupno}" />
-		<input type="hidden" name="fk_seq"  value="${requestScope.fk_seq}" />
-		<input type="hidden" name="depthno" value="${requestScope.depthno}" />
    	</form>
 </div>
 <%-- content end --%>

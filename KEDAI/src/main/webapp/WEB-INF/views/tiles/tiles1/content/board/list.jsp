@@ -7,7 +7,7 @@
 	//     /KEDAI
 %>
 <style type="text/css">
-	.boardAdd {
+	.add_btn {
 		text-align: center;
 		align-content: center;
 		border: solid 1px #2c4459;
@@ -18,7 +18,7 @@
 		height: 40px;
 		margin-left: 10px;
 	}
-	.boardAdd:hover {
+	.add_btn:hover {
 		text-decoration: none;
 		border: none;
 		background: #e68c0e;
@@ -94,7 +94,7 @@
 					   				const word = item.word;
 					   				const idx = word.toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
 					   				const len = $("input[name='searchWord']").val().length;
-					   				const result = word.substring(0, idx)+"<span style='color: #2c4459; font-weight: bold;'>"+word.substring(idx, idx+len)+"</span>"+word.substring(idx+len);
+					   				const result = word.substring(0, idx)+"<sapn style='color: #2c4459; font-weight: bold;'>"+word.substring(idx, idx+len)+"</span>"+word.substring(idx+len);
 					   				
 					   				v_html += `<span style='cursor: pointer;' class='result'>\${result}</span><br>`;
 					   			}); // end of $.each(json, function(index, item) ----------
@@ -159,13 +159,13 @@
 </script>
 
 <%-- content start --%>
-<div style="border: 1px solid red; padding: 1% 0;">
+<div style="border: 1px solid red; padding: 1% 3% 3% 0;">
 	<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;게시판</h3>
 
 	<section style="width: 95%;">
 		<div class="d-md-flex justify-content-md-end">
 			<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-				<a href="<%= ctxPath%>/board/add.kedai" class="boardAdd">등록하기</a>
+				<a href="<%= ctxPath%>/board/add.kedai" class="btn add_btn">등록하기</a>
 			</c:if>
 		</div>
 	
@@ -237,15 +237,15 @@
 			${requestScope.pageBar}
 		</div>
 		
-		<form name="searchFrm" style="margin-top: 20px;">
-	   		<select name="searchType" style="height: 26px;">
+		<form name="searchFrm">
+	   		<select name="searchType" style="height: 30px;">
 	      		<option value="subject">글제목</option>
 	      		<option value="content">글내용</option>
 	      		<option value="subject_content">글제목+글내용</option>
 	      		<option value="name">작성자</option>
 	   		</select>
 	   		
-	   		<input type="text" name="searchWord" size="40" width="500px" autocomplete="off" /> 
+	   		<input type="text" name="searchWord" size="40" width="500px" autocomplete="off" style="height: 30px;" /> 
 	   		<input type="text" style="display: none;"/> 
 	   		<button type="button" class="search_btn" onclick="goSearch()">검색</button>
 		</form>
@@ -255,6 +255,7 @@
 	</section>
 </div>
 
+<%-- 사용자가 "검색된결과목록보기" 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다. --%>
 <form name="goViewFrm">
 	<input type="hidden" name="board_seq" />
 	<input type="hidden" name="goBackURL" />
