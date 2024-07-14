@@ -71,7 +71,28 @@ public class BoardDAO_imple implements BoardDAO {
 		return bvo;
 	}
 
-	
+	@Override
+	public int increase_readCount(String board_seq) {
+		int n = sqlsession.update("board.increase_readCount", board_seq);
+		return n;
+	}
 
+	@Override
+	public int edit(BoardVO bvo) {
+		int n = sqlsession.update("board.edit", bvo);
+		return n;
+	}
+
+	@Override
+	public int edit_withFile(BoardVO bvo) {
+		int n = sqlsession.update("board.edit_withFile", bvo);
+		return n;
+	}
+
+	@Override
+	public int del(String board_seq) {
+		int n = sqlsession.delete("board.del", board_seq);
+		return n;
+	}
 	
 }

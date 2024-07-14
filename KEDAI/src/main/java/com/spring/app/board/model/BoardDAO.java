@@ -32,7 +32,19 @@ public interface BoardDAO {
 	// 검색어 입력 시 자동글 완성하기 
 	List<String> wordSearchShow(Map<String, String> paraMap);
 
-	// 글 조회수 증가와 함께 글 1개를 조회하기s
+	// 글 조회수 증가와 함께 글 1개를 조회하기
 	BoardVO getView(Map<String, String> paraMap);
+
+	// 글조회수 1 증가하기
+	int increase_readCount(String board_seq);
+
+	// 파일첨부가 없는 1개의 글 수정하기
+	int edit(BoardVO bvo);
+
+	// 파일첨부가 있는 1개의 글 수정하기
+	int edit_withFile(BoardVO bvo);
+
+	// 1개의 글 삭제하기
+	int del(String board_seq);
 
 }

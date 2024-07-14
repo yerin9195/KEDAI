@@ -515,6 +515,7 @@ WHERE RNO between 1 and 10;
 
 -----------------------------------------------------------------------
 
+-- 검색어 입력 시 자동글 완성하기
 select *
 from tbl_board;
 
@@ -528,4 +529,27 @@ from tbl_board
 where status = 1 and lower(name) like '%' ||lower('관리자')|| '%'
 order by name asc;
 
+-----------------------------------------------------------------------
 
+-- 글 1개 조회하기        
+SELECT previousseq, previoussubject
+     , board_seq, fk_category_code, fk_empid, name, subject, content, read_count, registerday, pwd
+     , nextseq, nextsubject
+     , groupno, fk_seq, depthno
+     , orgfilename, filename, filesize
+FROM
+(
+    select lag(board_seq, 1) over(order by board_seq desc) AS previousseq 
+         , lag(subject, 1) over(order by board_seq desc) AS previoussubject
+           
+         , board_seq, fk_category_code, fk_empid, name, subject, content
+         , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, pwd
+         , groupno, fk_seq, depthno
+         , orgfilename, filename, filesize
+         
+         , lead(board_seq, 1) over(order by board_seq desc) AS nextseq
+         , lead(subject, 1) over(order by board_seq desc) AS nextsubject
+    from tbl_board
+    where status = 1
+) V
+WHERE V.board_seq = 1;

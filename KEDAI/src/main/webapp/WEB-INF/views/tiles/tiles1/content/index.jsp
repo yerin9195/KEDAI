@@ -19,6 +19,24 @@
 		color: #fff;
 		background: #e68c0e;
 	}
+	.myPageList button {
+	    background: none;
+		color: #fff;
+		font-size: 12pt;
+	}
+	.myPageList button:hover {
+		color: #fff;
+	}
+	.dropdown-menu li {
+		margin-bottom: 5%;
+	}
+	.dropdown-menu li a {
+		color: #363636;
+		text-decoration: none;
+	}
+	.dropdown-menu li a:hover {
+		color: #e68c0e;
+	}
 </style>
 
 <script type="text/javascript">
@@ -74,11 +92,22 @@
 			<div class="mt-3">
 				<h4>${(sessionScope.loginuser).name}&nbsp;[ ${(sessionScope.loginuser).nickname} ]</h4>
 				<h5>${(sessionScope.loginuser).jvo.job_name}</h5>
-			
 				<span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp;<fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###" /> POINT
 				<br><br>
-				[&nbsp;<a href="<%= ctxPath%>/member/memberMenu.kedai">마이페이지</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;
-               	[&nbsp;<a href="javascript:goCoinPurchaseTypeChoice('${(sessionScope.loginuser).empid}','<%= ctxPath%>')">포인트충전</a>&nbsp;]
+				<div style="display: flex; width: 250px; margin: 0 auto;">
+					<div class="myPageList mr-5">
+						<button class="dropdown-toggle" type="button" data-toggle="dropdown">마이페이지&nbsp;&nbsp;</button>
+						<ul class="dropdown-menu" style="padding-left: 3%;">
+							<li><a href="<%= ctxPath%>/member/memberEdit.kedai">나의 정보 수정</a></li>
+							<li><a href="<%= ctxPath%>/myCar.kedai">나의 카셰어링</a></li>
+							<li><a href="#">포인트 결제 내역</a></li>
+							<li><a href="#">나의 결재 내역</a></li>
+						</ul>
+					</div>
+					<div>
+						[&nbsp;<a href="javascript:goCoinPurchaseTypeChoice('${(sessionScope.loginuser).empid}','<%= ctxPath%>')">포인트충전</a>&nbsp;]
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
