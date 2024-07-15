@@ -2,6 +2,7 @@ package com.spring.app.company.model;
 
 import java.util.List;
 
+import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.PartnerVO;
 
 public interface CompanyDAO {
@@ -25,6 +26,9 @@ public interface CompanyDAO {
 	
 	// 거래처 삭제하기(삭제할 거래처 사업자 번호 가져오기)
 	int delPartnerNo(String partner_no);
+	
+	// 직원 정보 가져오기
+	List<MemberVO> employee_list_select();
 
 	
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 
 import com.spring.app.company.model.CompanyDAO;
+import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.PartnerVO;
 @Service
 public class CompanyService_imple implements CompanyService{
@@ -67,6 +68,14 @@ public class CompanyService_imple implements CompanyService{
 		int n = dao.delPartnerNo(partner_no);
 		
 		return n;
+	}
+	
+	// 직원정보 가져오기
+	@Override
+	public List<MemberVO> employee_list_select() {
+		List<MemberVO> membervoList = dao.employee_list_select();
+		
+		return membervoList;
 	}
 
 

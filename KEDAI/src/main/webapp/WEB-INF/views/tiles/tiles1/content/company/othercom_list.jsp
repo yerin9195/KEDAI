@@ -290,7 +290,8 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	$(function(){
 	  $('.cardHead button').click(function(){
 		  var partner_no = $(this).closest('article').attr('partner_no');
-		  console.log(partner_no)
+		  
+		  /* console.log(partner_no) */
 	    // 클릭한 거래처 정보 상세보기
 	    $.ajax({
 	      url: "<%= ctxPath%>/partnerPopupClick.kedai?partner_no=" + partner_no,
@@ -354,31 +355,34 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	});
 	
 	function editPopup() {
-		const partner_no = $("#pop_partnerNo").html();
+		var partner_no = $("#pop_partnerNo").html();
 		location.assign("othercom_modify.kedai?partner_no=" + partner_no);
 	}
 
 
 	// 거래처 삭제하기
-	function delPopup(partner_no){
+	function delPopup(){
+		var partner_no = $("#pop_partnerNo").html();
 		
 		var bool = confirm("정말 거래처를 삭제하시겠습니까?");
 		
 		if(bool){
+			// console.log("partner_no : " + partner_no)
 			$.ajax({
-				url: "<%=ctxPath%>/delPartner_com.action",
+				url: "<%=ctxPath%>/company/delPartner_com.kedai" ,
 				type: "post",
 				data:{"partner_no" :partner_no},
-				/* console.log("partner_no"), */
+				dataType:"json",
 				success: function(json){
-					if(json.n == 1){
+					// console.log("응답 데이터: " + JSON.stringify(json)); 
+					if(json.n == 1 ){
 						alert("거래처를 삭제하였습니다.");
+					//	console.log("json.n : " + json.n);
 					}
 					else{
 						alert("거래처를 삭제하지 못했습니다.");
 					}
-					
-					location.href="<%=ctxPath%>/kedai/othercom_list.kedai";
+					location.href="<%=ctxPath%>/othercom_list.kedai";
 				},
 				error: function(request, status, error){
 		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -386,7 +390,8 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 			});
 		}
 	
-	}// end of function delPartnerCom(partner_no){}-------------------------------------
+
+
 
 
 	
@@ -471,7 +476,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
             <div class="listImg">
               <img src="<%= ctxPath%>/resources/images/common/business_num.svg" alt="">
             </div>
-            <div id="pop_partnerNo" class="listTxt"></div>
+            <div id="pop_partnerNo" class="listTxt">거래처 사업자 등록번호</div>
           </li>
           <li>
             <div class="listImg">
