@@ -386,7 +386,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 			});
 		}
 	
-	}// end of function delPartnerCom(partner_no){}
+	}// end of function delPartnerCom(partner_no){}-------------------------------------
 
 
 	
