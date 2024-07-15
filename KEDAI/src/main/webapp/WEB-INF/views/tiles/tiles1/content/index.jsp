@@ -44,6 +44,68 @@
 		
 		
 	}); // end of $(document).ready(function(){}) ----------
+	
+	// 코인충전 결제금액 선택하기
+	function goCoinPurchaseTypeChoice(ctxPath, empid){
+		
+		// 포인트충전 결제금액 선택하는 팝업창 띄우기
+	    const url = "${pageContext.request.contextPath}/member/coinPurchaseTypeChoice.kedai?empid="+empid;
+	    
+	    const width = 650;
+	    const height = 570;
+	    
+	    const left = Math.ceil((window.screen.width - width)/2); // 예> 1400-650 = 750 => 750/2 = 375 
+	    // window.screen.width 은 모니터의 너비이다.
+	    // Math.ceil() 은 소수부를 올려서 정수로 만드는 것이다.
+
+	    const top = Math.ceil((window.screen.height - height)/2); // 예> 900-570 = 330 => 330/2 = 165 
+	    // window.screen.height 은 모니터의 높이이다.
+	    // Math.ceil() 은 소수부를 올려서 정수로 만드는 것이다.
+	    
+	 	// 팝업창 띄우기
+	    window.open(url, "coinPurchaseTypeChoice", `"left="+left, "top="+top, "width="+width, "height="+height`);
+		
+	} // end of goCoinPurchaseTypeChoice(empid, ctxPath) ----------
+	
+	// 포트원(회사명 구 아임포트) 을 사용하여 결제하기
+	function goCoinPurchaseEnd(ctxPath, coinmoney, empid){
+		
+		// 포트원(회사명 구 아임포트) 결제 팝업창 띄우기
+	    const url = "${pageContext.request.contextPath}/member/coinPurchaseEnd.kedai?coinmoney="+coinmoney+"&empid="+empid;
+		
+		const width = 1000;
+	    const height = 600;
+	    
+	    const left = Math.ceil((window.screen.width - width)/2); // 예> 1400-1000 = 400 => 400/2 = 200 
+	    // window.screen.width 은 모니터의 너비이다.
+	    // Math.ceil() 은 소수부를 올려서 정수로 만드는 것이다.
+
+	    const top = Math.ceil((window.screen.height - height)/2); // 예> 900-600 = 300 => 300/2 = 150 
+	    // window.screen.height 은 모니터의 높이이다.
+	    // Math.ceil() 은 소수부를 올려서 정수로 만드는 것이다.
+	    
+	 	// 팝업창 띄우기
+	    window.open(url, "coinPurchaseEnd", `"left="+left, "top="+top, "width="+width, "height="+height`);
+		
+	} // end of function goCoinPurchaseEnd(ctxPath, coinmoney, empid) ----------
+	
+	// tbl_employees 테이블에 해당 사용자의 포인트 증가(update) 시키기
+	function goCoinUpdate(ctxPath, coinmoney, empid){
+		
+		$.ajax({
+			url: "<%= ctxPath%>/member/coinUpdateLoginUser.kedai",
+			type: "post",
+			data: {"empid":empid, "coinmoney":coinmoney},
+			dataType: "json",	 
+		   	success: function(json){
+		   		console.log("~~~ 확인용 json =>", json);
+		   	},
+			error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+		});
+		
+	} // end of function goCoinUpdate(ctxPath, coinmoney, empid) ----------
 </script>
 
 <%-- content start --%>
@@ -94,8 +156,8 @@
 				<h5>${(sessionScope.loginuser).jvo.job_name}</h5>
 				<span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp;<fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###" /> POINT
 				<br><br>
-				<div style="display: flex; width: 250px; margin: 0 auto;">
-					<div class="myPageList mr-5">
+				<div class="row pl-5 pr-5">
+					<div class="myPageList col-6">
 						<button class="dropdown-toggle" type="button" data-toggle="dropdown">마이페이지&nbsp;&nbsp;</button>
 						<ul class="dropdown-menu" style="padding-left: 3%;">
 							<li><a href="<%= ctxPath%>/member/memberEdit.kedai">나의 정보 수정</a></li>
@@ -104,12 +166,12 @@
 							<li><a href="#">나의 결재 내역</a></li>
 						</ul>
 					</div>
-					<div>
-						[&nbsp;<a href="javascript:goCoinPurchaseTypeChoice('${(sessionScope.loginuser).empid}','<%= ctxPath%>')">포인트충전</a>&nbsp;]
+					<div class="col-6">
+						[&nbsp;<a href="javascript:goCoinPurchaseTypeChoice('<%= ctxPath%>', '${(sessionScope.loginuser).empid}')">포인트충전</a>&nbsp;]
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>:
 	</section>
 	
 	<section class="row justify-content-between mt-2" style="height: 350px;">
