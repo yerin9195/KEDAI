@@ -171,11 +171,17 @@
 					<span class="icon"><i class="fa-regular fa-pen-to-square"></i></span>
 				</li>
 				<li>
-					<a href="#">급여명세서</a>
-					<span class="icon"><i class="fa-solid fa-comment-dollar"></i></span>
+					<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+						<a href="<%=ctxPath%>/pay_stub_admin.kedai">급여명세서</a>
+						<span class="icon"><i class="fa-solid fa-comment-dollar"></i></span>
+					</c:if>
+					<c:if test="${(sessionScope.loginuser).fk_job_code ne '1'}">
+						<a href="<%=ctxPath%>/pay_stub.kedai">급여명세서</a>
+						<span class="icon"><i class="fa-solid fa-comment-dollar"></i></span>
+					</c:if>
 				</li>
 				<li>
-					<a href="#">회의실예약</a>
+					<a href="<%=ctxPath%>/roomResercation.kedai">회의실예약</a>
 					<span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
 				</li>
 				<li>
