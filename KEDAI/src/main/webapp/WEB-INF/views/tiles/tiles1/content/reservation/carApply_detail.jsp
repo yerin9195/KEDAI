@@ -131,7 +131,6 @@ div.mycontent {
   .container {
       width: 80%;
       margin: 0 auto;
-      text-align: center;
   }
   #calendar {
       max-width: 500px;
@@ -431,7 +430,7 @@ $(document).ready(function(){
         <div id="place" style="background-color:white; border: solid 0px red; margin: 3%;">
          <h2 style="font-weight: 300; text-align:center;">날짜 선택<br><span style="font-size:8pt; text-align: center;">차주가 지정한 기간중에 날짜를 선택해주세요.</span></h2>
          <div id="calendar"></div>	
-         
+         <br>
          <h3 style="font-weight: 300; text-align:center; margin-top:4%;">탑승 정보</h3>
   		 <div class="mt-3">
 			 <h6>출발지&nbsp;<span class="star">*</span></h6>

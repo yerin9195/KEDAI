@@ -171,12 +171,5 @@ public class CarController {
 		return mav;
 		
 	}
-	// 마이페이지에서 나의 카셰어링 예약 및 결제내역 클릭시 들어가는 페이지 만들기
-	@GetMapping("/test.kedai")
-	public ModelAndView requiredLogin_test(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
-		
-		mav.setViewName("tiles1/reservation/test.tiles"); 
-		return mav;
-		
-	}
+
 }

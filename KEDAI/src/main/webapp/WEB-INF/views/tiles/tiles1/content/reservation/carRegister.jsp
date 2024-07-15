@@ -105,7 +105,7 @@ $(document).ready(function(){
     
     
 	var modal = document.getElementById("mapModal");
-    var btn = document.getElementById("arrive_zipcodeSearch");
+	var btn;
     var span = document.getElementsByClassName("close")[0];
     var searchButton = document.getElementById('searchButton');
     var selectedPlace = null;
@@ -113,143 +113,184 @@ $(document).ready(function(){
     // 모달 display 속성 변경 추적
     Object.defineProperty(modal.style, 'display', {
         set: function(value) {
-            console.log('Modal display changed to:', value);
+//          console.log('Modal display changed to:', value);
             this.setProperty('display', value);
         }
     });
-    
-    // 모달 열기
-    btn.onclick = function() {
+    var index;
+    $("button.icon").click(function(){
+    	index = this.getAttribute("data-index");
+    	console.log(index);
+    	// 모달 열기
         modal.style.display = "block";
         initializeMap();
-        console.log('Modal opened');
-    }
-
-    // 모달 닫기
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    // 모달 외부 클릭 시 닫기
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-
-    if (typeof kakao === 'undefined' || !kakao.maps) {
-        console.error('Failed to load Kakao Maps API');
-        return;
-    }
-
-
-    var map;
-    var ps;
-    var markers = [];
-    
-    function initializeMap() {
-        var mapContainer = document.getElementById('map'); 
-        var mapOption = { 
-            center: new kakao.maps.LatLng(37.566535, 126.97796919999996), 
-            level: 3 
-        }; 
-
-        map = new kakao.maps.Map(mapContainer, mapOption); 
-
-        if (!kakao.maps.services) {
-            console.error('Kakao Maps services library not loaded');
-            return;
-        }
-
-        ps = new kakao.maps.services.Places(); 
         
-    }
+	    if(index == 0){
+	       
+	        function showPlaceInfo(place) {
+	            console.log(place);
+	            var place_name = place.place_name;
+	            var road_address_name = place.road_address_name;
+	    		
+	            //document.getElementById("departure_name").value = place_name;
+	            //document.getElementById("departure_address").value = address_name;
+	            // alert(document.getElementById("departure_name").value); -- 문제: refresh가 되서 초기화됨.  clickEvent.preventDefault(); 이부분 추가.
+	            // 또는
+	            $("input[name='departure_name']").val(place_name);		
+	       		$("input[name='departure_address']").val(road_address_name);
+	
+	            modal.style.display = "none";
+	
+	
+	        }
+	    }
+	    if(index == 1){
+	        // 모달 열기
 
-    // 검색 버튼 클릭 이벤트 핸들러
-    searchButton.onclick = function(clickEvent) {
-        var buildingName = document.getElementById('buildingName').value;
-//      console.log('Searching for:', buildingName);
-        ps.keywordSearch(buildingName, placesSearchCB);
-        clickEvent.preventDefault();      
-        clickEvent.stopPropagation();
-    };
+	        function showPlaceInfo(place) {
+	            console.log(place);
+	            var place_name = place.place_name;
+	            var road_address_name = place.road_address_name;
+	    		
+	            //document.getElementById("departure_name").value = place_name;
+	            //document.getElementById("departure_address").value = address_name;
+	            // alert(document.getElementById("departure_name").value); -- 문제: refresh가 되서 초기화됨.  clickEvent.preventDefault(); 이부분 추가.
+	            // 또는
+	            $("input[name='arrive_name']").val(place_name);		
+	       		$("input[name='arrive_address']").val(road_address_name);
+	            modal.style.display = "none";
+	
+	
+	        }
+	    }
+    
+	
+	    // 모달 닫기
+	    span.onclick = function() {
+	        modal.style.display = "none";
+	    }
+	
+	    // 모달 외부 클릭 시 닫기
+	    window.onclick = function(event) {
+	        if (event.target == modal) {
+	            modal.style.display = "none";
+	        }
+	    }
+	
+	
+	    if (typeof kakao === 'undefined' || !kakao.maps) {
+	//      console.error('Failed to load Kakao Maps API');
+	        return;
+	    }
+	
+	
+	    var map;
+	    var ps;
+	    var markers = [];
+	    
+	    function initializeMap() {
+	        var mapContainer = document.getElementById('map'); 
+	        var mapOption = { 
+	            center: new kakao.maps.LatLng(37.566535, 126.97796919999996), 
+	            level: 3 
+	        }; 
+	
+	        map = new kakao.maps.Map(mapContainer, mapOption); 
+	
+	        if (!kakao.maps.services) {
+	            console.error('Kakao Maps services library not loaded');
+	            return;
+	        }
+	
+	        ps = new kakao.maps.services.Places(); 
+	        
+	    }
+	
+	    // 검색 버튼 클릭 이벤트 핸들러
+	    searchButton.onclick = function(clickEvent) {
+	        var buildingName = document.getElementById('buildingName').value;
+	//      console.log('Searching for:', buildingName);
+	        ps.keywordSearch(buildingName, placesSearchCB);
+	        clickEvent.preventDefault();      
+	        clickEvent.stopPropagation();
+	    };
+	
+	
+	    function placesSearchCB(data, status, pagination) {
+	        if (status === kakao.maps.services.Status.OK) {
+	            console.log('Search successful:', data);
+	            var resultsList = document.getElementById('results');
+	            resultsList.innerHTML = '';
+	            var bounds = new kakao.maps.LatLngBounds();
+	            
+	         // Clear existing markers
+	            clearMarkers();
+	         
+	            data.forEach(function(place) {
+	                var li = document.createElement('li');
+	//              console.log('li successful:', li);
+	                li.textContent = place.place_name;
+	                var selectButton = document.createElement('button');
+	                selectButton.textContent = '선택';
+	                selectButton.className = 'selectButton';
+	                selectButton.onclick = function(clickEvent) {
+	                	clickEvent.preventDefault(); // 기본 동작 막기
+	//                  alert('Selected: ' + place.place_name + place.road_address_name);
+	                    showPlaceInfo(place);
+		          	  	// 모달 초기화
+	                    const modal_frmArr = document.querySelectorAll("div.modal-content");
+						$('#buildingName').val("");
+						$('#results').empty();
+						
+	                };
+	
+	                li.appendChild(selectButton);
+	                li.onclick = function() {
+	                    map.setCenter(new kakao.maps.LatLng(place.y, place.x));
+	                    clearMarkers();
+	                    displayMarker(place);
+	                    document.querySelectorAll('.selectButton').forEach(function(button) {
+	                        button.style.display = 'none';
+	                    });
+	                    selectButton.style.display = 'inline';
+	                };
+	                resultsList.appendChild(li);
+	                
+	                // Display marker for each place
+	                var marker = displayMarker(place);
+	                markers.push(marker);
+	                bounds.extend(new kakao.maps.LatLng(place.y, place.x));
+	            });
+	            // Adjust map bounds to show all markers
+	            map.setBounds(bounds);
+	            
+	        } else {
+	            console.error('Failed to find the location:', status);
+	        }
+	    }
+	    function displayMarker(place) {
+	        var marker = new kakao.maps.Marker({
+	            map: map,
+	            position: new kakao.maps.LatLng(place.y, place.x)
+	        });
+	
+	        kakao.maps.event.addListener(marker, 'click', function() {
+	            var infowindow = new kakao.maps.InfoWindow({
+	                content: '<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>'
+	            });
+	            infowindow.open(map, marker);
+	        });
+	        return marker;
+	    }
+	    function clearMarkers() {
+	        markers.forEach(function(marker) {
+	            marker.setMap(null);
+	        });
+	        markers = [];
+	    }
 
-
-    function placesSearchCB(data, status, pagination) {
-        if (status === kakao.maps.services.Status.OK) {
-            console.log('Search successful:', data);
-            var resultsList = document.getElementById('results');
-            resultsList.innerHTML = '';
-            var bounds = new kakao.maps.LatLngBounds();
-            
-         // Clear existing markers
-            clearMarkers();
-         
-            data.forEach(function(place) {
-                var li = document.createElement('li');
-//              console.log('li successful:', li);
-                li.textContent = place.place_name;
-                var selectButton = document.createElement('button');
-                selectButton.textContent = '선택';
-                selectButton.className = 'selectButton';
-                selectButton.onclick = function() {
-                    alert('Selected: ' + place.place_name + place.road_address_name);
-                    showPlaceInfo(place);
-                };
-
-                li.appendChild(selectButton);
-                li.onclick = function() {
-                    map.setCenter(new kakao.maps.LatLng(place.y, place.x));
-                    clearMarkers();
-                    displayMarker(place);
-                    document.querySelectorAll('.selectButton').forEach(function(button) {
-                        button.style.display = 'none';
-                    });
-                    selectButton.style.display = 'inline';
-                };
-                resultsList.appendChild(li);
-                
-                // Display marker for each place
-                var marker = displayMarker(place);
-                markers.push(marker);
-                bounds.extend(new kakao.maps.LatLng(place.y, place.x));
-            });
-            // Adjust map bounds to show all markers
-            map.setBounds(bounds);
-            
-        } else {
-            console.error('Failed to find the location:', status);
-        }
-    }
-    function displayMarker(place) {
-        var marker = new kakao.maps.Marker({
-            map: map,
-            position: new kakao.maps.LatLng(place.y, place.x)
-        });
-
-        kakao.maps.event.addListener(marker, 'click', function() {
-            var infowindow = new kakao.maps.InfoWindow({
-                content: '<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>'
-            });
-            infowindow.open(map, marker);
-        });
-        return marker;
-    }
-    function clearMarkers() {
-        markers.forEach(function(marker) {
-            marker.setMap(null);
-        });
-        markers = [];
-    }
-    function showPlaceInfo(place) {
-        console.log(place);
-        var place_name = place.place_name;
-        var road_address_name = place.road_address_name;
-        $("input[name='departure_name']").val(place_name);		
-		$("input[name='departure_address']").val(road_address_name);
-
-    }
+    })//end of $("button.icon").click(function(){}-----------------------------------------------------------------------------
+    		
    // === 전체 datepicker 옵션 일괄 설정하기 ===  
    //     한번의 설정으로 $("input#fromDate"), $('input#toDate')의 옵션을 모두 설정할 수 있다.
    $(function() {
@@ -350,12 +391,16 @@ function goRegister() {
 //  console.log("~~~ 확인용 :"+ selectedValue);
 	if(selectedValue == ""){
 		b_requiredInfo = false;
+		$('span.num').show();
 	}
 	
-   	var datepicker_start =  document.getElementById('datepicker_start').value;
-   	var datepicker_end =  document.getElementById('datepicker_end').value;
+   	var datepicker_start =  document.getElementById('datepicker_start').value.trim();
+   	var datepicker_end =  document.getElementById('datepicker_end').value.trim();
    
-
+	if(datepicker_start == "" || datepicker_end == ""){
+		$('span.period2').show();
+	}
+	
    	// 기간 제약조건(시작일자가 끝나는 일자보다 이전이면 안된다.)
    	if(datepicker_start > datepicker_end){
       	$('span.period').show();
@@ -365,12 +410,28 @@ function goRegister() {
       	return;
 	 }
 	
+   	// 출발 시간
+   	var startTime =  document.getElementById('startTime').value.trim();
+   	if(datepicker_start == "" || datepicker_end == ""){
+		$('span.time').show();
+	}
+	
+   	
+   	// 주소 //
+   	var arrive_name = document.getElementById('arrive_name').value.trim();
+   	var departure_name = document.getElementById('departure_name').value.trim();
+    if(arrive_name ==""){
+    	$('span.arrive').show();
+    }
+    if(departure_name ==""){
+    	$('span.departure').show();
+    }
 	 // *** 약관에 동의를 했는지 검사하기 시작 *** //
 	 const checkbox_checked_length = $("input:checkbox[id='agree']:checked").length; 
 	
 	 if(checkbox_checked_length == 0) {
-	     alert("이용약관에 동의하셔야 합니다.");
-	      return; // goRegister() 함수를 종료한다.
+		 $('span.agree').show();
+	     return; // goRegister() 함수를 종료한다.
 	 }
 	 // *** 약관에 동의를 했는지 검사하기 끝 *** //
 	
@@ -378,7 +439,7 @@ function goRegister() {
 	 for(let i=0; i<requiredInfo_list.length; i++){
 	     const val = requiredInfo_list[i].value.trim();
 	     if(val == ""){
-	         alert("모든 항목을 입력하셔야 합니다. (약관 동의 필수)");
+	    	 alert("모든항목은 필수 항목입니다.")
 	         b_requiredInfo = false;
 	         break; 
 	     }
@@ -423,6 +484,7 @@ function goRegister() {
                      <option value="3">3</option>
                      <option value="4">4</option>
                </select>
+               <span class="error num">정원을 선택하세요.</span>
             </td>   
          </tr>
          <tr>
@@ -432,31 +494,31 @@ function goRegister() {
             </td>
          </tr>
           <tr>
-                <td class="prodInputName">이메일&nbsp;</td>
-                <td style="border-top: hidden; border-bottom: hidden;">
-               <input type="text" name="email" style="padding: 5px;" value="${sessionScope.loginuser.email}" readonly />
-                </td>
+              <td class="prodInputName">이메일&nbsp;</td>
+              <td style="border-top: hidden; border-bottom: hidden;">
+              <input type="text" name="email" size="30" style="padding: 5px;" value="${sessionScope.loginuser.email}" readonly />
+              </td>
           </tr>
-            <tr>
+          <tr>
                 <td class="prodInputName">기간</td>
                 <td>
                    <input type="text" name="start" id="datepicker_start" maxlength="10" value="" style="padding: 5px;" placeholder = "시작일자" readonly/><span>&nbsp;~&nbsp;</span>
                    <input type="text" name="last" id="datepicker_end" maxlength="10" value="" style="padding: 5px;" placeholder = "종료일자" readonly/>
-                   <span class="error period">종료일자가 시작일자보다 이전이면 안됩니다.</span>
+                   <span class="error period period2">종료일자가 시작일자보다 이전이면 안됩니다.</span>
                 </td>
-            </tr>
+          </tr>
           <tr>
                 <td class="prodInputName">출발시간&nbsp;</td>
                 <td style="border-top: hidden; border-bottom: hidden;">
-                <input type="text" name="startTime" id="startTime" style="padding: 5px;" value="" placeholder="출발시간"/>
+                <input type="text" name="startTime" id="startTime" style="padding: 5px;" value="" placeholder="출발시간"/><span class="error time">&nbsp;필수항목입니다.</span>
                 </td>
           </tr>
 		<tr>
             <td width="25%" class="prodInputName">출발지</td>
             <td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;">
-               <input type="text" name="departure_name" id="departure_name" class="requiredInfo" size="40" maxlength="40" style="padding: 5px;" placeholder="출발지 이름" readonly/>&nbsp;&nbsp;
-			   <button type="button" style="background-color: white; padding: 5px;" id="arrive_zipcodeSearch"><i class="fa-solid fa-magnifying-glass"></i></button><br>
-			   <input type="text" name="departure_address" id="departure_address" class="requiredInfo" size="80" maxlength="80" style="padding: 5px;" placeholder="출발지 주소" readonly/> 
+               <input type="text" name="departure_name" id="departure_name" class="requiredInfo name" size="40" maxlength="40" style="padding: 5px;" placeholder="출발지 이름" data-index="0" readonly/>&nbsp;&nbsp;
+			   <button type="button" style="background-color: white; padding: 5px;" class="icon" id="depature_zipcodeSearch" data-index="0"><i class="fa-solid fa-magnifying-glass"></i></button><span class="error departure">필수항목입니다.</span><br>
+			   <input type="text" name="departure_address" id="departure_address" class="requiredInfo address" size="80" maxlength="80" style="padding: 5px;" placeholder="출발지 주소" data-index="0"readonly/> 
                <!-- 출발지 이름에서 주소를 가지고 온 값을 넣어주고 수정 불가능하다. -->
                 <!-- The Modal start -->
                 <div id="mapModal" class="modal">
@@ -475,18 +537,29 @@ function goRegister() {
          <tr>
             <td width="25%" class="prodInputName">도착지</td>
             <td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;">
-               <input type="text" name="arrive_name" id="arrive_name" class="requiredInfo" size="40" maxlength="40" style="padding: 5px;" placeholder="도착지 이름" readonly/>&nbsp;&nbsp;
-               <button type="button" style="background-color: white; padding: 5px;" id="arrive_zipcodeSearch"><i class="fa-solid fa-magnifying-glass"></i></button><br>
-               <input type="text" name="arrive_address" id="arrive_address" class="requiredInfo" size="80" maxlength="80" style="padding: 5px;" placeholder="도착지 주소" readonly/> 
+               <input type="text" name="arrive_name" id="arrive_name" class="requiredInfo name" size="40" maxlength="40" data-index="1" style="padding: 5px;" placeholder="도착지 이름" readonly/>&nbsp;&nbsp;
+               <button type="button" style="background-color: white; padding: 5px;" class="icon" id="arrive_zipcodeSearch" data-index="1"><i class="fa-solid fa-magnifying-glass"></i></button><span class="error arrive">필수항목입니다.</span><br>
+               <input type="text" name="arrive_address" id="arrive_address" class="requiredInfo address" size="80" maxlength="80" style="padding: 5px;" placeholder="도착지 주소" data-index="1" readonly/> 
                <!-- 출발지 이름에서 주소를 가지고 온 값을 넣어주고 수정 불가능하다. -->
-               
+			    <!-- The Modal start -->
+                <div id="mapModal" class="modal">
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <input type="text" id="buildingName" placeholder="Enter building name">
+                        <button id="searchButton">Search</button>
+                        <div id="map"></div>
+                        <ul id="results"></ul>
+                    </div>
+                </div>
+                <!-- The Modal end -->
             </td>
          </tr>
          <tr>
             <td width="25%" class="prodInputName">약관동의</td>
             <td width="75%" align="left" >
                <iframe src="<%= ctxPath%>/iframe_agree/agree.html" width="100%" height="100px" style="border: solid 1px navy;"></iframe>
-               <label for="agree">이용약관에 동의합니다.(필수)</label>&nbsp;&nbsp;<input type="checkbox" id="agree" />
+               <label for="agree">이용약관에 동의합니다.(필수)</label>&nbsp;&nbsp;<input type="checkbox" id="agree" /><span class="error agree">&nbsp;필수항목입니다.</span>
             </td>
          </tr>
          <tr style="height: 70px;">
