@@ -59,19 +59,70 @@
      });
      const today = new Date();
      document.getElementById('currentDate').innerText = formatDate(today);
+     
+     $("#assetSelect").change(function() {
+         var selectedRoomMainSeq = $(this).val(); // 선택된 roomMainSeq 값 가져오기
+		//	console.log(selectedRoomMainSeq);
+         
+         
+         // 선택된 값이 존재할 때만 AJAX 요청 보내기
+         if(selectedRoomMainSeq == '전사 자산 목록'){
+        	 selectedRoomMainSeq = '0';
+        	 showAllData();
+         }
+         
+         if (selectedRoomMainSeq > 1) {
+        	 $.ajax({
+        	        url: "<%= request.getContextPath() %>/roommain.kedai?roomMainSeq=" + selectedRoomMainSeq,
+        	        type: "GET",
+        	        dataType: "json",
+        	        success: function(json) {
+        	            var tableBody = $("#assetTableBody");
+        	            tableBody.empty(); // 기존 테이블 내용 초기화
+
+        	            for (var i = 0; i < json.length; i++) {
+        	                var roomSubSeq = json[i].roomSubSeq;
+        	                var roomSubName = json[i].roomSubName;
+
+        	                var row = $("<tr>");
+        	                var leftCell = $("<td>");
+        	                leftCell.text(roomSubName); // 좌측 셀에 roomSubName 텍스트 추가
+        	                row.append(leftCell);
+
+        	                for (var hour = 9; hour <= 21; hour++) {
+        	                    var cell = $("<td colspan='2'>");
+        	                    // 예약 가능한 정보로 채우기
+        	                    // 예: cell.text("예약 가능");
+        	                    row.append(cell);
+        	                }
+
+        	                tableBody.append(row);
+        	            }
+        	        },
+        	        error: function(request, status, error) {
+        	            alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+        	        }
+        	    });
+         } else {
+             // 선택이 해제된 경우, 두 번째 선택 박스 초기화
+             $("#additionalSelect").html("");
+         }
+     });
  });
  
  // Ajax로 자산 목록 가져오기
-	 $.ajax({
+	$.ajax({
 	    url: "<%= ctxPath %>/roommain.kedai",
 	    type: "GET",
 	    dataType: "json", // 반환되는 데이터 타입 (JSON 형식)
 	    success: function(json) {
 	        var options = "<option>전사 자산 목록</option>";
 	        for (var i = 0; i < json.length; i++) {
-	            options += "<option value='" + json[i].roomMainName + "</option>";
+	            options += "<option value='" + json[i].roomMainSeq + "'>" + json[i].roomMainName + "</option>";
 	        }
-	        $("#assetSelect").html(options);
+	        $("#assetSelect").html(options); // id가 assetSelect인 select 태그에 옵션들을 추가
+	        
+	        
 	    },
 	    error: function(request, status, error) {
 	        alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
@@ -79,7 +130,40 @@
 	});
 
 
+function showAllData() {
+    $.ajax({
+        url: "<%= request.getContextPath() %>/roomall.kedai",
+        type: "GET",
+        dataType: "json",
+        success: function(json) {
+            var tableBody = $("#assetTableBody");
+            tableBody.empty(); // 기존 테이블 내용 초기화
 
+            for (var i = 0; i < json.length; i++) {
+                var roomMainName = json[i].roomMainName;
+
+                var row = $("<tr>");
+                var leftCell = $("<td>");
+                leftCell.text(roomMainName); // 좌측 셀에 roomMainName 텍스트 추가
+                row.append(leftCell);
+
+                for (var hour = 9; hour <= 21; hour++) {
+                    var cell = $("<td colspan='2'>");
+                    // 예약 가능한 정보로 채우기
+                    // 예: cell.text("예약 가능");
+                    row.append(cell);
+                }
+
+                tableBody.append(row);
+            }
+        },
+        error: function(request, status, error) {
+            alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+        }
+    });
+}
+ 
+ 
  function currentDate(){
      $("#datepicker").datepicker("show");
  }
@@ -142,7 +226,7 @@
                 </c:forEach>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="assetTableBody">
             <!-- 여기에 예약 가능한 자산 목록을 Ajax로 가져오기 -->
         </tbody>
     </table>
