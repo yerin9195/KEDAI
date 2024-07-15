@@ -148,7 +148,12 @@ from tbl_business_part;
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 select *
+from tbl_business_part;
+
+select *
 from tbl_employees;
+
+
 
 
 select partner_name
@@ -164,3 +169,16 @@ select partner_no, partner_type, partner_name, partner_url, partner_postcode, pa
 		       originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank
 		from tbl_business_part
         where partner_name = '(주)에이티에스인코';
+        
+        
+delete from tbl_business_part
+where partner_no = '111-22-22222'      
+   
+SELECT partner_name
+FROM tbl_business_part;       
+
+
+
+        
+        
+commit;        

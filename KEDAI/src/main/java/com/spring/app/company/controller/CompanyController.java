@@ -37,6 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.app.common.AES256;
 import com.spring.app.common.FileManager;
 import com.spring.app.company.service.CompanyService;
+import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.PartnerVO;
 
 import jdk.nashorn.api.scripting.JSObject;
@@ -266,43 +267,58 @@ public class CompanyController {
 	
 	// 거래처 삭제하기 // 
 	@ResponseBody
-	@PostMapping("/delPartner_com.action")
+	@PostMapping(value="/company/delPartner_com.kedai" , produces="text/plain;charset=UTF-8")
 	public String delPartner_com(HttpServletRequest request) throws Throwable{
 		
 		String partner_no = request.getParameter("partner_no");
-		
+		// System.out.println("partner_no : " + partner_no); 
 		int n = service.delPartnerNo(partner_no);
-		
+		// System.out.println("n : " + n );
 		JSONObject jsObj = new JSONObject();
+		
 		jsObj.put("n", n);
-		
-		
 		
 		
 		return jsObj.toString();
 		
-	
-		
 	}
 	
-		
-		
 	
-	
-	
-	
-	
-	
-	
-	// 페이지바 만들기
-	
-	
-	
-	
-	
-	
-	
-	
+	/*
+	 * // 거래처 삭제는 성공함 ==> 첨부파일 삭제 실패
+	 *  
+	 * // 거래처 등록 첨부파일 삭제하기 //
+	 * 
+	 * @PostMapping(value =
+	 * "/company/delPart_comImagefile.kedai",produces="text/plain;charset=UTF-8")
+	 * public ModelAndView delPart_comImagefile(ModelAndView mav, HttpServletRequest
+	 * request) {
+	 * 
+	 * String parter_no = request.getParameter("partner_no");
+	 * Map<String,String>paraMap = new HashMap<>();
+	 * paraMap.put("parter_no",parter_no);
+	 * 
+	 * PartnerVO partvo = service.getDelPart_comImagefile(paraMap);
+	 * 
+	 * String fileName = partvo.getOriginalfilename(); if(fileName != null &&
+	 * !"".contentEquals(fileName)) { // WAS 의 webapp 의 절대경로 알아오기 HttpSession
+	 * session = request.getSession(); String root =
+	 * session.getServletContext().getRealPath("/"); //
+	 * C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.
+	 * core\tmp0\wtpwebapps\KEDAI\
+	 * 
+	 * String path = root+"resources"+File.separator+"files"; //
+	 * C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.
+	 * core\tmp0\wtpwebapps\KEDAI\resources\files
+	 * 
+	 * paraMap.put("path", path); paraMap.put("fileName", fileName); }
+	 * 
+	 * int n = service.delPartnerNo(partner_no)
+	 * 
+	 * return mav;
+	 * 
+	 * }
+	 */
 	
 	
 	
@@ -311,19 +327,31 @@ public class CompanyController {
 
 	
 	//////////////////////////////////////////////////////////////////////////
-
-	
-	
-	
-	
-	
+	// 사원리스트  
 	@GetMapping(value="/employee.kedai")
-	public ModelAndView employee(ModelAndView mav) {
+	public ModelAndView employee_select(ModelAndView mav) {
 		
+		List<MemberVO> membervoList = service.employee_list();
+		
+		mav.addObject("membervoList",membervoList);
 		mav.setViewName("tiles1/company/employee.tiles");
 		
 		return mav;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@GetMapping(value="/employeeDetail.kedai")
 	public ModelAndView employeeDetail(ModelAndView mav) {
