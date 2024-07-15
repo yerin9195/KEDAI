@@ -1,9 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.net.InetAddress"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String ctxPath = request.getContextPath();
 	//	   /KEDAI
+	
+	// ==== #221. (웹채팅관련3) ==== 
+    // 서버 IP 주소 알아오기(사용중인 IP주소가 유동IP 이라면 IP주소를 알아와야 한다.) 
+	InetAddress inet = InetAddress.getLocalHost();
+ 	String serverIP = inet.getHostAddress();
+ 	
+ 	// 서버 포트번호 알아오기
+ 	int portnumber = request.getServerPort();
+ 	
+ 	String serverName = "http://"+serverIP+":"+portnumber;
 %>
 <style type="text/css">
 	.form-control:active, 
@@ -93,6 +104,10 @@
 		      	<li class="nav-item justify-content-end tooltipbottom">
 		      		<span class="tooltiptext">알림</span>
 		        	<a class="nav-link" href="#" style="text-align: center;"><img alt="alarm" src="<%= ctxPath%>/resources/images/common/alarm.png" width="60%" /></a>
+		      	</li>
+		      	<li class="nav-item justify-content-end tooltipbottom">
+		      		<span class="tooltiptext">웹채팅</span>
+		        	<a class="nav-link" href="<%= serverName%><%= ctxPath%>/chatting/multichat.kedai" style="text-align: center;"><img alt="alarm" src="<%= ctxPath%>/resources/images/common/chat.png" width="60%" /></a>
 		      	</li>
 		    </ul>
 		</div>
