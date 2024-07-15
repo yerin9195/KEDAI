@@ -447,11 +447,11 @@ $(document).ready(function(){
 			 <input type="text" name="carNum" id="startTime" size="6" maxlength="20" class="requiredInfo" placeholder="출발시간"/>	
 	     </div>      
        </div>
-     		<div class="mt-3" style="position: relative; left: 90px">
+       <div class="mt-3" style="position: relative; left: 90px">
 			<div class="btnRegister">
-	        <button type="button" onclick="goRegister()">신청하기</button>
-	        <button type="reset" onclick="goBack()">취소하기</button>
-	    </div>
+		        <button type="button" onclick="goRegister()">신청하기</button>
+		        <button type="reset" onclick="goBack()">취소하기</button>
+	    	</div>
 	   </div>
     </div>
 </div>

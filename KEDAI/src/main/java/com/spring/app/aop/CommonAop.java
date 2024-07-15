@@ -61,7 +61,7 @@ public class CommonAop {
 		// 정상적으로 로그인이 되어지면 session에 loginuser가 들어와있다. 
 		// (session.setAttribute("loginuser",loginuser); k - loginuser v - loginuser)
 			 
-			 String message = "먼저 로그인 하세요~~";
+			 String message = "로그인이 필요한 페이지입니다.\\n로그인 후 이용해주세요.";
 	         String loc = request.getContextPath()+"/login.kedai";		// 로그인 페이지를 loc에 넣어준다
 	         
 	         request.setAttribute("message", message);
