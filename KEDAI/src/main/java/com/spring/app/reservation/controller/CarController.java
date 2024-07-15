@@ -88,8 +88,8 @@ public class CarController {
 	public String requiredLogin_station(HttpServletRequest request, HttpServletResponse response) { // http://localhost:9099/final_project/bus.kedai
 		String bus_no = request.getParameter("bus_no");
 		String pf_station_id = request.getParameter("pf_station_id");
-		System.out.println("~~~ 확인용 pf_station_id : "+ pf_station_id);
-		System.out.println("~~~ 확인용 bus_no : "+ bus_no );
+//		System.out.println("~~~ 확인용 pf_station_id : "+ pf_station_id);
+//		System.out.println("~~~ 확인용 bus_no : "+ bus_no );
 		
 		List<BusVO> stationTimeList = service.getStationTimeList(bus_no,pf_station_id);
 		
