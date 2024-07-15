@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.spring.app.domain.DeptVO;
+import com.spring.app.domain.DocVO;
+import com.spring.app.domain.MinutesVO;
 
 @Repository 
 public class ApprovalDAO_imple implements ApprovalDAO {
@@ -48,6 +50,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	public List<Map<String, String>> deptEmpList(Map<String, String> paraMap) {
 		List<Map<String, String>> deptEmpList = sqlsession.selectList("approval.deptEmpList", paraMap);		
 		return deptEmpList;
+	}
+
+	// 첨부파일이 없는 게시판 글쓰기
+	@Override
+	public int noFile_meetingDoc(Map<String, Object> paraMap) {
+		int n = sqlsession.insert("approval.noFile_meetingDoc", paraMap);
+		return n;
 	}
 
 	// 각 부서별 당 인원수 가져오기

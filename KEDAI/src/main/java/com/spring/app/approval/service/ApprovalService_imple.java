@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.spring.app.approval.model.ApprovalDAO;
 import com.spring.app.domain.DeptVO;
+import com.spring.app.domain.DocVO;
+import com.spring.app.domain.MinutesVO;
 
 @Service
 public class ApprovalService_imple implements ApprovalService {
@@ -44,6 +46,13 @@ public class ApprovalService_imple implements ApprovalService {
 	public List<Map<String, String>> deptEmpList(Map<String, String> paraMap) {
 		List<Map<String, String>> deptEmpList = dao.deptEmpList(paraMap);
 		return deptEmpList;
+	}
+	
+	// 첨부파일이 없는 게시판 글쓰기
+	@Override
+	public int noFile_meetingDoc(Map<String, Object> paraMap) {
+		int n = dao.noFile_meetingDoc(paraMap);
+		return n;
 	}
 	
 	/*

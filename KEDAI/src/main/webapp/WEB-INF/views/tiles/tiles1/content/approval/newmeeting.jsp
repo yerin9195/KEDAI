@@ -135,7 +135,7 @@ span.clear{clear: both;}
   //스마트에디터 프레임생성
   		nhn.husky.EZCreator.createInIFrame({
     	oAppRef: obj,
-    	elPlaceHolder: "content", // id가 content인 textarea에 에디터를 넣어준다.
+    	elPlaceHolder: "doc_content", // id가 content인 textarea에 에디터를 넣어준다.
     	sSkinURI: "<%=ctxPath%>/resources/smarteditor/SmartEditor2Skin.html",
     	htParams : {
 	    	// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
@@ -150,31 +150,47 @@ span.clear{clear: both;}
   		 <%-- === 스마트 에디터 구현 끝 === --%>
   	     
   	     // 글쓰기 버튼
-  	     $("button#btnWrite").click(function(){
+		$("button#btnWrite").click(function(){
   	    	 
   	    	 <%-- === 스마트 에디터 구현 시작 === --%>
   	         // id가 content인 textarea에 에디터에서 대입
-  	           obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+  	    	obj.getById["doc_content"].exec("UPDATE_CONTENTS_FIELD", []);
   	        <%-- === 스마트 에디터 구현 끝 === --%>
   	    	 
   	    	 // 글제목 유효성 검사
-  	    	 const subject = $("input:text[name='subject']").val().trim();
-  	    	 if(subject == ""){
+  	    	const doc_subject = $("input:text[name='doc_subject']").val().trim();
+  	    	if(doc_subject == ""){
   	    		 alert("글 제목을 입력하세요!!");
-  	    		 $("input:text[name='subject']").val("");
+  	    		 $("input:text[name='doc_subject']").val("");
   	    		 return; // 종료
-  	    	 }
+  	    	}
+  	    	
+  	    	// 회의 주관부서 유효성 검사
+  	    	const host_dept = $("input:text[name='host_dept']").val().trim();
+  	    	if(host_dept == ""){
+ 	    		 alert("회의 주관 부서를 입력하세요!!");
+ 	    		 $("input:text[name='host_dept']").val("");
+ 	    		 return; // 종료
+ 	    	}
+			
+  	    	// 회의 참석자 유효성 검사
+  	    	const attendees = $("input:text[name='attendees']").val().trim();
+  	    	if(host_dept == ""){
+	    		 alert("회의 참석자를 입력하세요!!");
+	    		 $("input:text[name='attendees']").val("");
+	    		 return; // 종료
+	    	}
   	    	 
-  	    	 // 글내용 유효성 검사(스마트 에디터를 사용할 경우) 
-  	    	 <%-- const content = $("textarea[name='content']").val().trim();
-  	    	 if(content == ""){
+  	    	// 글내용 유효성 검사(스마트 에디터를 사용할 경우) 
+  	    	<%-- const doc_content = $("textarea[name='doc_content']").val().trim();
+  	    	if(doc_content == ""){
   	    		 alert("글 내용을 입력하세요!!");
   	    		 return; // 종료
-  	    	 } 
-  	    	 ==> 이렇게 입력했을 경우 html로 변환했을 때 <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p> 이렇게 나옴. 
+  	    	} 
+  	    	==> 이렇게 입력했을 경우 html로 변환했을 때 <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p> 이렇게 나옴. 
   	    	 그래서 공백이라고 인식하지 못함.
   	    	--%>
-  	    	let content_val = $("textarea[name='content']").val().trim();
+  	    	let content_val = $("textarea[name='doc_content']").val().trim();
   	   		// alert(content_val); // content에 공백만 여러개를 입력하여 쓰기할 경우 알아보는 것
   	   		// <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>
   			//content_val.replace("&nbsp;", ""); 첫 번째로 발견된 &nbsp; 문자열만을 빈 문자열로 대체. 그러므로 여러 개의 &nbsp;가 존재하는 경우 첫 번째만 대체되고 나머지는 그대로 남게 됨.
@@ -199,7 +215,7 @@ span.clear{clear: both;}
   	   // 폼(form)을 전송(submit)
   	   	 	const frm = document.newDocFrm;
   	     	frm.method = "post";
-  	      //frm.action = "<%=ctxPath%>/approval/newDocEnd.kedai";
+  	      	frm.action = "<%=ctxPath%>/approval/newDocEnd.kedai";
   	        frm.submit();
   	        
 		});// end of $("button#btnWrite").click(function()--------------
@@ -401,23 +417,21 @@ span.clear{clear: both;}
 				}
 				
 			    htmlAList += `<tr class='oneRow'>
-			            	   	 <td class="td_order">\${order}</td>
-			                	 <td class="td_deptName">\${deptName}</td>
-			                     <td class="td_jobName">\${empJobName}</td>
-			                     <td class="td_empName">\${empName}</td>
-			                     <td class ="empId" style="display:none;">\${empId}</td>
-			                     <td class ="jobCode" style="display:none;">\${jobCode}</td>
+			            	   	 <td><input type='hidden' name='level_no' value='\${order}'>\${order}</td>
+			                	 <td>\${deptName}</td>
+			                     <td>\${empJobName}</td>
+			                     <td>\${empName}</td>
+			                     <td class ='empId' style='display:none;'>\${empId}</td>
+			                     <td class ='jobCode' style='display:none;'>\${jobCode}</td>
 			                  </tr>`;
 
-			    $("table.addApproval").append(htmlAList);		    
+			    $("table.addApproval").append(htmlAList);	
 			}
 			else{// 체크박스가 선택되어 있지 않으면			
 			
 				var isRemoved = false;
 				$("tr.oneRow").each(function(index, item){
 					var td_empId = $(item).find("td.empId").text().trim();
-					console.log("~~확인용 td_empId : "+td_empId);
-					console.log("~~확인용 empId : "+empId)
 					if(td_empId == empId){
 						$(item).remove();
 						isRemoved = true;
@@ -435,21 +449,11 @@ span.clear{clear: both;}
 				for(let i=0; i<tblRow.length; i++){
 					tblRow[i].
 				}*/
-				
 			}  
-			
 		});
 		     
 	    
-		$("button.my_close").on("click", function(){
-			/*const modal_frmArr = document.querySelectorAll("form.my_form");
-		  	for(let i=0; i<modal_frmArr.length; i++) {
-		  		modal_frmArr[i].reset();
-		  	}*/
-		});
-		
-		
-		
+
 		
 		<%-- === jQuery 를 사용하여 드래그앤드롭(DragAndDrop)을 통한 파일 업로드 시작 === --%>
 	    let file_arr = []; // 첨부되어진 파일 정보를 담아둘 배열 
@@ -602,8 +606,9 @@ span.clear{clear: both;}
 		// == Drop 되어진 파일목록 제거하기 == //
 		$(document).on("click", "span.delete", function(e){
 			
-			let idx = $("span.delete").index($(e.target));
-			alert("인덱스 : " +idx);
+			let delSpan = $(e.target).closest("span.delete");
+			let idx = $("span.delete").index(delSpan);
+			//alert("인덱스 : " +idx);
 			
 			file_arr.splice(idx, 1);
 			console.log(file_arr);
@@ -620,19 +625,13 @@ span.clear{clear: both;}
 	                         start   - 수정할 배열 요소의 인덱스
 	                         deleteCount - 삭제할 요소 개수
 	   		--%>
-	    	$(e.target).closest("div#fileList").remove();
+	    	$(delSpan).closest("div.fileList").remove();
 	    	console.log("file_arr2"+file_arr);
-	    	  if(file_arr.length == 0){
-		        	$("span#fileInfo").css("display", "inline");
-		        }
-		});
-			 
-	    
+			if(file_arr.length == 0){
+		    	$("span#fileInfo").css("display", "inline");
+		    }
+		});	    
 	    <%-- === jQuery 를 사용하여 드래그앤드롭(DragAndDrop)을 통한 파일 업로드 끝 === --%>
-	    
-	
-		
-		
 		
 		
 	});// end of $(document).ready(function(){})-----------
@@ -705,23 +704,24 @@ span.clear{clear: both;}
 		</table>
 		<table class="table left_table" id="meeting">
 			<tr>
-				<th>주관부서</th>
-				<td><input type="text" name="meeting_room" size="30"
-					maxlength="60" style="width: 100%;" /></td>
-			</tr>
-			<tr>
 				<th>회의일자</th>
 				<td><input type="text" name="meeting_date" id="datepicker"
 					maxlength="8" size="8" /></td>
 			</tr>
 			<tr>
+				<th>회의 주관 부서</th>
+				<td><input type="text" name="host_dept" size="30"
+					maxlength="60" style="width: 100%;" /></td>
+			</tr>
+		
+		<!--<tr>
 				<th>회의장소</th>
 				<td><input type="text" name="meeting_room" size="30"
 					maxlength="60" style="width: 100%;" /></td>
-			</tr>
+			</tr> -->
 			<tr>
-				<th>회의 참여부서</th>
-				<td><input type="text" name="meeting_room" size="30"
+				<th>회의 참석자</th>
+				<td><input type="text" name="attendees" size="30"
 					maxlength="60" style="width: 100%;" /></td>
 			</tr>
 		</table>
@@ -810,17 +810,17 @@ span.clear{clear: both;}
 	<div class="col-md-6" style="margin: 0; width: 100%">
 		<form name="newDocFrm" enctype="multipart/form-data">
 			<%-- 버튼이 form 태그 안에 있으면 무조건 get방식으로 submit되어진다. 유효성 검사를 하고 post방식으로 submit해주고 싶다면 무조건   type="button" 해야 한다. --%>
-
+			<input type="hidden" name="fk_doctype_code" value="101"/>
 			<table style="margin-left: 5%;" class="table" id="newDoc">
 				<tr>
 					<th style="width: 12%;">제목</th>
-					<td><input type="text" name="subject" size="85"
+					<td><input type="text" name="doc_subject" size="85"
 						maxlength="100" style="height: 23pt;" /></td>
 				</tr>
 
 				<tr>
 					<td colspan='2'><textarea style="width: 100%; height: 500px;"
-							name="content" id="content"></textarea></td>
+							name="doc_content" id="doc_content"></textarea></td>
 				</tr>
 				<%-- === #170. 파일첨부 타입 추가하기 시작=== --%>
 			<%--	<tr>

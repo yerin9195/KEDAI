@@ -1,5 +1,7 @@
 package com.spring.app.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class DocVO {
 	private String doc_no;   			// 기안문서번호(EX. KD-100-2407)
 	private int fk_doctype_code;   	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
@@ -9,10 +11,21 @@ public class DocVO {
 	private String created_date;   		// 서류작성일자
 	private String doc_comment;   		// 기안의견
 	private int doc_status;   		// 기안상태  0:기안 1:반려
+	
+	///////////////////////////////////////////tbl_doc_file////////////////////////////////
+	private int doc_file_no;			//첨부파일번호
 	private String doc_org_filename;	// 원래 파일명
 	private String doc_filename;   		// 첨부 파일명
 	private String doc_filesize;   		// 파일크기
 	
+	// !!! 먼저, 댓글쓰기에 파일첨부까지 한 것을 위해서 오라클에서 tbl_comment 테이블에 3개 컬럼(fileName, orgFilename, fileSize)을 추가한 다음에 아래의 작업을 한다. !!!  
+	private MultipartFile attach;
+	   /* form 태그에서 type="file" 인 파일을 받아서 저장되는 필드이다. 
+	         진짜파일 ==> WAS(톰캣) 디스크에 저장됨.
+	             조심할것은 MultipartFile attach 는 오라클 데이터베이스 tbl_comment 테이블의 컬럼이 아니다.   
+	      /board/src/main/webapp/WEB-INF/views/tiles1/board/view.jsp 파일에서 input type="file" 인 name 의 이름(attach)과  
+	        동일해야만 파일첨부가 가능해진다.!!!!
+	 */
 	
 	
 	public String getDoc_no() {

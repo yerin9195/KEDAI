@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.spring.app.domain.DeptVO;
+import com.spring.app.domain.DocVO;
+import com.spring.app.domain.MinutesVO;
 
 public interface ApprovalDAO {
 
@@ -21,5 +23,8 @@ public interface ApprovalDAO {
 
 	// 해당 부서에 근무중인 사원 정보 가져오기
 	List<Map<String, String>> deptEmpList(Map<String, String> paraMap);
+
+	// 첨부파일이 없는 게시판 글쓰기
+	int noFile_meetingDoc(Map<String, Object> paraMap);
 
 }

@@ -97,6 +97,12 @@
 		ORDER BY D.dept_code asc, J.job_code ASC
 	</select>
 		
+	<insert id="noFile_meetingDoc" parameterType="HashMap">
+		<if test=" fk_doctype_code == ">
+		
+		</if>
+			
+	</insert>
  	
  
  	
