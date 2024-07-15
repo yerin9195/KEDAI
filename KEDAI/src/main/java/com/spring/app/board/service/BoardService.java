@@ -32,4 +32,16 @@ public interface BoardService {
 	// 글 조회수 증가와 함께 글 1개를 조회하기
 	BoardVO getView(Map<String, String> paraMap);
 
+	// 글 조회수 증가는 없고 단순히  글 1개만 조회하기
+	BoardVO getView_noIncrease_readCount(Map<String, String> paraMap);
+
+	// 파일첨부가 없는 1개의 글 수정하기
+	int edit(BoardVO bvo);
+
+	// 파일첨부가 있는 1개의 글 수정하기
+	int edit_withFile(BoardVO bvo);
+
+	// 1개의 글 삭제하기
+	int del(Map<String, String> paraMap);
+
 }
