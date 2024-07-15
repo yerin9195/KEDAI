@@ -71,15 +71,6 @@ public class CompanyDAO_imple implements CompanyDAO{
 		return n;
 	}
 
-	// 직원정보 가져오기
-	@Override
-	public List<MemberVO> employee_list_select() {
-		List<MemberVO> membervoList = sqlsession.selectList("company.employee_list_select");
-		
-		
-		return membervoList;
-	}
-
 
 	
 	
