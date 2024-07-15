@@ -6,9 +6,11 @@
 	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
+		<!-- ==== #224. (웹채팅관련6) ==== -->
 		<param-value>
 			/WEB-INF/spring/root-context.xml,
-		  	/WEB-INF/spring/mongo-connection.xml
+		  	/WEB-INF/spring/mongo-connection.xml,
+			/WEB-INF/spring/config/websocketContext.xml
 		</param-value>
 	</context-param>
 	
