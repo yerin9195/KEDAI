@@ -46,12 +46,12 @@
 	
 			// PC 데스크탑용
 			if ( rsp.success ) { // 결제가 성공된 경우
-			    opener.goCoinUpdate(ctxPath, coinmoney, empid); // 팝업창에서 부모창 함수 호출		
+			    window.opener.goCoinUpdate('<%= ctxPath%>','${requestScope.empid}','${requestScope.coinmoney}'); // 팝업창에서 부모창 함수 호출	
 				self.close(); // 팝업창 닫기
 	        } 
 			else {
-	            location.href="/KEDAI";
 	            alert("결제에 실패하였습니다. 다시 시도해주세요.");
+	            self.close(); // 팝업창 닫기
 	       }
 	
 	   }); // end of IMP.request_pay() ----------

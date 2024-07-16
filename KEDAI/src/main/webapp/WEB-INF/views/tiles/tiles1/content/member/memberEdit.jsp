@@ -332,7 +332,7 @@
 </script>
 
 <%-- content start --%>	
-<div style="border: 0px solid red; padding: 1% 0;">
+<div style="border: 0px solid red; padding: 2% 3% 0 0;">
 	<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;나의 정보 수정하기<span style="font-size: 12pt; color: #e68c0e;">&nbsp;&nbsp;* 표시는 필수입력 사항입니다.</span></h3>
 	
 	<form name="editFrm" enctype="multipart/form-data" class="row mt-5" style="border: 0px solid green;">
