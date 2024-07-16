@@ -476,7 +476,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
             <div class="listImg">
               <img src="<%= ctxPath%>/resources/images/common/business_num.svg" alt="">
             </div>
-            <div id="pop_partnerNo" class="listTxt">거래처 사업자 등록번호</div>
+            <div id="pop_partnerNo" class="listTxt"></div>
           </li>
           <li>
             <div class="listImg">

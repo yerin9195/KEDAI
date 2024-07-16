@@ -26,13 +26,13 @@ public class EmployeeService_imple implements EmployeeService{
 	@Override
 	public List<Map<String, String>> employeeList() {
 		
-		List<Map<String,String>> employeeList_select = dao.employeeList();
+		List<Map<String,String>> employeeList = dao.employeeList();
 		
-		employeeList_select.forEach( map -> {
+		employeeList.forEach( map -> {
 			
 			try {			
-				map.put("Email",(aES256.decrypt(map.get("Email"))));   // 복호화되어진 email 을 넣어준다.
-				map.put("mobile",(aES256.decrypt(map.get("Mobile")))); // 복호화되어진 mobile 을 넣어준다.
+				map.put("email",(aES256.decrypt(map.get("email"))));   // 복호화되어진 email 을 넣어준다.
+				map.put("mobile",(aES256.decrypt(map.get("mobile")))); // 복호화되어진 mobile 을 넣어준다.
 			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 				e.printStackTrace();
 			} 
@@ -40,12 +40,20 @@ public class EmployeeService_imple implements EmployeeService{
 		
 		
 		
-		return employeeList_select;
+		return employeeList;
+	}
+
+	// 클릭한 직원 상세 정보 가져오기
+	@Override
+	public Map<String, String> empDetail(String empid) {
+		
+		Map<String,String> empDetail = dao.empDetail(empid);
+		
+		return empDetail;
 	}
 	
 	
-	
-	
+	// 직원정보 상세보기 팝업 어떤것 클릭했는지 알아오기(직원 아이디로 가져오기)
 	
 	
 	
@@ -81,25 +89,6 @@ public class EmployeeService_imple implements EmployeeService{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	
 
 
@@ -120,17 +109,7 @@ public class EmployeeService_imple implements EmployeeService{
 
 
 
-
-
-
-
-
-
-	@Override
-	public MemberVO employeeDetail_select(String empid) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	
 /*

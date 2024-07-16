@@ -22,36 +22,39 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 	@Qualifier("sqlsession")
 	private SqlSessionTemplate sqlsession;
 	
-	/*
-	 * // 직원정보 가져오기
-	 * 
-	 * @Override public List<MemberVO> employee_list_select() {
-	 * 
-	 * List<MemberVO> membervoList =
-	 * sqlsession.selectList("employee.employee_list_select");
-	 * System.out.println("membervoList : " + membervoList);
-	 * 
-	 * return membervoList; }
-	 */
-	// 직원 상세보기 가져오기 
-	@Override
-	public MemberVO employeeDetail_select(String empid) {
-		
-		MemberVO mvo = sqlsession.selectOne("employee.employeeDetail_select", empid);
-		
-		
-		return mvo;
-	}
-
+	// 직원정보 가져오기
 	@Override
 	public List<Map<String, String>> employeeList() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<Map<String, String>> employeeList = sqlsession.selectList("employee.employeeList");
+		// System.out.println("111employeeList : " + employeeList);
+		return employeeList;
+	}
+	
+	// 직원정보 상세보기 팝업 어떤것 클릭했는지 알아오기(직원 아이디로 가져오기)
+	@Override
+	public Map<String, String> empDetail(String empid) {
+		Map<String, String> empDetail = sqlsession.selectOne("employee.empDetail", empid);
+		
+		return empDetail;
 	}
 
+	
+	
+	
+	
+	
+	/*
+	 * @Override public Map<String, String> empDetail_map(String empid) {
+	 * Map<String, String> employeeDetail_select =
+	 * sqlsession.selectOne("employee.empDetail_map", empid); return
+	 * employeeDetail_select; }
+	 */
+	
+	
+	
+	
 
-	
-	
 	
 	
 }

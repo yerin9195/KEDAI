@@ -443,7 +443,7 @@ bigName{
 			$('.popup-overlay-emp').css({
 				display : 'flex'
 			});
-			console.log('open popup')
+			// console.log('open popup')
 		})
 
 		// 닫기 버튼을 클릭하면 팝업 제거
@@ -453,20 +453,43 @@ bigName{
 			});
 		});
 	});
-	
-	
-	// function Declation
-	function formatPhoneNumber(phoneNumber){
+
+	// 클릭한 직원 상세정보 불러오는 함수 
+	$(function(){
+
+		var empid;
 		
-		let digits = phoneNumber.replace(/\D/g, '');
-		
-		let part1 = digits.substring(0,3);
-		let part2 = digits.substring(3,7);
-		let part3 = digits.substring(7,11);
-		
-		//return `${part1}-${part2}-${part3}`;
-		return "하하하";
-	}
+		$("#empInfo").click(function(empid){
+			console.log("empInfo clicked");
+			console.log("자고 싶다...");
+			var empid = $('#empInfo').attr('empid');
+			console.log('empid:', empid);
+			
+			$.ajax({
+				url: "<%=ctxPath%>/employeeDetail_select.kedai?empid=" + empid,
+				type:"get",
+				async:true,
+				dataType:"json",
+				success: function(json){
+					// 서버에서 직원id 로 정보 가져오기
+					if(json.name != null){
+						$("#pop_empName").html(json.name);
+						//console.log(json.name);
+					}
+					else{
+						alert("직원 상세 정보를 불러오지 못했습니다.");
+					}
+				},
+				 error: function(request, status, error) {
+				 	alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+				 }
+			 });
+			
+		  	$('.popup-overlay-emp').css({
+			  display : 'none'
+		  	});
+		});
+	});// end of $(function(){}------------------------------------------------------
 	
 
 	
@@ -538,15 +561,15 @@ bigName{
 			       </tr>
 			   </thead>
 			   <tbody>
-			   <c:forEach var="membervo" items="${requestScope.membervoList}" varStatus="status">
-			 	  <c:if test="${membervo.jvo.job_code != '1'}">
-			 	   <tr>
-			 	   	 <td class="emp-dept">${membervo.dvo.dept_name}</td>
-		   			 <td class="emp-rank">${membervo.jvo.job_name}</td>
-		   			 <td class="emp-name">${membervo.name}</td>
-		  			 <td class="dept-tel">${membervo.dept_tel}</td>
-		  			 <td class="personal-tel">${(membervo.mobile).substring(0,3)}-${(membervo.mobile).substring(3,7)}-${(membervo.mobile).substring(7,11)}</td>
-		  			 <td class="emp-email">${membervo.email}</td>
+			   <c:forEach var="empList" items="${requestScope.employeeList}" varStatus="status">
+			 	  <c:if test="${empList.job_code != '1'}">
+			 	   <tr id="empInfo">
+			 	   	 <td class="emp-dept">${empList.dept_name}</td>
+		   			 <td class="emp-rank">${empList.job_name}</td>
+		   			 <td class="emp-name">${empList.name}</td>
+		  			 <td class="dept-tel">${empList.dept_tel}</td>
+		  			 <td class="personal-tel">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
+		  			 <td class="emp-email">${empList.email}</td>
 	  			   </tr>
 	  			  </c:if>
 	  			</c:forEach>   
@@ -585,7 +608,7 @@ bigName{
 						<div class="input-forms">
 							<label> 
 								<span>이름</span> 
-								<input type="text" class="form-control" value="유선우" readonly>
+								<input type="text" class="form-control" id="pop_empName" value="" readonly>
 							</label> 
 							<label> 
 								<span>닉네임</span>
