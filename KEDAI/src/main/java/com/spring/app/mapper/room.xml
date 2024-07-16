@@ -30,9 +30,8 @@
 	</select>
 
 	<select id="Roomroomall" resultType="RoomSubVO" parameterType="RoomSubVO">
-
-	select pk_roomsub_seq as roomSubSeq, roomSub_name as roomSubName, roomSub_detail as roomSub_detail, room_status, fk_roomMain_seq as roomMainSeq
-    from tbl_room_main join tbl_room_sub
-    on tbl_room_main.pk_roommain_seq = tbl_room_sub.fk_roommain_seq
+		select pk_roomsub_seq as roomSubSeq, roomSub_name as roomSubName, roomSub_detail as roomSub_detail, room_status, fk_roomMain_seq as roomMainSeq
+	    from tbl_room_main join tbl_room_sub
+	    on tbl_room_main.pk_roommain_seq = tbl_room_sub.fk_roommain_seq
     </select>
 </mapper>

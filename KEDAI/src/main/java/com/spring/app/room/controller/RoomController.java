@@ -61,6 +61,7 @@ public class RoomController {
 	    }
 	 
 	 @GetMapping(value = "/roomall.kedai", produces = "application/json;charset=UTF-8")
+	 @ResponseBody
 	 public String roomall() {
 		 List<RoomSubVO> roomSubList = service.getroomall();
 		 JSONArray jsonArr = new JSONArray();
