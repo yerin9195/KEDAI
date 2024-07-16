@@ -459,6 +459,69 @@ public class MemberController {
 		return mav;
 	}
 	
+	// 포인트 충전하기
+	@GetMapping("/member/coinPurchaseTypeChoice.kedai")
+	public ModelAndView requiredLogin_coinPurchaseTypeChoice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		String empid = request.getParameter("empid");
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		if(loginuser.getEmpid().equals(empid)) {
+			mav.setViewName("coinPurchaseTypeChoice");
+		}
+		else {
+			String message = "다른 사용자의 포인트 충전 시도는 불가합니다.";
+			String loc = "javascript:history.back()";
+           
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+           
+			mav.setViewName("msg"); 
+		}
+		
+		return mav;
+	}
+	
+	@GetMapping("/member/coinPurchaseEnd.kedai")
+	public ModelAndView requiredLogin_coinPurchaseEnd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		String empid = request.getParameter("empid");
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		if(loginuser.getEmpid().equals(empid)) {
+			String coinmoney = request.getParameter("coinmoney");
+			String productName = "KEDAI";
+			
+			mav.addObject("productName", productName);
+			mav.addObject("productPrice", 10);
+			mav.addObject("email", loginuser.getEmail());
+			mav.addObject("name", loginuser.getName());
+			mav.addObject("mobile", loginuser.getMobile());
+			mav.addObject("empid", empid); 		   // 이것은 update 시 필요한 정보이다.
+			mav.addObject("coinmoney", coinmoney); // 이것은 update 시 필요한 정보이다.
+			
+			mav.setViewName("paymentGateway"); // PG(paymentGateway) 는 결제대행사를 의미한다.
+		}
+		else {
+			String message = "다른 사용자의 포인트 충전 시도는 불가합니다.";
+			String loc = "javascript:history.back()";
+           
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+           
+			mav.setViewName("msg"); 
+		}
+		
+		return mav;
+	}
+	
+	
+	
+	
 	
 	
 	
