@@ -28,6 +28,7 @@
 		color: #fff;
 	}
 	.dropdown-menu li {
+		margin-left: 5%;
 		margin-bottom: 5%;
 	}
 	.dropdown-menu li a {
@@ -68,10 +69,10 @@
 	} // end of goCoinPurchaseTypeChoice(empid, ctxPath) ----------
 	
 	// 포트원(회사명 구 아임포트) 을 사용하여 결제하기
-	function goCoinPurchaseEnd(ctxPath, coinmoney, empid){
+	function goCoinPurchaseEnd(ctxPath, empid, coinmoney){
 		
 		// 포트원(회사명 구 아임포트) 결제 팝업창 띄우기
-	    const url = "${pageContext.request.contextPath}/member/coinPurchaseEnd.kedai?coinmoney="+coinmoney+"&empid="+empid;
+	    const url = "${pageContext.request.contextPath}/member/coinPurchaseEnd.kedai?empid="+empid+"&coinmoney="+coinmoney;
 		
 		const width = 1000;
 	    const height = 600;
@@ -90,15 +91,18 @@
 	} // end of function goCoinPurchaseEnd(ctxPath, coinmoney, empid) ----------
 	
 	// tbl_employees 테이블에 해당 사용자의 포인트 증가(update) 시키기
-	function goCoinUpdate(ctxPath, coinmoney, empid){
+	function goCoinUpdate(ctxPath, empid, coinmoney){
 		
 		$.ajax({
-			url: "<%= ctxPath%>/member/coinUpdateLoginUser.kedai",
+			url: "<%= ctxPath%>/member/pointUpdate.kedai",
 			type: "post",
 			data: {"empid":empid, "coinmoney":coinmoney},
 			dataType: "json",	 
 		   	success: function(json){
-		   		console.log("~~~ 확인용 json =>", json);
+		   	//	console.log(JSON.stringify(json));
+
+		   	 	alert(json.message);
+	            location.href = json.loc;
 		   	},
 			error: function(request, status, error){
             	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -171,7 +175,7 @@
 					</div>
 				</div>
 			</div>
-		</div>:
+		</div>
 	</section>
 	
 	<section class="row justify-content-between mt-2" style="height: 350px;">
@@ -203,7 +207,6 @@
 			
 		<div class="col-4 pl-0 pr-0" style="border: 1px solid red; text-align: center;">
 			<h4>chart</h4>
-			<img alt="menu" src="" width="100%" />
 		</div>
 	</section>
 </div>

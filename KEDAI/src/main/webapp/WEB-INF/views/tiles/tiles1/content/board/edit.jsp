@@ -107,7 +107,7 @@
 </script>
 
 <%-- content start --%>
-<div style="border: 0px solid red; padding: 1% 3% 3% 0;">
+<div style="border: 0px solid red; padding: 2% 3% 0 0;">
 	<div>
    		<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;글수정하기</h3>
 	</div>

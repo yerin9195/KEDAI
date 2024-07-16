@@ -553,3 +553,17 @@ FROM
     where status = 1
 ) V
 WHERE V.board_seq = 1;
+
+-----------------------------------------------------------------------
+
+-- 포인트 충전하기
+select to_number('100000')*0.01      
+from dual;
+-- 1000
+
+update tbl_employees set point = point + (to_number('100000')*0.01)
+where empid = '2013100-002';
+-- 1 행 이(가) 업데이트되었습니다.
+
+commit;
+-- 커밋 완료.

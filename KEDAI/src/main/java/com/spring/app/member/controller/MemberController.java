@@ -3,6 +3,8 @@ package com.spring.app.member.controller;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,7 +141,7 @@ public class MemberController {
 		return mav;	
 	}
 	
-	// 아이디 & 비밀번호 찾기 페이지 이동
+	// 아이디 & 비밀번호 찾는 페이지 이동
 	@GetMapping("/login/idPwdFind.kedai")
 	public String idPwdFind(HttpServletRequest request) { 
 		
@@ -351,7 +353,7 @@ public class MemberController {
 		return mav;
 	}
 	
-	// 나의 정보 수정하기 페이지 이동
+	// 나의 정보 수정하는 페이지 이동
 	@GetMapping("/member/memberEdit.kedai")
 	public ModelAndView memberEdit(ModelAndView mav) {
 		
@@ -459,7 +461,7 @@ public class MemberController {
 		return mav;
 	}
 	
-	// 포인트 충전하기
+	// 포인트 충전하는 페이지 이동
 	@GetMapping("/member/coinPurchaseTypeChoice.kedai")
 	public ModelAndView requiredLogin_coinPurchaseTypeChoice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
@@ -484,6 +486,7 @@ public class MemberController {
 		return mav;
 	}
 	
+	// PG(paymentGateway) 결제대행사 페이지로 이동
 	@GetMapping("/member/coinPurchaseEnd.kedai")
 	public ModelAndView requiredLogin_coinPurchaseEnd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
@@ -519,7 +522,56 @@ public class MemberController {
 		return mav;
 	}
 	
+	// 포인트 충전하기
+	@ResponseBody
+	@PostMapping(value="/member/pointUpdate.kedai", produces="text/plain;charset=UTF-8")
+	public String coinUpdate(HttpServletRequest request) {
+		
+		String empid = request.getParameter("empid");
+		String coinmoney = request.getParameter("coinmoney");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("empid", empid);
+		paraMap.put("coinmoney", coinmoney);
+		
+		int n = 0;
+		String message = "";
+		String loc = "";
+		
+		try {
+			n = service.pointUpdate(paraMap);
+			
+			if(n == 1) {
+				HttpSession session = request.getSession();
+				MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+				
+				// 세션값 변경하기 => DB 에서 update 되어진 값을 다시 session 에 넣어준다.
+				loginuser.setPoint(loginuser.getPoint()+(int)(Integer.parseInt(coinmoney)*0.01)); // double 타입을 int 타입으로 형변환
+				
+				DecimalFormat df = new DecimalFormat("#,###");
+				
+				message = loginuser.getName()+"님의 "+df.format(Long.parseLong(coinmoney))+"원 결제가 완료되었습니다."; // string 타입을 long 타입으로 형변환
+				loc = request.getContextPath()+"/index.kedai";
+			}
+			
+		} catch (Exception e) {
+			message = "포인트 충전이 DB오류로 인해 실패되었습니다.\\n다시 시도해주세요.";
+			loc = "javascript:history.back()";
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		jsonObj.put("message", message);
+		jsonObj.put("loc", loc);
+		
+		return jsonObj.toString();
+	}
 	
+	
+	
+	
+		
+
 	
 	
 	

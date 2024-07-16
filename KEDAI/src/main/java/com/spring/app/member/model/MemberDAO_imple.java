@@ -17,9 +17,6 @@ public class MemberDAO_imple implements MemberDAO {
 	@Autowired
 	@Qualifier("sqlsession")
 	private SqlSessionTemplate sqlsession;
-	
-    @Autowired
-    private MemberDAO memberDAO;
 
 	@Override
 	public MemberVO getLoginMember(Map<String, String> paraMap) {
@@ -55,6 +52,12 @@ public class MemberDAO_imple implements MemberDAO {
 		int n = sqlsession.update("member.memberEditEnd", paraMap);
 		return n;
 	}
+	
+	@Override
+	public int pointUpdate(Map<String, String> paraMap) {
+		int n = sqlsession.update("member.pointUpdate", paraMap);
+		return n;
+	} 
 
 	
 
@@ -71,6 +74,8 @@ public class MemberDAO_imple implements MemberDAO {
 	public int salaryCal(SalaryVO salaryvo) {
 		int n = sqlsession.insert("salary.salaryCal", salaryvo);
 		return n;
-	} 
+	}
+
+	
 	
 }

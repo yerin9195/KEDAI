@@ -78,6 +78,13 @@ public class MemberService_imple implements MemberService {
 		int n = dao.memberEditEnd(paraMap);
 		return n;
 	}
+	
+	// 포인트 충전하기
+	@Override
+	public int pointUpdate(Map<String, String> paraMap) {
+		int n = dao.pointUpdate(paraMap);
+		return n;
+	}
 
 	
 
@@ -96,4 +103,6 @@ public class MemberService_imple implements MemberService {
 		return n;
 	}
 	//	
+
+	
 }
