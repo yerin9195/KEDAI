@@ -44,103 +44,103 @@ import jdk.nashorn.api.scripting.JSObject;
 
 @Controller
 public class CompanyController {
-	
+
 	@Autowired
 	private CompanyService service;
-	
+
 	@Autowired
 	private AES256 aes256;
-	
+
 	@Autowired
 	private FileManager fileManager;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	// 거래처 사업자등록번호 이미 있는지 중복확인
 	@ResponseBody
-	@PostMapping(value="/partnerNoCheck.kedai", produces="text/plain;charset=UTF-8")
+	@PostMapping(value = "/partnerNoCheck.kedai", produces = "text/plain;charset=UTF-8")
 	public String partnerNoDuplicateCheck(HttpServletRequest request) {
-		
+
 		String partner_no = request.getParameter("partner_no");
 		System.out.println("확인용 partner_no : " + partner_no);
-		
+
 		String searchPartnerNo = service.partnerNoDuplicateCheck(partner_no);
-		
+
 		boolean isExists = false;
-		
-		if(searchPartnerNo != null) {
+
+		if (searchPartnerNo != null) {
 			isExists = true;
 		}
-		
+
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("isExists", isExists);
-		
-		return jsonObj.toString();
-		
-	} // end of public String partnerNoDuplicateCheck()--------------------------------------
 
-	// 거래처 정보 등록하기 시작 
-	@GetMapping(value="/othercom_register.kedai")	// http://localhost:9099/KEDAI/othercom_list.kedai
+		return jsonObj.toString();
+
+	} // end of public String
+		// partnerNoDuplicateCheck()--------------------------------------
+
+	// 거래처 정보 등록하기 시작
+	@GetMapping(value = "/othercom_register.kedai") // http://localhost:9099/KEDAI/othercom_list.kedai
 	public ModelAndView other_comRegister(ModelAndView mav) {
-			
+
 		mav.setViewName("tiles1/company/othercom_register.tiles");
-		
+
 		return mav;
 	}
-	
-	// 거래처 정보 등록하기 넘겨주기 
+
+	// 거래처 정보 등록하기 넘겨주기
 	@PostMapping("othercom_register.kedai")
-	public ModelAndView othercomRegister_submit(PartnerVO partvo, @RequestParam("is_modify") Boolean isModify, ModelAndView mav, MultipartHttpServletRequest mrequest) {
-		
+	public ModelAndView othercomRegister_submit(PartnerVO partvo, @RequestParam("is_modify") Boolean isModify,
+			ModelAndView mav, MultipartHttpServletRequest mrequest) {
+
 		// 이미 파 업로드
 		imageFileUpload(partvo, mrequest);
-		
+
 		try {
-			int n = (isModify != true) ? 
-					service.othercomRegister_submit(partvo) // 등록 때  
-					: service.othercomModify_submit(partvo); // 수정  
-			if(n == 1) {
-				setModelView(mav, "거래처가 정상적으로 " + ((isModify != true)? "등록" : "수정") + "되었습니다!", 
-						mrequest.getContextPath()+"/othercom_list.kedai");
+			int n = (isModify != true) ? service.othercomRegister_submit(partvo) // 등록 때
+					: service.othercomModify_submit(partvo); // 수정
+			if (n == 1) {
+				setModelView(mav, "거래처가 정상적으로 " + ((isModify != true) ? "등록" : "수정") + "되었습니다!",
+						mrequest.getContextPath() + "/othercom_list.kedai");
 			}
 		} catch (Exception e) {
-			setModelView(mav, "거래처 " + ((isModify != true)? "등록" : "수정") + "을 실패하였습니다.", "javascript:history.back()");
+			setModelView(mav, "거래처 " + ((isModify != true) ? "등록" : "수정") + "을 실패하였습니다.", "javascript:history.back()");
 		}
-		
+
 		return mav;
 	}
 
 	private void setModelView(ModelAndView mav, String message, String loc) {
-		mav.addObject("message",message);
+		mav.addObject("message", message);
 		mav.addObject("loc", loc);
 		mav.setViewName("msg");
 	}
 
 	private void imageFileUpload(PartnerVO partvo, MultipartHttpServletRequest mrequest) {
 		MultipartFile attach = partvo.getAttach();
-		
+
 		String imgfilename = "";
-		String originalFilename ="";
-		
-		if(attach != null) {	// 첨부파일이 있는 경우
-			
+		String originalFilename = "";
+
+		if (attach != null) { // 첨부파일이 있는 경우
+
 			// WAS의 webapp 의 절대 경로 알아오기
 			String root = mrequest.getSession().getServletContext().getRealPath("/");
 			// System.out.println(root);
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
-			
+
 			String path = service.getPartnerImagePath(root);
-			
+
 			// 파일 첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 업로드
-			imgfilename = "";	// WAS(톰캣)의 디스크에 저장될 파일명
-			byte[] bytes = null;		// 첨부파일의 내용물을 담는 것
-			
-			
+			imgfilename = ""; // WAS(톰캣)의 디스크에 저장될 파일명
+			byte[] bytes = null; // 첨부파일의 내용물을 담는 것
+
 			try {
-				bytes = attach.getBytes();	// 첨부파일의 내용물을 읽어오는 것
-				
-				originalFilename = attach.getOriginalFilename();		// 첨부파일명의 파일명
+				bytes = attach.getBytes(); // 첨부파일의 내용물을 읽어오는 것
+
+				originalFilename = attach.getOriginalFilename(); // 첨부파일명의 파일명
 				/* System.out.println("originalFilename"+originalFilename); */
 				imgfilename = fileManager.doFileUpload(bytes, originalFilename, path);
 				/* System.out.println("imgfilename" +imgfilename); */
@@ -149,34 +149,32 @@ public class CompanyController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
- 			
-			
-		} // end of if(attach != null) {}--------------------------------------------------------------
-	}
-	
 
-	// end of public ModelAndView othercomRegister_submit(ModelAndView mav, PartnerVO partvo, MultipartHttpServletRequest mrequest) {}-----------------------------------------------------
-	
-	
-	// 거래처 수정하기 
-	@GetMapping(value="/othercom_modify.kedai")	// http://localhost:9099/KEDAI/othercom_list.kedai
+		} // end of if(attach != null)
+			// {}--------------------------------------------------------------
+	}
+
+	// end of public ModelAndView othercomRegister_submit(ModelAndView mav,
+	// PartnerVO partvo, MultipartHttpServletRequest mrequest)
+	// {}-----------------------------------------------------
+
+	// 거래처 수정하기
+	@GetMapping(value = "/othercom_modify.kedai") // http://localhost:9099/KEDAI/othercom_list.kedai
 	public ModelAndView other_comModify(@RequestParam("partner_no") String partnerNo, ModelAndView mav) {
 		PartnerVO partnerVO = service.otherCom_get_select(partnerNo);
-			
+
 		mav.setViewName("tiles1/company/othercom_register.tiles");
 		mav.addObject("partvo", partnerVO);
-		
+
 		return mav;
 	}
-	
-	
-	
+
 	// 거래처 정보 조회하기 #######################################################
-	@RequestMapping(value="/othercom_list.kedai")
+	@RequestMapping(value = "/othercom_list.kedai")
 	public ModelAndView otherCom_list_select(ModelAndView mav) {
-		
-		List<PartnerVO> partnervoList = service.otherCom_list_select(); 
-		
+
+		List<PartnerVO> partnervoList = service.otherCom_list_select();
+
 		/*
 		 * for(PartnerVO partvo : partnervoList) { System.out.println("partner_No : " +
 		 * partvo.getPartner_no()); System.out.println("PARTNER_TYPE : " +
@@ -194,105 +192,98 @@ public class CompanyController {
 		 * partvo.getPart_emp_dept()); System.out.println("ORIGINALFILENAME : " +
 		 * partvo.getOriginalfilename()); System.out.println("PART_EMP_RANK : " +
 		 * partvo.getPart_emp_rank()); }
-		*/
-		
-		mav.addObject("partnervoList",partnervoList);
-		
+		 */
+
+		mav.addObject("partnervoList", partnervoList);
+
 		mav.setViewName("tiles1/company/othercom_list.tiles");
-		
-		
+
 		return mav;
 	}
-	
-	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 
+
+	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기
 	@ResponseBody
-	@GetMapping(value="/partnerPopupClick.kedai", produces="text/plain;charset=UTF-8")
+	@GetMapping(value = "/partnerPopupClick.kedai", produces = "text/plain;charset=UTF-8")
 	public String otherCom_get_select(String partner_no) throws JsonProcessingException {
-	
+
 		PartnerVO partnerVO = service.otherCom_get_select(partner_no);
-		
-		String jsonString = objectMapper.writeValueAsString(partnerVO); // toObject => PartnerVO partnerVO = objectMapper.readValue(jsonString, PartnerVO.class)
-	
-		
-		
+
+		String jsonString = objectMapper.writeValueAsString(partnerVO); // toObject => PartnerVO partnerVO =
+																		// objectMapper.readValue(jsonString,
+																		// PartnerVO.class)
+
 		return jsonString;
 	} // end of public String partnerPopupClick(HttpServletRequest request) {
-	
-	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 
+
+	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기
 	@ResponseBody
-	@PostMapping(value="/partnerPopupClick.kedai", produces="text/plain;charset=UTF-8")
+	@PostMapping(value = "/partnerPopupClick.kedai", produces = "text/plain;charset=UTF-8")
 	public String partnerPopupClick(PartnerVO partvo) {
-	
-		List<PartnerVO> partnervoList = service.partnerPopupClick(partvo); 
-		
+
+		List<PartnerVO> partnervoList = service.partnerPopupClick(partvo);
+
 		JSONArray jsonArr = new JSONArray();
-		
-		if(partnervoList != null) {
-			
-			for(PartnerVO pvo:partnervoList) {
+
+		if (partnervoList != null) {
+
+			for (PartnerVO pvo : partnervoList) {
 				JSONObject jsonObj = new JSONObject();
-				jsonObj.put("partner_no",pvo.getPartner_no());
-				jsonObj.put("partner_name",pvo.getPartner_name());
-				jsonObj.put("partner_type",pvo.getPartner_type());
-				jsonObj.put("partner_url",pvo.getPartner_url());
-				jsonObj.put("partner_postcode",pvo.getPartner_postcode());
-				jsonObj.put("partner_address",pvo.getPartner_address());
-				jsonObj.put("partner_detailaddress",pvo.getPartner_detailaddress());
-				jsonObj.put("partner_extraaddress",pvo.getPartner_extraaddress());
-				jsonObj.put("imgfilename",pvo.getImgfilename());
+				jsonObj.put("partner_no", pvo.getPartner_no());
+				jsonObj.put("partner_name", pvo.getPartner_name());
+				jsonObj.put("partner_type", pvo.getPartner_type());
+				jsonObj.put("partner_url", pvo.getPartner_url());
+				jsonObj.put("partner_postcode", pvo.getPartner_postcode());
+				jsonObj.put("partner_address", pvo.getPartner_address());
+				jsonObj.put("partner_detailaddress", pvo.getPartner_detailaddress());
+				jsonObj.put("partner_extraaddress", pvo.getPartner_extraaddress());
+				jsonObj.put("imgfilename", pvo.getImgfilename());
 				jsonObj.put("originalfilename", pvo.getOriginalfilename());
-				jsonObj.put("part_emp_name",pvo.getPart_emp_name());
-				jsonObj.put("part_emp_tel",pvo.getPart_emp_tel());
-				jsonObj.put("part_emp_email",pvo.getPart_emp_email());
-				jsonObj.put("part_emp_dept",pvo.getPart_emp_dept());
-				jsonObj.put("part_emp_rank",pvo.getPart_emp_rank());
-				
+				jsonObj.put("part_emp_name", pvo.getPart_emp_name());
+				jsonObj.put("part_emp_tel", pvo.getPart_emp_tel());
+				jsonObj.put("part_emp_email", pvo.getPart_emp_email());
+				jsonObj.put("part_emp_dept", pvo.getPart_emp_dept());
+				jsonObj.put("part_emp_rank", pvo.getPart_emp_rank());
+
 				jsonArr.put(jsonObj);
-			}// end of for()------------------------------------------------
-		
+			} // end of for()------------------------------------------------
+
 		}
-		
+
 		String jsonString = jsonArr.toString();
-		
-		
+
 		return jsonString;
-		
-		
-		
+
 	} // end of public String partnerPopupClick(HttpServletRequest request) {
-	
-	
-	// 거래처 삭제하기 // 
+
+	// 거래처 삭제하기 //
 	@ResponseBody
-	@PostMapping(value="/company/delPartner_com.kedai" , produces="text/plain;charset=UTF-8")
-	public String delPartner_com(HttpServletRequest request) throws Throwable{
-		
+	@PostMapping(value = "/company/delPartner_com.kedai", produces = "text/plain;charset=UTF-8")
+	public String delPartner_com(HttpServletRequest request) throws Throwable {
+
 		// WAS의 webapp 의 절대 경로 알아오기
 		String rootPath = request.getSession().getServletContext().getRealPath("/");
 		// System.out.println(root);
 		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 
-		
 		String partner_no = request.getParameter("partner_no");
-		// System.out.println("partner_no : " + partner_no); 
+		// System.out.println("partner_no : " + partner_no);
 		int n = service.delPartnerNo(partner_no, rootPath);
 		// System.out.println("n : " + n );
 		JSONObject jsObj = new JSONObject();
-		
+
 		jsObj.put("n", n);
-		
-		
+
 		return jsObj.toString();
-		
+
 	}
+	
+
+	
+	
 	
 	
 	/*
-	 * // 거래처 삭제는 성공함 ==> 첨부파일 삭제 실패
-	 *  
-	 * // 거래처 등록 첨부파일 삭제하기 //
-	 * 
-	 * @PostMapping(value =
+	 * // 거래처 삭제는 성공함 ==> 첨부파일 삭제 실패 //@PostMapping(value =
 	 * "/company/delPart_comImagefile.kedai",produces="text/plain;charset=UTF-8")
 	 * public ModelAndView delPart_comImagefile(ModelAndView mav, HttpServletRequest
 	 * request) {
@@ -322,45 +313,27 @@ public class CompanyController {
 	 * 
 	 * }
 	 */
-	
 
-	
-	//////////////////////////////////////////////////////////////////////////
-	// 사원리스트  
-	@GetMapping(value="/employee.kedai")
-	public ModelAndView employee_select(ModelAndView mav) {
-		
-		// List<MemberVO> membervoList = service.employee_list_select();
-		
-		//mav.addObject("membervoList",membervoList);
-		// mav.setViewName("tiles1/company/employee.tiles");
-		
-		return mav;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	@GetMapping(value="/employeeDetail.kedai")
-	public ModelAndView employeeDetail(ModelAndView mav) {
-		
-		mav.setViewName("tiles1/company/employeeDetail.tiles");
-		
-		return mav;
-	}
-	
-	
-	
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 사원리스트
+	/*
+	 * @GetMapping(value="/employee.kedai") public ModelAndView
+	 * employee_select(ModelAndView mav) {
+	 * 
+	 * List<MemberVO> membervoList = service.employee_list_select();
+	 * 
+	 * mav.addObject("membervoList",membervoList); //
+	 * mav.setViewName("tiles1/company/employee.tiles");
+	 * 
+	 * return mav; }
+	 * 
+	 * @GetMapping(value="/employeeDetail.kedai") public ModelAndView
+	 * employeeDetail(ModelAndView mav) {
+	 * mav.setViewName("tiles1/company/employeeDetail.tiles");
+	 * 
+	 * return mav; }
+	 */
+
 
 }

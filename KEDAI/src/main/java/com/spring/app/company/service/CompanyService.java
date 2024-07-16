@@ -28,7 +28,9 @@ public interface CompanyService {
 	// 거래처 삭제하기
 	int delPartnerNo(String partner_no, String rootPath);
 	
-	String getPartnerImagePath(String rootPath);	
+	String getPartnerImagePath(String rootPath);
+	
+
 	
 	
 

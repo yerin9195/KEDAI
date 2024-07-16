@@ -22,7 +22,7 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 	public List<MemberVO> employee_list_select() {
 		
 		List<MemberVO> membervoList = sqlsession.selectList("employee.employee_list_select");
-		
+		System.out.println("membervoList : " + membervoList);
 		
 		return membervoList;
 	}
