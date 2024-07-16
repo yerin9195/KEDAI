@@ -331,7 +331,7 @@ public class CompanyController {
 	@GetMapping(value="/employee.kedai")
 	public ModelAndView employee_select(ModelAndView mav) {
 		
-		List<MemberVO> membervoList = service.employee_list();
+		List<MemberVO> membervoList = service.employee_list_select();
 		
 		mav.addObject("membervoList",membervoList);
 		mav.setViewName("tiles1/company/employee.tiles");
