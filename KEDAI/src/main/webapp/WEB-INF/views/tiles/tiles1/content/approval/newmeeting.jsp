@@ -175,7 +175,7 @@ span.clear{clear: both;}
 			
   	    	// 회의 참석자 유효성 검사
   	    	const attendees = $("input:text[name='attendees']").val().trim();
-  	    	if(host_dept == ""){
+  	    	if(attendees == ""){
 	    		 alert("회의 참석자를 입력하세요!!");
 	    		 $("input:text[name='attendees']").val("");
 	    		 return; // 종료
@@ -211,6 +211,15 @@ span.clear{clear: both;}
   	     		alert("글 내용을 입력하세요!!");
   	     		return; //종료
   	     	}
+  	     	
+  	     	
+  	  	// 결재라인 유효성 검사
+  	  		const second_approval = $("table#approval tr").eq(1).length;
+  	    	if(second_approval == 0){
+ 	    		 alert("결재자를 선택하세요!!");
+ 	    		 return; // 종료
+ 	    	}
+  	     	
   	     	
   	   // 폼(form)을 전송(submit)
   	   	 	const frm = document.newDocFrm;
@@ -318,7 +327,7 @@ span.clear{clear: both;}
 							v_html += "<ul class='moreList approvalList'>";
 							$.each(json, function(index, item){
 								v_html += 	`<li>
-								    			<input type='checkbox' name='submitList' id='\${item.empid}' value='\${item.empid}' />
+								    			<input type='checkbox' id='\${item.empid}' value='\${item.empid}' />
 								    			<input type='hidden' id='deptName' value='\${item.dept_name}' />
 								    			<input type='hidden' id='jobCode' value='\${item.job_code}'/>
 								    			<label for='\${item.empid}' id="labelBold"><span id="emp_name">\${item.name}</span>&nbsp;<span id="emp_jobName">\${item.job_name}</span></label>
@@ -394,21 +403,20 @@ span.clear{clear: both;}
             */
 		       
 		$(document).on("click", "ul.approvalList > li > input:checkbox", function(){
-			// name이 submitList인 체크박스에 대해서 클릭하면
-			let order;
-			let htmlAList = "";
-	    	
-			var empId = $(this).val(); // 클릭한 체크박스에 해당하는 직원의 아이디값     
+			// 체크박스를 클릭하면	    	
+			let empId = $(this).val(); // 클릭한 체크박스에 해당하는 직원의 아이디값     
 	        
 	        // 클릭한 체크박스의 체크유무를 알아온다.
 			if($(this).prop("checked")){// 체크 박스가 선택되어 있으면
-				var $li = $(this).closest("li"); // 체크박스를 포함한 가장 가까운 <li> 요소 선택
-		        var empName = $li.find("#emp_name").text(); // #emp_name 요소의 텍스트 가져오기
-		        var empJobName = $li.find("#emp_jobName").text(); // #emp_jobName 요소의 텍스트 가져오기
-		        var deptName = $li.find("#deptName").val();
-		        var jobCode = $li.find("#jobCode").val();
 				
-				order = $("ul.approvalList > li input:checkbox:checked").length;
+				let $li = $(this).closest("li"); // 체크박스를 포함한 가장 가까운 <li> 요소 선택
+				let empName = $li.find("#emp_name").text().trim(); // #emp_name 요소의 텍스트 가져오기
+				let empJobName = $li.find("#emp_jobName").text().trim(); // #emp_jobName 요소의 텍스트 가져오기
+				let deptName = $li.find("#deptName").val();
+				let jobCode = $li.find("#jobCode").val();
+				
+		        // 선택된 모든 체크박스의 수
+				let order = $("ul.approvalList > li input:checkbox:checked").length;
 				
 				if(order > 3){
 					alert("결제자는 3명 이상 선택 불가합니다.");
@@ -416,40 +424,29 @@ span.clear{clear: both;}
 					return;//종료
 				}
 				
-			    htmlAList += `<tr class='oneRow'>
-			            	   	 <td><input type='hidden' name='level_no' value='\${order}'>\${order}</td>
+				var htmlRow = `<tr class='oneRow'>
+			            	   	 <td><input type='hidden' name='totalListNum' value='\${order}'>\${order}</td>
 			                	 <td>\${deptName}</td>
 			                     <td>\${empJobName}</td>
 			                     <td>\${empName}</td>
-			                     <td class ='empId' style='display:none;'>\${empId}</td>
+			                     <td class ='empId' style='display:none;'><input type='hidden' name='level_no_\${order}' value='\${empId}' />\${empId}</td>
 			                     <td class ='jobCode' style='display:none;'>\${jobCode}</td>
 			                  </tr>`;
 
-			    $("table.addApproval").append(htmlAList);	
+			    $("table.addApproval").append(htmlRow);	
 			}
 			else{// 체크박스가 선택되어 있지 않으면			
-			
-				var isRemoved = false;
-				$("tr.oneRow").each(function(index, item){
-					var td_empId = $(item).find("td.empId").text().trim();
+				$("table.addApproval tr.oneRow").each(function(index, item){
+					let td_empId = $(item).find("td.empId").text().trim();
 					if(td_empId == empId){
 						$(item).remove();
-						isRemoved = true;
 					}
 				});
-				if(isRemoved){
-					order = 1;
-					$("tr.oneRow").each(function(index, row){
-						$(row).children().first().text(order);
-						order ++;
-					});
-				}
-				
-				/*var tblRow = document.querySelectorAll("ul.addApproval tr");
-				for(let i=0; i<tblRow.length; i++){
-					tblRow[i].
-				}*/
-			}  
+				// 남아있는 테이블 행의 순서 재정렬
+				$("table.addApproval tr.oneRow").each(function(index, row){
+					$(row).find("td:first-child").text(index + 1);
+				});
+			} 
 		});
 		     
 	    
@@ -641,38 +638,50 @@ span.clear{clear: both;}
 		var login_jobCode = ${(sessionScope.loginuser).jvo.job_code}; // 로그인한 사람의 직급코드
 		var v_html ="";
 		
+		const isChecked = $("input[type='checkbox']:checked").length;
 		
-		$("table#approval").find("tr:not(:first)").remove(); // 회의록에 있는 결제 라인에 제목 부분 빼고 다 지우기
-		let approvalArr = [];
-		
-		$("table.addApproval tr").each(function(index, item) {
-			if(index > 0){
-				var getjobcode = $(item).find("td:eq(5)").text().trim();
-				if(login_jobCode <= getjobcode){
-					alert("결재자는 상위 직급만 선택 가능합니다.");
-					$("#selectLineModal").modal("hide"); // 모달 닫기
-					return false; // 함수 종료
-					 
-				}
-				else{
-					approvalArr[index] = Number(getjobcode);
-					v_html += "<tr>" + $(item).html() +"</tr>";
-				}
-			}// end of if(index > 0)--------------
-		});
-		
-		for(let i=0; i<approvalArr.length-1; i++){
-			if(approvalArr.length > 1){
-				if(approvalArr[i] > approvalArr[i+1]){
-					alert("결재 순서가 잘못 되었습니다.");
-					$("#selectLineModal").modal("hide"); // 모달 닫기
-					return false; // 함수 종료
+		if(isChecked != 0){// 모달 결재라인에 하나라도 선택이 되어 있으면
+			$("table#approval").find("tr:not(:first)").remove(); // 회의록에 있는 결제 라인에 제목 부분 빼고 다 지우기
+			let approvalArr = [];
+			
+			let isOk = true;
+			$("table.addApproval tr").each(function(index, item) {
+				if(index > 0){
+					var getjobcode = $(item).find("td:eq(5)").text().trim();
+					if(login_jobCode <= getjobcode){
+						alert("결재자는 상위 직급만 선택 가능합니다.");
+						$("#selectLineModal").modal("hide"); // 모달 닫기
+						isOk = false;
+						return false; // 함수 종료
+					}
+					else{
+						approvalArr[index] = Number(getjobcode);
+						v_html += "<tr>" + $(item).html() +"</tr>";
+					}
+				}// end of if(index > 0)--------------
+			});
+			
+			for(let i=0; i<approvalArr.length-1; i++){
+				if(approvalArr.length > 1){
+					if(approvalArr[i] > approvalArr[i+1]){
+						alert("결재 순서가 잘못 되었습니다.");
+						$("#selectLineModal").modal("hide"); // 모달 닫기
+						isOk = false;
+						return false; // 함수 종료
+					}
 				}
 			}
+			// 모든 조건에 부합했을 때
+			if(isOk){
+				$("table#approval").append(v_html);
+				$("#selectLineModal").modal("hide"); // 모달 닫기
+			}		
 		}
-		// 모든 조건에 부합했을 때
-		$("table#approval").append(v_html);
-		$("#selectLineModal").modal("hide"); // 모달 닫기
+		else{
+			alert("결재자를 최소 1명 이상 선택해주세요!");
+			return;
+		}
+		
 		
 	}// end of function btnSubmit()------------------
 	
@@ -684,8 +693,10 @@ span.clear{clear: both;}
 ///////////////////////////////////////////////////////////////////////
 </script>
 
+<div id="total_contatiner">
+	<form name="newDocFrm" enctype="multipart/form-data" style="display: flex;">
+			<%-- 버튼이 form 태그 안에 있으면 무조건 get방식으로 submit되어진다. 유효성 검사를 하고 post방식으로 submit해주고 싶다면 무조건   type="button" 해야 한다. --%>
 
-<div id="total_contatiner" style="display: flex;">
 	<div id="leftside" class="col-md-4" style="width: 90%; padding: 0;">
 		<div id="title">회의록</div>
 		<table class="table left_table" id="title_table">
@@ -693,11 +704,11 @@ span.clear{clear: both;}
 				<th>문서번호</th>
 				<td></td>
 				<th>기안일자</th>
-				<td>${requestScope.str_now}</td>
+				<td><input type="hidden" name="created_date" value="${requestScope.str_now}" />${requestScope.str_now}</td>
 			</tr>
 			<tr>
 				<th>기안자</th>
-				<td>${sessionScope.loginuser.name}</td>
+				<td><input type="hidden" name="fk_empid" value="${sessionScope.loginuser.name}" />${sessionScope.loginuser.name}</td>
 				<th>부서</th>
 				<td>${requestScope.dept_name}</td>
 			</tr>
@@ -808,9 +819,7 @@ span.clear{clear: both;}
 		</table>
 	</div>
 	<div class="col-md-6" style="margin: 0; width: 100%">
-		<form name="newDocFrm" enctype="multipart/form-data">
-			<%-- 버튼이 form 태그 안에 있으면 무조건 get방식으로 submit되어진다. 유효성 검사를 하고 post방식으로 submit해주고 싶다면 무조건   type="button" 해야 한다. --%>
-			<input type="hidden" name="fk_doctype_code" value="101"/>
+		
 			<table style="margin-left: 5%;" class="table" id="newDoc">
 				<tr>
 					<th style="width: 12%;">제목</th>
@@ -844,10 +853,13 @@ span.clear{clear: both;}
 				<button type="button" class="btn btn-primary btn-sm"
 					onclick="javascript:history.back()">취소</button>
 			</div>
-			<input type="hidden" name="docTypeCode" value="100" />
-		</form>
+			<input type="hidden" name="fk_doctype_code" value="101"/>
+		
+		</div>
+</form>
 	</div>
-</div>
+
+
 
 </body>
 </html>

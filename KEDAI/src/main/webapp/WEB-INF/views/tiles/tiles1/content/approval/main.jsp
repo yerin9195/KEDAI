@@ -19,7 +19,7 @@
 		
 		const frm = document.docTypeFrm;
 		
-		let docRadio = document.querySelectorAll(`input[name='doc_type']`); 
+		let docRadio = document.querySelectorAll(`input[name='doctype_code']`); 
 		let isCheck = false; // 라디오의 선택 유무 검사용 
 /* 		?docType=dayoffDoc */
 	<%--	location.href=`<%= ctxPath%>/approval/newdoc.kedai?docType=\${docType}`; --%>
@@ -64,10 +64,10 @@
 	      		<form name="docTypeFrm">
 		      		<div class="modal-body">
 		      		<!--  라디오 버튼과 연결된 라벨(label)을 클릭했을 때 라디오 버튼이 체크되도록 하려면, 라벨의 for 속성과 라디오 버튼의 id 속성을 일치하게 해야 한다. -->
-		      			<input type="radio" name="doc_type" value="newdayoff" id="newdayoff" />
+		      			<input type="radio" name="doctype_code" value="100" id="newdayoff" />
 		      			<label for="newdayoff" style="margin-left: 1.5%;">휴가신청서</label> 
 		      			<br>
-		      			<input type="radio" name="doc_type" value="newmeeting" id="newmeeting"/>
+		      			<input type="radio" name="doctype_code" value="101" id="newmeeting"/>
 		      			<label for="newmeeting" style="margin-left: 1.5%;">회의록</label>
 		      		</div>
 		      

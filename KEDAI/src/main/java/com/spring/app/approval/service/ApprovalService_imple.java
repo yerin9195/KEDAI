@@ -54,6 +54,13 @@ public class ApprovalService_imple implements ApprovalService {
 		int n = dao.noFile_meetingDoc(paraMap);
 		return n;
 	}
+
+	// doc_no의 시퀀스 채번해오기
+	@Override
+	public String getDocSeq() {
+		String docSeq = dao.getDocSeq();
+		return docSeq;
+	}
 	
 	/*
 	 * // 각 부서별 당 인원수 가져오기

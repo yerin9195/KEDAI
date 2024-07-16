@@ -46,7 +46,7 @@ public class ApprovalController {
 	@Autowired
 	private FileManager fileManager;
 	
-	@GetMapping(value = "/approval.kedai")
+	@GetMapping(value = "/approval/main.kedai")
 	public ModelAndView approval(ModelAndView mav) {
 		mav.setViewName("tiles1/approval/main.tiles");
 		// /WEB-INF/views/tiles/tiles1/content/approval/main.jsp
@@ -57,7 +57,7 @@ public class ApprovalController {
 	@GetMapping(value = "/approval/newdoc.kedai")
 	public ModelAndView mom(ModelAndView mav, HttpServletRequest request ) {
 		
-		String doc_type = request.getParameter("doc_type");
+		String doctype_code = request.getParameter("doctype_code");
 
 		Map<String, String> paraMap = new HashMap<>();
 		
@@ -87,26 +87,27 @@ public class ApprovalController {
 		mav.addObject("allDeptList", allDeptList);
 		
 		
-		if(doc_type.equals("newdayoff")) {
+		if(doctype_code.equals("100")) {
 			mav.setViewName("tiles1/approval/newdayoff.tiles");
 		}
-		else if(doc_type.equals("newmeeting")){
+		else if(doctype_code.equals("101")){
 			
 			mav.setViewName("tiles1/approval/newmeeting.tiles");
 		}
 			
 		//	/WEB-INF/views/tiles/tiles1/content/approval/newdoc.jsp 페이지를 만들어야 한다.
 
-		else {
+		/*else {
 		
-			if(doc_type.equals("newdayoff")) {
+			if(doctype_code.equals("100")) {
 				mav.setViewName("tiles1/approval/newdayoff.tiles");
 			}
-			else if(doc_type.equals("newmeeting")){
+			else if(doctype_code.equals("101")){
 				
 				mav.setViewName("tiles1/approval/newmeeting.tiles");
 			}		
-		}
+		}*/
+		
 		return mav;
 	}
 	
@@ -170,7 +171,7 @@ public class ApprovalController {
 	// === #54.게시판 글쓰기 완료 요청 === // 
 	// ===== #104. After Advice를 사용하기====//  pointPlus_addEnd 메소드의  파라미터에 Map<String, String> paraMap 추가함.
 	@PostMapping("/approval/newDocEnd.kedai")
-	public ModelAndView newDocEnd(ModelAndView mav, MinutesVO minutesvo, DocVO docvo, ApprovalVO approvalvo) { 
+	public ModelAndView newDocEnd(ModelAndView mav, DocVO docvo, HttpServletRequest request) { 
 		// @RequestParam("files") MultipartFile[] files는 "files"라는 이름으로 전송된 파일들을 배열 형태로 받아옵니다.
 //	public ModelAndView pointPlus_addEnd(Map<String, String> paraMap, ModelAndView mav, BoardVO boardvo) { // <== After Advice를 사용한 후
 // ===#170.-2 첨부 파일 추가하기 위에 위의 public ModelAndView pointPlus_addEnd(Map<String, String> paraMap, ModelAndView mav, BoardVO boardvo) 를 주석처리 하고
@@ -204,15 +205,32 @@ public class ApprovalController {
 		
 		// === #176. 파일 첨부가 있는 글쓰기 또는 파일 첨부가 없는 글쓰기로 나뉘어서 service 호출하기 시작==
 		// 먼저 위의 int n = service.add(boardvo); 부분을 주석처리하고 아래와 같이 한다.
+				
 		int n = 0;
+		Map<String,Object> docMap = new HashMap<>();
+		// doc_no의 시퀀스 채번해오기
+		String docSeq = service.getDocSeq();	
 		
-		request.getParameter("fk_empid", )
+		docvo.setDoc_no(doc_no);
 		
-		Map<String,Object> paraMap = new HashMap<>();
-		paraMap.put("minutesvo", minutesvo);
-		paraMap.put("docvo", docvo);
-		paraMap.put("approvalvo", approvalvo);
+		docMap.put("docvo", docvo); //기안 종류 코드, 기안자 사원 아이디, 기안문서 제목, 기안문서내용, 서류 작성일자
 		
+		
+		
+		
+		
+		Map<String, String> paraMap = new HashMap<>();
+//		docInfoMap.put("doctype_code", doctype_code);
+		
+
+		String empId1 = request.getParameter("level_no_1");
+		String empId2 = request.getParameter("level_no_2");
+		String empId3 = request.getParameter("level_no_3");
+		
+
+		paraMap.put("empId1", empId1);
+		paraMap.put("empId2", empId2);
+		paraMap.put("empId3", empId3);
 		
 		
 		
@@ -238,7 +256,7 @@ public class ApprovalController {
 		
 		// ===== #104. After Advice 를 사용하기 ====== //
 		//             글쓰기를 한 이후에는 회원의 포인트를 100점 증가 
-		paraMap.put("userid", boardvo.getFk_userid());
+	//	paraMap.put("userid", boardvo.getFk_userid());
 		paraMap.put("point", "100");
 		
 		return mav;

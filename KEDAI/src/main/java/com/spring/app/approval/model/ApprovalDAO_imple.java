@@ -59,6 +59,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return n;
 	}
 
+	// doc_no의 시퀀스 채번해오기
+	@Override
+	public String getDocSeq() {
+		String docSeq = sqlsession.selectOne("approval.getDocSeq");
+		return docSeq;
+	}
+
 	// 각 부서별 당 인원수 가져오기
 	/*
 	 * @Override public List<Map<String, String>> numByDept() { List<Map<String,

@@ -98,12 +98,40 @@
 	</select>
 		
 	<insert id="noFile_meetingDoc" parameterType="HashMap">
-		<if test=" fk_doctype_code == ">
+	
+		<if test='fk_doctype_code == 100'>
+		<!--  첨부파일이 없는 경우 -->
+			<choose>
+				<when test="empId2 == null">
+					insert into tbl_comment(seq, fk_userid, name, content, regDate, parentSeq, status)
+					values(commentSeq.nextval, #{fk_userid}, #{name}, #{content}, default, #{parentSeq}, default)
+	
+					empId1만 넣는다.
+				</when>
+				<when test="empId2 != null">
+					empId 2만 넣는다.
+					<if test="empId3 != null">
+						empId 2와 3까지 넣는다.
+					</if>
+				</when>
+			</choose>	
+		</if>
+		<if test='fk_doctype_code == 101'>
 		
 		</if>
-			
+		<if test='fk_doctype_code == 102'>
+		
+		</if>
+		
 	</insert>
  	
+ 	
+ 	<!-- 	// doc_no의 시퀀스 채번해오기 -->
+ 	
+ 	<select id="getDocSeq" resultType="String">
+ 		select doc_noSeq.nextval
+		from dual
+ 	</select>
  
  	
 </mapper>

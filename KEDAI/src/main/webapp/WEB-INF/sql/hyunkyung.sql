@@ -153,19 +153,37 @@ create table tbl_doc
 (doc_no             VARCHAR2(30)         not null    -- 기안문서번호(EX. KD-100-2407)
 ,fk_doctype_code    NUMBER               not null    -- 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
 ,fk_empid           VARCHAR2(30)         not null    -- 기안자사원아이디
-,subject            NVARCHAR2(50)        not null    -- 기안문서제목
-,content            NVARCHAR2(2000)      not null    -- 기안문서내용
+,doc_subject        NVARCHAR2(50)        not null    -- 기안문서제목
+,doc_content        NVARCHAR2(2000)      not null    -- 기안문서내용
 ,created_date       date default sysdate not null    -- 서류작성일자
 ,doc_comment            NVARCHAR2(100)                   -- 기안의견
-,doc_status         NUMBER  default 0    not null    -- 기안상태  0:기안 1:반려
-,doc_org_filename   VARCHAR2(200)                     -- 원래 파일명
-,doc_filename       VARCHAR2(200)                     -- 첨부 파일명
-,doc_filesize       NUMBER                           --파일크기
+,doc_status         NUMBER  default 0    not null    -- 기안상태  0:기안 1:반려                
 ,constraint PK_tbl_doc_doc_no primary key(doc_no)
 ,constraint FK_tbl_doc_fk_doctype_code foreign key(fk_doctype_code) references tbl_doctype(doctype_code)
 ,constraint FK_tbl_doc_fk_empid foreign key(fk_empid) references tbl_employees(EMPID)
 ,constraint ck_tbl_doc_doc_status CHECK (doc_status IN(0, 1))
 );
+
+ALTER TABLE tbl_doc RENAME COLUMN content TO doc_content;
+
+ALTER TABLE tbl_doc DROP COLUMN doc_org_filename;
+ALTER TABLE tbl_doc DROP COLUMN doc_filename; -- 첨부 파일명
+ALTER TABLE tbl_doc DROP COLUMN doc_filesize;--파일크기
+commit;
+
+create sequence doc_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+SELECT column_name, comments
+FROM user_col_comments
+WHERE table_name = 'TBL_DOC' ;
+
+commit;
 
 -- 기안종류 코멘트
 COMMENT ON COLUMN tbl_doc.doc_no IS '기안 문서 번호(primary key)'; --Comment이(가) 생성되었습니다.
@@ -203,20 +221,33 @@ COMMENT ON COLUMN tbl_doc.reason IS '연차사유 ';
 
 --회의록(24.07.03 생성완료)
 create table tbl_minutes
-(minutes_code    NUMBER             not null    -- 회의록시퀀스
+(minutes_no    NUMBER             not null    -- 회의록시퀀스
 ,fk_doc_no       VARCHAR2(30)       not null    -- 기안문서번호
 ,meeting_date    DATE               not null    -- 회의일자 
-,content         NVARCHAR2(2000)    not null    -- 회의록내용
 ,attendees       NVARCHAR2(50)      not null    -- 회의 참석자
 ,host_dept       NVARCHAR2(50)      not null    -- 회의 주관부서
 ,constraint PK_tbl_minutes_minutes_code primary key(minutes_code)
 ,constraint FK_tbl_minutes_fk_doc_no foreign key(fk_doc_no) references tbl_doc(doc_no)
 );             
-
+ALTER TABLE tbl_minutes RENAME COLUMN minutes_code TO minutes_no;
 ALTER TABLE tbl_minutes ADD host_dept NVARCHAR2(50) not null;
+ALTER TABLE tbl_minutes DROP COLUMN content; -- content테이블 삭제
 
-DROP TABLE tbl_minutes;
+select *
+from tbl_minutes;
+create sequence minutes_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+--Sequence MINUTES_NOSEQ이(가) 생성되었습니다.
+
 commit;
+
+select *
+from  tbl_minutes;
 
 SELECT *
 FROM USER_CONSTRAINTS
@@ -253,6 +284,15 @@ ALTER TABLE tbl_doc_test ADD approval_no NUMBER NOT NULL;
 
 drop table tbl_doc_test
 
+
+create sequence approval_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
 commit;
 
 -- 결재 코멘트(24.07.03 생성완료)
@@ -263,6 +303,9 @@ COMMENT ON COLUMN tbl_approval.fk_empid IS ' 결재자 사원 아이디 ';
 COMMENT ON COLUMN tbl_approval.status IS '결재상태 0:미결재 1:결재 3:반려'; 
 COMMENT ON COLUMN tbl_approval.approval_comment IS '결재의견 '; 
 COMMENT ON COLUMN tbl_approval.approval_date IS '결재일자 '; 
+
+
+-- 첨부파일 테이블
 
 
 
@@ -335,3 +378,7 @@ ORDER BY D.dept_code desc;
 
 select *
 from tbl_employees
+
+
+select minutes_no.nextval
+from dual;

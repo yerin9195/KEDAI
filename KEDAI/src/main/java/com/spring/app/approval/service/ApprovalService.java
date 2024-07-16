@@ -26,4 +26,7 @@ public interface ApprovalService {
 
 	// 첨부파일이 없는 게시판 글쓰기
 	int noFile_meetingDoc(Map<String, Object> paraMap);
+
+	// doc_no의 시퀀스 채번해오기
+	String getDocSeq();
 }

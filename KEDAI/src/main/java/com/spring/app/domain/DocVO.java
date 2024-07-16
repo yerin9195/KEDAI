@@ -13,11 +13,11 @@ public class DocVO {
 	private int doc_status;   		// 기안상태  0:기안 1:반려
 	
 	///////////////////////////////////////////tbl_doc_file////////////////////////////////
-	private int doc_file_no;			//첨부파일번호
+/*	private int doc_file_no;			//첨부파일번호
 	private String doc_org_filename;	// 원래 파일명
 	private String doc_filename;   		// 첨부 파일명
 	private String doc_filesize;   		// 파일크기
-	
+	*/
 	// !!! 먼저, 댓글쓰기에 파일첨부까지 한 것을 위해서 오라클에서 tbl_comment 테이블에 3개 컬럼(fileName, orgFilename, fileSize)을 추가한 다음에 아래의 작업을 한다. !!!  
 	private MultipartFile attach;
 	   /* form 태그에서 type="file" 인 파일을 받아서 저장되는 필드이다. 
@@ -91,7 +91,7 @@ public class DocVO {
 	public void setDoc_status(int doc_status) {
 		this.doc_status = doc_status;
 	}
-	
+/*	
 	public String getDoc_org_filename() {
 		return doc_org_filename;
 	}
@@ -115,5 +115,5 @@ public class DocVO {
 	public void setDoc_filesize(String doc_filesize) {
 		this.doc_filesize = doc_filesize;
 	}
-	
+	*/
 }
