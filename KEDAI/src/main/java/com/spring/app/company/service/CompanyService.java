@@ -2,6 +2,7 @@ package com.spring.app.company.service;
 
 import java.util.List;
 
+import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.PartnerVO;
 
 public interface CompanyService {
@@ -12,6 +13,9 @@ public interface CompanyService {
 	// 거래처 정보 등록하기
 	int othercomRegister_submit(PartnerVO partvo);
 	
+	// 거래처 정보 수정하기
+	int othercomModify_submit(PartnerVO partvo);
+	
 	// 거래처 정보 가져오기
 	List<PartnerVO> otherCom_list_select();
 	
@@ -21,9 +25,12 @@ public interface CompanyService {
 	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기 (거래처 사업자번호로 가져오기)
 	PartnerVO otherCom_get_select(String partner_no);
 
+	// 거래처 삭제하기
+	int delPartnerNo(String partner_no, String rootPath);
+	
+	String getPartnerImagePath(String rootPath);
+	
 
-	
-	
 	
 	
 
