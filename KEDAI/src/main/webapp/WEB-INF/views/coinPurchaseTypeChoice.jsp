@@ -87,7 +87,7 @@
 </head>
 <body>	
 	<%-- content start --%>
-	<div class="container-fluid" style="width: 50%; margin: 3% auto; border: 1px solid #ddd; text-align: center;">
+	<div class="container-fluid" style="width: 80%; margin: 3% auto; border: 1px solid #ddd; text-align: center;">
 	   	<h2 class="my-5"><i class="fa-solid fa-angles-right"></i>&nbsp;&nbsp;포인트충천 결제방식 선택&nbsp;&nbsp;<i class="fa-solid fa-angles-left"></i></h2>
 	    
 	   	<div class="table-responsive" style="margin-top: 30px;">           

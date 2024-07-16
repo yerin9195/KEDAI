@@ -341,7 +341,7 @@
 				<img id="previewImg" style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/images/member/${(sessionScope.loginuser).orgimgfilename}" />
 			</div>
 			<br>
-	   <%-- <input type="file" name="attach" class="infoData img_file" accept='image/*' /> --%>
+	   <%-- <input type="file" name="attach" class="infoData img_file" accept='image/*' /> --%>	
 		</div>
 		
 		<div class="col-10 row" id="memberEdit">

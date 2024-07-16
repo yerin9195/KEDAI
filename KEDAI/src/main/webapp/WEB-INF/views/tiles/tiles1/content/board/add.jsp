@@ -123,11 +123,11 @@
    		<div class="col-4">
    			<div class="mb-3">
 	   			<label for="fk_empid" style="width: 30%;">사원아이디</label>
-	   			<input type="text" name="fk_empid" id="fk_empid" style="width: 180px; height: 30px;" value="${sessionScope.loginuser.empid}" />
+	   			<input type="text" name="fk_empid" id="fk_empid" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).empid}" />
 	   		</div>
 	   		<div class="mb-3">
 	   			<label for="name" style="width: 30%;">작성자</label>
-	   			<input type="text" name="name" id="name" style="width: 180px; height: 30px;" value="${sessionScope.loginuser.name}" readonly />
+	   			<input type="text" name="name" id="name" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).name}" readonly />
 	   		</div>
 	   		<div class="mb-3" style="display: flex;">
 				<label for="fk_empid" style="width: 30%;">카테고리</label>
