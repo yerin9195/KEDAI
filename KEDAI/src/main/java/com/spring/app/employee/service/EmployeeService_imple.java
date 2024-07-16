@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.app.common.AES256;
-import com.spring.app.company.model.CompanyDAO;
 import com.spring.app.domain.MemberVO;
-import com.spring.app.domain.PartnerVO;
 import com.spring.app.employee.model.EmployeeDAO;
 @Service
 public class EmployeeService_imple implements EmployeeService{

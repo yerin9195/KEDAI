@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.spring.app.company.model.CompanyDAO;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.PartnerVO;
+
 @Service
 public class CompanyService_imple implements CompanyService{
 	
