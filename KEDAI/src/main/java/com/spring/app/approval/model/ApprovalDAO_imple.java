@@ -52,18 +52,32 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return deptEmpList;
 	}
 
-	// 첨부파일이 없는 게시판 글쓰기
-	@Override
-	public int noFile_meetingDoc(Map<String, Object> paraMap) {
-		int n = sqlsession.insert("approval.noFile_meetingDoc", paraMap);
-		return n;
-	}
-
 	// doc_no의 시퀀스 채번해오기
 	@Override
 	public String getDocSeq() {
 		String docSeq = sqlsession.selectOne("approval.getDocSeq");
 		return docSeq;
+	}
+
+	// 첨부파일이 없는 서류 작성하기(tbl_doc)
+	@Override
+	public int noFile_newdoc(Map<String, Object> paraMap) {
+		int n = sqlsession.insert("approval.noFile_newdoc", paraMap);
+		return n;
+	}
+
+	// 첨부파일이 없는 서류 작성하기(tbl_minutes)
+	@Override
+	public int noFile_minutes(Map<String, Object> paraMap) {
+		int n = sqlsession.insert("approval.noFile_minutes", paraMap);
+		return n;
+	}
+
+	// 첨부파일이 없는 서류 작성하기(tbl_approval)
+	@Override
+	public int noFile_approval(Map<String, Object> paraMap) {
+		int n = sqlsession.insert("approval.noFile_approval", paraMap);
+		return n;
 	}
 
 	// 각 부서별 당 인원수 가져오기

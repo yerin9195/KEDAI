@@ -210,33 +210,38 @@ public class ApprovalController {
 		Map<String,Object> docMap = new HashMap<>();
 		// doc_no의 시퀀스 채번해오기
 		String docSeq = service.getDocSeq();	
+		System.out.println("~~확인용 docSeq" + docSeq);
 		
-		docvo.setDoc_no(doc_no);
+		String fk_doc_no = "KD-"+ request.getParameter("fk_doctype_code") + "-" + docSeq;
+		
+		System.out.println("~~확인용 doc_no" + doc_no);
+		
+		docvo.setDoc_no(fk_doc_no);
 		
 		docMap.put("docvo", docvo); //기안 종류 코드, 기안자 사원 아이디, 기안문서 제목, 기안문서내용, 서류 작성일자
-		
-		
-		
-		
 		
 		Map<String, String> paraMap = new HashMap<>();
 //		docInfoMap.put("doctype_code", doctype_code);
 		
-
-		String empId1 = request.getParameter("level_no_1");
-		String empId2 = request.getParameter("level_no_2");
-		String empId3 = request.getParameter("level_no_3");
 		
+		paraMap.put("fk_doc_no", fk_doc_no);
+		paraMap.put("meeting_date", request.getParameter("meeting_date"));
+		paraMap.put("attendees", request.getParameter("attendees"));
+		paraMap.put("host_dept", request.getParameter("host_dept"));
+		
+		
+		
+		paraMap.put("empId1", request.getParameter("level_no_1"));
+		paraMap.put("empId2", request.getParameter("level_no_2"));
+		paraMap.put("empId3", request.getParameter("level_no_3"));
 
-		paraMap.put("empId1", empId1);
-		paraMap.put("empId2", empId2);
-		paraMap.put("empId3", empId3);
+
 		
 		
 		
 	//	if(attach.isEmpty()) {
 			// 파일첨부가 없는 경우라면
-			n = service.noFile_meetingDoc(paraMap); // <== 파일첨부가 없는 글쓰기 
+			n = service.noFile_doc(paraMap); // <== 파일첨부가 없는 글쓰기 
 //		}
 	//	else {
 			// 파일첨부가 있는 경우라면
@@ -257,7 +262,7 @@ public class ApprovalController {
 		// ===== #104. After Advice 를 사용하기 ====== //
 		//             글쓰기를 한 이후에는 회원의 포인트를 100점 증가 
 	//	paraMap.put("userid", boardvo.getFk_userid());
-		paraMap.put("point", "100");
+	//	paraMap.put("point", "100");
 		
 		return mav;
 	}

@@ -50,9 +50,11 @@ public class ApprovalService_imple implements ApprovalService {
 	
 	// 첨부파일이 없는 게시판 글쓰기
 	@Override
-	public int noFile_meetingDoc(Map<String, Object> paraMap) {
-		int n = dao.noFile_meetingDoc(paraMap);
-		return n;
+	public int noFile_doc(Map<String, Object> paraMap) {
+		int n1 = dao.noFile_newdoc(paraMap);
+		int n2 = dao.noFile_minutes(paraMap);
+		int n3 = dao.noFile_approval(paraMap);
+		return n1*n2*n3;
 	}
 
 	// doc_no의 시퀀스 채번해오기

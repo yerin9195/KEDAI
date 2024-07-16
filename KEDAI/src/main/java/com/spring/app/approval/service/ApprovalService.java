@@ -24,9 +24,10 @@ public interface ApprovalService {
 	// 해당 부서에 근무중인 사원 정보 가져오기
 	List<Map<String, String>> deptEmpList(Map<String, String> paraMap);
 
-	// 첨부파일이 없는 게시판 글쓰기
-	int noFile_meetingDoc(Map<String, Object> paraMap);
+	// 첨부파일이 없는 기안 작성하기
+	int noFile_doc(Map<String, Object> paraMap);
 
 	// doc_no의 시퀀스 채번해오기
 	String getDocSeq();
+
 }
