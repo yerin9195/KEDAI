@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.spring.app.domain.BusVO;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.RoomMainVO;
+import com.spring.app.domain.RoomSubVO;
 
 @Repository
 public class RoomDAO_imple implements RoomDAO {
@@ -25,6 +26,20 @@ public class RoomDAO_imple implements RoomDAO {
 		List<RoomMainVO> roomMainList = sqlsession.selectList("Room.roomMainView");
 		return roomMainList;
 		
+	}
+
+
+	@Override
+	public List<RoomSubVO> getRoomMainBySeq(Integer roomMainSeq) {
+		List<RoomSubVO> getRoomMainBySeq = sqlsession.selectList("Room.getRoomMainBySeq", roomMainSeq);
+		return getRoomMainBySeq;
+	}
+
+
+	@Override
+	public List<RoomSubVO> getRoomroomall() {
+		List<RoomSubVO> getRoomroomall = sqlsession.selectList("Room.Roomroomall");
+		return getRoomroomall;
 	}
 
 

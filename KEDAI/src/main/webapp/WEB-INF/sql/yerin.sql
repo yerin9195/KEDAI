@@ -221,7 +221,7 @@ desc tbl_loginhistory;
 SELECT empid, name, nickname, jubun, gender, age, email, mobile
      , postcode, address, detailaddress, extraaddress
      , imgfilename, orgimgfilename, hire_date, salary, commission_pct, point
-     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel, sign_img, annual_leave, pwdchangegap
+     , fk_dept_code, dept_name, fk_job_code, job_name, dept_tel, sign_img, annual_leave, pwdchangegap
      , NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
 FROM 
 (
@@ -230,8 +230,8 @@ FROM
          , func_age(jubun) AS age
          , email, mobile, postcode, address, detailaddress, extraaddress
          , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
-         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
-         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
+         , fk_dept_code, nvl(D.dept_name, ' ') AS dept_name
+         , fk_job_code, nvl(J.job_name, ' ') AS job_name
          , dept_tel, sign_img, annual_leave
          , trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap
     from tbl_employees E1 
@@ -553,3 +553,17 @@ FROM
     where status = 1
 ) V
 WHERE V.board_seq = 1;
+
+-----------------------------------------------------------------------
+
+-- 포인트 충전하기
+select to_number('100000')*0.01      
+from dual;
+-- 1000
+
+update tbl_employees set point = point + (to_number('100000')*0.01)
+where empid = '2013100-002';
+-- 1 행 이(가) 업데이트되었습니다.
+
+commit;
+-- 커밋 완료.

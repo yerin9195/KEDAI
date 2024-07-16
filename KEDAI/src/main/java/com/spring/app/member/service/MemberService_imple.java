@@ -5,11 +5,8 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.AES256;
 import com.spring.app.domain.MemberVO;
@@ -78,6 +75,13 @@ public class MemberService_imple implements MemberService {
 		int n = dao.memberEditEnd(paraMap);
 		return n;
 	}
+	
+	// 포인트 충전하기
+	@Override
+	public int pointUpdate(Map<String, String> paraMap) {
+		int n = dao.pointUpdate(paraMap);
+		return n;
+	}
 
 	
 
@@ -96,4 +100,6 @@ public class MemberService_imple implements MemberService {
 		return n;
 	}
 	//	
+
+	
 }

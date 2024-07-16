@@ -9,8 +9,29 @@
 		<result property="roommain_detail" column="roommain_detail" javaType="String" />
 	</resultMap>
 	
-	<select id="roomMainView" resultType="String" parameterType="RoomMainVO">
-		select pk_roommain_seq, roommain_name, roommain_detail from tbl_room_main
+		<resultMap type="HashMap" id="roomSubMap">
+		<result property="roomSubSeq" column="roomSubSeq" javaType="int" />
+		<result property="roomMainSeq" column="roomMainSeq" javaType="int" />
+		<result property="roomSubName" column="roomSubName" javaType="String" />
+		<result property="roomSub_detail" column="roomSub_detail" javaType="String" />
+		<result property="room_status" column="room_status" javaType="int" />
+	</resultMap>
+	
+	<select id="roomMainView" resultType="RoomMainVO" parameterType="RoomMainVO">
+		select pk_roommain_seq as roomMainSeq, roommain_name as roomMainName, roommain_detail as roomMainDetail
+    from tbl_room_main
+	</select>
+	
+	<select id="getRoomMainBySeq" resultType="RoomSubVO" parameterType="RoomSubVO">
+		select pk_roomsub_seq as roomSubSeq, roomSub_name as roomSubName, roomSub_detail as roomSub_detail, room_status, fk_roomMain_seq as roomMainSeq
+		from tbl_room_sub
+		where fk_roomMain_seq = #{roomMainSeq}
+
 	</select>
 
+	<select id="Roomroomall" resultType="RoomSubVO" parameterType="RoomSubVO">
+		select pk_roomsub_seq as roomSubSeq, roomSub_name as roomSubName, roomSub_detail as roomSub_detail, room_status, fk_roomMain_seq as roomMainSeq
+	    from tbl_room_main join tbl_room_sub
+	    on tbl_room_main.pk_roommain_seq = tbl_room_sub.fk_roommain_seq
+    </select>
 </mapper>

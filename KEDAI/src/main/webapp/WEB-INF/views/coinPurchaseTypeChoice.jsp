@@ -9,6 +9,12 @@
 <head>
 <meta charset="UTF-8">
 <title>포인트 충전 결제하기</title>
+<%-- Bootstrap CSS --%>
+<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/bootstrap-4.6.2-dist/css/bootstrap.min.css" >
+
+<%-- Font Awesome 6 Icons --%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
 <%-- Optional JavaScript --%>
 <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
 <style type="text/css">
@@ -16,12 +22,20 @@
 		margin-right: 10px;
 	}
 	.stylePoint {
-		color: #e68c0e;
-	}
-	.purchase {
 		font-weight: bold;
 		color: #e68c0e;
-		cursor: pointer;
+	}
+	.purchase_btn {
+		border: solid 1px #2c4459;
+		color: #2c4459;
+		font-size: 12pt;
+		width: 120px;
+		height: 40px;
+	}
+	.purchase {
+		color: #fff;
+		border: none;
+		background: #e68c0e;
 	}
 </style>
 
@@ -42,7 +56,7 @@
 			
 		}); // end of $("input:radio[name='coinmoney']").bind("click", e => {}) ----------
 		
-		$("td#purchase").hover(function(e){ // mouseover
+		$("td#purchase > button").hover(function(e){ // mouseover
 			$(e.target).addClass("purchase");
 		}, 
 		function(e){  // mouseout
@@ -60,10 +74,12 @@
 			return;
 		}
 		else{ // 결제금액을 선택했을 경우
+			$("td#error").hide();
+			
 			const coinmoney = $("input:radio[name='coinmoney']:checked").val();
 
-			opener.goCoinPurchaseEnd(ctxPath, coinmoney, empid); // 팝업창에서 부모창 함수 호출		
-			self.close();
+			opener.goCoinPurchaseEnd(ctxPath, empid, coinmoney); // 팝업창에서 부모창 함수 호출		
+			self.close(); // 팝업창 닫기
 		}
 		
 	} // end of function goCoinPayment(ctxPath, empid){} ----------
@@ -71,35 +87,37 @@
 </head>
 <body>	
 	<%-- content start --%>
-	<div class="container-fluid" style="border: 1px solid red; text-align: center;">
-	   	<h2 class="my-5">포인트충천 결제방식 선택</h2>
+	<div class="container-fluid" style="width: 80%; margin: 3% auto; border: 1px solid #ddd; text-align: center;">
+	   	<h2 class="my-5"><i class="fa-solid fa-angles-right"></i>&nbsp;&nbsp;포인트충천 결제방식 선택&nbsp;&nbsp;<i class="fa-solid fa-angles-left"></i></h2>
 	    
 	   	<div class="table-responsive" style="margin-top: 30px;">           
-	    	<table class="table">
+	    	<table class="table table-bordered">
 	       		<thead>
 	           		<tr>
-	           			<th style="width: 50%">금액</th>
+	           			<th style="width: 50%">금 액</th>
 	           			<th style="width: 30%">POINT</th>
 	           		</tr>
 	       		</thead>
 	       		<tbody>
 	           		<tr>
-	           			<td><label class="radio-inline"><input type="radio" name="coinmoney" value="300000" />&nbsp;300,000원</label></td>
+	           			<td><label class="radio-inline"><input type="radio" name="coinmoney" value="300000" />&nbsp;&nbsp;300,000원</label></td>
 	              		<td><span>3,000</span></td>
 		            </tr>
 		            <tr>
-	              		<td><label class="radio-inline"><input type="radio" name="coinmoney" value="200000" />&nbsp;200,000원</label></td>
+	              		<td><label class="radio-inline"><input type="radio" name="coinmoney" value="200000" />&nbsp;&nbsp;200,000원</label></td>
 		              	<td><span>2,000</span></td>
 		            </tr>
 	           		<tr>
-	           			<td><label class="radio-inline"><input type="radio" name="coinmoney" value="100000" />&nbsp;100,000원</label></td>
+	           			<td><label class="radio-inline"><input type="radio" name="coinmoney" value="100000" />&nbsp;&nbsp;100,000원</label></td>
 	           			<td><span>1,000</span></td>
 	           		</tr>
 	           		<tr>
-	           			<td id="error" colspan="3" align="center" style="height: 50px; vertical-align: middle; color: #e68c0e;">결제종류에 따른 금액을 선택하세요.</td>
+	           			<td id="purchase" colspan="3" align="center" style="height: 50px;">
+	           				<button class="btn purchase_btn" type="button" onclick="goCoinPayment('<%= ctxPath%>','${(sessionScope.loginuser).empid}')">결제하기</button>  
+	           			</td>
 	           		</tr>
 	           		<tr>
-	           			<td id="purchase" colspan="3" align="center" style="height: 100px; vertical-align: middle;" onclick="goCoinPayment('<%= ctxPath%>','${(sessionScope.loginuser).empid}')">[ 충전결제하기 ]</td>
+	           			<td id="error" colspan="3" align="center" style="height: 50px; color: #e68c0e; font-weight: bold;">*** 결제종류에 따른 금액을 선택하세요. ***</td>
 	           		</tr>
 	       		</tbody>
 	       	</table>
