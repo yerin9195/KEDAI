@@ -538,15 +538,17 @@ bigName{
 			       </tr>
 			   </thead>
 			   <tbody>
-			   	<c:forEach var="membervo" items="${requestScope.membervoList}" varStatus="status">
+			   <c:forEach var="membervo" items="${requestScope.membervoList}" varStatus="status">
+			 	  <c:if test="${membervo.jvo.job_code != '1'}">
 			 	   <tr>
-		   			 <td class="emp-dept">${membervo.dvo.dept_name}</td>
+			 	   	 <td class="emp-dept">${membervo.dvo.dept_name}</td>
 		   			 <td class="emp-rank">${membervo.jvo.job_name}</td>
 		   			 <td class="emp-name">${membervo.name}</td>
 		  			 <td class="dept-tel">${membervo.dept_tel}</td>
 		  			 <td class="personal-tel">${(membervo.mobile).substring(0,3)}-${(membervo.mobile).substring(3,7)}-${(membervo.mobile).substring(7,11)}</td>
 		  			 <td class="emp-email">${membervo.email}</td>
 	  			   </tr>
+	  			  </c:if>
 	  			</c:forEach>   
 		   		</tbody>
 			</table>

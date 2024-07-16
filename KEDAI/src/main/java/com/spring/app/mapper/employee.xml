@@ -4,58 +4,44 @@
 
 <mapper namespace="employee">
 	
-	<resultMap id="MemberJoinDeptJob" type="MemberVO">
-        <id property="empid" 			  column="empid"/>
-        <result property="name" 		  column="name"/>
-        <result property="nickname" 	  column="nickname"/>
-        <result property="jubun" 		  column="jubun"/>
-        <result property="gender" 		  column="gender"/>
-        <result property="age" 			  column="age"/>
-        <result property="email" 		  column="email"/>
-        <result property="mobile" 	 	  column="mobile"/>
-        <result property="postcode" 	  column="postcode"/>
-        <result property="address" 		  column="address"/>
-        <result property="detailaddress"  column="detailaddress"/>
-        <result property="extraaddress"   column="extraaddress"/>
-        <result property="imgfilename" 	  column="imgfilename"/>
-        <result property="orgimgfilename" column="orgimgfilename"/>
-        <result property="hire_date" 	  column="hire_date"/>
-        <result property="salary" 		  column="salary"/>
-        <result property="commission_pct" column="commission_pct"/>
-        <result property="point" 		  column="point"/>
-        <result property="fk_dept_code"   column="fk_dept_code"/>
-        <result property="fk_job_code" 	  column="fk_job_code"/>
-        <result property="dept_tel" 	  column="dept_tel"/>
-        <result property="sign_img" 	  column="sign_img"/>
-        <result property="annual_leave"   column="annual_leave"/>
-        
-        <association property="dvo" javaType="com.spring.app.domain.DeptVO">
-            <id property="dept_code" 	 column="dept_code"/>
-            <result property="dept_name" column="dept_name"/>
-        </association>
-        
-        <association property="jvo" javaType="com.spring.app.domain.JobVO">
-            <id property="job_code" 	column="job_code"/>
-            <result property="job_name" column="job_name"/>
-        </association>
+	<resultMap id="MemberJoinDeptJob"     type="HashMap">
+        <result property="empid" 		  column="empid" 			javaType="String"/>
+        <result property="name" 		  column="name" 			javaType="String"/>
+        <result property="nickname" 	  column="nickname" 		javaType="String"/>
+        <result property="email" 		  column="email" 			javaType="String"/>
+        <result property="mobile" 	 	  column="mobile" 			javaType="String"/>
+        <result property="postcode" 	  column="postcode" 		javaType="String"/>
+        <result property="address" 		  column="address" 		 	javaType="String"/>
+        <result property="detailaddress"  column="detailaddress" 	javaType="String"/>
+        <result property="extraaddress"   column="extraaddress" 	javaType="String"/>
+        <result property="imgfilename" 	  column="imgfilename" 		javaType="String"/>
+        <result property="orgimgfilename" column="orgimgfilename" 	javaType="String"/>
+        <result property="hire_date" 	  column="hire_date" 		javaType="String"/>
+        <result property="salary" 		  column="salary" 			javaType="String"/>
+        <result property="point" 		  column="point" 			javaType="String"/>
+        <result property="fk_dept_code"   column="fk_dept_code" 	javaType="String"/>
+        <result property="fk_job_code" 	  column="fk_job_code" 		javaType="String"/>
+        <result property="dept_tel" 	  column="dept_tel" 		javaType="String"/>
+		<result property="dept_code" 	  column="dept_code" 		javaType="String"/>
+        <result property="dept_name" 	  column="dept_name"		javaType="String"/>
+        <result property="job_code"		  column="job_code"			javaType="String"/>
+        <result property="job_name" 	  column="job_name"			javaType="String"/>
     </resultMap>
 	
 	<!-- 가져오기 -->
-	<select id="employee_list_select" resultType="MemberVO" resultMap="MemberJoinDeptJob">
-		SELECT empid, name, nickname, jubun, gender, age, email, mobile
+	<select id="employee_list_select" resultMap="MemberJoinDeptJob">
+		SELECT empid, name, nickname, mobile
 		     , postcode, address, detailaddress, extraaddress
-		     , imgfilename, orgimgfilename, hire_date, salary, commission_pct, point
-		     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel, sign_img, annual_leave
+		     , imgfilename, orgimgfilename, hire_date, salary, point
+		     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel
 		FROM 
 		(
-		    select empid, name, nickname, jubun
-		         , func_gender(jubun) AS gender
-		         , func_age(jubun) AS age
+		    select empid, name, nickname
 		         , email, mobile, postcode, address, detailaddress, extraaddress
-		         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
+		         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, point
 		         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
 		         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
-		         , dept_tel, sign_img, annual_leave
+		         , dept_tel
 		    from tbl_employees E1 
 		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
 		    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code

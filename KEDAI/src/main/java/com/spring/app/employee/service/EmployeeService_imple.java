@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,23 +21,118 @@ public class EmployeeService_imple implements EmployeeService{
 	@Autowired
     private AES256 aES256;
 	
+	
 	// 직원정보 가져오기
 	@Override
-	public List<MemberVO> employee_list_select() {
-		List<MemberVO> membervoList = dao.employee_list_select();
+	public List<Map<String, String>> employeeList() {
 		
-		membervoList.forEach(membervo -> {
+		List<Map<String,String>> employeeList_select = dao.employeeList();
+		
+		employeeList_select.forEach( map -> {
+			
 			try {			
-				membervo.setEmail(aES256.decrypt(membervo.getEmail()));   // 복호화되어진 email 을 넣어준다.
-				membervo.setMobile(aES256.decrypt(membervo.getMobile())); // 복호화되어진 mobile 을 넣어준다.
+				map.put("Email",(aES256.decrypt(map.get("Email"))));   // 복호화되어진 email 을 넣어준다.
+				map.put("mobile",(aES256.decrypt(map.get("Mobile")))); // 복호화되어진 mobile 을 넣어준다.
 			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 				e.printStackTrace();
 			} 
 		});
 		
-		return membervoList;
+		
+		
+		return employeeList_select;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	 * 
+	 * // 직원정보 가져오기
+	 * 
+	 * @Override public List<MemberVO> employee_list_select() { List<MemberVO>
+	 * membervoList = dao.employee_list_select();
+	 * 
+	 * membervoList.forEach(membervo -> { try {
+	 * membervo.setEmail(aES256.decrypt(membervo.getEmail())); // 복호화되어진 email 을
+	 * 넣어준다. membervo.setMobile(aES256.decrypt(membervo.getMobile())); // 복호화되어진
+	 * mobile 을 넣어준다. } catch (UnsupportedEncodingException |
+	 * GeneralSecurityException e) { e.printStackTrace(); } });
+	 * 
+	 * return membervoList; }
+	 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	@Override
+	public MemberVO employeeDetail_select(String empid) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
+	
 /*
 			try {			
 				membervo.setEmail(aES256.decrypt(membervo.getEmail()));   // 복호화되어진 email 을 넣어준다.
@@ -47,9 +143,26 @@ public class EmployeeService_imple implements EmployeeService{
 
  */
 
-
-
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+/*
+ * // 직원 상세보기 팝업 어떤것 클릭했는지 알아오기
+ * 
+ * @Override public MemberVO employeeDetail_select(String empid) {
+ * 
+ * MemberVO mvo = dao.employeeDetail_select(empid);
+ * 
+ * return mvo; }
+ */
+
 	
 	
 }	

@@ -313,27 +313,14 @@ public class CompanyController {
 	 * 
 	 * }
 	 */
-
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// 사원리스트
+		
 	/*
-	 * @GetMapping(value="/employee.kedai") public ModelAndView
-	 * employee_select(ModelAndView mav) {
-	 * 
-	 * List<MemberVO> membervoList = service.employee_list_select();
-	 * 
-	 * mav.addObject("membervoList",membervoList); //
-	 * mav.setViewName("tiles1/company/employee.tiles");
-	 * 
-	 * return mav; }
-	 * 
 	 * @GetMapping(value="/employeeDetail.kedai") public ModelAndView
 	 * employeeDetail(ModelAndView mav) {
 	 * mav.setViewName("tiles1/company/employeeDetail.tiles");
 	 * 
-	 * return mav; }
+	 * return mav;
+	 * 
+	 * }
 	 */
-
-
 }

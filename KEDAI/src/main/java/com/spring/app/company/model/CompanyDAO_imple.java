@@ -48,6 +48,7 @@ public class CompanyDAO_imple implements CompanyDAO{
 		return partnervoList;
 	}
 	
+	// 거래처 상세보기 어떤거 선택했는지 알아오기
 	@Override
 	public PartnerVO otherCom_get_select(String partner_no) {
 		PartnerVO partnerVO = sqlsession.selectOne("company.otherCom_get_select", partner_no);

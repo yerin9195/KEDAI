@@ -201,12 +201,12 @@ SELECT empid, name, nickname, jubun, gender, age, email, mobile
 		         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
 		         , dept_tel, sign_img, annual_leave
 		    from tbl_employees E1 
-      
+           
 		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
 		    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
                   order by dept_name asc, job_code asc
 		) E
-
+         where empid ='2010001-001' 
 
 
 
