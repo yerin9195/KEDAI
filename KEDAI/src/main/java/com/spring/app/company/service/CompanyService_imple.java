@@ -1,5 +1,6 @@
 package com.spring.app.company.service;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,19 +64,25 @@ public class CompanyService_imple implements CompanyService{
 	
 	// 거래처 삭제하기 
 	@Override
-	public int delPartnerNo(String partner_no) {
+	public int delPartnerNo(String partner_no, String rootPath) {
+		PartnerVO partnerVO = dao.otherCom_get_select(partner_no);
+		// file delete
+		String path = getPartnerImagePath(rootPath);
+		new File(path + File.separator + partnerVO.getImgfilename()).delete();
+
 		
 		int n = dao.delPartnerNo(partner_no);
 		
 		return n;
 	}
-	
-	// 직원정보 가져오기
+
 	@Override
-	public List<MemberVO> employee_list_select() {
-		List<MemberVO> membervoList = dao.employee_list_select();
-		
-		return membervoList;
+	public String getPartnerImagePath(String rootPath) {
+		String path = rootPath+"resources"+File.separator+"files";
+		// System.out.println(path);
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+					
+		return path;
 	}
 
 

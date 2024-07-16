@@ -26,14 +26,9 @@ public interface CompanyService {
 	PartnerVO otherCom_get_select(String partner_no);
 
 	// 거래처 삭제하기
-	int delPartnerNo(String partner_no);
+	int delPartnerNo(String partner_no, String rootPath);
 	
-	// 직원정보 가져오기
-	List<MemberVO> employee_list_select();
-
-
-	
-	
+	String getPartnerImagePath(String rootPath);	
 	
 	
 

@@ -126,14 +126,11 @@ public class CompanyController {
 		if(attach != null) {	// 첨부파일이 있는 경우
 			
 			// WAS의 webapp 의 절대 경로 알아오기
-			HttpSession session = mrequest.getSession();
-			String root = session.getServletContext().getRealPath("/");
+			String root = mrequest.getSession().getServletContext().getRealPath("/");
 			// System.out.println(root);
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 			
-			String path = root+"resources"+File.separator+"files";
-			// System.out.println(path);
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			String path = service.getPartnerImagePath(root);
 			
 			// 파일 첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 업로드
 			imgfilename = "";	// WAS(톰캣)의 디스크에 저장될 파일명
@@ -157,7 +154,7 @@ public class CompanyController {
 		} // end of if(attach != null) {}--------------------------------------------------------------
 	}
 	
-	
+
 	// end of public ModelAndView othercomRegister_submit(ModelAndView mav, PartnerVO partvo, MultipartHttpServletRequest mrequest) {}-----------------------------------------------------
 	
 	
@@ -270,9 +267,15 @@ public class CompanyController {
 	@PostMapping(value="/company/delPartner_com.kedai" , produces="text/plain;charset=UTF-8")
 	public String delPartner_com(HttpServletRequest request) throws Throwable{
 		
+		// WAS의 webapp 의 절대 경로 알아오기
+		String rootPath = request.getSession().getServletContext().getRealPath("/");
+		// System.out.println(root);
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
+
+		
 		String partner_no = request.getParameter("partner_no");
 		// System.out.println("partner_no : " + partner_no); 
-		int n = service.delPartnerNo(partner_no);
+		int n = service.delPartnerNo(partner_no, rootPath);
 		// System.out.println("n : " + n );
 		JSONObject jsObj = new JSONObject();
 		
@@ -320,10 +323,6 @@ public class CompanyController {
 	 * }
 	 */
 	
-	
-	
-	
-	
 
 	
 	//////////////////////////////////////////////////////////////////////////
@@ -363,4 +362,5 @@ public class CompanyController {
 	
 	
 	
+
 }
