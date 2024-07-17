@@ -22,16 +22,16 @@
         <result property="hire_date"      column="hire_date"      javaType="String" />
         <result property="salary"         column="salary"         javaType="String" />
         <result property="commission_pct" column="commission_pct" javaType="String" />
-        <result property="point"          column="point"          javaType="int" />
+        <result property="point"          column="point"          javaType="int"    />
         <result property="fk_dept_code"   column="fk_dept_code"   javaType="String" />
         <result property="dept_name"      column="dept_name"      javaType="String" />
         <result property="fk_job_code"    column="fk_job_code"    javaType="String" />
         <result property="job_name"       column="job_name"       javaType="String" />
         <result property="dept_tel"       column="dept_tel"       javaType="String" />
         <result property="sign_img"       column="sign_img"       javaType="String" />
-        <result property="annual_leave"   column="annual_leave"   javaType="int" />
-        <result property="pwdchangegap"   column="pwdchangegap"   javaType="int" />
-        <result property="lastlogingap"   column="lastlogingap"   javaType="int" />  
+        <result property="annual_leave"   column="annual_leave"   javaType="int"    />
+        <result property="pwdchangegap"   column="pwdchangegap"   javaType="int"    />
+        <result property="lastlogingap"   column="lastlogingap"   javaType="int"    />  
     </resultMap>
 
 	<select id="getLoginMember" parameterType="HashMap" resultType="MemberVO" resultMap="empJoinDeptJob">
