@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
 import com.spring.app.reservation.service.RoomService;
-//	qwe
+
 @Controller
 public class RoomController {
 
