@@ -25,7 +25,7 @@
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
-		
+
 		<%-- === 스마트 에디터 구현 시작 === --%>
 		var obj = [];
 		
@@ -93,7 +93,7 @@
      		// 폼(form)을 전송(submit)
      		const frm = document.addFrm;
      		frm.method = "post";
-     		frm.action = "<%= ctxPath%>/board/addEnd.kedai";
+     		frm.action = "<%= ctxPath%>/community/addEnd.kedai";
      		frm.submit();
      	});
 		
@@ -103,26 +103,22 @@
 <%-- content start --%>
 <div style="border: 0px solid red; padding: 2% 3% 0 0;">
 	<div>
-		<%-- === 원글쓰기인 경우 === --%>
-	   	<c:if test='${requestScope.fk_seq eq ""}'>
-	   		<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;글쓰기</h3>
-	   	</c:if>
-	   	
-		<%-- === 답변글쓰기인 경우 === --%>
-		<c:if test='${requestScope.fk_seq ne ""}'>
-			<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;답변글쓰기</h3>
-	   	</c:if>
+   		<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;글쓰기</h3>
 	</div>
-   	
-   	<form name="addFrm" enctype="multipart/form-data" class="row mt-5"> 
-   		<div class="col-4">
-   			<div class="mb-3">
+	
+	<form name="addFrm" enctype="multipart/form-data" class="row mt-5"> 
+		<div class="col-4">
+			<div class="mb-3">
 	   			<label for="fk_empid" style="width: 30%;">사원아이디</label>
 	   			<input type="text" name="fk_empid" id="fk_empid" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).empid}" readonly />
 	   		</div>
 	   		<div class="mb-3">
 	   			<label for="name" style="width: 30%;">작성자</label>
 	   			<input type="text" name="name" id="name" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).name}" readonly />
+	   		</div>
+	   		<div class="mb-3">
+	   			<label for="name" style="width: 30%;">닉네임</label>
+	   			<input type="text" name="nickname" id="nickname" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).nickname}" readonly />
 	   		</div>
 	   		<div class="mb-3" style="display: flex;">
 				<label for="fk_empid" style="width: 30%;">카테고리</label>
@@ -133,22 +129,14 @@
            			</c:forEach>
 				</select>
 			</div>
-   		</div>
-   		
-   		<div class="col-8">
-   			<div class="mb-3">
-	   			<label for="subject" style="width: 10%;">제목</label>
-	   			<%-- === 원글쓰기인 경우 === --%>
-    			<c:if test='${requestScope.fk_seq eq ""}'>
-	     			<input type="text" name="subject" id="subject" size="100" maxlength="200" style="width: 50%; height: 30px;" /> 
-	     		</c:if>
-	     	
-	     		<%-- === 답변글쓰기인 경우 === --%>
-				<c:if test='${requestScope.fk_seq ne ""}'>
-	     			<input type="text" name="subject" id="subject" size="100" style="width: 50%; height: 30px;" value="${requestScope.subject}" readonly /> 
-	     		</c:if>
-	   		</div>
-	   		<div class="mb-3">
+		</div>
+		
+		<div class="col-8">
+			<div class="mb-3">
+				<label for="subject" style="width: 10%;">제목</label>
+				<input type="text" name="subject" id="subject" size="100" maxlength="200" style="width: 50%; height: 30px;" /> 
+			</div>
+			<div class="mb-3">
    				<textarea style="width: 100%; height: 530px;" name="content" id="content"></textarea>
    			</div>
    			<div class="row">
@@ -168,12 +156,7 @@
 			       	<button type="button" class="btn add_btn" onclick="javascript:history.back()">취소</button>
 			   	</div>
    			</div>
-   		</div>
-   		
-   		<%-- 답변글쓰기가 추가된 경우 --%>
-		<input type="hidden" name="groupno" value="${requestScope.groupno}" />
-		<input type="hidden" name="fk_seq"  value="${requestScope.fk_seq}" />
-		<input type="hidden" name="depthno" value="${requestScope.depthno}" />
-   	</form>
+		</div>
+	</form>
 </div>
 <%-- content end --%>
