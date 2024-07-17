@@ -205,22 +205,19 @@ public class ApprovalController {
 		
 		// === #176. 파일 첨부가 있는 글쓰기 또는 파일 첨부가 없는 글쓰기로 나뉘어서 service 호출하기 시작==
 		// 먼저 위의 int n = service.add(boardvo); 부분을 주석처리하고 아래와 같이 한다.
-				
-		int n = 0;
-		Map<String,Object> docMap = new HashMap<>();
-		// doc_no의 시퀀스 채번해오기
-		String docSeq = service.getDocSeq();	
-		System.out.println("~~확인용 docSeq" + docSeq);
 		
-		String fk_doc_no = "KD-"+ request.getParameter("fk_doctype_code") + "-" + docSeq;
+		Map<String, String> docSeq = new HashMap<>();
 		
-		System.out.println("~~확인용 doc_no" + doc_no);
+		docSeq = service.getDocSeq();			
+		String fk_doc_no = "KD-"+ request.getParameter("fk_doctype_code") + "-" + docSeq.get("doc_noSeq");
 		
 		docvo.setDoc_no(fk_doc_no);
 		
-		docMap.put("docvo", docvo); //기안 종류 코드, 기안자 사원 아이디, 기안문서 제목, 기안문서내용, 서류 작성일자
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("docvo", docvo); 
+		//기안 종류 코드, 기안자 사원 아이디, 기안문서 제목, 기안문서내용, 서류 작성일자
 		
-		Map<String, String> paraMap = new HashMap<>();
+
 //		docInfoMap.put("doctype_code", doctype_code);
 		
 		
@@ -229,19 +226,20 @@ public class ApprovalController {
 		paraMap.put("attendees", request.getParameter("attendees"));
 		paraMap.put("host_dept", request.getParameter("host_dept"));
 		
-		
-		
+		paraMap.put("approval_no", docSeq.get("approval_noSeq"));
 		paraMap.put("empId1", request.getParameter("level_no_1"));
 		paraMap.put("empId2", request.getParameter("level_no_2"));
 		paraMap.put("empId3", request.getParameter("level_no_3"));
 
 
-		
+		int n = 0;
 		
 		
 	//	if(attach.isEmpty()) {
 			// 파일첨부가 없는 경우라면
-			n = service.noFile_doc(paraMap); // <== 파일첨부가 없는 글쓰기 
+			n = service.noFile_doc(paraMap); // <== 파일첨부가 없는 글쓰기
+			
+			System.out.println("확인용 n"+n);
 //		}
 	//	else {
 			// 파일첨부가 있는 경우라면
@@ -251,7 +249,7 @@ public class ApprovalController {
 	// === 파일첨부가 있는 글쓰기 또는 파일첨부가 없는 글쓰기로 나뉘어서 service 호출하기 끝 === //
 		
 		if(n==1) {
-			mav.setViewName("redirect:/list.action");
+			mav.setViewName("redirect:/newDocEnd.action");
 		    //  /list.action 페이지로 redirect(페이지이동)해라는 말이다.
 		}
 		else {

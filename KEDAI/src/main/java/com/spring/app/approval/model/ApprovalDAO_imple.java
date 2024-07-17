@@ -52,12 +52,6 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return deptEmpList;
 	}
 
-	// doc_no의 시퀀스 채번해오기
-	@Override
-	public String getDocSeq() {
-		String docSeq = sqlsession.selectOne("approval.getDocSeq");
-		return docSeq;
-	}
 
 	// 첨부파일이 없는 서류 작성하기(tbl_doc)
 	@Override
@@ -79,6 +73,21 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		int n = sqlsession.insert("approval.noFile_approval", paraMap);
 		return n;
 	}
+
+	// doc_no의 시퀀스 채번해오기
+	@Override
+	public String getDoc_noSeq() {
+		String doc_noSeq = sqlsession.selectOne("approval.getDoc_noSeq");
+		return doc_noSeq;
+	}
+
+	// approval_noSeq 시퀀스 채번해오기
+	@Override
+	public String getApproval_noSeq() {
+		String approval_noSeq = sqlsession.selectOne("approval.getApproval_noSeq");
+		return approval_noSeq;
+	}
+
 
 	// 각 부서별 당 인원수 가져오기
 	/*

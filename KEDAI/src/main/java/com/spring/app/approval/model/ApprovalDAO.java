@@ -25,7 +25,10 @@ public interface ApprovalDAO {
 	List<Map<String, String>> deptEmpList(Map<String, String> paraMap);
 
 	// doc_no의 시퀀스 채번해오기
-	String getDocSeq();
+	String getDoc_noSeq();
+
+	// approval_noSeq 시퀀스 채번해오기
+	String getApproval_noSeq();
 	
 	// 첨부파일이 없는 서류 작성하기(tbl_doc)
 	int noFile_newdoc(Map<String, Object> paraMap);
@@ -35,5 +38,10 @@ public interface ApprovalDAO {
 
 	// 첨부파일이 없는 서류 작성하기(tbl_approval)
 	int noFile_approval(Map<String, Object> paraMap);
+
+
+
+
+;
 
 }

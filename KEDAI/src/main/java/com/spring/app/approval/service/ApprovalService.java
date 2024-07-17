@@ -27,7 +27,10 @@ public interface ApprovalService {
 	// 첨부파일이 없는 기안 작성하기
 	int noFile_doc(Map<String, Object> paraMap);
 
-	// doc_no의 시퀀스 채번해오기
-	String getDocSeq();
+	// doc_no와 approval_noSeq의 시퀀스 채번해오기
+	Map<String, String> getDocSeq();
+
+	
+
 
 }

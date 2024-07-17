@@ -141,11 +141,12 @@ create table tbl_doctype
 ,constraint PK_tbl_doctype_doctype_code primary key(doctype_code)
 );
 -- 기안종류 코멘트
-COMMENT ON COLUMN tbl_doctype.doctype_code IS '기안 종류 코드(primary key) 100:연차신청서 101:회의록 102:야간근무신청'; --Comment이(가) 생성되었습니다.
+COMMENT ON COLUMN tbl_doctype.doctype_code IS '기안 종류 코드(primary key) 100:연차신청서 101:회의록 102:추가근무비용신청'; --Comment이(가) 생성되었습니다.
 
-insert into tbl_doctype(doctype_code, doctype_name)
-        values(boardSeq.nextval, 'hkim', '차은우', '차은우 입니다'||i, '안녕하세요? 차은우'|| i ||' 입니다.', '1234', default, default, default, i);
-
+insert into tbl_doctype(doctype_code, doctype_name) values(100, '연차신청서');
+insert into tbl_doctype(doctype_code, doctype_name) values(101, '회의록');
+insert into tbl_doctype(doctype_code, doctype_name) values(102, '추가근무비용신청');
+      
 commit;
 
 --기안문서(24.07.03 생성완료)
@@ -157,12 +158,16 @@ create table tbl_doc
 ,doc_content        NVARCHAR2(2000)      not null    -- 기안문서내용
 ,created_date       date default sysdate not null    -- 서류작성일자
 ,doc_comment            NVARCHAR2(100)                   -- 기안의견
-,doc_status         NUMBER  default 0    not null    -- 기안상태  0:기안 1:반려                
+-- ,doc_status         NUMBER  default 0    not null    -- 기안상태  0:기안 1:반려                
 ,constraint PK_tbl_doc_doc_no primary key(doc_no)
 ,constraint FK_tbl_doc_fk_doctype_code foreign key(fk_doctype_code) references tbl_doctype(doctype_code)
 ,constraint FK_tbl_doc_fk_empid foreign key(fk_empid) references tbl_employees(EMPID)
-,constraint ck_tbl_doc_doc_status CHECK (doc_status IN(0, 1))
+-- ,constraint ck_tbl_doc_doc_status CHECK (doc_status IN(0, 1))
 );
+
+ALTER TABLE tbl_doc
+DROP COLUMN doc_status;
+
 
 ALTER TABLE tbl_doc RENAME COLUMN content TO doc_content;
 
@@ -270,20 +275,20 @@ create table tbl_approval
 ,status             NUMBER           not null    -- 결재상태
 ,approval_comment   NVARCHAR2(100)               -- 결재의견
 ,approval_date      DATE                         -- 결재일자
-
+,level_no           NUMBER DEFAULT 0 not null    -- 결재단계
 ,constraint PK_tbl_approval_approval_no primary key(approval_no)
 ,constraint FK_tbl_approval_fk_doc_no foreign key(fk_doc_no) references tbl_doc(doc_no)
 ,constraint FK_tbl_approval_fk_empid foreign key(fk_empid) references tbl_employees(empid)
 );
 
-CREATE TABLE tbl_doc_test (
-    id NUMBER
-);
+ALTER TABLE tbl_approval DROP CONSTRAINT PK_tbl_approval_new;
 
-ALTER TABLE tbl_doc_test ADD approval_no NUMBER NOT NULL;
+ALTER TABLE tbl_approval 
+ADD CONSTRAINT PK_tbl_approval_no_empid PRIMARY KEY (approval_no, fk_empid);
 
-drop table tbl_doc_test
-
+SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE, TABLE_NAME
+FROM USER_CONSTRAINTS
+WHERE TABLE_NAME = 'TBL_APPROVAL';
 
 create sequence approval_noSeq
 start with 1
@@ -292,6 +297,10 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+
+SELECT sequence_name
+FROM user_sequences
+WHERE sequence_name = 'APPROVAL_NOSEQ';
 
 commit;
 
@@ -382,3 +391,13 @@ from tbl_employees
 
 select minutes_no.nextval
 from dual;
+
+
+insert insert into tbl_doc(doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date)
+values(103, '변우석', default);
+
+select *
+from tbl_minutes;
+
+desc tbl_doc;
+

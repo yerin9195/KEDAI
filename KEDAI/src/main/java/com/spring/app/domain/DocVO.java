@@ -6,8 +6,8 @@ public class DocVO {
 	private String doc_no;   			// 기안문서번호(EX. KD-100-2407)
 	private int fk_doctype_code;   	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
 	private String fk_empid;   			// 기안자사원아이디
-	private String subject;   			// 기안문서제목
-	private String content;   			// 기안문서내용
+	private String doc_subject;   			// 기안문서제목
+	private String doc_content;   			// 기안문서내용
 	private String created_date;   		// 서류작성일자
 	private String doc_comment;   		// 기안의견
 	private int doc_status;   		// 기안상태  0:기안 1:반려
@@ -50,24 +50,24 @@ public class DocVO {
 	
 	public void setFk_empid(String fk_empid) {
 		this.fk_empid = fk_empid;
-	}
+	}	
 	
-	public String getSubject() {
-		return subject;
+	public String getDoc_subject() {
+		return doc_subject;
 	}
-	
-	public void setSubject(String subject) {
-		this.subject = subject;
+
+	public void setDoc_subject(String doc_subject) {
+		this.doc_subject = doc_subject;
 	}
-	
-	public String getContent() {
-		return content;
+
+	public String getDoc_content() {
+		return doc_content;
 	}
-	
-	public void setContent(String content) {
-		this.content = content;
+
+	public void setDoc_content(String doc_content) {
+		this.doc_content = doc_content;
 	}
-	
+
 	public String getCreated_date() {
 		return created_date;
 	}

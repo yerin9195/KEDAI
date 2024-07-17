@@ -1,5 +1,6 @@
 package com.spring.app.approval.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,18 +52,32 @@ public class ApprovalService_imple implements ApprovalService {
 	// 첨부파일이 없는 게시판 글쓰기
 	@Override
 	public int noFile_doc(Map<String, Object> paraMap) {
+		
 		int n1 = dao.noFile_newdoc(paraMap);
 		int n2 = dao.noFile_minutes(paraMap);
 		int n3 = dao.noFile_approval(paraMap);
-		return n1*n2*n3;
+		
+		int result = n1*n2*n3;
+		
+		return result;
 	}
 
-	// doc_no의 시퀀스 채번해오기
+
+		
+	// doc_no와 approval_noSeq의 시퀀스 채번해오기
 	@Override
-	public String getDocSeq() {
-		String docSeq = dao.getDocSeq();
-		return docSeq;
+	public Map<String, String> getDocSeq() {
+		String doc_noSeq = dao.getDoc_noSeq();
+		String approval_noSeq = dao.getApproval_noSeq();
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("doc_noSeq", doc_noSeq);
+		paraMap.put("approval_noSeq", approval_noSeq);
+		
+		return paraMap;
 	}
+		
+
 	
 	/*
 	 * // 각 부서별 당 인원수 가져오기

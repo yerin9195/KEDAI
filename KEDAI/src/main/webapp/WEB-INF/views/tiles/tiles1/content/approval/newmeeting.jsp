@@ -708,7 +708,7 @@ span.clear{clear: both;}
 			</tr>
 			<tr>
 				<th>기안자</th>
-				<td><input type="hidden" name="fk_empid" value="${sessionScope.loginuser.name}" />${sessionScope.loginuser.name}</td>
+				<td><input type="hidden" name="fk_empid" value="${sessionScope.loginuser.empid}" />${sessionScope.loginuser.name}</td>
 				<th>부서</th>
 				<td>${requestScope.dept_name}</td>
 			</tr>

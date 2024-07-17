@@ -96,42 +96,50 @@
  		</choose>
 		ORDER BY D.dept_code asc, J.job_code ASC
 	</select>
-		
-	<insert id="noFile_meetingDoc" parameterType="HashMap">
-	
-		<if test='fk_doctype_code == 100'>
-		<!--  첨부파일이 없는 경우 -->
-			<choose>
-				<when test="empId2 == null">
-					insert into tbl_comment(seq, fk_userid, name, content, regDate, parentSeq, status)
-					values(commentSeq.nextval, #{fk_userid}, #{name}, #{content}, default, #{parentSeq}, default)
-	
-					empId1만 넣는다.
-				</when>
-				<when test="empId2 != null">
-					empId 2만 넣는다.
-					<if test="empId3 != null">
-						empId 2와 3까지 넣는다.
-					</if>
-				</when>
-			</choose>	
-		</if>
-		<if test='fk_doctype_code == 101'>
-		
-		</if>
-		<if test='fk_doctype_code == 102'>
-		
-		</if>
-		
-	</insert>
- 	
  	
  	<!-- 	// doc_no의 시퀀스 채번해오기 -->
- 	
- 	<select id="getDocSeq" resultType="String">
+ 	<select id="getDoc_noSeq" resultType="String">
  		select doc_noSeq.nextval
 		from dual
  	</select>
+ 	
+ 	 	<!--  approval_noSeq 시퀀스 채번해오기  -->
+ 	<select id="getApproval_noSeq" resultType="String">
+ 		select approval_noSeq.nextval
+		from dual
+ 	</select>
+ 	
+ 	
+ 	<!-- 첨부파일이 없는 서류 작성하기(tbl_doc) -->
+ 	<insert id="noFile_newdoc" parameterType="HashMap">
+		insert into tbl_doc(doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date)
+		values(#{docvo.doc_no}, #{docvo.fk_doctype_code}, #{docvo.fk_empid}, #{docvo.doc_subject}, #{docvo.doc_content}, #{docvo.created_date})
+	</insert>
+ 	
+ 	
+ 	<!-- 첨부파일이 없는 서류 작성하기(tbl_minutes) -->
+ 	<insert id="noFile_minutes" parameterType="HashMap">
+		insert into tbl_minutes(minutes_no, fk_doc_no, meeting_date, attendees, host_dept)
+		values( minutes_noSeq.nextval, #{fk_doc_no}, #{meeting_date}, #{attendees}, #{host_dept})
+	</insert>
+ 	
+ 	
+ 	<!-- 첨부파일이 없는 서류 작성하기(tbl_approval) -->
+ 	<insert id="noFile_approval" parameterType="HashMap">
+ 		<if test="empId1 != null">
+ 			insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+			values(approval_noSeq.nextval, #{fk_doc_no}, #{empId1}, default, 1);
+ 		</if>
+		<if test="empId2 != null ">
+			insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+			values(approval_noSeq.nextval, #{fk_doc_no}, #{empId2}, default, 2);
+		</if>
+		<if test="empId3 != null">
+			insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+			values(approval_noSeq.nextval, #{fk_doc_no}, #{empId3}, default, 3);
+		</if>
+	</insert>
+ 	
  
  	
 </mapper>
