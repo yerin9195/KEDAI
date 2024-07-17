@@ -36,7 +36,6 @@
      }
      th, td { 
       border: 1px solid #ddd; 
-      padding: 15px; 
       text-align: center;
      }
      th { background-color: #f2f2f2; }
@@ -47,26 +46,17 @@
      }
      
        /* 모달 스타일 */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            padding-top: 100px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
+         .modal-header, .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group {
+            margin-bottom: 1rem;
         }
 
         .close {
@@ -83,9 +73,6 @@
             cursor: pointer;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
 
         .form-group label {
             display: block;
@@ -97,23 +84,119 @@
             padding: 8px;
             box-sizing: border-box;
         }
+        
+        .reserveBtn{
+        	padding: 22px;
+        }
+        
+        
      
  </style>
  
  <script type="text/javascript">
  $(document).ready(function(){
 	showallsub();
- 
- 
-     $("#datepicker").datepicker({
-         dateFormat: "yy-mm-dd",
-         onSelect: function(dateText) {
-             const date = new Date(dateText);
-             document.getElementById('currentDate').innerText = formatDate(date);
-         }
-     });
-     const today = new Date();
-     document.getElementById('currentDate').innerText = formatDate(today);
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 캘린더 소분류 카테고리 숨기기
+	$("select.small_category").hide();
+	
+	// === *** 달력(type="date") 관련 시작 *** === //
+	// 시작시간, 종료시간		
+	var html="";
+	for(var i=0; i<24; i++){
+		if(i<10){
+			html+="<option value='0"+i+"'>0"+i+"</option>";
+		}
+		else{
+			html+="<option value="+i+">"+i+"</option>";
+		}
+	}// end of for----------------------
+	
+	$("select#startHour").html(html);
+	$("select#endHour").html(html);
+	
+	// 시작분, 종료분 
+	html="";
+	for(var i=0; i<60; i=i+5){
+		if(i<10){
+			html+="<option value='0"+i+"'>0"+i+"</option>";
+		}
+		else {
+			html+="<option value="+i+">"+i+"</option>";
+		}
+	}// end of for--------------------
+	html+="<option value="+59+">"+59+"</option>"
+	
+	$("select#startMinute").html(html);
+	$("select#endMinute").html(html);
+	// === *** 달력(type="date") 관련 끝 *** === //
+	
+	// '종일' 체크박스 클릭시
+	$("input#allDay").click(function() {
+		var bool = $('input#allDay').prop("checked");
+		
+		if(bool == true) {
+			$("select#startHour").val("00");
+			$("select#startMinute").val("00");
+			$("select#endHour").val("23");
+			$("select#endMinute").val("59");
+			$("select#startHour").prop("disabled",true);
+			$("select#startMinute").prop("disabled",true);
+			$("select#endHour").prop("disabled",true);
+			$("select#endMinute").prop("disabled",true);
+		} 
+		else {
+			$("select#startHour").prop("disabled",false);
+			$("select#startMinute").prop("disabled",false);
+			$("select#endHour").prop("disabled",false);
+			$("select#endMinute").prop("disabled",false);
+		}
+	});
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	$("#startDate").datepicker({
+        dateFormat: "yy-mm-dd",
+        onSelect: function(dateText) {
+            $(this).val(dateText); // 선택한 날짜를 예약일(input id="startDate")에 설정
+            $("#reservationModal").modal("hide"); // 모달 숨기기
+        }
+    });
+
+    // 예약 버튼 클릭 시 모달 보이기
+    $(document).on("click", ".reserveBtn", function() {
+        $("#reservationModal").modal("show");
+
+    });
+    
+    $(document).on("click", "#startDate", function() {
+   	 console.log("??/")
+   	    // currentDate 버튼의 텍스트를 startDate input 필드에 설정
+   	            // 예약일(input id="startDate") 클릭 시 달력 보이기
+       	$("#startDate").datepicker("show");
+   	    var currentDateText = document.getElementById('currentDate').innerText;
+   	    document.getElementById('startDate').value = currentDateText;
+   	});
+
+    $(".close, #reserveCancel").on("click", function() {
+        $("#reservationModal").hide();
+    });
+
+    $(".datepicker").datepicker({
+        dateFormat: "yy-mm-dd"
+    });
+
+
+    // 오늘 날짜 설정
+    const today = new Date();
+    const formattedToday = formatDate(today);
+    $("#currentDate").text(formattedToday);
+    $("#startDate").val(formattedToday); // 예약일(input id="startDate")에 오늘 날짜 설정
+	
      
      $("#assetSelect").change(function() {
          var selectedRoomMainSeq = $(this).val(); // 선택된 roomMainSeq 값 가져오기
@@ -142,7 +225,7 @@
                             leftCell.text(roomSubName);
                             row.append(leftCell);
                             for (var hour = 9; hour <= 21; hour++) {
-                                var cell1 = $("<td>").addClass("time-slot").append("<button class='reserveBtn'>예약</button>");
+                                var cell1 = $("<td>").addClass("time-slot").append("<button class='reserveBtn'></button>");
                                 var cell2 = $("<td>").addClass("time-slot").append("<button class='reserveBtn'></button>");
                                 row.append(cell1);
                                 row.append(cell2);
@@ -160,27 +243,8 @@
          }
      });
      
-     $(document).on("click", ".reserveBtn", function() {
-         $("#reservationModal").show();
-     });
+    
 
-     $(".close, #reserveCancel").on("click", function() {
-         $("#reservationModal").hide();
-     });
-
-     $(".datepicker").datepicker({
-         dateFormat: "yy-mm-dd"
-     });
-
-     $(".timepicker").timepicker({
-         timeFormat: "HH:mm",
-         interval: 30,
-         minTime: "09:00",
-         maxTime: "21:30",
-         dynamic: false,
-         dropdown: true,
-         scrollbar: true
-     });
      
  });
  
@@ -205,9 +269,6 @@
 
 
  
- function currentDate(){
-     $("#datepicker").datepicker("show");
- }
 
  function changeDate(days) {
      const currentDateText = document.getElementById('currentDate').innerText.replace(/[<>]/g, '').trim();
@@ -217,21 +278,17 @@
  }
 
  function formatDate(date) {
-     const year = date.getFullYear();
-     const month = ('0' + (date.getMonth() + 1)).slice(-2);
-     const day = ('0' + date.getDate()).slice(-2);
-     const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
-     return year + '-' + month + '-' + day + ' (' + dayOfWeek + ')';
- }
+	    const year = date.getFullYear();
+	    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+	    const day = ('0' + date.getDate()).slice(-2);
+	    const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
+	    return year + '-' + month + '-' + day + ' (' + dayOfWeek + ')';
+	}
 
  function showModal(asset, time) {
      alert(`예약: ${asset} - ${time}`);
  }
 
- function setToday() {
-     const today = new Date();
-     document.getElementById('currentDate').innerText = formatDate(today);
- }
   
  	function showallsub(){
  		 $.ajax({
@@ -249,8 +306,8 @@
                      leftCell.text(roomSubName);
                      row.append(leftCell);
                      for (var hour = 9; hour <= 21; hour++) {
-                         var cell1 = $("<td>").addClass("time-slot").attr("data-hour", hour).text("예약");
-                         var cell2 = $("<td>").addClass("time-slot").attr("data-hour", hour).text("예약");
+                    	 var cell1 = $("<td>").addClass("time-slot").append("<button class='reserveBtn'></button>");
+                         var cell2 = $("<td>").addClass("time-slot").append("<button class='reserveBtn'></button>");
                          row.append(cell1);
                          row.append(cell2);
                      }
@@ -267,18 +324,6 @@
  		
  	}
  	
- 	function changeDate(delta) {
- 	    // 날짜 변경 로직
- 	}
-
- 	function currentDate() {
- 	    // 현재 날짜 설정 로직
- 	}
-
- 	function setToday() {
- 	    // 오늘 날짜 설정 로직
- 	}
- 
  </script>
 
  <div class="header">
@@ -323,40 +368,54 @@
     </table>
     <hr style="margin-top: 1%; width: 85%;" />
     
-    <!-- 모달 -->
-<div id="reservationModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>예약</h2>
-        <div class="form-group">
-            <label for="reservationDate">예약일:</label>
-            <input type="text" id="reservationDate" class="datepicker">
-        </div>
-        <div class="form-group">
-            <label for="startTime">시작 시간:</label>
-            <input type="text" id="startTime" class="timepicker">
-        </div>
-        <div class="form-group">
-            <label for="endTime">종료 시간:</label>
-            <input type="text" id="endTime" class="timepicker">
-        </div>
-        <div class="form-group">
-            <label><input type="checkbox" id="allDay"> 종일</label>
-        </div>
-        <div class="form-group">
-            <label for="reserver">예약자:</label>
-            <input type="text" id="reserver" value="<%= session.getAttribute("name") %>" readonly>
-        </div>
-        <div class="form-group">
-            <label for="purpose">목적:</label>
-            <textarea id="purpose"></textarea>
-        </div>
-        <div class="form-group">
-            <button id="reserveConfirm">확인</button>
-            <button id="reserveCancel">취소</button>
+   <!-- 모달 -->
+    <div class="modal" id="reservationModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- 모달 헤더 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">예약</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- 모달 바디 -->
+                <div class="modal-body">
+                    <form id="reservationForm">
+                        <div class="form-group">
+                              <label for="startDate">예약일</label>
+							     <input type="text" class="form-control" id="startDate">
+							        <div class="input-group-append">
+							            <button type="button" class="btn btn-outline-secondary" id="startDate"></button>
+							        </div>
+							        <input type="datetime-local" class="form-control" id="endDate">
+							    </div>
+							    <div class="form-check">
+							        <input type="checkbox" class="form-check-input" id="allDay">
+							        <label class="form-check-label" for="allDay">종일</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="reserver">예약자</label>
+                            <input type="text" class="form-control" id="reserver" value="${sessionScope.loginuser.name} ${sessionScope.loginuser.jvo.job_name}" readonly/>
+	
+                        </div>
+                        <div class="form-group">
+                            <label for="purpose">목적</label>
+                            <input type="text" class="form-control" id="purpose">
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 모달 푸터 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">확인</button>
+                    <button type="button" class="btn btn-secondary" id="reserveCancel" data-dismiss="modal">취소</button>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
+
     
     
 </body>
