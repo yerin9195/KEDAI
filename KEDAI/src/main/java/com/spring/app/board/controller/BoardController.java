@@ -765,4 +765,16 @@ public class BoardController {
 	
 	}
 	
+	// 게시글수 조회하기
+	@ResponseBody
+	@GetMapping(value="/board/boardTotalCountJSON.kedai", produces="text/plain;charset=UTF-8")
+	public String boardTotalCountJSON(HttpServletRequest request) {
+		
+		int totalCount = service.boardTotalCountJSON();
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("totalCount", totalCount*10);
+		
+		return jsonObj.toString();
+	}
 }

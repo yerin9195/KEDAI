@@ -1,4 +1,4 @@
-package com.spring.app.room.model;
+package com.spring.app.reservation.model;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +13,7 @@ import com.spring.app.domain.BusVO;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
+import com.spring.app.domain.SalaryVO;
 
 @Repository
 public class RoomDAO_imple implements RoomDAO {
@@ -43,6 +44,20 @@ public class RoomDAO_imple implements RoomDAO {
 	}
 
 
+	//	급여명세서 직원목록 불러오기
+	@Override
+	public List<MemberVO> memberListView() {
+		List<MemberVO> membervoList = sqlsession.selectList("salary.memberListView");
+		return membervoList;
+	}
+
+    
+	//	급여 전체 계산
+	@Override
+	public int salaryCal(SalaryVO salaryvo) {
+		int n = sqlsession.insert("salary.salaryCal", salaryvo);
+		return n;
+	}
 
 
 }

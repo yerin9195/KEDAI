@@ -1,10 +1,8 @@
 package com.spring.app.member.service;
 
-import java.util.List;
 import java.util.Map;
 
 import com.spring.app.domain.MemberVO;
-import com.spring.app.domain.SalaryVO;
 
 public interface MemberService {
 
@@ -26,10 +24,7 @@ public interface MemberService {
 	// 포인트 충전하기
 	int pointUpdate(Map<String, String> paraMap);
 	
-	//	급여명세서 직원목록 불러오기
-	List<MemberVO> memberListView();
-
-	//	급여명세서 계산
-	int salaryCal(SalaryVO salaryvo);
-
+	// 사원수 조회하기
+	int memberTotalCountJSON();
+	
 }

@@ -458,7 +458,7 @@ public class MemberController {
 	
 	// 포인트 충전하는 페이지 이동
 	@GetMapping("/member/coinPurchaseTypeChoice.kedai")
-	public ModelAndView requiredLogin_coinPurchaseTypeChoice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView coinPurchaseTypeChoice(HttpServletRequest request, ModelAndView mav) {
 		
 		String empid = request.getParameter("empid");
 		
@@ -483,7 +483,7 @@ public class MemberController {
 	
 	// PG(paymentGateway) 결제대행사 페이지로 이동
 	@GetMapping("/member/coinPurchaseEnd.kedai")
-	public ModelAndView requiredLogin_coinPurchaseEnd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView coinPurchaseEnd(HttpServletRequest request, ModelAndView mav) {
 		
 		String empid = request.getParameter("empid");
 		
@@ -562,24 +562,17 @@ public class MemberController {
 		return jsonObj.toString();
 	}
 	
-	
-	
-	
+	// 사원수 조회하기
+	@ResponseBody
+	@GetMapping(value="/member/memberTotalCountJSON.kedai", produces="text/plain;charset=UTF-8")
+	public String memberTotalCountJSON(HttpServletRequest request) {
 		
-
-	
-	
-	
-	
-	
-	
-	
-	
-
-	@GetMapping(value = "/roomResercation.kedai")  // http://localhost:8090/board/pay_stub.action
-	public String roomResercation(HttpServletRequest request) {
+		int totalCount = service.memberTotalCountJSON();
 		
-		return "tiles1/reservation/roomReservation.tiles";
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("totalCount", totalCount*1000);
+		
+		return jsonObj.toString();
 	}
 	
 }
