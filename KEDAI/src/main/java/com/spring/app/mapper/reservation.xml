@@ -81,4 +81,10 @@
           current_times
    </select>
 	
+	<select id="getmyCar" resultType="CarVO" parameterType="String">
+		select car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year
+		from tbl_car
+		where fk_empid = #{empid}
+	</select>	
+	
 </mapper>

@@ -34,6 +34,18 @@ public class CarDAO_imple implements CarDAO {
 		return stationTimeList;
 	}
 
+	@Override
+	public List<Map<String, String>> getmyCar(String empid) {
+
+		List<Map<String, String>> myCar = sqlsession.selectList("reservation.getmyCar", empid);
+		return myCar;
+	}
+
+
+
+
+
+
 
 
 }

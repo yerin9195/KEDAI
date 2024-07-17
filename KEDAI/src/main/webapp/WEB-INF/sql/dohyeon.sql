@@ -579,3 +579,76 @@ commit;
 select *
 from tbl_loginhistory
 
+drop table tbl_car;
+
+commit;
+
+
+create table tbl_car
+(car_seq                  NUMBER                     --��������̵�                   
+,fk_empid                 VARCHAR2(30)      not null           --�������
+,car_num                  VARCHAR2(100)     not null                  --����
+,car_type                 VARCHAR2(100)     not null                  --�浵
+,max_num                  NUMBER            not null
+,insurance                NUMBER            not null 
+,drive_year               VARCHAR2(30)      not null 
+,car_imgfilename          VARCHAR2(100)     not null 
+,constraint PK_tbl_car_car_seq primary key(car_seq)
+,constraint FK_tbl_car_fk_empid foreign key(fk_empid) references tbl_employees(empid)
+);
+
+create table tbl_day_share
+(res_num                  NUMBER                      --��������̵�                   
+,fk_car_seq               NUMBER            not null           --�������
+,start_date               DATE              not null                  --����
+,last_date                DATE              not null                  --�浵
+,dp_name                  VARCHAR2(200)     not null                  --�浵
+,dp_add                   VARCHAR2(200)     not null                  --�浵
+,dp_lat                   NUMBER            not null                  --�浵
+,dp_lng                   NUMBER            not null                  --�浵
+,ds_name                  VARCHAR2(200)     not null                  --�浵
+,ds_add                   VARCHAR2(200)     not null                  --�浵
+,ds_lat                   NUMBER            not null                  --�浵
+,ds_lng                   NUMBER            not null                  --�浵
+,want_max                 NUMBER            not null                  --�浵                 --�浵
+,end_status               NUMBER            not null                  --�浵
+,cancel_status            NUMBER            not null                  --�浵
+,total_calculate          NUMBER  
+,total_pay                NUMBER  
+,total_nonpay             NUMBER  
+,constraint PK_tbl_day_share_res_num primary key(res_num)
+,constraint FK_tbl_day_share_fk_car_seq foreign key(fk_car_seq) references tbl_car(car_seq)
+);
+
+create table tbl_car_share
+(pf_res_num             NUMBER                      --��������̵�                   
+,pf_empid               VARCHAR2(30)        not null           --�������
+,share_date             DATE                not null                  --����
+,share_may_time         DATE                not null                  --����
+,accept_yon             NUMBER              not null                  --����
+,reason_nonaccept       VARCHAR2(200)                             --����
+,rdp_name               VARCHAR2(200)                                  --����
+,rdp_add                VARCHAR2(200)                         --�浵
+,rdp_lat                NUMBER                              --�浵
+,rdp_lng                NUMBER                               --�浵
+,rds_name               VARCHAR2(200)                      --�浵
+,rds_add                VARCHAR2(200)                     --�浵
+,rds_lat                NUMBER                             --�浵
+,rds_lng                NUMBER                           --�浵
+,getin_time             DATE                          --�浵
+,getout_time            DATE
+,use_time               DATE
+,settled_amount         NUMBER                   --�浵
+,payment_amount         DATE                   --�浵
+,nonpaymnet_amount      DATE                   --�浵
+,constraint PK_tbl_car primary key(pf_res_num,pf_empid,share_date)
+,constraint FK_tbl_car_share_pf_res_num foreign key(pf_res_num) references tbl_day_share(res_num)
+,constraint FK_tbl_car_share_pf_empid  foreign key(pf_empid) references tbl_employees(empid)
+);
+
+commit;
+
+select car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year
+from tbl_car
+where fk_empid = '2010400-001';
+

@@ -1,0 +1,56 @@
+package com.spring.app.domain;
+
+public class CarVO {
+	private int car_seq;
+	private String fk_empid;
+	private String car_num;
+	private String car_type;
+	private int max_num;
+	private int insurance;
+	private String drive_year;
+	public int getCar_seq() {
+		return car_seq;
+	}
+	public void setCar_seq(int car_seq) {
+		this.car_seq = car_seq;
+	}
+	public String getFk_empid() {
+		return fk_empid;
+	}
+	public void setFk_empid(String fk_empid) {
+		this.fk_empid = fk_empid;
+	}
+	public String getCar_num() {
+		return car_num;
+	}
+	public void setCar_num(String car_num) {
+		this.car_num = car_num;
+	}
+	public String getCar_type() {
+		return car_type;
+	}
+	public void setCar_type(String car_type) {
+		this.car_type = car_type;
+	}
+	public int getMax_num() {
+		return max_num;
+	}
+	public void setMax_num(int max_num) {
+		this.max_num = max_num;
+	}
+	public int getInsurance() {
+		return insurance;
+	}
+	public void setInsurance(int insurance) {
+		this.insurance = insurance;
+	}
+	public String getDrive_year() {
+		return drive_year;
+	}
+	public void setDrive_year(String drive_year) {
+		this.drive_year = drive_year;
+	}
+	
+	
+
+}

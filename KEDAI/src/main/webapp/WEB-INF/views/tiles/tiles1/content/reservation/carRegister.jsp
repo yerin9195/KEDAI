@@ -451,8 +451,8 @@ function goRegister() {
 	 // *** 필수입력사항에 모두 입력이 되었는지 검사하기 끝 *** //
 	
 	 
-	 const frm = document.registerFrm;
-	 frm.action = "memberRegister.up";
+	 const frm = document.prodInputFrm;
+	 frm.action = "<%= ctxPath%>/carRegisterEnd.kedai";
 	 frm.method = "post";
 	 frm.submit();
 

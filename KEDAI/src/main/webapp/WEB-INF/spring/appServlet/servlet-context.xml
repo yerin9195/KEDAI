@@ -84,4 +84,6 @@
    	<aop:config proxy-target-class="true">
     	<aop:pointcut id="controllerOperation" expression="execution(public * com.spring.app..*Controller.*(..))" />
     </aop:config>
+    
+
 </beans:beans>

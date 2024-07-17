@@ -62,11 +62,6 @@
 
 <script type="text/javascript">
 
-
-	let b_idcheck_click = false; 
-	let b_emailcheck_click = false; 
-	let b_zipcodeSearch_click = false;
-	
 	$(document).ready(function(){
 		
 		$("span.error").hide();

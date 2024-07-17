@@ -12,6 +12,7 @@
 		<typeAlias type="com.spring.app.domain.SalaryVO" alias="SalaryVO" />
 		<typeAlias type="com.spring.app.domain.RoomMainVO" alias="RoomMainVO" />
 		<typeAlias type="com.spring.app.domain.RoomSubVO" alias="RoomSubVO" />
+		<typeAlias type="com.spring.app.domain.CarVO" alias="CarVO" />
 	</typeAliases>		
 
 </configuration>
