@@ -35,8 +35,8 @@ public class MemberVO {
 	private int pwdchangegap; // 마지막으로 암호를 변경한지가 몇개월인지 알려주는 개월수
 	private int lastlogingap; // 마지막으로 로그인한지가 몇개월인지 알려주는 개월수
 	
-	private DeptVO dvo;
-	private JobVO  jvo;
+	private String dept_name;
+	private String job_name;
 	
 	// alert 용
 	private boolean requirePwdChange = false; // 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지났으면 true
@@ -272,22 +272,22 @@ public class MemberVO {
 		this.lastlogingap = lastlogingap;
 	}
 
-	public DeptVO getDvo() {
-		return dvo;
+	public String getDept_name() {
+		return dept_name;
 	}
 
-	public void setDvo(DeptVO dvo) {
-		this.dvo = dvo;
+	public void setDept_name(String dept_name) {
+		this.dept_name = dept_name;
 	}
 
-	public JobVO getJvo() {
-		return jvo;
+	public String getJob_name() {
+		return job_name;
 	}
 
-	public void setJvo(JobVO jvo) {
-		this.jvo = jvo;
+	public void setJob_name(String job_name) {
+		this.job_name = job_name;
 	}
-	
+
 	public boolean isRequirePwdChange() {
 		return requirePwdChange;
 	}
