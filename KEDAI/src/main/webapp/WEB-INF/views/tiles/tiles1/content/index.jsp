@@ -157,7 +157,7 @@
 			</div>
 			<div class="mt-3">
 				<h4>${(sessionScope.loginuser).name}&nbsp;[ ${(sessionScope.loginuser).nickname} ]</h4>
-				<h5>${(sessionScope.loginuser).jvo.job_name}</h5>
+				<h5>${(sessionScope.loginuser).job_name}</h5>
 				<span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp;<fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###" /> POINT
 				<br><br>
 				<div class="row pl-5 pr-5">

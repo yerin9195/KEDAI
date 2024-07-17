@@ -43,7 +43,7 @@ public class EmployeeService_imple implements EmployeeService{
 		return employeeList;
 	}
 
-	// 클릭한 직원 상세 정보 가져오기
+	// 직원정보 상세보기 팝업 어떤것 클릭했는지 알아오기(직원 아이디로 가져오기)
 	@Override
 	public Map<String, String> empDetail(String empid) {
 		
@@ -53,7 +53,7 @@ public class EmployeeService_imple implements EmployeeService{
 	}
 	
 	
-	// 직원정보 상세보기 팝업 어떤것 클릭했는지 알아오기(직원 아이디로 가져오기)
+	
 	
 	
 	

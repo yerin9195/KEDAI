@@ -4,45 +4,37 @@
 
 <mapper namespace="member">
  
-	<resultMap id="MemberJoinDeptJob" type="MemberVO">
-        <id property="empid" 			  column="empid"/>
-        <result property="name" 		  column="name"/>
-        <result property="nickname" 	  column="nickname"/>
-        <result property="jubun" 		  column="jubun"/>
-        <result property="gender" 		  column="gender"/>
-        <result property="age" 			  column="age"/>
-        <result property="email" 		  column="email"/>
-        <result property="mobile" 	 	  column="mobile"/>
-        <result property="postcode" 	  column="postcode"/>
-        <result property="address" 		  column="address"/>
-        <result property="detailaddress"  column="detailaddress"/>
-        <result property="extraaddress"   column="extraaddress"/>
-        <result property="imgfilename" 	  column="imgfilename"/>
-        <result property="orgimgfilename" column="orgimgfilename"/>
-        <result property="hire_date" 	  column="hire_date"/>
-        <result property="salary" 		  column="salary"/>
-        <result property="commission_pct" column="commission_pct"/>
-        <result property="point" 		  column="point"/>
-        <result property="fk_dept_code"   column="fk_dept_code"/>
-        <result property="fk_job_code" 	  column="fk_job_code"/>
-        <result property="dept_tel" 	  column="dept_tel"/>
-        <result property="sign_img" 	  column="sign_img"/>
-        <result property="annual_leave"   column="annual_leave"/>
-        <result property="pwdchangegap"   column="pwdchangegap"/>
-        <result property="lastlogingap"   column="lastlogingap"/>
-        
-        <association property="dvo" javaType="com.spring.app.domain.DeptVO">
-            <id property="dept_code" 	 column="dept_code"/>
-            <result property="dept_name" column="dept_name"/>
-        </association>
-        
-        <association property="jvo" javaType="com.spring.app.domain.JobVO">
-            <id property="job_code" 	column="job_code"/>
-            <result property="job_name" column="job_name"/>
-        </association>
+	<resultMap id="empJoinDeptJob" type="MemberVO">
+        <result property="empid"          column="empid"          javaType="String" />
+        <result property="name"           column="name"           javaType="String" />
+        <result property="nickname"       column="nickname"       javaType="String" />
+        <result property="jubun"          column="jubun"          javaType="String" />
+        <result property="gender"         column="gender"         javaType="String" />
+        <result property="age"            column="age"            javaType="String" />
+        <result property="email"          column="email"          javaType="String" />
+        <result property="mobile"         column="mobile"         javaType="String" />
+        <result property="postcode"       column="postcode"       javaType="String" />
+        <result property="address"        column="address"        javaType="String" />
+        <result property="detailaddress"  column="detailaddress"  javaType="String" />
+        <result property="extraaddress"   column="extraaddress"   javaType="String" />
+        <result property="imgfilename"    column="imgfilename"    javaType="String" />
+        <result property="orgimgfilename" column="orgimgfilename" javaType="String" />
+        <result property="hire_date"      column="hire_date"      javaType="String" />
+        <result property="salary"         column="salary"         javaType="String" />
+        <result property="commission_pct" column="commission_pct" javaType="String" />
+        <result property="point"          column="point"          javaType="int"    />
+        <result property="fk_dept_code"   column="fk_dept_code"   javaType="String" />
+        <result property="dept_name"      column="dept_name"      javaType="String" />
+        <result property="fk_job_code"    column="fk_job_code"    javaType="String" />
+        <result property="job_name"       column="job_name"       javaType="String" />
+        <result property="dept_tel"       column="dept_tel"       javaType="String" />
+        <result property="sign_img"       column="sign_img"       javaType="String" />
+        <result property="annual_leave"   column="annual_leave"   javaType="int"    />
+        <result property="pwdchangegap"   column="pwdchangegap"   javaType="int"    />
+        <result property="lastlogingap"   column="lastlogingap"   javaType="int"    />  
     </resultMap>
 
-	<select id="getLoginMember" parameterType="HashMap" resultType="MemberVO" resultMap="MemberJoinDeptJob">
+	<select id="getLoginMember" parameterType="HashMap" resultType="MemberVO" resultMap="empJoinDeptJob">
 		SELECT empid, name, nickname, jubun, gender, age, email, mobile
 		     , postcode, address, detailaddress, extraaddress
 		     , imgfilename, orgimgfilename, hire_date, salary, commission_pct, point

@@ -44,7 +44,7 @@ public class EmployeeController {
 
 	// 직원 상세보기 팝업 어떤것 클릭했는지 알아오기
 	@ResponseBody
-	@GetMapping(value="/employeeDetail_select.kedai",produces = "text/plain;charset=UTF-8")
+	@GetMapping(value="/employeeDetail.kedai",produces = "text/plain;charset=UTF-8")
 	public Map<String,String> employeeDetail(@RequestParam String empid) throws JsonProcessingException {
 		
 		Map<String,String> empDetail= service.empDetail(empid);

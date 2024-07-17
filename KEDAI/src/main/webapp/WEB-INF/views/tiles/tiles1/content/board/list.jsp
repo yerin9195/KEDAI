@@ -213,7 +213,7 @@
 			      				<c:if test="${empty bvo.filename}">
 			      					<%-- 원글인 경우  --%>
 		      						<c:if test="${bvo.depthno == 0}">
-			      						<span class="subject" onclick="goView('${bvo.board_seq}')">[ ${bvo.categoryvo.category_name} ]&nbsp;&nbsp;${bvo.subject}</span>
+			      						<span class="subject" onclick="goView('${bvo.board_seq}')">[ ${bvo.category_name} ]&nbsp;&nbsp;${bvo.subject}</span>
 		      						</c:if>
 		      						<%-- 답변글인 경우  --%>
 		      						<c:if test="${bvo.depthno > 0}">
@@ -225,7 +225,7 @@
 			      				<c:if test="${not empty bvo.filename}">
 			      					<%-- 원글인 경우  --%>
 		      						<c:if test="${bvo.depthno == 0}">
-		      							<span class="subject" onclick="goView('${bvo.board_seq}')">[ ${bvo.categoryvo.category_name} ]&nbsp;&nbsp;${bvo.subject}&nbsp;<i class="fa-solid fa-paperclip"></i></span>
+		      							<span class="subject" onclick="goView('${bvo.board_seq}')">[ ${bvo.category_name} ]&nbsp;&nbsp;${bvo.subject}&nbsp;<i class="fa-solid fa-paperclip"></i></span>
 		      						</c:if>
 		      						<%-- 답변글인 경우  --%>
 		      						<c:if test="${bvo.depthno > 0}">

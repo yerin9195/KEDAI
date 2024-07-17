@@ -3,10 +3,8 @@ package com.spring.app.member.controller;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -14,14 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -32,7 +28,6 @@ import com.spring.app.common.FileManager;
 import com.spring.app.common.GoogleMail;
 import com.spring.app.common.Sha256;
 import com.spring.app.domain.MemberVO;
-import com.spring.app.domain.SalaryVO;
 import com.spring.app.member.service.MemberService;
 
 @Controller 
@@ -62,7 +57,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("/index.kedai")
-	public ModelAndView requiredLogin_index(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView index(ModelAndView mav) {
 
 		mav.setViewName("tiles1/index.tiles"); 
 
@@ -525,7 +520,7 @@ public class MemberController {
 	// 포인트 충전하기
 	@ResponseBody
 	@PostMapping(value="/member/pointUpdate.kedai", produces="text/plain;charset=UTF-8")
-	public String coinUpdate(HttpServletRequest request) {
+	public String pointUpdate(HttpServletRequest request) {
 		
 		String empid = request.getParameter("empid");
 		String coinmoney = request.getParameter("coinmoney");

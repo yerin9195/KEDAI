@@ -69,26 +69,22 @@
 		</choose>
 	</select>
 	
-	<resultMap id="BoardJoinCategory" type="BoardVO">
-        <id property="board_seq" 		  	column="board_seq"/>
-        <result property="fk_category_code" column="fk_category_code"/>
-        <result property="fk_empid" 	  	column="fk_empid"/>
-        <result property="name" 		  	column="name"/>
-        <result property="subject" 		  	column="subject"/>
-        <result property="read_count" 		column="read_count"/>
-       	<result property="registerday" 	 	column="registerday"/>
-        <result property="groupno" 		  	column="groupno"/>
-        <result property="fk_seq" 	 	  	column="fk_seq"/>
-        <result property="depthno" 	  		column="depthno"/>
-        <result property="filename" 		column="filename"/>
-        
-        <association property="categoryvo" javaType="com.spring.app.domain.CategoryVO">
-            <id property="category_code" 	 column="category_code"/>
-            <result property="category_name" column="category_name"/>
-        </association>
+	<resultMap id="boardJoinCategory" type="BoardVO">
+        <result property="board_seq" 		column="board_seq"        javaType="String" />
+        <result property="fk_category_code" column="fk_category_code" javaType="String" />
+        <result property="category_name"    column="category_name"    javaType="String" />
+        <result property="fk_empid" 	  	column="fk_empid"         javaType="String" />
+        <result property="name" 		  	column="name"             javaType="String" />
+        <result property="subject" 		  	column="subject"          javaType="String" />
+        <result property="read_count" 		column="read_count"		  javaType="String" />
+       	<result property="registerday" 	 	column="registerday"	  javaType="String" />
+        <result property="groupno" 		  	column="groupno"		  javaType="String" />
+        <result property="fk_seq" 	 	  	column="fk_seq"			  javaType="String" />
+        <result property="depthno" 	  		column="depthno" 		  javaType="String" />
+        <result property="filename" 		column="filename"		  javaType="String" />
     </resultMap>
 	
-	<select id="boardListSearch_withPaging" parameterType="HashMap" resultType="BoardVO" resultMap="BoardJoinCategory">
+	<select id="boardListSearch_withPaging" parameterType="HashMap" resultType="BoardVO" resultMap="boardJoinCategory">
 		SELECT board_seq, fk_category_code, category_name, fk_empid, name, subject, read_count, registerday
 		     , groupno, fk_seq, depthno, filename
 		FROM
