@@ -281,7 +281,7 @@ commit;
 
 select *
 from tbl_employees
-where fk_dept_code = '100'
+where fk_dept_code = '300'
 order by fk_job_code asc;   
 
 delete from tbl_employees
@@ -326,7 +326,7 @@ commit;
 
 select *
 from tbl_employees
-where fk_dept_code = '100'
+where fk_dept_code = '300'
 order by fk_job_code;
 
 update tbl_employees set fk_job_code = 1
