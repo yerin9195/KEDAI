@@ -43,6 +43,39 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		
+		// 사원수 조회하기
+		$.ajax({
+			url: "${pageContext.request.contextPath}/member/memberTotalCountJSON.kedai",
+			type: "get",
+			dataType: "json",	 
+		   	success: function(json){
+		   	//	console.log(JSON.stringify(json));
+		   	//	console.log(JSON.stringify(json.totalCount));
+		   		
+		   		let v_html = json.totalCount.toLocaleString('en');
+		   		$("span.memberTotalCount").html(v_html);
+		   	},
+			error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+		});
+		
+		// 게시글수 조회하기
+		$.ajax({
+			url: "${pageContext.request.contextPath}/board/boardTotalCountJSON.kedai",
+			type: "get",
+			dataType: "json",	 
+		   	success: function(json){
+		   	//	console.log(JSON.stringify(json));
+		   	//	console.log(JSON.stringify(json.totalCount));
+		   		
+		   		let v_html = json.totalCount.toLocaleString('en');
+		   		$("span.boardTotalCount").html(v_html);
+		   	},
+			error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+		});
 		
 	}); // end of $(document).ready(function(){}) ----------
 	
@@ -120,7 +153,7 @@
 				<div class="col-5 pl-5 pr-2" style="height: 100px; display: flex; align-items: center;">
 					<div style="width: 60%">
 						<h6>사원 수</h6>
-						<h3>1,543</h3>
+						<h3><span class="memberTotalCount"></span></h3>
 					</div>
 					<div style="width: 20%">
 						<div style="width: 80px; height: 80px; border-radius: 50%; background: #e68c0e; text-align: center; align-content: center;">
@@ -131,7 +164,7 @@
 				<div class="col-5 pl-5 pr-2" style="height: 100px; display: flex; align-items: center;">
 					<div style="width: 60%">
 						<h6>게시글 수</h6>
-						<h3>455</h3>
+						<h3><span class="boardTotalCount"></span></h3>
 					</div>
 					<div style="width: 20%">
 						<div style="width: 80px; height: 80px; border-radius: 50%; background: #e68c0e; text-align: center; align-content: center;">

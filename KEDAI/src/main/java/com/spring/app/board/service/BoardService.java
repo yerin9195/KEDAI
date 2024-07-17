@@ -44,4 +44,7 @@ public interface BoardService {
 	// 1개의 글 삭제하기
 	int del(Map<String, String> paraMap);
 
+	// 게시글수 조회하기
+	int boardTotalCountJSON();
+
 }

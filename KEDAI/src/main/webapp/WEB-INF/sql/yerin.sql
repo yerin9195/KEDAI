@@ -567,3 +567,12 @@ where empid = '2013100-002';
 
 commit;
 -- 커밋 완료.
+
+select count(*)
+from tbl_employees
+where status = 1;
+
+select count(*)
+from tbl_board;
+
+

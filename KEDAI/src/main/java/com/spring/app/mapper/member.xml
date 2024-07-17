@@ -105,5 +105,11 @@
 		update tbl_employees set point = point + (to_number(#{coinmoney})*0.01)
 		where empid = #{empid}
 	</update>
+	
+	<select id="memberTotalCountJSON" resultType="int">
+		select count(*)
+		from tbl_employees
+		where status = 1
+	</select>
 
 </mapper>

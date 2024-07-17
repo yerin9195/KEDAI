@@ -94,5 +94,11 @@ public class BoardDAO_imple implements BoardDAO {
 		int n = sqlsession.delete("board.del", board_seq);
 		return n;
 	}
+
+	@Override
+	public int boardTotalCountJSON() {
+		int totalCount = sqlsession.selectOne("board.boardTotalCountJSON");
+		return totalCount;
+	}
 	
 }

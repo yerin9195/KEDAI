@@ -83,23 +83,11 @@ public class MemberService_imple implements MemberService {
 		return n;
 	}
 
-	
-
-	
-	//	급여명세서 직원목록 불러오기
+	// 사원수 조회하기
 	@Override
-	public List<MemberVO> memberListView() {
-		List<MemberVO> membervoList = dao.memberListView();
-		return membervoList;
+	public int memberTotalCountJSON() {
+		int totalCount = dao.memberTotalCountJSON();
+		return totalCount;
 	}
-
-	//	급여 전체 계산
-	@Override
-	public int salaryCal(SalaryVO salaryvo) {
-		int n = dao.salaryCal(salaryvo);
-		return n;
-	}
-	//	
-
 	
 }

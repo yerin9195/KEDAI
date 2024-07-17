@@ -1,4 +1,4 @@
-package com.spring.app.room.service;
+package com.spring.app.reservation.service;
 
 import java.util.List;
 import java.util.Map;
@@ -14,8 +14,9 @@ import com.spring.app.domain.BusVO;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
+import com.spring.app.domain.SalaryVO;
 import com.spring.app.reservation.model.CarDAO;
-import com.spring.app.room.model.RoomDAO;
+import com.spring.app.reservation.model.RoomDAO;
 
 @Service
 public class RoomService_imple implements RoomService {
@@ -41,6 +42,19 @@ public class RoomService_imple implements RoomService {
 		return roomall;
 	}
 
+//	급여명세서 직원목록 불러오기
+	@Override
+	public List<MemberVO> memberListView() {
+		List<MemberVO> membervoList = dao.memberListView();
+		return membervoList;
+	}
+
+	//	급여 전체 계산
+	@Override
+	public int salaryCal(SalaryVO salaryvo) {
+		int n = dao.salaryCal(salaryvo);
+		return n;
+	}
 
 
 
