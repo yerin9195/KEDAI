@@ -455,26 +455,27 @@ bigName{
 	});
 
 	// 클릭한 직원 상세정보 불러오는 함수 
+	
+	
 	$(function(){
-
-		var empid;
+		$('#empInfo > tbody > tr > td.empid').show();
 		
-		$("#empInfo").click(function(empid){
-			console.log("empInfo clicked");
-			console.log("자고 싶다...");
-			var empid = $('#empInfo').attr('empid');
-			console.log('empid:', empid);
+		$('#empInfo').click(function(){
+			/* var empid = $('#empInfo').attr('empid'); */
+			var empid = $('#empInfo > tbody > tr:nth-child(1) > td.empid').text();
+			/* var empid = $(this).closest('tr').find('td.empid').text(); */
+       		console.log('empid:', empid);
 			
 			$.ajax({
-				url: "<%=ctxPath%>/employeeDetail_select.kedai?empid=" + empid,
+				url: "<%=ctxPath%>/employeeDetail.kedai?empid=" + empid,
 				type:"get",
 				async:true,
-				dataType:"json",
+				dataType:'json',
 				success: function(json){
 					// 서버에서 직원id 로 정보 가져오기
 					if(json.name != null){
-						$("#pop_empName").html(json.name);
-						//console.log(json.name);
+						$("#pop_empName").html(json.name)
+						console.log(json.name);
 					}
 					else{
 						alert("직원 상세 정보를 불러오지 못했습니다.");
@@ -549,7 +550,7 @@ bigName{
 			</div> 
 		</div>
 					
-			<table id="" class="emp_table">
+			<table id="empInfo" class="emp_table">
 			   <thead>
 			       <tr>
 			          <th id ="depart">부서</th>
@@ -563,7 +564,8 @@ bigName{
 			   <tbody>
 			   <c:forEach var="empList" items="${requestScope.employeeList}" varStatus="status">
 			 	  <c:if test="${empList.job_code != '1'}">
-			 	   <tr id="empInfo">
+			 	   <tr>
+			 	   	 <td class="empid">${empList.empid}</td>
 			 	   	 <td class="emp-dept">${empList.dept_name}</td>
 		   			 <td class="emp-rank">${empList.job_name}</td>
 		   			 <td class="emp-name">${empList.name}</td>

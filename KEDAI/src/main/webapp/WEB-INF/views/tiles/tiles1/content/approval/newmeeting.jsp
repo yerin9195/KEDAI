@@ -256,6 +256,7 @@ ul.approvalList>li>label {
 		    $(document).on("이벤트종류", "선택자", function(){}); 으로 한다.
 		 */
 		 
+		 
 		$(document).on("click", "div.openList > img", function(){
 			if($(this).is(".plus")) {
 				var $img = $(this); // 현재 클릭된 img 요소를 변수에 저장

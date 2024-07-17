@@ -213,17 +213,48 @@ SELECT empid, name, nickname, mobile
 		     , postcode, address, detailaddress, extraaddress
 		     , imgfilename, orgimgfilename, hire_date, salary, point
 		     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel
-		FROM 
-		(
-		    select empid, name, nickname
-		         , email, mobile, postcode, address, detailaddress, extraaddress
-		         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, point
-		         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
-		         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
-		         , dept_tel
-		    from tbl_employees E1 
-		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
-		    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
-		    order by dept_name asc, job_code asc
-		) E
+FROM 
+(
+    select empid, name, nickname
+         , email, mobile, postcode, address, detailaddress, extraaddress
+         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, point
+         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
+         , dept_tel
+    from tbl_employees E1 
+    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+    order by dept_name asc, job_code asc
+) E
+
+
+
+
+
+SELECT empid, name, nickname, mobile, email
+     , postcode, address, detailaddress, extraaddress
+     , imgfilename, orgimgfilename, hire_date, salary, point
+     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel
+FROM 
+(
+    select empid, name, nickname
+         , email, mobile, postcode, address, detailaddress, extraaddress
+         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, point
+         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
+         , dept_tel
+    from tbl_employees E1 
+    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+    order by dept_name asc, job_code asc
+) E
+where empid = '2024500-001'; 
+
+
+
+
+
+
+
+
 
