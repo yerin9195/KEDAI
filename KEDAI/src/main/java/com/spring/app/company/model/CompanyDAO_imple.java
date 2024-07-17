@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import com.spring.app.company.service.CompanyService;
+import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.PartnerVO;
 
 @Repository
@@ -28,8 +29,14 @@ public class CompanyDAO_imple implements CompanyDAO{
 	// 거래처 정보 등록하기
 	@Override
 	public int othercomRegister_submit(PartnerVO partvo) {
-		
 		int n = sqlsession.insert("company.othercomRegister_submit",partvo);
+		return n;
+	}
+	
+	// 거래처 정보 등록하기
+	@Override
+	public int othercomModify_submit(PartnerVO partvo) {
+		int n = sqlsession.update("company.othercomModify_submit",partvo);
 		return n;
 	}
 	
@@ -54,6 +61,14 @@ public class CompanyDAO_imple implements CompanyDAO{
 		List<PartnerVO> partnervoList = sqlsession.selectList("company.partnerPopupClick", partner_name);
 	//	System.out.println("asd" + partnervoList.toString());
 		return partnervoList;
+	}
+
+	// 삭제할 거래처 사업자 번호 알아오기
+	@Override
+	public int delPartnerNo(String partner_no) {
+		
+		int n = sqlsession.delete("company.delPartnerNo",partner_no);
+		return n;
 	}
 
 

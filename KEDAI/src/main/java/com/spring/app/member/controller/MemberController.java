@@ -3,8 +3,8 @@ package com.spring.app.member.controller;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -12,14 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -30,7 +28,6 @@ import com.spring.app.common.FileManager;
 import com.spring.app.common.GoogleMail;
 import com.spring.app.common.Sha256;
 import com.spring.app.domain.MemberVO;
-import com.spring.app.domain.SalaryVO;
 import com.spring.app.member.service.MemberService;
 
 @Controller 
@@ -60,7 +57,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("/index.kedai")
-	public ModelAndView requiredLogin_index(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView index(ModelAndView mav) {
 
 		mav.setViewName("tiles1/index.tiles"); 
 
@@ -139,7 +136,7 @@ public class MemberController {
 		return mav;	
 	}
 	
-	// 아이디 & 비밀번호 찾기 페이지 이동
+	// 아이디 & 비밀번호 찾는 페이지 이동
 	@GetMapping("/login/idPwdFind.kedai")
 	public String idPwdFind(HttpServletRequest request) { 
 		
@@ -351,7 +348,7 @@ public class MemberController {
 		return mav;
 	}
 	
-	// 나의 정보 수정하기 페이지 이동
+	// 나의 정보 수정하는 페이지 이동
 	@GetMapping("/member/memberEdit.kedai")
 	public ModelAndView memberEdit(ModelAndView mav) {
 		
@@ -459,17 +456,123 @@ public class MemberController {
 		return mav;
 	}
 	
-	
-	
-	
-	
-	
-	
-
-	@GetMapping(value = "/roomResercation.kedai")  // http://localhost:8090/board/pay_stub.action
-	public String roomResercation(HttpServletRequest request) {
+	// 포인트 충전하는 페이지 이동
+	@GetMapping("/member/coinPurchaseTypeChoice.kedai")
+	public ModelAndView coinPurchaseTypeChoice(HttpServletRequest request, ModelAndView mav) {
 		
-		return "tiles1/reservation/roomReservation.tiles";
+		String empid = request.getParameter("empid");
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		if(loginuser.getEmpid().equals(empid)) {
+			mav.setViewName("coinPurchaseTypeChoice");
+		}
+		else {
+			String message = "다른 사용자의 포인트 충전 시도는 불가합니다.";
+			String loc = "javascript:history.back()";
+           
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+           
+			mav.setViewName("msg"); 
+		}
+		
+		return mav;
+	}
+	
+	// PG(paymentGateway) 결제대행사 페이지로 이동
+	@GetMapping("/member/coinPurchaseEnd.kedai")
+	public ModelAndView coinPurchaseEnd(HttpServletRequest request, ModelAndView mav) {
+		
+		String empid = request.getParameter("empid");
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		if(loginuser.getEmpid().equals(empid)) {
+			String coinmoney = request.getParameter("coinmoney");
+			String productName = "KEDAI";
+			
+			mav.addObject("productName", productName);
+			mav.addObject("productPrice", 10);
+			mav.addObject("email", loginuser.getEmail());
+			mav.addObject("name", loginuser.getName());
+			mav.addObject("mobile", loginuser.getMobile());
+			mav.addObject("empid", empid); 		   // 이것은 update 시 필요한 정보이다.
+			mav.addObject("coinmoney", coinmoney); // 이것은 update 시 필요한 정보이다.
+			
+			mav.setViewName("paymentGateway"); // PG(paymentGateway) 는 결제대행사를 의미한다.
+		}
+		else {
+			String message = "다른 사용자의 포인트 충전 시도는 불가합니다.";
+			String loc = "javascript:history.back()";
+           
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+           
+			mav.setViewName("msg"); 
+		}
+		
+		return mav;
+	}
+	
+	// 포인트 충전하기
+	@ResponseBody
+	@PostMapping(value="/member/pointUpdate.kedai", produces="text/plain;charset=UTF-8")
+	public String pointUpdate(HttpServletRequest request) {
+		
+		String empid = request.getParameter("empid");
+		String coinmoney = request.getParameter("coinmoney");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("empid", empid);
+		paraMap.put("coinmoney", coinmoney);
+		
+		int n = 0;
+		String message = "";
+		String loc = "";
+		
+		try {
+			n = service.pointUpdate(paraMap);
+			
+			if(n == 1) {
+				HttpSession session = request.getSession();
+				MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+				
+				// 세션값 변경하기 => DB 에서 update 되어진 값을 다시 session 에 넣어준다.
+				loginuser.setPoint(loginuser.getPoint()+(int)(Integer.parseInt(coinmoney)*0.01)); // double 타입을 int 타입으로 형변환
+				
+				DecimalFormat df = new DecimalFormat("#,###");
+				
+				message = loginuser.getName()+"님의 "+df.format(Long.parseLong(coinmoney))+"원 결제가 완료되었습니다."; // string 타입을 long 타입으로 형변환
+				loc = request.getContextPath()+"/index.kedai";
+			}
+			
+		} catch (Exception e) {
+			message = "포인트 충전이 DB오류로 인해 실패되었습니다.\\n다시 시도해주세요.";
+			loc = "javascript:history.back()";
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		jsonObj.put("message", message);
+		jsonObj.put("loc", loc);
+		
+		return jsonObj.toString();
+	}
+	
+	// 사원수 조회하기
+	@ResponseBody
+	@GetMapping(value="/member/memberTotalCountJSON.kedai", produces="text/plain;charset=UTF-8")
+	public String memberTotalCountJSON(HttpServletRequest request) {
+		
+		int totalCount = service.memberTotalCountJSON();
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("totalCount", totalCount*1000);
+		
+		return jsonObj.toString();
 	}
 	
 }

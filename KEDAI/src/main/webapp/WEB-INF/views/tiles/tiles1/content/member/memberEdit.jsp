@@ -65,7 +65,6 @@
 	$(document).ready(function(){
 		
 		$("span.error").hide();
-		$("input#pwd").focus();
 	
 		// 이미지 미리 보여주기
 		$(document).on("change", "input.img_file", function(e){
@@ -332,7 +331,7 @@
 </script>
 
 <%-- content start --%>	
-<div style="border: 0px solid red; padding: 1% 0;">
+<div style="border: 0px solid red; padding: 2% 3% 0 0;">
 	<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;나의 정보 수정하기<span style="font-size: 12pt; color: #e68c0e;">&nbsp;&nbsp;* 표시는 필수입력 사항입니다.</span></h3>
 	
 	<form name="editFrm" enctype="multipart/form-data" class="row mt-5" style="border: 0px solid green;">
@@ -341,7 +340,7 @@
 				<img id="previewImg" style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/images/member/${(sessionScope.loginuser).orgimgfilename}" />
 			</div>
 			<br>
-	   <%-- <input type="file" name="attach" class="infoData img_file" accept='image/*' /> --%>
+	   <%-- <input type="file" name="attach" class="infoData img_file" accept='image/*' /> --%>	
 		</div>
 		
 		<div class="col-10 row" id="memberEdit">
@@ -429,11 +428,11 @@
 				</div>
 				<div class="mt-3">
 					<h6>부서</h6>
-					<input type="text" name="dept_name" id="dept_name" value="${sessionScope.loginuser.dvo.dept_name}" readonly />
+					<input type="text" name="dept_name" id="dept_name" value="${sessionScope.loginuser.dept_name}" readonly />
 				</div>
 				<div class="mt-3">
 					<h6>직급</h6>
-					<input type="text" name="job_name" id="job_name" value="${sessionScope.loginuser.jvo.job_name}" readonly />
+					<input type="text" name="job_name" id="job_name" value="${sessionScope.loginuser.job_name}" readonly />
 				</div>
 				<div class="btnEdit" style="position: absolute; bottom: 0;">
 			        <button type="button" onclick="goEdit()">수정하기</button>

@@ -47,4 +47,7 @@ public interface BoardDAO {
 	// 1개의 글 삭제하기
 	int del(String board_seq);
 
+	// 게시글수 조회하기
+	int boardTotalCountJSON();
+
 }

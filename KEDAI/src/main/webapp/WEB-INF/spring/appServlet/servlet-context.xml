@@ -84,4 +84,30 @@
    	<aop:config proxy-target-class="true">
     	<aop:pointcut id="controllerOperation" expression="execution(public * com.spring.app..*Controller.*(..))" />
     </aop:config>
+    
+    <!-- ======================== #인터셉터관련2. 시작  ======================== -->
+    <beans:bean id="loginCheckInterceptor" class="com.spring.app.interceptor.controller.LoginCheckInterceptor" />
+    <beans:bean id="adminLoginCheckInterceptor" class="com.spring.app.interceptor.controller.AdminLoginCheckInterceptor" />
+    
+   	<mvc:interceptors>
+   		<mvc:interceptor>
+   			<mvc:mapping path="/**" />
+   			<mvc:exclude-mapping path="/" />
+   			<mvc:exclude-mapping path="/login.kedai" />
+   			<mvc:exclude-mapping path="/loginEnd.kedai" />
+   			<mvc:exclude-mapping path="/logout.kedai" />
+   			<mvc:exclude-mapping path="/login/idPwdFind.kedai" />
+   			<mvc:exclude-mapping path="/login/idFind.kedai" />
+   			<mvc:exclude-mapping path="/login/pwdFind.kedai" />
+   			<mvc:exclude-mapping path="/login/verifyCertification.kedai" />
+   			<mvc:exclude-mapping path="/login/pwdUpdateEnd.kedai" />
+   			<beans:ref bean="loginCheckInterceptor" />
+   		</mvc:interceptor>
+   		
+   		<mvc:interceptor>
+   			<mvc:mapping path="/admin/**" />
+   			<beans:ref bean="adminLoginCheckInterceptor" />
+   		</mvc:interceptor>
+   	</mvc:interceptors>
+    <!-- ======================== #인터셉터관련2. 끝  ======================== -->
 </beans:beans>

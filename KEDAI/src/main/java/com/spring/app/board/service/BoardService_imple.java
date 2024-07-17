@@ -141,5 +141,12 @@ public class BoardService_imple implements BoardService {
 		
 		return n;
 	}
+
+	// 게시글수 조회하기
+	@Override
+	public int boardTotalCountJSON() {
+		int totalCount = dao.boardTotalCountJSON();
+		return totalCount;
+	}
 	
 }

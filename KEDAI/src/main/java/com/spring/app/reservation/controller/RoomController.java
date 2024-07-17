@@ -1,6 +1,8 @@
-package com.spring.app.room.controller;
+package com.spring.app.reservation.controller;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,8 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
-import com.spring.app.room.service.RoomService;
-
+import com.spring.app.reservation.service.RoomService;
+//	qwe
 @Controller
 public class RoomController {
 
@@ -78,5 +80,11 @@ public class RoomController {
              }
          }
          return jsonArr.toString();
+	 }
+	 
+	 @GetMapping(value = "/roomResercation.kedai")  // http://localhost:8090/board/pay_stub.action
+	 public String roomResercation(HttpServletRequest request) {
+		
+		 return "tiles1/reservation/roomReservation.tiles";
 	 }
 }

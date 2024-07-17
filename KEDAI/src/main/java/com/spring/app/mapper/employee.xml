@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="employee">
+	
+	<resultMap id="MemberJoinDeptJob" type="MemberVO">
+        <id property="empid" 			  column="empid"/>
+        <result property="name" 		  column="name"/>
+        <result property="nickname" 	  column="nickname"/>
+        <result property="jubun" 		  column="jubun"/>
+        <result property="gender" 		  column="gender"/>
+        <result property="age" 			  column="age"/>
+        <result property="email" 		  column="email"/>
+        <result property="mobile" 	 	  column="mobile"/>
+        <result property="postcode" 	  column="postcode"/>
+        <result property="address" 		  column="address"/>
+        <result property="detailaddress"  column="detailaddress"/>
+        <result property="extraaddress"   column="extraaddress"/>
+        <result property="imgfilename" 	  column="imgfilename"/>
+        <result property="orgimgfilename" column="orgimgfilename"/>
+        <result property="hire_date" 	  column="hire_date"/>
+        <result property="salary" 		  column="salary"/>
+        <result property="commission_pct" column="commission_pct"/>
+        <result property="point" 		  column="point"/>
+        <result property="fk_dept_code"   column="fk_dept_code"/>
+        <result property="fk_job_code" 	  column="fk_job_code"/>
+        <result property="dept_tel" 	  column="dept_tel"/>
+        <result property="sign_img" 	  column="sign_img"/>
+        <result property="annual_leave"   column="annual_leave"/>
+        
+        <association property="dvo" javaType="com.spring.app.domain.DeptVO">
+            <id property="dept_code" 	 column="dept_code"/>
+            <result property="dept_name" column="dept_name"/>
+        </association>
+        
+        <association property="jvo" javaType="com.spring.app.domain.JobVO">
+            <id property="job_code" 	column="job_code"/>
+            <result property="job_name" column="job_name"/>
+        </association>
+    </resultMap>
+	
+	<!-- 가져오기 -->
+	<select id="employee_list_select" resultType="MemberVO" resultMap="MemberJoinDeptJob">
+		SELECT empid, name, nickname, jubun, gender, age, email, mobile
+		     , postcode, address, detailaddress, extraaddress
+		     , imgfilename, orgimgfilename, hire_date, salary, commission_pct, point
+		     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel, sign_img, annual_leave
+		FROM 
+		(
+		    select empid, name, nickname, jubun
+		         , func_gender(jubun) AS gender
+		         , func_age(jubun) AS age
+		         , email, mobile, postcode, address, detailaddress, extraaddress
+		         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
+		         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+		         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
+		         , dept_tel, sign_img, annual_leave
+		    from tbl_employees E1 
+		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+		    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+		    order by dept_name asc, job_code asc
+		) E
+	</select>
+	
+	<!-- 사원정보 가져오기 -->
+	<select id="employee_get_select" parameterType="string" resultType="MemberVO">
+		select *
+		from tbl_employees
+        where empid = #{empid}
+	</select>
+		
+	
+</mapper>

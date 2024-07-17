@@ -107,7 +107,7 @@
 </script>
 
 <%-- content start --%>
-<div style="border: 0px solid red; padding: 1% 3% 3% 0;">
+<div style="border: 0px solid red; padding: 2% 3% 0 0;">
 	<div>
    		<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;글수정하기</h3>
 	</div>
@@ -116,11 +116,11 @@
    		<div class="col-4">
    			<div class="mb-3">
 	   			<label for="fk_empid" style="width: 30%;">사원아이디</label>
-	   			<input type="text" name="fk_empid" id="fk_empid" style="width: 180px; height: 30px;" value="${sessionScope.loginuser.empid}" readonly />
+	   			<input type="text" name="fk_empid" id="fk_empid" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).empid}" readonly />
 	   		</div>
 	   		<div class="mb-3">
 	   			<label for="name" style="width: 30%;">작성자</label>
-	   			<input type="text" name="name" id="name" style="width: 180px; height: 30px;" value="${sessionScope.loginuser.name}" readonly />
+	   			<input type="text" name="name" id="name" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).name}" readonly />
 	   			
 	   			<!-- 동일한 작성가가 글을 여러개 작성할 수도 있기 때문에 글번호를 넘겨줘야 한다. -->
 	   			<input type="hidden" name="board_seq" value="${requestScope.bvo.board_seq}" />

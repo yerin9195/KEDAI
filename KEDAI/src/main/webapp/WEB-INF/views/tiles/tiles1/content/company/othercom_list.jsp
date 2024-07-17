@@ -30,18 +30,27 @@ div#othercom_list{
 	align-items: center;
 }
 
-/* 여기서부터 시작 */
+/* 여기서부터 시작*/
 div#othercom_list .artWrap {
   display: flex;
   justify-content: space-around;
-  flex-wrap: wrap;
-  width: 80%;
-  padding-right:10%;
+  flex-wrap: wrap;  
   gap: 20px;
+  border: solid 1px orange;
+/*   margin: 2%; */
 }
 
+div#cover_all{
+  width: 80%;
+  border: solid 1px purple;
+  margin-left : 5%;
+
+}
+
+
 div#othercom_list .artWrap article {
-  width: calc(33.33% - 20px);
+	width: calc(33.33% - 20px);
+
   background-color: #fff;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
   padding-bottom: 20px;
@@ -162,7 +171,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 .popupWrap .popup .popupBody .forAlign {
   display: flex;
   justify-content: center;
-  align-items: center;
+  
 }
 .popupWrap .popup .popupBody .popupImg {
   width: 180px;
@@ -217,21 +226,34 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 }
 
 .othercom-reg{
-	border-radius:3px;
-	width:50px;
-	height:400px;
 	background-color:#e68c0e;
-	color:#2C4459;
-	font-weight:700;
+	float:right;
+	font-size:17px;
+
+	
 }
 
 .othercom-reg:hover{
 	background-color:#2C4459;
 	color:#e68c0e;
 }
+ 
 .reg{
-	margin: 80px 0 50px 1200px;
+	border: 1px solid blue;
+	width:20%;
+	border-radius:3px;
+	color:#2C4459;
+	font-weight:700;
+	float:right;
+	
+	
 }
+
+.reg-search{
+	border:1px solid red;
+	margin : 20px 10px;
+}
+
 
 
 .editcom{
@@ -253,16 +275,23 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	margin: 0 auto;
 }
 
-
+.othercom_title{
+	font-size: 20px;
+	border: 1px solid blue;
+	font-weight: 700;
+	line-height: 40px;
+	margin-top: 3%;
+}
 
 </style>
 
 <script type="text/javascript">
 
-$(function(){
+	$(function(){
 	  $('.cardHead button').click(function(){
 		  var partner_no = $(this).closest('article').attr('partner_no');
-		  console.log(partner_no)
+		  
+		  /* console.log(partner_no) */
 	    // 클릭한 거래처 정보 상세보기
 	    $.ajax({
 	      url: "<%= ctxPath%>/partnerPopupClick.kedai?partner_no=" + partner_no,
@@ -274,12 +303,11 @@ $(function(){
  */	      dataType: "json",
 	      success: function(json){
 	        // 서버에서 거래처이름으로 정보 얻어오기
-	        console.log("??", json.partner_name)
 	        if(json.partner_name != null){
 	          $("#pop_partnerName").html(json.partner_name);
 	          $("#pop_partnerNo").html(json.partner_no);
-	          $("#pop_partnerImg").attr("src", "./resources/files/" + json.imgfilename);
-	          $("#pop_partnerAddress").html(json.partner_address);
+	          $("#pop_partnerImg").attr("src", "./resources/files/" + json.imgfilename);// http://localhost:9099/KEDAI/resources/images/partner/%EB%84%A4%EB%AA%A8%EB%84%A4%EB%AA%A8.png
+	          $("#pop_partnerAddress").html(json.partner_address + " " + json.partner_detailaddress + " " + json.partner_extraaddress);
 	          $("#pop_partnerUrl").html(json.partner_url);
 	          $("#pop_partEmpTel").html(json.part_emp_tel);
 	          $("#pop_partEmpEmail").html(json.part_emp_email);
@@ -327,22 +355,73 @@ $(function(){
 	});
 	
 	function editPopup() {
-		const partner_no = $("#pop_partnerNo").html();
+		var partner_no = $("#pop_partnerNo").html();
 		location.assign("othercom_modify.kedai?partner_no=" + partner_no);
 	}
 
 
+	// 거래처 삭제하기
+	function delPopup(){
+		var partner_no = $("#pop_partnerNo").html();
+		
+		var bool = confirm("정말 거래처를 삭제하시겠습니까?");
+		
+		if(bool){
+			// console.log("partner_no : " + partner_no)
+			$.ajax({
+				url: "<%=ctxPath%>/company/delPartner_com.kedai" ,
+				type: "post",
+				data:{"partner_no" :partner_no},
+				dataType:"json",
+				success: function(json){
+					// console.log("응답 데이터: " + JSON.stringify(json)); 
+					if(json.n == 1 ){
+						alert("거래처를 삭제하였습니다.");
+					//	console.log("json.n : " + json.n);
+					}
+					else{
+						alert("거래처를 삭제하지 못했습니다.");
+					}
+					location.href="<%=ctxPath%>/othercom_list.kedai";
+				},
+				error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		        }
+			});
+		}
+	
+	}; // end of function delPopup(){}------------------------------------------------------
+
+
+
+	
 	
 </script>
 
 
-<div class="reg">
-    <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-         <a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처등록하기</a>
-    </c:if>    
+<div id="cover_all">
+<div class="othercom_title">
+		거래처 목록
 </div>
-
-<div id="othercom_list">
+<div class="reg-search">
+	
+    <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+        <div class="reg"><a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처등록하기</a></div>
+    </c:if> 
+	
+    <form name="employee_search_frm" style="display:flex;">
+		<select name ="searchType" style="margin-right:10px;">
+			<option value="">검색대상</option>
+			<option value="department">부서</option>
+			<option value="position">직위</option>
+			<option value="name">이름</option>
+		</select>
+		<input type="search" name="searchWord;" style="margin-right:10px"/>
+		<input type="button" name="searchWord;" onclick="goSearch()" value="검색"/>
+	</form>
+</div>  
+   
+<div id="othercom_list" class="othercom_list">
   <div class="artWrap">
     <c:forEach var="partvo" items="${requestScope.partnervoList}">
       <article partner_no="${partvo.partner_no}">
@@ -397,7 +476,7 @@ $(function(){
             <div class="listImg">
               <img src="<%= ctxPath%>/resources/images/common/business_num.svg" alt="">
             </div>
-            <div id="pop_partnerNo" class="listTxt"></div>
+            <div id="pop_partnerNo" class="listTxt">거래처 사업자 등록번호</div>
           </li>
           <li>
             <div class="listImg">
@@ -416,8 +495,8 @@ $(function(){
           <li>
             <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
             <div class="listTxt">
-              <span id="pop_partEmpName">홍길동</span>
-              <span id="pop_partEmpRank">직급</span>
+              <span id="pop_partEmpName"></span>
+              <span id="pop_partEmpRank"></span>
             </div>
           </li>
           <li>
@@ -433,9 +512,10 @@ $(function(){
       <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
         <div class="buttonContainer" style="width: 200px; margin: 1% auto; border:solid 0px blue;">
           <button onclick="editPopup()" class="editcom" style="border: solid 0px red; float: left; margin-right: 10px;">수정하기</button>
-          <button class="delcom" style="border: solid 0px red; float: left;">삭제하기</button>
+          <button onclick="delPopup()" class="delcom" style="border: solid 0px red; float: left;">삭제하기</button>
         </div>
       </c:if>
     </div>
   </div>
+</div>
 </div>
