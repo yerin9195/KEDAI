@@ -220,7 +220,6 @@ public class ApprovalController {
 
 //		docInfoMap.put("doctype_code", doctype_code);
 		
-		
 		paraMap.put("fk_doc_no", fk_doc_no);
 		paraMap.put("meeting_date", request.getParameter("meeting_date"));
 		paraMap.put("attendees", request.getParameter("attendees"));
@@ -238,8 +237,6 @@ public class ApprovalController {
 	//	if(attach.isEmpty()) {
 			// 파일첨부가 없는 경우라면
 			n = service.noFile_doc(paraMap); // <== 파일첨부가 없는 글쓰기
-			
-			System.out.println("확인용 n"+n);
 //		}
 	//	else {
 			// 파일첨부가 있는 경우라면
@@ -249,7 +246,7 @@ public class ApprovalController {
 	// === 파일첨부가 있는 글쓰기 또는 파일첨부가 없는 글쓰기로 나뉘어서 service 호출하기 끝 === //
 		
 		if(n==1) {
-			mav.setViewName("redirect:/newDocEnd.action");
+			mav.setViewName("redirect:/approval/main.kedai");
 		    //  /list.action 페이지로 redirect(페이지이동)해라는 말이다.
 		}
 		else {

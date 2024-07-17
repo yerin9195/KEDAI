@@ -126,20 +126,24 @@
  	
  	<!-- 첨부파일이 없는 서류 작성하기(tbl_approval) -->
  	<insert id="noFile_approval" parameterType="HashMap">
- 		<if test="empId1 != null">
+ 		<if test="empId2 == null">
  			insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
-			values(approval_noSeq.nextval, #{fk_doc_no}, #{empId1}, default, 1);
+			values(to_number(#{approval_no}), #{fk_doc_no}, #{empId1}, 0, 1)
  		</if>
-		<if test="empId2 != null ">
-			insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
-			values(approval_noSeq.nextval, #{fk_doc_no}, #{empId2}, default, 2);
+		<if test="empId2 != null">
+			<if test="empId3 == null ">
+				insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+				values(to_number(#{approval_no}), #{fk_doc_no}, #{empId2}, 0, 2)
+			</if>
+			<if test="empId3 != null">
+				insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+				values(to_number(#{approval_no}), #{fk_doc_no}, #{empId3}, 0, 3)
+			</if>
+			
 		</if>
-		<if test="empId3 != null">
-			insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
-			values(approval_noSeq.nextval, #{fk_doc_no}, #{empId3}, default, 3);
-		</if>
+		
 	</insert>
- 	
+
  
  	
 </mapper>

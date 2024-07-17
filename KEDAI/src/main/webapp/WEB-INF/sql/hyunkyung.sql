@@ -275,7 +275,7 @@ create table tbl_approval
 ,status             NUMBER           not null    -- 결재상태
 ,approval_comment   NVARCHAR2(100)               -- 결재의견
 ,approval_date      DATE                         -- 결재일자
-,level_no           NUMBER DEFAULT 0 not null    -- 결재단계
+,level_no           NUMBER           not null    -- 결재단계
 ,constraint PK_tbl_approval_approval_no primary key(approval_no)
 ,constraint FK_tbl_approval_fk_doc_no foreign key(fk_doc_no) references tbl_doc(doc_no)
 ,constraint FK_tbl_approval_fk_empid foreign key(fk_empid) references tbl_employees(empid)
@@ -289,6 +289,9 @@ ADD CONSTRAINT PK_tbl_approval_no_empid PRIMARY KEY (approval_no, fk_empid);
 SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE, TABLE_NAME
 FROM USER_CONSTRAINTS
 WHERE TABLE_NAME = 'TBL_APPROVAL';
+
+ALTER TABLE tbl_approval
+MODIFY level_no DEFAULT NULL;
 
 create sequence approval_noSeq
 start with 1
