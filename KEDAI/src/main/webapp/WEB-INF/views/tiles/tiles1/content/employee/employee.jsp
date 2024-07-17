@@ -460,8 +460,8 @@ bigName{
 		var empid;
 		
 		$("#empInfo").click(function(empid){
-			console.log("empInfo clicked");
-			console.log("자고 싶다...");
+			//console.log("empInfo clicked");
+			//console.log("자고 싶다...");
 			var empid = $('#empInfo').attr('empid');
 			console.log('empid:', empid);
 			
