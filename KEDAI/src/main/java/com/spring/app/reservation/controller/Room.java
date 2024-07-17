@@ -1,11 +1,11 @@
 package com.spring.app.reservation.controller;
-
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,17 +14,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
-import com.spring.app.reservation.service.RoomService;
+import com.spring.app.reservation.service.RoomService2;
+
+
 //	qwe
-@Controller
-public class RoomController {
+//@Controller
+public class Room {
 
 	@Autowired
-	private RoomService service;
+	private RoomService2 service;
 	
 	 @GetMapping(value = "/roommain.kedai", produces = "application/json;charset=UTF-8")
-	    @ResponseBody
-	    public String roommain(@RequestParam(required = false) Integer roomMainSeq ) {
+	 @ResponseBody
+	 public String roommain(@RequestParam(required = false) Integer roomMainSeq ) {
 	        JSONArray jsonArr = new JSONArray();
 
 	        if (roomMainSeq == null) {

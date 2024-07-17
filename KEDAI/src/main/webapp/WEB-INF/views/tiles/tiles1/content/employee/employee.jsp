@@ -454,44 +454,35 @@ bigName{
 		});
 	});
 
-	// 클릭한 직원 상세정보 불러오는 함수 
-	
-	
-	$(function(){
-		$('#empInfo > tbody > tr > td.empid').show();
-		
+	// 클릭한 직원 상세정보 불러오는 이벤트
+ 	$('#empInfo > tbody > tr').click(function(){
+ 	    var empid = $(this).find('td.empid').text();
+ 	    console.log('empid:', empid);
 
-		$('#empInfo').click(function(){
-			/* var empid = $('#empInfo').attr('empid'); */
-			var empid = $('#empInfo > tbody > tr:nth-child(1) > td.empid').text();
-			/* var empid = $(this).closest('tr').find('td.empid').text(); */
-       		console.log('empid:', empid);
-			
-			$.ajax({
-				url: "<%=ctxPath%>/employeeDetail.kedai?empid=" + empid,
-				type:"get",
-				async:true,
-				dataType:'json',
-				success: function(json){
-					// 서버에서 직원id 로 정보 가져오기
-					if(json.name != null){
-						$("#pop_empName").html(json.name)
-						console.log(json.name);
-					}
-					else{
-						alert("직원 상세 정보를 불러오지 못했습니다.");
-					}
-				},
-				 error: function(request, status, error) {
-				 	alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-				 }
-			 });
-			
-		  	$('.popup-overlay-emp').css({
-			  display : 'none'
-		  	});
-		});
-	});// end of $(function(){}------------------------------------------------------
+ 	    $.ajax({
+ 	      url: "<%=ctxPath%>/employeeDetail.kedai?empid=" + empid,
+ 	      type:"get",
+ 	      async:true,
+ 	      dataType:'json',
+ 	      success: function(json){
+ 	        if(json.name != null){
+ 	          $("#pop_empName").html(json.name)
+ 	          console.log(json.name);
+ 	        }
+ 	        else{
+ 	          alert("직원 상세 정보를 불러오지 못했습니다.");
+ 	        }
+ 	      },
+ 	      error: function(request, status, error) {
+ 	        alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+ 	      }
+ 	    });
+
+ 	    $('.popup-overlay-emp').css({
+ 	      display : 'none'
+ 	    });
+ 	  });
+	
 	
 
 	
@@ -564,17 +555,19 @@ bigName{
 			   </thead>
 			   <tbody>
 			   <c:forEach var="empList" items="${requestScope.employeeList}" varStatus="status">
-			 	  <c:if test="${empList.job_code != '1'}">
-			 	   <tr>
-			 	   	 <td class="empid">${empList.empid}</td>
-			 	   	 <td class="emp-dept">${empList.dept_name}</td>
-		   			 <td class="emp-rank">${empList.job_name}</td>
-		   			 <td class="emp-name">${empList.name}</td>
-		  			 <td class="dept-tel">${empList.dept_tel}</td>
-		  			 <td class="personal-tel">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
-		  			 <td class="emp-email">${empList.email}</td>
-	  			   </tr>
-	  			  </c:if>
+			     <tr class="emp-row" data-empid="${empList.empid}">
+				 	  <c:if test="${empList.job_code != '1'}">
+					 	   <tr>
+					 	   	 <td class="empid" style="display:none">${empList.empid}</td>
+					 	   	 <td class="emp-dept">${empList.dept_name}</td>
+				   			 <td class="emp-rank">${empList.job_name}</td>
+				   			 <td class="emp-name">${empList.name}</td>
+				  			 <td class="dept-tel">${empList.dept_tel}</td>
+				  			 <td class="personal-tel">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
+				  			 <td class="emp-email">${empList.email}</td>
+			  			   </tr>
+		  			  </c:if>
+	  			  </tr>
 	  			</c:forEach>   
 		   		</tbody>
 			</table>

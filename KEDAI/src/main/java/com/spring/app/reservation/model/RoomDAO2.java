@@ -7,7 +7,7 @@ import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
 import com.spring.app.domain.SalaryVO;
 
-public interface RoomDAO {
+public interface RoomDAO2 {
 
 	List<RoomMainVO> roomMainView();
 
