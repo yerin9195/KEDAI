@@ -251,7 +251,8 @@ FROM
 where empid = '2024500-001'; 
 
 
-
+select * 
+from tbl_employees;
 
 
 

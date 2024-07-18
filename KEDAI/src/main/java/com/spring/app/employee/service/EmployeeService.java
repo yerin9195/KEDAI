@@ -10,9 +10,13 @@ public interface EmployeeService {
 	
 	// 직원정보 가져오기
 	List<Map<String, String>> employeeList();
-	
 	// 클릭한 직원 상세 정보 가져오기
-	Map<String, String> empDetail(String empid);
+	List<Map<String, Object>> empDetailList (Map<String, Object> paraMap);
+
+	
+	
+	
+	
 	
 
 	

@@ -45,11 +45,11 @@ public class EmployeeService_imple implements EmployeeService{
 
 	// 직원정보 상세보기 팝업 어떤것 클릭했는지 알아오기(직원 아이디로 가져오기)
 	@Override
-	public Map<String, String> empDetail(String empid) {
+	public List<Map<String, Object>> empDetailList (Map<String, Object> paraMap) {
 		
-		Map<String,String> empDetail = dao.empDetail(empid);
+		List<Map<String,Object>> empDetailList = dao.empDetailList(paraMap);
 		
-		return empDetail;
+		return empDetailList;
 	}
 	
 	

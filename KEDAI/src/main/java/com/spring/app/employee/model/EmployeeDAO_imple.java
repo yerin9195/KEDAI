@@ -33,10 +33,10 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 	
 	// 직원정보 상세보기 팝업 어떤것 클릭했는지 알아오기(직원 아이디로 가져오기)
 	@Override
-	public Map<String, String> empDetail(String empid) {
-		Map<String, String> empDetail = sqlsession.selectOne("employee.empDetail", empid);
+	public List<Map<String, Object>> empDetailList (Map<String, Object> paraMap) {
+		List<Map<String, Object>> empDetailList = sqlsession.selectList("employee.empDetailList", paraMap);
 		
-		return empDetail;
+		return empDetailList;
 	}
 
 	

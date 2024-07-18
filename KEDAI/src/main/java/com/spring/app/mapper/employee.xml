@@ -51,7 +51,7 @@
 	
 	
 	<!-- 클릭한 사원정보 가져오기 -->
-	<select id="empDetail" resultMap="MemberJoinDeptJob">
+	<select id="empDetailList" resultMap="MemberJoinDeptJob">
 		SELECT empid, name, nickname, mobile, email
 		     , postcode, address, detailaddress, extraaddress
 		     , imgfilename, orgimgfilename, hire_date, salary, point

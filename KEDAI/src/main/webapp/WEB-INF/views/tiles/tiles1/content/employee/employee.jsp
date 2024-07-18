@@ -455,7 +455,78 @@ bigName{
 	});
 
 	// 클릭한 직원 상세정보 불러오는 이벤트
- 	$('#empInfo > tbody > tr').click(function(){
+	$(document).on('click','#empInfo', function(e){
+		const empid = $(this).find('.empid').text();
+		// console.log('empid : ' + empid);	// 성공
+		//console.log('aaaaaempid : ' + empid);
+		$.ajax({
+	 	      url: "<%=ctxPath%>/employeeDetail.kedai?empid=" + empid,
+	 	      type:"get",
+	 	      async:true,
+	 	      dataType:"json",
+	 	      data: {
+	 	    	  "empid" :empid
+	 	      },
+	 	      success: function(json){
+	 	    	// console.log(JSON.stringify(json)); //성공 [{"dept_code":"200","empid":"2013200-001","detailaddress":"511동","fk_job_code":"3","address":"서울 강서구 강서로 489-4","imgfilename":"20240716235810265812732265200.jpg","mobile":"IkVj3zk7v9KiWyZD1sebOw==","postcode":"07523","dept_name":"영업지원부","orgimgfilename":"김재욱.jpg","fk_dept_code":"200","hire_date":"2013-02-08","salary":"48000000","point":"0","extraaddress":" (가양동)","job_name":"상무","name":"김재욱","nickname":"Daniel","dept_tel":"070-1234-200","job_code":"3","email":"xyQQoXYPG/DaercU8LIgYrS/w1X04jC3f2rkZ5QOuOY="}]
+	 	        if(json.length > 0){
+	 	      		json.forEach(function(item){
+	 	      			$('#empName').val(item.name);
+	 	      			console.log("empName : " + item.name);
+	 	      		})
+	 	        }
+	 	        else{
+	 	          alert("직원 상세 정보를 불러오지 못했습니다.");
+	 	        }
+	 	      },
+	 	      error: function(request, status, error) {
+	 	      alert("11111code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+	 	      }
+	 	 });
+	});
+			
+		
+
+	
+	
+	
+	
+<%-- 	 $(document).on("click", '#empInfo > tbody > tr > td.empid', function(e) {
+	        var empid = $('#empInfo > tbody > tr > td.empid').text(); // 현재 클릭된 td.empid 요소의 텍스트 값을 empid 변수에 저장
+	      /*   $('#empInfo > tbody > tr > td.empid').hide(); // 모든 td.empid 요소를 숨김 */
+
+	        console.log('.empid:', empid);
+
+	       $.ajax({
+	            url: "<%=ctxPath%>/employeeDetail.kedai?empid=" + empid,
+	            type: "get",
+	            async: true,
+	            dataType: 'json',
+	            success: function(json) {
+	                // 서버에서 직원id 로 정보 가져오기
+	                if (json.name != null) {
+	                    $("#pop_empName").html(json.name)
+	                    console.log(json.name);
+	                } else {
+	                    alert("직원 상세 정보를 불러오지 못했습니다.");
+	                }
+	            },
+	            error: function(request, status, error) {
+	                alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+	            }
+	        });
+
+	        $('.popup-overlay-emp').css({
+	            display: 'none'
+	        });
+	    });
+	        --%>
+
+	
+
+	
+	
+<%--  	$('#empInfo > tbody > tr').click(function(){
  	    var empid = $(this).find('td.empid').text();
  	    console.log('empid:', empid);
 
@@ -481,9 +552,9 @@ bigName{
  	    $('.popup-overlay-emp').css({
  	      display : 'none'
  	    });
- 	  });
+ 	  }); 
 	
-	
+	 --%>
 
 	
 	
@@ -542,9 +613,10 @@ bigName{
 			</div> 
 		</div>
 					
-			<table id="empInfo" class="emp_table">
+			<table class="emp_table" id="empTbl"><!-- id="empInfo" -->
 			   <thead>
 			       <tr>
+			         <!--  <th id ="empid">ID</th> -->
 			          <th id ="depart">부서</th>
 			          <th id ="position">직위</th>
 			          <th id="name">이름</th>
@@ -555,10 +627,11 @@ bigName{
 			   </thead>
 			   <tbody>
 			   <c:forEach var="empList" items="${requestScope.employeeList}" varStatus="status">
-			     <tr class="emp-row" data-empid="${empList.empid}">
+			     <tr class="emp-row">
 				 	  <c:if test="${empList.job_code != '1'}">
-					 	   <tr>
-					 	   	 <td class="empid" style="display:none">${empList.empid}</td>
+					 	   <tr id="empInfo">
+					 	     <td class="empid" hidden>${empList.empid}</td>
+					 	   	<%--  <td class="empid type=hidden">${empList.empid}</td> <!-- 이렇게 하면 값까지 아예 날려버림 (empid 이용해서 값가져올 수 없음) --> --%>
 					 	   	 <td class="emp-dept">${empList.dept_name}</td>
 				   			 <td class="emp-rank">${empList.job_name}</td>
 				   			 <td class="emp-name">${empList.name}</td>
@@ -604,7 +677,7 @@ bigName{
 						<div class="input-forms">
 							<label> 
 								<span>이름</span> 
-								<input type="text" class="form-control" id="pop_empName" value="" readonly>
+								<input type="text" class="form-control" id="empName" value="" readonly>
 							</label> 
 							<label> 
 								<span>닉네임</span>
