@@ -82,14 +82,14 @@
    </select>
 	
 	<select id="getmyCar" resultType="CarVO" parameterType="String">
-		select car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year
+		select car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year, license, car_imgfilename, car_orgimgfilename
 		from tbl_car
-		where fk_empid = #{empid}
+		where fk_empid = #{fk_empid}
 	</select>	
 	
 	<insert id="addMyCar" parameterType="CarVO">
-		insert into tbl_car(car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year, car_imgfilename, car_orgimgfilename)
-		values(#{car_seq}, #{fk_empid}, #{car_num}, #{car_type}, #{max_num}, #{insurance}, #{drive_year}, #{car_imgfilename}, #{car_orgimgfilename})
+		insert into tbl_car(car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year, license, car_imgfilename, car_orgimgfilename)
+		values(car_seq.nextval, #{fk_empid}, #{car_num}, #{car_type}, #{max_num}, #{insurance}, #{drive_year}, #{license}, #{car_imgfilename}, #{car_orgimgfilename})
 	</insert>
 	
 </mapper>

@@ -36,8 +36,8 @@ public class CarService_imple implements CarService {
 	}
 
 	@Override
-	public List<Map<String, String>> myCar(String empid) {
-		List<Map<String, String>> myCar = dao.getmyCar(empid);
+	public List<Map<String, String>> myCar(String fk_empid) {
+		List<Map<String, String>> myCar = dao.getmyCar(fk_empid);
 		return myCar;
 	}
 

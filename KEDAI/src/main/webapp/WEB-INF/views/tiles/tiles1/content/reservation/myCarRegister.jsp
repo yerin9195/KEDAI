@@ -215,10 +215,10 @@
                 <div class="mt-3" style="display: flex;">
                     <div>
                     <h6>운전 종별&nbsp;<span class="star">*</span></h6>
-                        <select name="searchType" id="searchType" class="requiredInfo" style="width: 170px;">
-                           <option value="2Small">2종</option>
-                           <option value="1Small">1종</option>
-                           <option value="1Large">대형(1종)</option>
+                        <select name="license" id="license" class="requiredInfo" style="width: 170px;">
+                           <option value="2종">2종</option>
+                           <option value="1종">1종</option>
+                           <option value="대형(1종)">대형(1종)</option>
                         </select>   
                     </div>
                     &nbsp;&nbsp;&nbsp;&nbsp;

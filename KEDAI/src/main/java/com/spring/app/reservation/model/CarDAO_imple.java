@@ -36,9 +36,9 @@ public class CarDAO_imple implements CarDAO {
 	}
 
 	@Override
-	public List<Map<String, String>> getmyCar(String empid) {
+	public List<Map<String, String>> getmyCar(String fk_empid) {
 
-		List<Map<String, String>> myCar = sqlsession.selectList("reservation.getmyCar", empid);
+		List<Map<String, String>> myCar = sqlsession.selectList("reservation.getmyCar", fk_empid);
 		return myCar;
 	}
 

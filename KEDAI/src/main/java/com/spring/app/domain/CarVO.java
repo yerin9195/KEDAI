@@ -10,6 +10,9 @@ public class CarVO {
 	private int max_num;
 	private int insurance;
 	private String drive_year;
+	private String license;
+
+
 	private String car_imgfilename;
 	private String car_orgimgfilename;
 	
@@ -20,21 +23,7 @@ public class CarVO {
 		return car_seq;
 	}
 
-	public String getCar_imgfilename() {
-		return car_imgfilename;
-	}
 
-	public void setCar_imgfilename(String car_imgfilename) {
-		this.car_imgfilename = car_imgfilename;
-	}
-
-	public String getCar_orgimgfilename() {
-		return car_orgimgfilename;
-	}
-
-	public void setCar_orgimgfilename(String car_orgimgfilename) {
-		this.car_orgimgfilename = car_orgimgfilename;
-	}
 
 	public void setCar_seq(int car_seq) {
 		this.car_seq = car_seq;
@@ -82,5 +71,28 @@ public class CarVO {
 		this.attach = attach;
 	}
 	
+	public String getCar_imgfilename() {
+		return car_imgfilename;
+	}
 
+	public void setCar_imgfilename(String car_imgfilename) {
+		this.car_imgfilename = car_imgfilename;
+	}
+
+	public String getCar_orgimgfilename() {
+		return car_orgimgfilename;
+	}
+
+	public void setCar_orgimgfilename(String car_orgimgfilename) {
+		this.car_orgimgfilename = car_orgimgfilename;
+	}
+	public String getLicense() {
+		return license;
+	}
+
+
+
+	public void setLicense(String license) {
+		this.license = license;
+	}
 }

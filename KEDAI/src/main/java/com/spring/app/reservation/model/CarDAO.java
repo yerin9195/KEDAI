@@ -12,7 +12,7 @@ public interface CarDAO {
 
 	List<BusVO> getStationTimeList(String pf_station_id, String bus_no);
 
-	List<Map<String, String>> getmyCar(String empid);
+	List<Map<String, String>> getmyCar(String fk_empid);
 
 	int addMycar(CarVO cvo);
 

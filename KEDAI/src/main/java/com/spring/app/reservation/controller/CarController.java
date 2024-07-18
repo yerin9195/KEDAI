@@ -179,18 +179,20 @@ public class CarController {
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		
-        String empid = loginuser.getEmpid();
+        String fk_empid = loginuser.getEmpid();
 		
 //		System.out.println("~~~확인용 : "+ empid);
 //		~~~확인용 : 2010400-001
         
 		// car테이블에서 mycar정보 가져오기
-		List<Map<String,String>> myCar = service.myCar(empid);
+		List<Map<String,String>> myCar = service.myCar(fk_empid);
 		
 		if(myCar == null) {
 			mav.setViewName("tiles1/reservation/myCar.tiles");
 		}
 		
+//		System.out.println("~~~ 확인용 : " + myCar);
+		mav.addObject("myCar", myCar);
 		mav.setViewName("tiles1/reservation/myCar.tiles");
 		return mav;
 		
@@ -253,18 +255,20 @@ public class CarController {
 			
 		} // end of if(attach != null) ----------
 		
-		fk_empid = mrequest.getParameter("fk_empid");
 		String car_type = mrequest.getParameter("car_type");
 		String car_num = mrequest.getParameter("car_num");
 		int max_num = Integer.parseInt(mrequest.getParameter("max_num"));
 		int insurance = Integer.parseInt(mrequest.getParameter("insurance"));
+		String license = mrequest.getParameter("license");
 		String drive_year = mrequest.getParameter("drive_year");
 		
-		System.out.println("~~~ 확인용 : "+ car_type);
-		System.out.println("~~~ 확인용 : "+ car_num);
-		System.out.println("~~~ 확인용 : "+ max_num);
-		System.out.println("~~~ 확인용 : "+ insurance);
-		System.out.println("~~~ 확인용 : "+ drive_year);
+//	    System.out.println("~~~ 확인용 : "+ fk_empid);
+//		System.out.println("~~~ 확인용 : "+ car_type);
+//		System.out.println("~~~ 확인용 : "+ car_num);
+//		System.out.println("~~~ 확인용 : "+ max_num);
+//		System.out.println("~~~ 확인용 : "+ insurance);
+//		System.out.println("~~~ 확인용 : "+ drive_year);
+//		System.out.println("~~~ 확인용 : " + license);
 		
 		cvo.setFk_empid(fk_empid);
 		cvo.setCar_type(car_type);
@@ -272,6 +276,8 @@ public class CarController {
 		cvo.setMax_num(max_num);
 		cvo.setInsurance(insurance);
 		cvo.setDrive_year(drive_year);
+		cvo.setLicense(license);
+		
 		
 		try {
 			int n = service.addMycar(cvo);

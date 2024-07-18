@@ -12,7 +12,7 @@ public interface CarService {
 
 	List<BusVO> getStationTimeList(String pf_station_id, String bus_no);
 
-	List<Map<String, String>> myCar(String empid);
+	List<Map<String, String>> myCar(String fk_empid);
 
 	int addMycar(CarVO cvo);
 
