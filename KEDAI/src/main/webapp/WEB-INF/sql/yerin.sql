@@ -575,4 +575,228 @@ where status = 1;
 select count(*)
 from tbl_board;
 
+-----------------------------------------------------------------------
 
+-- 커뮤니티 카테고리 테이블
+create table tbl_community_category
+(category_code  NUMBER(4)      not null
+,category_name  VARCHAR2(100)  not null
+,constraint PK_tbl_community_category_code primary key(category_code)
+);
+-- Table TBL_COMMUNITY_CATEGORY이(가) 생성되었습니다.
+
+comment on table tbl_community_category 
+is '커뮤니티 카테고리 정보가 들어있는 테이블';
+-- Comment이(가) 생성되었습니다.
+
+comment on column tbl_community_category.category_code is '커뮤니티 카테고리코드'; 
+comment on column tbl_community_category.category_name is '커뮤니티 카테고리명'; 
+-- Comment이(가) 생성되었습니다.
+
+select *
+from user_tab_comments
+where table_name = 'TBL_COMMUNITY_CATEGORY';
+
+select column_name, comments
+from user_col_comments
+where table_name = 'TBL_COMMUNITY_CATEGORY';
+
+insert into tbl_community_category(category_code, category_name)
+values(1, '동호회');
+-- 1 행 이(가) 삽입되었습니다.
+
+insert into tbl_community_category(category_code, category_name)
+values(2, '건의함');
+-- 1 행 이(가) 삽입되었습니다.
+
+insert into tbl_community_category(category_code, category_name)
+values(3, '사내소식');
+-- 1 행 이(가) 삽입되었습니다.
+
+commit;
+-- 커밋 완료.
+
+select category_code, category_name
+from tbl_community_category
+order by category_code asc;
+
+-----------------------------------------------------------------------
+
+-- 커뮤니티 테이블
+create table tbl_community
+(community_seq     NUMBER                not null
+,fk_category_code  NUMBER(4)             not null
+,fk_empid          VARCHAR2(30)          not null
+,name              VARCHAR2(30)          not null
+,subject           NVARCHAR2(200)        not null
+,content           NVARCHAR2(2000)       not null
+,pwd               VARCHAR2(20)          not null
+,read_count        NUMBER DEFAULT 0      not null
+,registerday       DATE DEFAULT SYSDATE  not null
+,status            NUMBER(1) DEFAULT 1   not null
+,commentCount      NUMBER DEFAULT 0      not null
+,constraint PK_tbl_community_community_seq primary key(community_seq)
+,constraint FK_tbl_community_category_code foreign key(fk_category_code) references tbl_community_category(category_code)
+,constraint FK_tbl_community_fk_empid      foreign key(fk_empid) references tbl_employees(empid)
+,constraint CK_tbl_community_status        check(status in(0,1))
+);
+-- Table TBL_COMMUNITY이(가) 생성되었습니다.
+
+create sequence community_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence COMMUNITY_SEQ이(가) 생성되었습니다.
+
+comment on table tbl_community
+is '커뮤니티 정보가 들어있는 테이블';
+-- Comment이(가) 생성되었습니다.
+
+comment on column tbl_community.community_seq is '글번호'; 
+comment on column tbl_community.fk_category_code is '카테고리코드';
+comment on column tbl_community.fk_empid is '사원아이디';
+comment on column tbl_community.name is '글쓴이';
+comment on column tbl_community.subject is '글제목';
+comment on column tbl_community.content is '글내용';
+comment on column tbl_community.pwd is '글암호';
+comment on column tbl_community.read_count is '글조회수';
+comment on column tbl_community.registerday is '작성일자';
+comment on column tbl_community.status is '글삭제여부';
+comment on column tbl_community.commentCount is '댓글의개수';
+-- Comment이(가) 생성되었습니다.
+
+select *
+from user_tab_comments
+where table_name = 'TBL_COMMUNITY';
+
+select column_name, comments
+from user_col_comments
+where table_name = 'TBL_COMMUNITY';
+
+-----------------------------------------------------------------------
+
+-- 커뮤니티 첨부파일 테이블
+create table tbl_community_file
+(file_seq          NUMBER         not null
+,fk_community_seq  NUMBER         not null
+,orgfilename       VARCHAR2(255)  not null
+,filename          VARCHAR2(255)  not null
+,filesize          NUMBER         not null
+,constraint PK_tbl_community_file_seq     primary key(file_seq)
+,constraint FK_tbl_community_file_com_seq foreign key(fk_community_seq) references tbl_community(community_seq)
+);
+-- Table TBL_COMMUNITY_FILE이(가) 생성되었습니다.
+
+create sequence file_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence FILE_SEQ이(가) 생성되었습니다.
+
+comment on table tbl_community_file
+is '커뮤니티 첨부파일 정보가 들어있는 테이블';
+-- Comment이(가) 생성되었습니다.
+
+comment on column tbl_community_file.file_seq is '첨부파일번호'; 
+comment on column tbl_community_file.fk_community_seq is '글번호';
+comment on column tbl_community_file.orgfilename is '원본파일명';
+comment on column tbl_community_file.filename is '저장파일명';
+comment on column tbl_community_file.filesize is '파일크기';
+-- Comment이(가) 생성되었습니다.
+
+select *
+from user_tab_comments
+where table_name = 'TBL_COMMUNITY_FILE';
+
+select column_name, comments
+from user_col_comments
+where table_name = 'TBL_COMMUNITY_FILE';
+
+-----------------------------------------------------------------------
+
+-- 커뮤니티 댓글 테이블
+create table tbl_comment
+(comment_seq       NUMBER                not null
+,fk_community_seq  NUMBER                not null
+,fk_empid          VARCHAR2(30)          not null
+,name              VARCHAR2(30)          not null
+,content           NVARCHAR2(1000)       not null
+,registerday       DATE DEFAULT SYSDATE  not null
+,status            NUMBER(1) DEFAULT 1   not null
+,constraint PK_tbl_comment_comment_seq   primary key(comment_seq)
+,constraint FK_tbl_comment_community_seq foreign key(fk_community_seq) references tbl_community(community_seq) 
+,constraint FK_tbl_comment_fk_empid      foreign key(fk_empid) references tbl_employees(empid)
+,constraint CK_tbl_comment_status        check(status in(0,1))
+);
+-- Table TBL_COMMENT이(가) 생성되었습니다.
+
+ALTER TABLE tbl_comment 
+DROP CONSTRAINT FK_tbl_comment_community_seq;
+-- Table TBL_COMMENT이(가) 변경되었습니다.
+
+ALTER TABLE tbl_comment
+ADD CONSTRAINT FK_tbl_comment_community_seq FOREIGN KEY(fk_community_seq)
+REFERENCES tbl_community(community_seq) ON DELETE CASCADE; 
+-- Table TBL_COMMENT이(가) 변경되었습니다.
+
+create sequence comment_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence COMMENT_SEQ이(가) 생성되었습니다.
+
+comment on table tbl_comment
+is '커뮤니티 댓글 정보가 들어있는 테이블';
+-- Comment이(가) 생성되었습니다.
+
+comment on column tbl_comment.comment_seq is '댓글번호';
+comment on column tbl_comment.fk_community_seq is '원글번호';
+comment on column tbl_comment.fk_empid is '사원아이디';
+comment on column tbl_comment.name is '글쓴이';
+comment on column tbl_comment.content is '댓글내용';
+comment on column tbl_comment.registerday is '작성일자';
+comment on column tbl_comment.status is '글삭제여부';
+-- Comment이(가) 생성되었습니다.
+
+select *
+from user_tab_comments
+where table_name = 'TBL_COMMENT';
+
+select column_name, comments
+from user_col_comments
+where table_name = 'TBL_COMMENT';
+
+-----------------------------------------------------------------------
+
+-- 커뮤니티 좋아요 테이블
+create table tbl_community_like
+(fk_empid          VARCHAR2(30)  not null 
+,fk_community_seq  NUMBER        not null
+,constraint PK_tbl_community_like         primary key(fk_empid,fk_community_seq) -- 누가 어떤 글에 대해 좋아요를 누른 경우 => 복합 primary key
+,constraint FK_tbl_community_like_empid   foreign key(fk_empid) references tbl_employees(empid)
+,constraint FK_tbl_community_like_com_seq foreign key(fk_community_seq) references tbl_community(community_seq) on delete cascade
+);
+-- Table TBL_COMMUNITY_LIKE이(가) 생성되었습니다.
+
+comment on table tbl_community_like
+is '커뮤니티 좋아요 정보가 들어있는 테이블';
+-- Comment이(가) 생성되었습니다.
+
+comment on column tbl_community_like.fk_empid is '사원아이디';
+comment on column tbl_community_like.fk_community_seq is '글번호';
+-- Comment이(가) 생성되었습니다.
+
+-----------------------------------------------------------------------
+
+select category_code, category_name
+from tbl_community_category
+order by category_code asc;

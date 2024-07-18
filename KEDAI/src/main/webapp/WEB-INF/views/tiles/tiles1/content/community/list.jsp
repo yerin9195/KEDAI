@@ -7,11 +7,67 @@
 	//     /KEDAI
 %>
 <style type="text/css">
-
+	.add_btn {
+		text-align: center;
+		align-content: center;
+		border: solid 1px #2c4459;
+		background: none;
+		color: #2c4459;
+		font-size: 12pt;
+		width: 120px;
+		height: 40px;
+		margin-left: 10px;
+	}
+	.add_btn:hover {
+		text-decoration: none;
+		border: none;
+		background: #e68c0e;
+		color: #fff;
+	}
+	table#boardTbl tr.boardList:hover {
+      	cursor: pointer;
+   	}
+   	.search_btn {
+		width: 60px;
+		height: 30px;
+		font-size: 16px;
+		border: none;
+		background: #2c4459;
+		color: #fff;
+		cursor: pointer;
+	}
+	.search_btn:hover {
+		background: #e68c0e;
+	}
+	.subjectStyle {
+		color: #e68c0e;
+		cursor: pointer;
+	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
+		
+		$("span.subject").hover(function(e){ // mouseover
+			$(e.target).addClass("subjectStyle");
+		}, function(e){ // mouseout
+			$(e.target).removeClass("subjectStyle");
+		});
+		
+		$("input:text[name='searchWord']").bind("keydown", function(e){
+			if(e.keyCode == 13){
+				goSearch();
+			}
+		});
+		
+		// 검색 시 검색조건 및 검색어 값 유지시키기
+		if(${not empty requestScope.paraMap}){ // paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다.
+			$("select[name='searchType']").val("${requestScope.paraMap.searchType}");
+			$("input[name='searchWord']").val("${requestScope.paraMap.searchWord}");
+		}
 	
+		// 검색어 입력 시 자동글 완성하기 
+		$("div#displayList").hide();
+		
 	}); // end of $(document).ready(function(){}) ----------
 	
 	function goSearch(){
