@@ -126,22 +126,14 @@
  	
  	<!-- 첨부파일이 없는 서류 작성하기(tbl_approval) -->
  	<insert id="noFile_approval" parameterType="HashMap">
- 		<if test="empId2 == null">
- 			insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
-			values(to_number(#{approval_no}), #{fk_doc_no}, #{empId1}, 0, 1)
- 		</if>
-		<if test="empId2 != null">
-			<if test="empId3 == null ">
-				insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
-				values(to_number(#{approval_no}), #{fk_doc_no}, #{empId2}, 0, 2)
-			</if>
-			<if test="empId3 != null">
-				insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
-				values(to_number(#{approval_no}), #{fk_doc_no}, #{empId3}, 0, 3)
-			</if>
-			
-		</if>
-		
+ 		insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+		values(to_number(#{approval_no}), #{fk_doc_no}, #{empId}, 0, #{level_no})		
+	</insert>
+	
+	<!-- 첨부파일이 있을 때 첨부파일 insert하기 -->
+	<insert id="withFile_doc" parameterType="HashMap">
+		insert into tbl_doc_file(doc_file_no, fk_doc_no, doc_org_filename, doc_filename, doc_filesize)
+		values( doc_file_noSeq.nextval, #{fk_doc_no}, #{doc_org_filename}, #{doc_filename}, to_number(#{doc_filesize}))
 	</insert>
 
  

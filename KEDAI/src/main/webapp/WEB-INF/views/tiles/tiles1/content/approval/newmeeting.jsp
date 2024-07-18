@@ -219,15 +219,95 @@ span.clear{clear: both;}
  	    		 alert("결재자를 선택하세요!!");
  	    		 return; // 종료
  	    	}
-  	     	
-  	     	
-  	   // 폼(form)을 전송(submit)
-  	   	 	const frm = document.newDocFrm;
-  	     	frm.method = "post";
-  	      	frm.action = "<%=ctxPath%>/approval/newDocEnd.kedai";
-  	        frm.submit();
+  	    	
+  	    	 /* 
+  	         FormData 객체는 ajax 로 폼 전송을 가능하게 해주는 자바스크립트 객체이다.
+  	                즉, FormData란 HTML5 의 <form> 태그를 대신 할 수 있는 자바스크립트 객체로서,
+  	                자바스크립트 단에서 ajax 를 사용하여 폼 데이터를 다루는 객체라고 보면 된다. 
+  	         FormData 객체가 필요하는 경우는 ajax로 파일을 업로드할 때 필요하다.
+  	       */ 
+  	    
+  	       /*
+  	          === FormData 의 사용방법 2가지 ===
+  	          <form id="myform">
+  	             <input type="text" id="title" name="title" />
+  	             <input type="file" id="imgFile" name="imgFile" />
+  	          </form>
+  	               
+  	                 첫번째 방법, 폼에 작성된 전체 데이터 보내기   
+  	          var formData = new FormData($("form#myform").get(0));  // 폼에 작성된 모든것       
+  	                  또는
+  	          var formData = new FormData($("form#myform")[0]);  // 폼에 작성된 모든것
+  	          // jQuery선택자.get(0) 은 jQuery 선택자인 jQuery Object 를 DOM(Document Object Model) element 로 바꿔주는 것이다. 
+  		      // DOM element 로 바꿔주어야 순수한 javascript 문법과 명령어를 사용할 수 있게 된다. 
+  	       
+  		   // 또는
+  	          var formData = new FormData(document.getElementById('myform'));  // 폼에 작성된 모든것
   	        
+  	                 두번째 방법, 폼에 작성된 것 중 필요한 것만 선택하여 데이터 보내기 
+  	          var formData = new FormData();
+  	       // formData.append("key", value값); // "key" 값이 폼태그의 name명에 해당하는 것이 되고, value값이 실제 값이 되는 것이다.  
+  	          formData.append("title", $("input#title").val());
+  	          formData.append("imgFile", $("input#imgFile")[0].files[0]);
+  	      */  
+  	    //  var formData = new FormData($("#fileForm")[0]); // $("#fileForm")[0] 폼 에 작성된 모든 데이터 보내기 
+  	      //  또는 
+  	    	var formData = new FormData($("form[name='newDocFrm']").get(0)); // $("form[name='newDocFrm']").get(0) 폼 에 작성된 모든 데이터 보내기 
+  	    	
+  	      	if(file_arr.length > 0) { // 파일첨부가 있을 경우   	    	
+  	      	// 첨부한 파일의 총합의 크기가 10MB 이상 이라면 메일 전송을 하지 못하게 막는다.
+          		let sum_file_size = 0;
+  	          	for(let i=0; i<file_arr.length; i++) {
+  	            	sum_file_size += file_arr[i].size;
+  	          	}// end of for---------------
+  	    		
+  	          	if( sum_file_size >= 10*1024*1024 ) { // 첨부한 파일의 총합의 크기가 10MB 이상 이라면 
+	            	alert("첨부한 파일의 총합의 크기가 10MB 이상이라서 파일을 업로드할 수 없습니다.!!");
+	        	  	return; // 종료
+	          	}
+	          	else { // formData 속에 첨부파일 넣어주기
+	        		file_arr.forEach(function(item){
+	                	formData.append("file_arr", item);  // 첨부파일 추가하기.  "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.    
+	                                                      // 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
+	              	});
+	          	}
+  	      	}
+  	      	$.ajax({
+            	url : "<%= ctxPath%>/approval/newdoc.kedai",
+              	type : "post",
+              	data : formData,
+              	processData:false,  // 파일 전송시 설정 
+              	contentType:false,  // 파일 전송시 설정 
+              	dataType:"json",
+              	success:function(json){
+            	  // console.log("~~~ 확인용 : " + JSON.stringify(json));
+                  // ~~~ 확인용 : {"result":1}
+                	if(json.result == 1) {
+            	    	location.href="<%= ctxPath%>/approval/newDocEnd.kedai"; 
+                  	}
+              	},
+              	error: function(request, status, error){
+  					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+  		      	}
+          	});// end of ajax-------------------
+  	      	
 		});// end of $("button#btnWrite").click(function()--------------
+				
+		  /*
+        processData 관련하여, 일반적으로 서버에 전달되는 데이터는 query string(쿼리 스트링)이라는 형태로 전달된다. 
+        ex) http://localhost:9090/board/list.action?searchType=subject&searchWord=안녕
+            ? 다음에 나오는 searchType=subject&searchWord=안녕 이라는 것이 query string(쿼리 스트링) 이다. 
+
+        data 파라미터로 전달된 데이터를 jQuery에서는 내부적으로 query string 으로 만든다. 
+                하지만 파일 전송의 경우 내부적으로 query string 으로 만드는 작업을 하지 않아야 한다.
+                이와 같이 내부적으로 query string 으로 만드는 작업을 하지 않도록 설정하는 것이 processData: false 이다.
+    */
+     
+    /*
+        contentType 은 default 값이 "application/x-www-form-urlencoded; charset=UTF-8" 인데, 
+        "multipart/form-data" 로 전송이 되도록 하기 위해서는 false 로 해야 한다. 
+                 만약에 false 대신에 "multipart/form-data" 를 넣어보면 제대로 작동하지 않는다.
+    */
   	  
 				
 				
@@ -472,18 +552,18 @@ span.clear{clear: both;}
 	            즉, 이벤트 버블링을 막기위해서 사용하는 것이다. 
 	            사용예제 사이트 https://devjhs.tistory.com/142 을 보면 이해가 될 것이다. 
 			--%>
-			}).on("dragover", function(e){ /* "dragover" 이벤트는 드롭대상인 박스 안에 Drag 한 파일이 머물러 있는 중일 때. 필수이벤트이다. dragover 이벤트를 적용하지 않으면 drop 이벤트가 작동하지 않음 */ 
-	            e.preventDefault();
-	            e.stopPropagation();
-	            $(this).css("background-color", "#ffd8d8");
-			}).on("dragleave", function(e){ /* "dragleave" 이벤트는 Drag 한 파일이 드롭대상인 박스 밖으로 벗어났을 때  */
-	            e.preventDefault();
-	            e.stopPropagation();
-	            $(this).css("background-color", "#fff");
-			}).on("drop", function(e){      /* "drop" 이벤트는 드롭대상인 박스 안에서 Drag 한것을 Drop(Drag 한 파일(객체)을 놓는것) 했을 때. 필수이벤트이다. */
-			    e.preventDefault();
-			    $("span#fileInfo").css("display", "none");
-			    var files = e.originalEvent.dataTransfer.files;  
+		}).on("dragover", function(e){ /* "dragover" 이벤트는 드롭대상인 박스 안에 Drag 한 파일이 머물러 있는 중일 때. 필수이벤트이다. dragover 이벤트를 적용하지 않으면 drop 이벤트가 작동하지 않음 */ 
+	    	e.preventDefault();
+	        e.stopPropagation();
+	        $(this).css("background-color", "#ffd8d8");
+		}).on("dragleave", function(e){ /* "dragleave" 이벤트는 Drag 한 파일이 드롭대상인 박스 밖으로 벗어났을 때  */
+	    	e.preventDefault();
+	        e.stopPropagation();
+	        $(this).css("background-color", "#fff");
+		}).on("drop", function(e){      /* "drop" 이벤트는 드롭대상인 박스 안에서 Drag 한것을 Drop(Drag 한 파일(객체)을 놓는것) 했을 때. 필수이벤트이다. */
+		    e.preventDefault();
+		    $("span#fileInfo").css("display", "none");
+		    var files = e.originalEvent.dataTransfer.files;  
 			    <%--  
 	                jQuery 에서 이벤트를 처리할 때는 W3C 표준에 맞게 정규화한 새로운 객체를 생성하여 전달한다.
 	                이 전달된 객체는 jQuery.Event 객체 이다. 이렇게 정규화된 이벤트 객체 덕분에, 
@@ -516,7 +596,7 @@ span.clear{clear: both;}
 	                [[Prototype]]: FileList
 	            --%>
 						
-				if(files != null && files != undefined) {
+			if(files != null && files != undefined) {
 	                <%-- console.log("files.length 는 => " + files.length);  
 	                        // files.length 는 => 1 이 나온다.
 	                        // files.length 는 => 4 가 나온다. 
@@ -532,9 +612,9 @@ span.clear{clear: both;}
 	                    } // end of for------------------------
 	                --%>
 			            
-	            let html = "";
-	            const f = files[0]; // 어차피 files.length 의 값이 1 이므로 위의 for문을 사용하지 않고 files[0] 을 사용하여 1개만 가져오면 된다. 
-	            let fileSize = f.size/1024/1024;  /* 파일의 크기는 MB로 나타내기 위하여 /1024/1024 하였음 */
+	           	let html = "";
+	           	const f = files[0]; // 어차피 files.length 의 값이 1 이므로 위의 for문을 사용하지 않고 files[0] 을 사용하여 1개만 가져오면 된다. 
+	           	let fileSize = f.size/1024/1024;  /* 파일의 크기는 MB로 나타내기 위하여 /1024/1024 하였음 */
 	            <%--
 	            if( !(f.type == 'image/jpeg' || f.type == 'image/png') ) {
 	                alert("jpg 또는 png 파일만 가능합니다.");
@@ -543,17 +623,16 @@ span.clear{clear: both;}
 	            }
 	            --%>
 	            
-	            if(fileSize >= 10) {
-	                alert("10MB 이상인 파일은 업로드할 수 없습니다.!!");
-	                $(this).css("background-color", "#fff");
-	                return;
-	            }
-	            
-	            else {
-	                file_arr.push(f);
-	                const fileName = f.name; // 파일명	
-	            
-	                fileSize = fileSize < 1 ? fileSize.toFixed(3) : fileSize.toFixed(1);
+	           	if(fileSize >= 10) {
+	               	alert("10MB 이상인 파일은 업로드할 수 없습니다.!!");
+	               	$(this).css("background-color", "#fff");
+	               	return;
+	           	}
+		       	else {
+	               	file_arr.push(f); // 드롭대상인 박스 안에 첨부파일을 드롭하면 파일들을 담아둘 배열인 file_arr 에 파일들을 저장시키도록 한다. 
+	               	const fileName = f.name; // 파일명	
+	           
+	               	fileSize = fileSize < 1 ? fileSize.toFixed(3) : fileSize.toFixed(1);
 	                // fileSize 가 1MB 보다 작으면 소수부는 반올림하여 소수점 3자리까지 나타내며, 
 	                // fileSize 가 1MB 이상이면 소수부는 반올림하여 소수점 1자리까지 나타낸다. 만약에 소수부가 없으면 소수점은 0 으로 표시한다.
 	                /* 
@@ -567,14 +646,14 @@ span.clear{clear: both;}
 	                        numObj.toFixed(1);      // 결과값 '12345.7' : 반올림한다.
 	                        numObj.toFixed(6);      // 결과값 '12345.678900': 빈 공간을 0 으로 채운다.
 	                */
-	                html += 
-	                    "<div class='fileList'>" +
-	                        "<span class='fileName'>"+fileName+"</span>" +
-	                        "<span class='fileSize'>("+fileSize+" MB)</span>" +
-	                        "<span class='delete'><i class='far fa-minus-square'></i></span>" +
-	                        "<span class='clear'></span>" +
-	                    "</div>";
-	                $(this).append(html);
+	               	html += 
+	                   	"<div class='fileList'>" +
+	                       	"<span class='fileName'>"+fileName+"</span>" +
+	                       	"<span class='fileSize'>("+fileSize+" MB)</span>" +
+	                       	"<span class='delete'><i class='far fa-minus-square'></i></span>" +
+	                       	"<span class='clear'></span>" +
+	                   	"</div>";
+	               	$(this).append(html);
 	                    
 	                // ===>> 이미지파일 미리보기 시작 <<=== // 
 	                // 자바스크립트에서 file 객체의 실제 데이터(내용물)에 접근하기 위해 FileReader 객체를 생성하여 사용한다.
@@ -591,14 +670,11 @@ span.clear{clear: both;}
 	               //     document.getElementById("previewImg").src = fileReader.result;
 	               // };
 	                // ===>> 이미지파일 미리보기 끝 <<=== //
-	                    
-	            }
-	                
-	        }// end of if(files != null && files != undefined)---------	
+	           	}
+	       	}// end of if(files != null && files != undefined)---------	
 	            
-	        $(this).css("background-color", "#fff");
-	    
-	    });
+	       	$(this).css("background-color", "#fff");
+		});
 	    
 		// == Drop 되어진 파일목록 제거하기 == //
 		$(document).on("click", "span.delete", function(e){
@@ -607,8 +683,8 @@ span.clear{clear: both;}
 			let idx = $("span.delete").index(delSpan);
 			//alert("인덱스 : " +idx);
 			
-			file_arr.splice(idx, 1);
-			console.log(file_arr);
+			file_arr.splice(idx, 1);// 드롭대상인 박스 안에 첨부파일을 드롭하면 파일들을 담아둘 배열인 file_arr 에서 파일을 제거시키도록 한다. 
+		//	console.log(file_arr);
 			<%-- 
 	           배열명.splice() : 배열의 특정 위치에 배열 요소를 추가하거나 삭제하는데 사용한다. 
 	                           삭제할 경우 리턴값은 삭제한 배열 요소이다. 삭제한 요소가 없으면 빈 배열( [] )을 반환한다.
@@ -623,7 +699,7 @@ span.clear{clear: both;}
 	                         deleteCount - 삭제할 요소 개수
 	   		--%>
 	    	$(delSpan).closest("div.fileList").remove();
-	    	console.log("file_arr2"+file_arr);
+	 //   	console.log("file_arr2"+file_arr);
 			if(file_arr.length == 0){
 		    	$("span#fileInfo").css("display", "inline");
 		    }
@@ -633,7 +709,7 @@ span.clear{clear: both;}
 		
 	});// end of $(document).ready(function(){})-----------
 	
-	function btnSubmit(){
+	function modalSubmit(){
 
 		var login_jobCode = ${(sessionScope.loginuser).jvo.job_code}; // 로그인한 사람의 직급코드
 		var v_html ="";
@@ -675,6 +751,8 @@ span.clear{clear: both;}
 			if(isOk){
 				$("table#approval").append(v_html);
 				$("#selectLineModal").modal("hide"); // 모달 닫기
+				let lineNumHtml = `<input type="text" name="lineNumber" value="\${isChecked}">`;
+				$(".htmlAdd").html(lineNumHtml);
 			}		
 		}
 		else{
@@ -683,7 +761,7 @@ span.clear{clear: both;}
 		}
 		
 		
-	}// end of function btnSubmit()------------------
+	}// end of function modalSubmit()------------------
 	
 	
 	
@@ -800,7 +878,7 @@ span.clear{clear: both;}
 						<button type="button" class="btn btn-danger my_close"
 							data-dismiss="modal">취소</button>
 						<button type="button" class="btn btn-primary btnSubmit"
-							onclick="btnSubmit()" >확인</button>
+							onclick="modalSubmit()" >확인</button>
 					</div>
 				</div>
 			</div>
@@ -817,6 +895,11 @@ span.clear{clear: both;}
 				<th>성명</th>
 			</tr>
 		</table>
+		
+		<div class="htmlAdd">
+			<input type="hidden" name="fk_doctype_code" value="101"/>
+		</div>
+		
 	</div>
 	<div class="col-md-6" style="margin: 0; width: 100%">
 		

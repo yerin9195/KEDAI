@@ -39,9 +39,7 @@ public interface ApprovalDAO {
 	// 첨부파일이 없는 서류 작성하기(tbl_approval)
 	int noFile_approval(Map<String, Object> paraMap);
 
-
-
-
-;
+	// 첨부파일이 있을 때 첨부파일 insert하기
+	int withFile_doc(Map<String, String> docFileMap);
 
 }

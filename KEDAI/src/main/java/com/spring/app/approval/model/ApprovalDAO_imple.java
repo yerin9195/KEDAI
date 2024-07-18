@@ -73,6 +73,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		int n = sqlsession.insert("approval.noFile_approval", paraMap);
 		return n;
 	}
+	
+	// 첨부파일이 있을 때 첨부파일 insert하기
+	@Override
+	public int withFile_doc(Map<String, String> docFileMap) {
+		int n = sqlsession.insert("approval.withFile_doc", docFileMap);
+		return n;
+	}
 
 	// doc_no의 시퀀스 채번해오기
 	@Override
@@ -87,6 +94,8 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		String approval_noSeq = sqlsession.selectOne("approval.getApproval_noSeq");
 		return approval_noSeq;
 	}
+
+
 
 
 	// 각 부서별 당 인원수 가져오기

@@ -55,11 +55,24 @@ public class ApprovalService_imple implements ApprovalService {
 		
 		int n1 = dao.noFile_newdoc(paraMap);
 		int n2 = dao.noFile_minutes(paraMap);
+
+		
+		int lineNumber = (int) paraMap.get("lineNumber");
+		
+		for(int i=0; i<lineNumber+1; i++);
 		int n3 = dao.noFile_approval(paraMap);
+			
 		
 		int result = n1*n2*n3;
 		
 		return result;
+	}
+	
+	// 첨부파일이 있을 때 첨부파일 insert하기
+	@Override
+	public int withFile_doc(Map<String, String> docFileMap) {
+		int n = dao.withFile_doc(docFileMap);
+		return n;
 	}
 
 
@@ -76,6 +89,8 @@ public class ApprovalService_imple implements ApprovalService {
 		
 		return paraMap;
 	}
+
+
 		
 
 	

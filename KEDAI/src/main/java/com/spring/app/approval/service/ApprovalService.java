@@ -30,6 +30,9 @@ public interface ApprovalService {
 	// doc_no와 approval_noSeq의 시퀀스 채번해오기
 	Map<String, String> getDocSeq();
 
+	// 첨부파일이 있을 때 첨부파일 insert하기
+	int withFile_doc(Map<String, String> docFileMap);
+
 	
 
 

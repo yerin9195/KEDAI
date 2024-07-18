@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +56,7 @@ public class ApprovalController {
 	}
 	
 	@GetMapping(value = "/approval/newdoc.kedai")
-	public ModelAndView mom(ModelAndView mav, HttpServletRequest request ) {
+	public ModelAndView newDoc(ModelAndView mav, HttpServletRequest request ) {
 		
 		String doctype_code = request.getParameter("doctype_code");
 
@@ -111,6 +112,187 @@ public class ApprovalController {
 		return mav;
 	}
 	
+	@ResponseBody
+	@PostMapping(value="/approval/newdoc.kedai", produces="text/plain;charset=UTF-8")
+	public String newDoc(MultipartHttpServletRequest mtp_request, DocVO docvo) {
+		
+		List<MultipartFile> fileList = mtp_request.getFiles("file_arr"); // getFile는 단수 개, getFiles는 List로 반환
+		// "file_arr" 은 /board/src/main/webapp/WEB-INF/views/tiles1/email/emailWrite.jsp 페이지의 314 라인에 보여지는 formData.append("file_arr", item); 의 값이다.
+		// !!주의 !!복수개의 파일은 mtp_request.getFile이 아니라 mtp_request.getFiles이다.
+		
+		
+		// MultipartFile interface는 Spring에서 업로드된 파일을 다룰 때 사용되는 인터페이스로 파일의 이름과 실제 데이터, 파일 크기 등을 구할 수 있다.
+	       
+	    /*
+	         >>>> 첨부파일이 업로드 되어질 특정 경로(폴더)지정해주기
+	                    우리는 WAS 의 webapp/resources/doc_attach_file 라는 폴더로 지정해준다.
+	    */
+	    // WAS 의 webapp 의 절대경로를 알아와야 한다.
+		
+		HttpSession session = mtp_request.getSession();
+	    String root = session.getServletContext().getRealPath("/");
+	    String path = root + "resources"+File.separator+"doc_attach_file";
+	    // path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
+	      
+	    //  System.out.println("~~~~ 확인용 path => " + path);
+	    //~~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp1\wtpwebapps\board\resources\doc_attach_file
+	    // resources에 들어가면 doc_attach_file폴더가 아직 생성되지 않았다. 아래와 같이 생성해준다.
+	    
+	    File dir = new File(path); // 
+	    if(!dir.exists()) {
+	    	dir.mkdirs();
+	    }
+	    
+	  //C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp1\wtpwebapps\board\resources\doc_attach_file 라는 폴더가 생성 되었는지 확인해준다.
+		
+		 // >>>> 첨부파일을 위의 path 경로에 올리기 <<<< //
+		String[] arr_attachFilename = null; // 첨부파일명들을 기록하기 위한 용도
+		String[] arr_attachFileSize = null;
+		
+		if(fileList != null && fileList.size() > 0){ // 파일 첨부가 있는 경우라면
+			arr_attachFilename = new String[fileList.size()];
+			arr_attachFileSize = new String[fileList.size()];	
+			
+		    for(int i=0; i<fileList.size(); i++) {
+		    	MultipartFile mtfile = fileList.get(i);
+		    	String fileName = mtfile.getOriginalFilename();
+		    //	System.out.println("파일명 : " + mtfile.getOriginalFilename() + " / 파일크기 : " + mtfile.getSize());
+		    		/*
+		    		 파일명 : berkelekle심플라운드01.jpg / 파일크기 : 71317
+					파일명 : Electrolux냉장고_사용설명서.pdf / 파일크기 : 791567
+					파일명 : 쉐보레전면.jpg / 파일크기 : 131110
+					*/
+		    	// 서버에 저장할 새로운 파일명을 만든다.
+                // 서버에 저장할 새로운 파일명이 동일한 파일명이 되지 않고 고유한 파일명이 되도록 하기 위해
+                // 현재의 년월일시분초에다가 현재 나노세컨즈nanoseconds 값을 결합하여 확장자를 붙여서 만든다.
+    			String newFilename = fileName.substring(0, fileName.lastIndexOf(".")); // 확장자를 뺀 파일명 알아오기
+    			
+    			newFilename += "_" + String.format("%1$tY%1$tm%1$td%1$tH%1$tM%1$tS", Calendar.getInstance());
+    			newFilename += System.nanoTime();
+    			newFilename += fileName.substring(fileName.lastIndexOf(".")); // 확장자 붙이기
+    			
+    			
+		    	try {
+		    			/*
+		                   	File 클래스는 java.io 패키지에 포함되며, 입출력에 필요한 파일이나 디렉터리를 제어하는 데 사용된다.
+		                    	파일과 디렉터리의 접근 권한, 생성된 시간, 경로 등의 정보를 얻을 수 있는 메소드가 있으며, 
+		                    	새로운 파일 및 디렉터리 생성, 삭제 등 다양한 조작 메서드를 가지고 있다.
+		               */		    		
+		    		
+		    			// === MultipartFile 을 File 로 변환하여 탐색기 저장폴더에 저장하기 시작 ===
+		    		File attachFile = new File(path + File.separator + newFilename);
+			    	mtfile.transferTo(attachFile); // // !!!!! 이것이 파일을 업로드해주는 것이다. !!!!!!
+			    		/*
+		                  form 태그로 부터 전송받은 MultipartFile mtfile 파일을 지정된 대상 파일(attachFile)로 전송한다.
+		                                           만약에 대상 파일(attachFile)이 이미 존재하는 경우 먼저 삭제된다.
+		               */
+		               // 탐색기에서 C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp1\wtpwebapps\board\resources\doc_attach_file 폴더에 가보면
+		               // 첨부한 파일이 생성되어져 있음을 확인할 수 있다.
+			    		
+			    //	arr_attachFilename[i] = mtfile.getOriginalFilename(); // 배열 속에 첨부파일명 들을 기록한다.
+			    	arr_attachFilename[i] = newFilename; // 배열 속에 첨부파일명 들을 기록한다.
+			    	
+			    	arr_attachFileSize[i] = Long.toString(mtfile.getSize());
+			    		
+			    		
+			    		// === MultipartFile 을 File 로 변환하여 탐색기 저장폴더에 저장하기 끝 ===
+		    	} catch(Exception e) {
+		    		e.printStackTrace();
+		    	}
+		    		
+		    }// end of for---------------------
+		}
+		
+		// === 첨부 이미지 파일을 저장했으니 그 다음으로 doc정보들을 테이블에 insert 해주어야 한다.  ===
+		Map<String, String> docSeq = new HashMap<>();
+		docSeq = service.getDocSeq();// seq들을 채번해 오는 함수
+		
+		Calendar currentDate = Calendar.getInstance();		// 현재날짜와 시간을 얻어온다.
+
+		int year = currentDate.get(Calendar.YEAR);
+		String year_new = String.valueOf(year).substring(2);
+		String fk_doc_no = "KD" +year_new +"-"+ mtp_request.getParameter("fk_doctype_code") + "-" + docSeq.get("doc_noSeq");
+		
+		docvo.setDoc_no(fk_doc_no); 
+		
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("docvo", docvo); 
+		//기안 종류 코드, 기안자 사원 아이디, 기안문서 제목, 기안문서내용, 서류 작성일자
+		
+		int lineNumber = Integer.parseInt(mtp_request.getParameter("lineNumber"));
+		
+		paraMap.put("fk_doc_no", fk_doc_no);
+		paraMap.put("meeting_date", mtp_request.getParameter("meeting_date"));
+		paraMap.put("attendees", mtp_request.getParameter("attendees"));
+		paraMap.put("host_dept", mtp_request.getParameter("host_dept"));
+		
+		paraMap.put("approval_no", docSeq.get("approval_noSeq"));
+		paraMap.put("lineNumber", lineNumber);
+		
+		int n1 = 0;
+		int n2 = 0;
+		
+		for(int i=1; i<lineNumber+1; i++) {
+			String level_no = "level_no_"+i;
+			paraMap.put("empId", mtp_request.getParameter(level_no));
+			paraMap.put("level_no", i);
+			
+			n1 = service.noFile_doc(paraMap); // 서류 작성 insert 하기
+			
+			if(n1>0) {
+				System.out.println("Document inserted successfully for empId: " + paraMap.get("empId"));
+			}else {
+		        // 삽입 실패 처리
+		        System.out.println("Failed to insert document for empId: " + paraMap.get("empId"));
+		    }
+		}
+		/*
+		paraMap.put("empId1", mtp_request.getParameter("level_no_1"));
+		paraMap.put("empId2", mtp_request.getParameter("level_no_2"));
+		paraMap.put("empId3", mtp_request.getParameter("level_no_3"));
+		 	*/
+		
+		
+		
+
+		int cnt = 0;
+		if(n1 ==1 && fileList != null && fileList.size() > 0) {
+			Map<String, String> docFileMap = new HashMap<>();
+			
+			docFileMap.put("fk_doc_no", fk_doc_no);
+			
+			for(int i=0; i<fileList.size(); i++) {
+				docFileMap.put("doc_filename", arr_attachFilename[i]);
+				docFileMap.put("doc_filesize", arr_attachFileSize[i]);
+				docFileMap.put("doc_org_filename", arr_attachFilename[i].substring(0, arr_attachFilename[i].lastIndexOf("_")));
+			
+				int attach_insert_result = service.withFile_doc(docFileMap);
+				
+				System.out.println("~~!확인용 : "+ arr_attachFilename[i].substring(0, arr_attachFilename[i].lastIndexOf("_")));
+
+				if(attach_insert_result == 1) {
+        			cnt++;
+        		}
+			} // end of for----------------
+			
+			if(cnt == fileList.size()) {
+				n2 = 1;
+        	}
+		}// end of if(n1 ==1 && fileList != null && fileList.size() > 0)-----------------------
+		JSONObject jsonObj = new JSONObject();
+        jsonObj.put("result", n1*n2);
+        
+        return jsonObj.toString(); 
+	}
+	
+	@GetMapping(value="/approval/newDocEnd.kedai")
+	public String newDocEnd() {
+	      
+		return "tiles1/approval/newDocEnd.tiles";
+	    //  /WEB-INF/views/tiles1/email/emailWrite_done.jsp 페이지를 만들어야 한다.
+	}
+
+	
 	
 	
 	 /*
@@ -165,101 +347,8 @@ public class ApprovalController {
 
 //mav.setViewName("tiles1/approval/newDocEnd.tiles");
 	//	return mav;
+	
 
 	
-	
-	// === #54.게시판 글쓰기 완료 요청 === // 
-	// ===== #104. After Advice를 사용하기====//  pointPlus_addEnd 메소드의  파라미터에 Map<String, String> paraMap 추가함.
-	@PostMapping("/approval/newDocEnd.kedai")
-	public ModelAndView newDocEnd(ModelAndView mav, DocVO docvo, HttpServletRequest request) { 
-		// @RequestParam("files") MultipartFile[] files는 "files"라는 이름으로 전송된 파일들을 배열 형태로 받아옵니다.
-//	public ModelAndView pointPlus_addEnd(Map<String, String> paraMap, ModelAndView mav, BoardVO boardvo) { // <== After Advice를 사용한 후
-// ===#170.-2 첨부 파일 추가하기 위에 위의 public ModelAndView pointPlus_addEnd(Map<String, String> paraMap, ModelAndView mav, BoardVO boardvo) 를 주석처리 하고
-	// 파라미터에 MultipartHttpServletRequest mrequest를 추가한다.
-//	public ModelAndView pointPlus_addEnd(Map<String, String> paraMap, ModelAndView mav, MinutesVO minutesVO, DocVO docVO, MultipartHttpServletRequest mrequest) { // <== After Advice를 사용한 후
-		/*
-	       form 태그의 name 명과  BoardVO 의 필드명이 같다라면 
-	       request.getParameter("form 태그의 name명"); 을 사용하지 않더라도
-	           자동적으로 BoardVO boardvo 에 set 되어진다.
-	   */
-		
-		/* === #171. 파일첨부가 된 글쓰기 이므로  
-		          먼저 위의  public ModelAndView pointPlus_addEnd(Map<String,String> paraMap, ModelAndView mav, BoardVO boardvo) { 을 
-		          주석처리 한 이후에 아래와 같이 한다.
-		    MultipartHttpServletRequest mrequest 를 사용하기 위해서는 
-		          먼저 /board/src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml 에서     
-		    #21 파일업로드 및 파일다운로드에 필요한 의존객체 설정하기 를 해두어야 한다.  
-		 
-		 */
-		/*
-	        웹페이지에 요청 form이 enctype="multipart/form-data" 으로 되어있어서 Multipart 요청(파일처리 요청)이 들어올때 
-	        컨트롤러에서는 HttpServletRequest 대신 MultipartHttpServletRequest 인터페이스를 사용해야 한다.
-	     MultipartHttpServletRequest 인터페이스는 HttpServletRequest 인터페이스와  MultipartRequest 인터페이스를 상속받고있다.
-	           즉, 웹 요청 정보를 얻기 위한 getParameter()와 같은 메소드와 Multipart(파일처리) 관련 메소드를 모두 사용가능하다.     
-		 */
-		
-		// === 사용자가 쓴 글에 파일이 첨부되어 있는 것인지,  아니면 파일첨부가 안된 것인지 구분을 지어주어야 한다. ===
-		// ===#173. !!! 첨부파일이 있는 경우 작업 시작!!! === 
-		
-	//	int n = service.add(boardvo); // <== 파일첨부가 없는 글쓰기
-		
-		// === #176. 파일 첨부가 있는 글쓰기 또는 파일 첨부가 없는 글쓰기로 나뉘어서 service 호출하기 시작==
-		// 먼저 위의 int n = service.add(boardvo); 부분을 주석처리하고 아래와 같이 한다.
-		
-		Map<String, String> docSeq = new HashMap<>();
-		
-		docSeq = service.getDocSeq();			
-		String fk_doc_no = "KD-"+ request.getParameter("fk_doctype_code") + "-" + docSeq.get("doc_noSeq");
-		
-		docvo.setDoc_no(fk_doc_no);
-		
-		Map<String, Object> paraMap = new HashMap<>();
-		paraMap.put("docvo", docvo); 
-		//기안 종류 코드, 기안자 사원 아이디, 기안문서 제목, 기안문서내용, 서류 작성일자
-		
-
-//		docInfoMap.put("doctype_code", doctype_code);
-		
-		paraMap.put("fk_doc_no", fk_doc_no);
-		paraMap.put("meeting_date", request.getParameter("meeting_date"));
-		paraMap.put("attendees", request.getParameter("attendees"));
-		paraMap.put("host_dept", request.getParameter("host_dept"));
-		
-		paraMap.put("approval_no", docSeq.get("approval_noSeq"));
-		paraMap.put("empId1", request.getParameter("level_no_1"));
-		paraMap.put("empId2", request.getParameter("level_no_2"));
-		paraMap.put("empId3", request.getParameter("level_no_3"));
-
-
-		int n = 0;
-		
-		
-	//	if(attach.isEmpty()) {
-			// 파일첨부가 없는 경우라면
-			n = service.noFile_doc(paraMap); // <== 파일첨부가 없는 글쓰기
-//		}
-	//	else {
-			// 파일첨부가 있는 경우라면
-		//	n = service.add_withFile(boardvo);
-	//	}
-		
-	// === 파일첨부가 있는 글쓰기 또는 파일첨부가 없는 글쓰기로 나뉘어서 service 호출하기 끝 === //
-		
-		if(n==1) {
-			mav.setViewName("redirect:/approval/main.kedai");
-		    //  /list.action 페이지로 redirect(페이지이동)해라는 말이다.
-		}
-		else {
-			mav.setViewName("board/error/add_error.tiles1");
-			//  /WEB-INF/views/tiles1/board/error/add_error.jsp 파일을 생성한다.
-		}
-		
-		// ===== #104. After Advice 를 사용하기 ====== //
-		//             글쓰기를 한 이후에는 회원의 포인트를 100점 증가 
-	//	paraMap.put("userid", boardvo.getFk_userid());
-	//	paraMap.put("point", "100");
-		
-		return mav;
-	}
 	
 }

@@ -240,6 +240,7 @@ ALTER TABLE tbl_minutes DROP COLUMN content; -- content테이블 삭제
 
 select *
 from tbl_minutes;
+
 create sequence minutes_noSeq
 start with 1
 increment by 1
@@ -248,6 +249,8 @@ nominvalue
 nocycle
 nocache;
 --Sequence MINUTES_NOSEQ이(가) 생성되었습니다.
+
+DROP SEQUENCE minutes_noSeq;
 
 commit;
 
@@ -301,6 +304,8 @@ nominvalue
 nocycle
 nocache;
 
+DROP SEQUENCE approval_noSeq;
+
 SELECT sequence_name
 FROM user_sequences
 WHERE sequence_name = 'APPROVAL_NOSEQ';
@@ -318,7 +323,36 @@ COMMENT ON COLUMN tbl_approval.approval_date IS '결재일자 ';
 
 
 -- 첨부파일 테이블
+create table tbl_doc_file
+(doc_file_no        NUMBER           not null    -- 결재번호
+,fk_doc_no          VARCHAR2(30)     not null    -- 기안문서번호
+,doc_org_filename   VARCHAR2(100)    not null    -- 원래파일명 
+,doc_filename       varchar2(100)    not null    -- 첨부파일명 
+,doc_filesize       NUMBER           not null    -- 파일크기
+,constraint PK_tbl_doc_file_doc_file_no primary key(doc_file_no)
+,constraint FK_tbl_doc_file_fk_doc_no foreign key(fk_doc_no) references tbl_doc(doc_no)
+);
 
+alter table tbl_doc_file MODIFY (doc_filename VARCHAR2(100)); 
+
+create sequence doc_file_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+DROP SEQUENCE doc_file_noSeq;
+
+commit;
+
+COMMENT ON COLUMN tbl_doc_file.doc_file_no IS '결재번호(primary key) '; 
+COMMENT ON COLUMN tbl_doc_file.fk_doc_no IS '기안 문서 번호'; 
+COMMENT ON COLUMN tbl_doc_file.doc_org_filename IS '원래 파일명'; 
+COMMENT ON COLUMN tbl_doc_file.doc_file_no IS '결재번호(primary key) '; 
+COMMENT ON COLUMN tbl_doc_file.doc_filename IS '첨부 파일명 '; 
+COMMENT ON COLUMN tbl_doc_file.doc_filesize IS '파일크기'; 
 
 
 --- 문서번호 추가하기
@@ -400,7 +434,11 @@ insert insert into tbl_doc(doc_no, fk_doctype_code, fk_empid, doc_subject, doc_c
 values(103, '변우석', default);
 
 select *
-from tbl_minutes;
+from tbl_doc;
 
 desc tbl_doc;
+
+DELETE FROM tbl_doc;
+
+commit;
 
