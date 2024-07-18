@@ -29,7 +29,7 @@
     </resultMap>
 	
 	<!-- 직원 리스트 가져오기 -->
-	<select id="employeeList" resultMap="MemberJoinDeptJob">
+	<select id="employeeList" parameterType="map" resultMap="MemberJoinDeptJob">
 		SELECT empid, name, nickname, mobile, email
 		     , postcode, address, detailaddress, extraaddress
 		     , imgfilename, orgimgfilename, hire_date, salary, point
@@ -42,14 +42,50 @@
 		         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
 		         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
 		         , dept_tel
+		        <!--  , rownum row_num -->
 		    from tbl_employees E1 
 		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
 		    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+		    <!-- WHERE rownum &lt; ((#{page} * #{size}) + 1 ) -->
+	    <choose>
+			<when test="searchType == 'department'">
+			and dept_name like '%${searchWord}%'
+			</when>
+			<when test="searchType == 'position'">
+			and job_name like '%${searchWord}%'
+			</when>
+			<when test="searchType == 'name'">
+			and name like '%${searchWord}%'
+			</when>
+			<when test="searchType == 'personal-tel'">
+			and mobile = #{searchWord}
+			</when>
+		</choose>
 		    order by dept_name asc, job_code asc
 		) E
+		<!-- WHERE row_num &gt;= (((#{page}-1) * #{size}) + 1) -->
 	</select>
-	
-	
+
+ 
+<!-- 	<select id="employeeListTotal" parameterType="map" resultType="long">
+		    select count(1)
+		    from tbl_employees E1
+	    <choose>
+			<when test="searchType == 'department'">
+			WHERE dept_name like '%${searchWord}%'
+			</when>
+			<when test="searchType == 'position'">
+			WHERE job_name like '%${searchWord}%'
+			</when>
+			<when test="searchType == 'name'">
+			WHERE name like '%${searchWord}%'
+			</when>
+			<when test="searchType == 'personal-tel'">
+			WHERE mobile = #{searchWord}
+			</when>
+		</choose>
+	</select> -->
+
 	<!-- 클릭한 사원정보 가져오기 -->
 	<select id="empDetailList" resultMap="MemberJoinDeptJob">
 		SELECT empid, name, nickname, mobile, email

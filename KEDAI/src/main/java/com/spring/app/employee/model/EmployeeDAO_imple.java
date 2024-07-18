@@ -24,37 +24,26 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 	
 	// 직원정보 가져오기
 	@Override
-	public List<Map<String, String>> employeeList() {
+	public List<Map<String, String>> employeeList(Map<String, String> paraMap) {
 		
 		List<Map<String, String>> employeeList = sqlsession.selectList("employee.employeeList");
-		// System.out.println("111employeeList : " + employeeList);
+		System.out.println("111employeeList : " + employeeList);
 		return employeeList;
 	}
-	
+
+	/*
+	 * @Override public Long employeeListTotal(Map<String, String> paraMap) { Long
+	 * employeeListTotal = sqlsession.selectOne("employee.employeeListTotal",
+	 * paraMap); // System.out.println("111employeeList : " + employeeList); return
+	 * employeeListTotal; }
+	 */
 	// 직원정보 상세보기 팝업 어떤것 클릭했는지 알아오기(직원 아이디로 가져오기)
 	@Override
-	public List<Map<String, Object>> empDetailList (Map<String, Object> paraMap) {
-		List<Map<String, Object>> empDetailList = sqlsession.selectList("employee.empDetailList", paraMap);
+	public List<Map<String, String>> empDetailList (Map<String, String> paraMap) {
+		List<Map<String, String>> empDetailList = sqlsession.selectList("employee.empDetailList", paraMap);
 		
 		return empDetailList;
 	}
 
-	
-	
-	
-	
-	
-	/*
-	 * @Override public Map<String, String> empDetail_map(String empid) {
-	 * Map<String, String> employeeDetail_select =
-	 * sqlsession.selectOne("employee.empDetail_map", empid); return
-	 * employeeDetail_select; }
-	 */
-	
-	
-	
-	
-
-	
 	
 }

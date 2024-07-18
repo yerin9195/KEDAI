@@ -302,11 +302,11 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	      },
  */	      dataType: "json",
 	      success: function(json){
-	        // 서버에서 거래처이름으로 정보 얻어오기
+	        // 서버에서 거래처이름으로 정보 얻어오기\images\partne
 	        if(json.partner_name != null){
 	          $("#pop_partnerName").html(json.partner_name);
 	          $("#pop_partnerNo").html(json.partner_no);
-	          $("#pop_partnerImg").attr("src", "./resources/files/" + json.imgfilename);// http://localhost:9099/KEDAI/resources/images/partner/%EB%84%A4%EB%AA%A8%EB%84%A4%EB%AA%A8.png
+	          $("#pop_partnerImg").attr("src", "./resources/images/partner" + json.imgfilename);// http://localhost:9099/KEDAI/resources/images/partner/%EB%84%A4%EB%AA%A8%EB%84%A4%EB%AA%A8.png
 	          $("#pop_partnerAddress").html(json.partner_address + " " + json.partner_detailaddress + " " + json.partner_extraaddress);
 	          $("#pop_partnerUrl").html(json.partner_url);
 	          $("#pop_partEmpTel").html(json.part_emp_tel);

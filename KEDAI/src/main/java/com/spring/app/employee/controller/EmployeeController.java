@@ -9,8 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,36 +39,28 @@ public class EmployeeController {
 	
 	//////////////////////////////////////////////////////////////////////////
 	// 사원리스트  
-	@GetMapping(value="/employee.kedai") 
-	public ModelAndView employeelist_select(ModelAndView mav) {
-	
-		List<Map<String,String>> employeeList = service.employeeList();
-		// System.out.println("222employeeList : " + employeeList);
+	@RequestMapping(value="/employee.kedai") 
+	public ModelAndView employeelist_select(
+			@RequestParam(required = false) String searchType, 
+			@RequestParam(required = false) String searchWord, 
+			//@PageableDefault() Pageable pageable, // page=, size=
+			ModelAndView mav) {
+		System.out.println("searchType:" + searchType + ", searchWord: " + searchWord);
 		
-		mav.addObject("employeeList", employeeList);
+		List<Map<String,String>> employeeList = service.employeeList(searchType, searchWord);
+		// Page<Map<String,String>> pagedResult = service.employeeList(searchType, searchWord, pageable);
+		// System.out.println("page : " + page);
+		
+		// mav.addObject("pagedResult", pagedResult);
+		// mav.addObject("employeeList", pagedResult.getContent());
+		mav.addObject("employeeList",employeeList);
+		mav.addObject("searchType", searchType);
+		mav.addObject("searchWord", searchWord);
 		mav.setViewName("tiles1/employee/employee.tiles");
 		
 		return mav;
 	}
-/*
-	// 직원 상세보기 팝업 어떤것 클릭했는지 알아오기
-	@ResponseBody
-	@GetMapping(value="/employeeDetail.kedai",produces = "text/plain;charset=UTF-8")
-	public ModelAndView employeeDetail(@RequestParam String empid) throws JsonProcessingException {
-		System.out.println("empid : " + empid);
-		
-		List<Map<String,Object>> empDetail= service.empDetail(empid);
-		
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("empDetail",empDetail);
-		
-		System.out.println("empDetail : " + empDetail);
-		mav.setViewName("tiles1/employee/employee.tiles");
-		
-		return mav;
-		
-	} // end of public String employeeDetail_select(String empid) throws JsonProcessingException {}------------------------
-	*/
+
 	
 	
 	@ResponseBody
@@ -72,14 +69,14 @@ public class EmployeeController {
 		
 		String empid = request.getParameter("empid");
 		
-		Map<String,Object> paraMap = new HashMap<>();
+		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("empid", empid);
 		
-		List<Map<String,Object>> empDetailList = service.empDetailList(paraMap);
+		List<Map<String, String>> empDetailList = service.empDetailList(paraMap);
 		
 		JSONArray jsonArr = new JSONArray();
 		if(empDetailList != null) {
-			for(Map<String,Object> map : empDetailList) {
+			for(Map<String, String> map : empDetailList) {
 				JSONObject jsonObj = new JSONObject();
 				jsonObj.put("empid", map.get("empid"));
 				jsonObj.put("name", map.get("name"));
@@ -106,7 +103,7 @@ public class EmployeeController {
 				jsonArr.put(jsonObj);
 			}// end of for---------------
 			
-			System.out.println(jsonArr.toString());
+			// System.out.println(jsonArr.toString());
 			
 		}
 		

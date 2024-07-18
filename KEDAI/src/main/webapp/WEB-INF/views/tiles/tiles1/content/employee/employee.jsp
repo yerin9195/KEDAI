@@ -454,6 +454,18 @@ bigName{
 		});
 	});
 
+	
+	
+	function formatNumber(num) {
+		  return parseFloat(num).toLocaleString('ko-KR');
+		}
+
+		
+	
+	
+	
+	
+	
 	// 클릭한 직원 상세정보 불러오는 이벤트
 	$(document).on('click','#empInfo', function(e){
 		const empid = $(this).find('.empid').text();
@@ -472,7 +484,21 @@ bigName{
 	 	        if(json.length > 0){
 	 	      		json.forEach(function(item){
 	 	      			$('#empName').val(item.name);
-	 	      			console.log("empName : " + item.name);
+	 	      			$('#empNickName').val(item.nickname);
+	 	      			$('#empDepartment').val(item.dept_name);
+	 	      			$('#empRank').val(item.job_name);
+	 	      			$('#empEmail').val(item.email);
+	 	      			$('#empPersonal-Tel').val(item.mobile.substring(0,3) + "-" + item.mobile.substring(3,7) + "-" + item.mobile.substring(7,11));
+	 	      			$('#deptTel').val(item.dept_tel);
+	 	      			$('#hireDate').val(item.hire_date);
+	 	      			$('#salary').val(formatNumber(item.salary) + '원');
+	 	      			$('#point').val(item.point);
+	 	      			$('#empPostcode').val(item.postcode);
+	 	      			$('#empAddress').val(item.address);
+	 	      			$('#empDetailAddress').val(item.detailaddress);
+	 	      			$('#empExtraAddress').val(item.extraaddress);
+	 	      			$("#pop_partnerImg").attr("src", "./resources/images/member/" + item.orgimgfilename);
+	 	      			// console.log("empName : " + item.name);
 	 	      		})
 	 	        }
 	 	        else{
@@ -480,81 +506,17 @@ bigName{
 	 	        }
 	 	      },
 	 	      error: function(request, status, error) {
-	 	      alert("11111code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+	 	    	  
+	 	      	alert("11111code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
 	 	      }
 	 	 });
 	});
 			
-		
-
 	
-	
-	
-	
-<%-- 	 $(document).on("click", '#empInfo > tbody > tr > td.empid', function(e) {
-	        var empid = $('#empInfo > tbody > tr > td.empid').text(); // 현재 클릭된 td.empid 요소의 텍스트 값을 empid 변수에 저장
-	      /*   $('#empInfo > tbody > tr > td.empid').hide(); // 모든 td.empid 요소를 숨김 */
+	function goSearch() {
+		document.employee_search_frm.submit();
+	}
 
-	        console.log('.empid:', empid);
-
-	       $.ajax({
-	            url: "<%=ctxPath%>/employeeDetail.kedai?empid=" + empid,
-	            type: "get",
-	            async: true,
-	            dataType: 'json',
-	            success: function(json) {
-	                // 서버에서 직원id 로 정보 가져오기
-	                if (json.name != null) {
-	                    $("#pop_empName").html(json.name)
-	                    console.log(json.name);
-	                } else {
-	                    alert("직원 상세 정보를 불러오지 못했습니다.");
-	                }
-	            },
-	            error: function(request, status, error) {
-	                alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-	            }
-	        });
-
-	        $('.popup-overlay-emp').css({
-	            display: 'none'
-	        });
-	    });
-	        --%>
-
-	
-
-	
-	
-<%--  	$('#empInfo > tbody > tr').click(function(){
- 	    var empid = $(this).find('td.empid').text();
- 	    console.log('empid:', empid);
-
- 	    $.ajax({
- 	      url: "<%=ctxPath%>/employeeDetail.kedai?empid=" + empid,
- 	      type:"get",
- 	      async:true,
- 	      dataType:'json',
- 	      success: function(json){
- 	        if(json.name != null){
- 	          $("#pop_empName").html(json.name)
- 	          console.log(json.name);
- 	        }
- 	        else{
- 	          alert("직원 상세 정보를 불러오지 못했습니다.");
- 	        }
- 	      },
- 	      error: function(request, status, error) {
- 	        alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
- 	      }
- 	    });
-
- 	    $('.popup-overlay-emp').css({
- 	      display : 'none'
- 	    });
- 	  }); 
-	
-	 --%>
 
 	
 	
@@ -569,15 +531,18 @@ bigName{
 		
 		<div class="search_bar">
 			<div class="sch_left">
-				<form name="employee_search_frm">
+				<form name="employee_search_frm" method="post">
 					<select name ="searchType">
 						<option value="">검색대상</option>
-						<option value="department">부서</option>
-						<option value="position">직위</option>
-						<option value="name">이름</option>
+						<option value="department" <c:if test="${'department' eq searchType}">selected</c:if>>부서</option>
+						<option value="position" <c:if test="${'position' eq searchType}">selected</c:if>>직위</option>
+						<option value="name" <c:if test="${'name' eq searchType}">selected</c:if>>이름</option>
+						<option value="personal-tel" <c:if test="${'personal-tel' eq searchType}">selected</c:if>>휴대폰번호</option>
 					</select>
-					<input type="search" name="searchWord;" />
-					<input type="button" name="searchWord;" onclick="goSearch()" value="검색"/>
+					<input type="text" name="searchWord" value="${searchWord}" />
+					<%-- <input type="hidden" name="page" value="${pagedResult.pageable.page}" /> --%>
+				<%-- 	<input type="hidden" name="size" value="${pagedResult.pageable.size}" /> --%>
+					<input type="button" onclick="goSearch()" value="검색"/>
 				</form>
 			</div>	
 	     
@@ -626,6 +591,7 @@ bigName{
 			       </tr>
 			   </thead>
 			   <tbody>
+			   <!-- ${requestScope.pagedResult.pageable.size}  -->
 			   <c:forEach var="empList" items="${requestScope.employeeList}" varStatus="status">
 			     <tr class="emp-row">
 				 	  <c:if test="${empList.job_code != '1'}">
@@ -669,8 +635,8 @@ bigName{
 			</div>
 			<div class="section">
 				<div class="article left">
-					<div class="img-box">
-						<img src="<%= ctxPath%>/resources/images/common/picture.png">
+					<div class="popupImg" style="width:200px; border: 1px solid red; height:200px; overflow: hidden;">
+						<img id="pop_partnerImg" src="" alt="" style="object-fit:none;">
 					</div>
 				</div>
 					<div class="article right">
@@ -681,41 +647,41 @@ bigName{
 							</label> 
 							<label> 
 								<span>닉네임</span>
-								<input type="text" class="form-control" value="qwldnjs" readonly>
+								<input type="text" class="form-control" id="empNickName" value="" readonly>
 							</label> 
 							<label> 
 								<span>부서</span>
-								<input type="text" class="form-control" value="디자인부" readonly>
+								<input type="text" class="form-control" id="empDepartment" value="" readonly>
 							</label> 
 							<label> 
 								<span>직위</span> 
-								<input type="text" class="form-control" value="부장" readonly>
+								<input type="text" class="form-control" id="empRank" value="" readonly>
 							</label> 
 							<label> 
 								<span>Email</span> 
-								<input type="text" class="form-control" value="qwldnjs@hanmail.net" readonly>
+								<input type="text" class="form-control" id="empEmail" value="" readonly>
 							</label> 
 							<label> 
 								<span>내선전화</span> 
-								<input type="text" class="form-control" value="000#" readonly>
+								<input type="text" class="form-control" id="deptTel" readonly>
 							</label>
 							<label>
 							 	<span>휴대폰번호</span>
-							 	<input type="text" class="form-control" value="000#" readonly>
+							 	<input type="text" class="form-control" id="empPersonal-Tel" value="000#" readonly>
 							</label>
 							
 						<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
 							<label> 
 								<span>입사일자</span> 
-								<input type="text" class="form-control" value="000#" readonly>
+								<input type="text" class="form-control" id="hireDate" readonly>
 							</label>
 							<label> 
 								<span>기본급여</span> 
-								<input type="text" class="form-control" value="000#" readonly>
+								<input type="text" class="form-control" id="salary" readonly>
 							</label>
 							<label> 
 								<span>포인트</span> 
-								<input type="text" class="form-control" value="000#" readonly>
+								<input type="text" class="form-control" id="point" readonly>
 							</label>
 					
 							</div>
@@ -723,13 +689,13 @@ bigName{
 									<label>
 										<span>주소</span>
 										<span>						
-											<input type="text" id="sample6_postcode" placeholder="우편번호" class="form-control" readonly>
+											<input type="text" id="empPostcode" placeholder="우편번호" class="form-control" readonly>
 											<!-- <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" readonly> -->
 										</span>					
 									</label>
-									<input type="text" id="sample6_address" placeholder="주소"class="form-control" readonly>
-									<input type="text" id="sample6_detailAddress" placeholder="상세주소"class="form-control" readonly>
-									<input type="text" id="sample6_extraAddress" placeholder="참고항목"class="form-control" readonly>
+									<input type="text" id="empAddress" class="form-control" readonly>
+									<input type="text" id="empDetailAddress" placeholder="상세주소"class="form-control" readonly>
+									<input type="text" id="empExtraAddress" placeholder="참고항목"class="form-control" readonly>
 								</div>
 						</c:if>
 					</div>
