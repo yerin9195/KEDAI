@@ -6,55 +6,63 @@
 %>
 
  <style type="text/css">
-     .header { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-	margin-right: 15%;
-     }
-     .date-navigation { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-   	padding-left: 45%;
-      font-size: 35px;
-      
-     }
-     
-      .date-navigation button {
-         margin: 0 10px; /* 버튼과 텍스트 사이의 간격 추가 */
-         background-color: transparent; /* 배경색 제거 */
-         border: none; /* 버튼의 기본 테두리 제거 */
-         font-size: 35px; /* 버튼의 글자 크기 조정 */
-         cursor: pointer; /* 버튼에 커서 포인터 표시 */
-     }
+      .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-right: 15%;
+        }
 
-     table { 	        
-      border-collapse: collapse; 
-      width: 85%;
-     
-     }
-     th, td { 
-      border: 1px solid #ddd; 
-      text-align: center;
-     }
-     th { background-color: #f2f2f2; }
-     
-     .time-slot:hover{
-     		background-color: yellow;
-     		cursor: pointer;
-     }
-     
-       /* 모달 스타일 */
-         .modal-header, .modal-footer {
+        .date-navigation { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding-left: 45%;
+            font-size: 35px;
+        }
+
+        .date-navigation button {
+            margin: 0 10px; /* 버튼과 텍스트 사이의 간격 추가 */
+            background-color: transparent; /* 배경색 제거 */
+            border: none; /* 버튼의 기본 테두리 제거 */
+            font-size: 35px; /* 버튼의 글자 크기 조정 */
+            cursor: pointer; /* 버튼에 커서 포인터 표시 */
+        }
+
+        table {         
+            border-collapse: collapse; 
+            width: 85%;
+        }
+
+        th, td { 
+            border: 1px solid #ddd; 
+            text-align: center;
+        }
+
+        th { background-color: #f2f2f2; }
+        
+        .time-slot:hover {
+            background-color: yellow;
+            cursor: pointer;
+        }
+
+        /* 모달 스타일 */
+        .modal-dialog {
+            max-width: 800px; /* 원하는 너비로 설정 */
+        }
+        
+        .modal-header, .modal-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         .modal-body {
             display: flex;
             flex-direction: column;
+            width: auto;
         }
+
         .form-group {
             margin-bottom: 1rem;
         }
@@ -73,31 +81,59 @@
             cursor: pointer;
         }
 
-
         .form-group label {
             display: block;
             margin-bottom: 5px;
         }
 
         .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
             padding: 8px;
-            box-sizing: border-box;
+            
         }
         
-        .reserveBtn{
-        	padding: 22px;
+        .reserveBtn {
+            padding: 22px;
         }
-        
-        
-     
- </style>
+
+        .date-time-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .date-input {
+            margin-right: 10px;
+            flex: 1;
+        }
+
+        .time-input {
+            margin-right: 10px;
+            width: 80px; /* 시간 입력 필드의 크기 조정 */
+            text-align: center;
+        }
+
+        .checkbox-label {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .reservee {
+            display: inline-block;
+            background-color: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .change-btn {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
  
  <script type="text/javascript">
  $(document).ready(function(){
 	showallsub();
-	
-	
+	setToday();
+    
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// 캘린더 소분류 카테고리 숨기기
@@ -135,52 +171,58 @@
 	// === *** 달력(type="date") 관련 끝 *** === //
 	
 	// '종일' 체크박스 클릭시
-	$("input#allDay").click(function() {
-		var bool = $('input#allDay').prop("checked");
-		
-		if(bool == true) {
-			$("select#startHour").val("00");
-			$("select#startMinute").val("00");
-			$("select#endHour").val("23");
-			$("select#endMinute").val("59");
-			$("select#startHour").prop("disabled",true);
-			$("select#startMinute").prop("disabled",true);
-			$("select#endHour").prop("disabled",true);
-			$("select#endMinute").prop("disabled",true);
-		} 
-		else {
-			$("select#startHour").prop("disabled",false);
-			$("select#startMinute").prop("disabled",false);
-			$("select#endHour").prop("disabled",false);
-			$("select#endMinute").prop("disabled",false);
-		}
-	});
+	$("#allDay").click(function() {
+                var isChecked = $(this).is(":checked");
+                if (isChecked) {
+                    $("#startTime, #endTime").val("00:00").prop("disabled", true);
+                } else {
+                    $("#startTime, #endTime").prop("disabled", false);
+                }
+            });
+
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	
 	$("#startDate").datepicker({
-        dateFormat: "yy-mm-dd",
         onSelect: function(dateText) {
-            $(this).val(dateText); // 선택한 날짜를 예약일(input id="startDate")에 설정
-            $("#reservationModal").modal("hide"); // 모달 숨기기
+            const selectedDate = $(this).datepicker("getDate");
+            const formattedDate = formatDate(selectedDate);
+            $(this).val(formattedDate); // 선택한 날짜를 예약일(input id="startDate")에 설정
         }
     });
 
+
+	   $("#endDate").datepicker({
+	        onSelect: function(dateText) {
+	        	 const selectedDate = $(this).datepicker("getDate");
+	             const formattedDate = formatDate(selectedDate);
+	             $(this).val(formattedDate); // 선택한 날짜를 예약일(input id="startDate")에 설정
+	        }
+	    });
+	   
     // 예약 버튼 클릭 시 모달 보이기
     $(document).on("click", ".reserveBtn", function() {
+    	 setToday();
         $("#reservationModal").modal("show");
-
     });
     
     $(document).on("click", "#startDate", function() {
-   	 console.log("??/")
    	    // currentDate 버튼의 텍스트를 startDate input 필드에 설정
    	            // 예약일(input id="startDate") 클릭 시 달력 보이기
        	$("#startDate").datepicker("show");
    	    var currentDateText = document.getElementById('currentDate').innerText;
    	    document.getElementById('startDate').value = currentDateText;
    	});
+    
+    $(document).on("click", "#endDate", function() {
+   	    // currentDate 버튼의 텍스트를 startDate input 필드에 설정
+   	            // 예약일(input id="startDate") 클릭 시 달력 보이기
+       	$("#endDate").datepicker("show");
+   	    var currentDateText = document.getElementById('currentDate').innerText;
+   	    document.getElementById('endDate').value = currentDateText;
+   	});
+    
 
     $(".close, #reserveCancel").on("click", function() {
         $("#reservationModal").hide();
@@ -190,12 +232,24 @@
         dateFormat: "yy-mm-dd"
     });
 
+/*     $(".timepicker").timepicker({
+        timeFormat: "HH:mm",
+        interval: 30,
+        minTime: "09:00",
+        maxTime: "21:30",
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
+    }); */
 
+    
+    
     // 오늘 날짜 설정
     const today = new Date();
     const formattedToday = formatDate(today);
     $("#currentDate").text(formattedToday);
     $("#startDate").val(formattedToday); // 예약일(input id="startDate")에 오늘 날짜 설정
+    $("#endDate").val(formattedToday);
 	
      
      $("#assetSelect").change(function() {
@@ -268,28 +322,51 @@
 	});
 
 
- 
 
- function changeDate(days) {
-     const currentDateText = document.getElementById('currentDate').innerText.replace(/[<>]/g, '').trim();
-     const currentDate = new Date(currentDateText);
-     currentDate.setDate(currentDate.getDate() + days);
-     document.getElementById('currentDate').innerText = formatDate(currentDate);
- }
 
- function formatDate(date) {
-	    const year = date.getFullYear();
-	    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-	    const day = ('0' + date.getDate()).slice(-2);
-	    const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
-	    return year + '-' + month + '-' + day + ' (' + dayOfWeek + ')';
-	}
+	 function changeDate(days) {
+	     const currentDateText = document.getElementById('currentDate').innerText.replace(/[<>]/g, '').trim();
+	     const currentDate = new Date(currentDateText);
+	     currentDate.setDate(currentDate.getDate() + days);
+	     document.getElementById('currentDate').innerText = formatDate(currentDate);
+	 }
+	 
+	 
 
- function showModal(asset, time) {
-     alert(`예약: ${asset} - ${time}`);
- }
-
-  
+	 function formatDate(date) {
+	     const year = date.getFullYear();
+	     const month = ('0' + (date.getMonth() + 1)).slice(-2);
+	     const day = ('0' + date.getDate()).slice(-2);
+	     const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
+	     return year + '-' + month + '-' + day + ' (' + dayOfWeek + ')';
+	 }
+	
+	 function showModal(asset, time) {
+	     alert(`예약: ${asset} - ${time}`);
+	 }
+	
+	 function setToday() {
+			let selectedStartDate = null;
+		    let selectedEndDate = null;
+		    
+		    const today = new Date();
+	        const formattedToday = formatDate(today);
+	        $("#currentDate").text(formattedToday); // 현재 날짜 표시 업데이트
+	        if (!selectedStartDate) {
+	            selectedStartDate = formattedToday;
+	            $("#startDate").val(formattedToday); // 예약일(input id="startDate")에 오늘 날짜 설정
+	        }
+	        if (!selectedEndDate) {
+	            selectedEndDate = formattedToday;
+	            $("#endDate").val(formattedToday); // 종료일(input id="endDate")에 오늘 날짜 설정
+	        }
+	 }
+	 
+	 function currentDate(){
+		 const today = new Date();
+	     document.getElementById('currentDate').innerText = formatDate(today);
+	 }
+	  
  	function showallsub(){
  		 $.ajax({
  	        url: "<%= ctxPath %>/roomall.kedai",
@@ -320,7 +397,10 @@
  	        }
  	    });
  	
- 		
+ 		  $("button[data-change-date]").click(function() {
+ 		        const days = parseInt($(this).attr("data-change-date"));
+ 		        changeDate(days);
+ 		    });
  		
  	}
  	
@@ -356,6 +436,7 @@
             <c:forEach var="hour" begin="9" end="21">
                 <th colspan="2">${hour}</th>
             </c:forEach>
+
         </tr>
         <tr>
             <c:forEach var="hour" begin="9" end="21">
@@ -383,20 +464,21 @@
                 <div class="modal-body">
                     <form id="reservationForm">
                         <div class="form-group">
-                              <label for="startDate">예약일</label>
-							     <input type="text" class="form-control" id="startDate">
-							        <div class="input-group-append">
-							            <button type="button" class="btn btn-outline-secondary" id="startDate"></button>
-							        </div>
-							        <input type="datetime-local" class="form-control" id="endDate">
-							    </div>
-							    <div class="form-check">
-							        <input type="checkbox" class="form-check-input" id="allDay">
-							        <label class="form-check-label" for="allDay">종일</label>
+                              <label for="reservationDate">예약일</label>
+					            <div class="date-time-group">
+					                <input type="text" id="startDate" class="date-input" readonly>
+					                <input type="text" id="startTime" class="time-input" placeholder="HH:MM">
+					                ~ 
+					                <input type="text" id="endDate" class="date-input" readonly>
+					                <input type="text" id="endTime" class="time-input" placeholder="HH:MM">
+					            </div>
+					            <label for="allDay" class="checkbox-label">
+					                <input type="checkbox" id="allDay"> 종일
+					            </label>
                         </div>
                         <div class="form-group">
                             <label for="reserver">예약자</label>
-                            <input type="text" class="form-control" id="reserver" value="${sessionScope.loginuser.name} ${sessionScope.loginuser.jvo.job_name}" readonly/>
+                            <input type="text" class="form-control" id="reserver" value="${sessionScope.loginuser.name} ${sessionScope.loginuser.job_name}" readonly/>
 	
                         </div>
                         <div class="form-group">
