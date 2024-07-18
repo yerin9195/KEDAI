@@ -23,8 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.app.common.FileManager;
 import com.spring.app.common.Sha256;
 import com.spring.app.domain.BusVO;
+import com.spring.app.domain.CarVO;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.reservation.service.CarService;
 
@@ -33,6 +35,9 @@ public class CarController {
 	
 	@Autowired
 	private CarService service;
+	
+	@Autowired
+	private FileManager fileManager;
 	
 	// sidebar에서 통근버스 클릭시 이동하는 페이지 만들기
 	@GetMapping("/bus.kedai")
@@ -207,7 +212,94 @@ public class CarController {
 		return mav;
 		
 	}
-	
+	// 마이페이지에서 나의 차량 정보 등록  완료시
+	@PostMapping("/myCarRegisterEnd.kedai")
+	public ModelAndView myCarRegisterEnd(ModelAndView mav, CarVO cvo, MultipartHttpServletRequest mrequest) { // http://localhost:9099/final_project/bus.kedai
+		
+		String userid = mrequest.getParameter("userid");
+		HttpSession session = mrequest.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		
+        String fk_empid = loginuser.getEmpid();
+        
+		MultipartFile attach = cvo.getAttach();
+		
+		if(attach != null) { // 첨부파일이 있는 경우
+			
+			// WAS 의 webapp 의 절대경로 알아오기
+			String root = session.getServletContext().getRealPath("/"); 
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
+			
+			String path = root+"resources"+File.separator+"files";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			
+			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
+			byte[] bytes = null;     // 첨부파일의 내용물을 담는 것
+			
+			try {
+				bytes = attach.getBytes(); 
+				
+				String originalFilename = attach.getOriginalFilename(); // 첨부파일명의 파일명
+				
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path); // 첨부되어진 파일을 업로드
+				
+				cvo.setCar_imgfilename(newFileName);
+				cvo.setCar_orgimgfilename(originalFilename);
+				
+			} catch (Exception e) {
+				e.printStackTrace(); 
+			}
+			
+		} // end of if(attach != null) ----------
+		
+		fk_empid = mrequest.getParameter("fk_empid");
+		String car_type = mrequest.getParameter("car_type");
+		String car_num = mrequest.getParameter("car_num");
+		int max_num = Integer.parseInt(mrequest.getParameter("max_num"));
+		int insurance = Integer.parseInt(mrequest.getParameter("insurance"));
+		String drive_year = mrequest.getParameter("drive_year");
+		
+		System.out.println("~~~ 확인용 : "+ car_type);
+		System.out.println("~~~ 확인용 : "+ car_num);
+		System.out.println("~~~ 확인용 : "+ max_num);
+		System.out.println("~~~ 확인용 : "+ insurance);
+		System.out.println("~~~ 확인용 : "+ drive_year);
+		
+		cvo.setFk_empid(fk_empid);
+		cvo.setCar_type(car_type);
+		cvo.setCar_num(car_num);
+		cvo.setMax_num(max_num);
+		cvo.setInsurance(insurance);
+		cvo.setDrive_year(drive_year);
+		
+		try {
+			int n = service.addMycar(cvo);
+			
+			if(n ==1) {
+				String message = "내 차 정보가 정상적으로 등록되었습니다.";
+				String loc = mrequest.getContextPath()+"/index.kedai";
+				
+				mav.addObject("message",message);
+				mav.addObject("loc",loc);
+				
+				mav.setViewName("msg");
+				
+			}
+		}catch(Exception e) {
+			String message = "내 차 정보 등록이 실패했습니다. \\n 다시 시도해주세요.";
+			String loc = "javascript:history.back()";
+			
+			mav.addObject("message",message);
+			mav.addObject("loc",loc);
+			
+			mav.setViewName("msg");
+		
+			
+		}
+		return mav;
+		
+	}
 
 	// 마이페이지에서 나의 카셰어링 예약 및 결제내역 클릭시 들어가는 페이지 만들기
 	@GetMapping("/myCarReserveAndPay.kedai")

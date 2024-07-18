@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.spring.app.domain.BusVO;
+import com.spring.app.domain.CarVO;
 
 public interface CarService {
 
@@ -12,6 +13,8 @@ public interface CarService {
 	List<BusVO> getStationTimeList(String pf_station_id, String bus_no);
 
 	List<Map<String, String>> myCar(String empid);
+
+	int addMycar(CarVO cvo);
 
 
 

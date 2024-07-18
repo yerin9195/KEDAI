@@ -579,7 +579,7 @@ commit;
 select *
 from tbl_loginhistory
 
-drop table tbl_car;
+drop table tbl_car purge;
 
 commit;
 
@@ -592,7 +592,8 @@ create table tbl_car
 ,max_num                  NUMBER            not null
 ,insurance                NUMBER            not null 
 ,drive_year               VARCHAR2(30)      not null 
-,car_imgfilename          VARCHAR2(100)     not null 
+,car_imgfilename          VARCHAR2(100)     
+,car_orgimgfilename       VARCHAR2(100)     
 ,constraint PK_tbl_car_car_seq primary key(car_seq)
 ,constraint FK_tbl_car_fk_empid foreign key(fk_empid) references tbl_employees(empid)
 );

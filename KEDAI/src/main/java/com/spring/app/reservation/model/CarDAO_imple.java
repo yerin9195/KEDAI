@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.spring.app.domain.BusVO;
+import com.spring.app.domain.CarVO;
 
 @Repository
 public class CarDAO_imple implements CarDAO {
@@ -39,6 +40,13 @@ public class CarDAO_imple implements CarDAO {
 
 		List<Map<String, String>> myCar = sqlsession.selectList("reservation.getmyCar", empid);
 		return myCar;
+	}
+
+	// 내 차 정보 등록하기
+	@Override
+	public int addMycar(CarVO cvo) {
+		int n = sqlsession.insert("reservation.addMyCar", cvo);
+		return n;
 	}
 
 

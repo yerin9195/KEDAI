@@ -1,5 +1,7 @@
 package com.spring.app.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class CarVO {
 	private int car_seq;
 	private String fk_empid;
@@ -8,9 +10,32 @@ public class CarVO {
 	private int max_num;
 	private int insurance;
 	private String drive_year;
+	private String car_imgfilename;
+	private String car_orgimgfilename;
+	
+	// form 태그에서 type="file" 인 파일을 받아서 저장되는 필드
+	private MultipartFile attach; 
+	
 	public int getCar_seq() {
 		return car_seq;
 	}
+
+	public String getCar_imgfilename() {
+		return car_imgfilename;
+	}
+
+	public void setCar_imgfilename(String car_imgfilename) {
+		this.car_imgfilename = car_imgfilename;
+	}
+
+	public String getCar_orgimgfilename() {
+		return car_orgimgfilename;
+	}
+
+	public void setCar_orgimgfilename(String car_orgimgfilename) {
+		this.car_orgimgfilename = car_orgimgfilename;
+	}
+
 	public void setCar_seq(int car_seq) {
 		this.car_seq = car_seq;
 	}
@@ -50,7 +75,12 @@ public class CarVO {
 	public void setDrive_year(String drive_year) {
 		this.drive_year = drive_year;
 	}
-	
+	public MultipartFile getAttach() {
+		return attach;
+	}
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
 	
 
 }
