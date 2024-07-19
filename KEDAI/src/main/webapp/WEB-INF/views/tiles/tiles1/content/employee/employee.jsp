@@ -10,8 +10,8 @@
    String ctxPath = request.getContextPath();
 
 %>
-
-<script type="text/javascript" src="<%= ctxPath%>/resources/js/employee.js"></script>
+<%-- 
+<script type="text/javascript" src="<%= ctxPath%>/resources/js/employee.js"></script> --%>
 <style type="text/css">
 
 *{margin: 0;
@@ -419,7 +419,6 @@ bigName{
 
 
 <script type="text/javascript">
-
 	
 	$(document).ready(function() {
 
@@ -440,7 +439,7 @@ bigName{
 		/* 조직도 팝업 여는 함수 시작 끝 */
 		
 		// 클릭 시 팝업
-		$('.emp-name').click(function() {
+		$('.emp-dept, .emp-rank, .emp-name, .dept-tel, .personal-tel, .emp-email ').click(function() {
 			$('.popup-overlay-emp').css({
 				display : 'flex'
 			});
@@ -454,8 +453,25 @@ bigName{
 			});
 		});
 	});
-</script>
+	
+	
+	// function Declation
+	function formatPhoneNumber(phoneNumber){
+		
+		let digits = phoneNumber.replace(/\D/g, '');
+		
+		let part1 = digits.substring(0,3);
+		let part2 = digits.substring(3,7);
+		let part3 = digits.substring(7,11);
+		
+		//return `${part1}-${part2}-${part3}`;
+		return "하하하";
+	}
+	
 
+	
+	
+</script>
 
 
 <div class="employeeWrap">
@@ -465,7 +481,6 @@ bigName{
 		</div>
 		
 		<div class="search_bar">
-		
 			<div class="sch_left">
 				<form name="employee_search_frm">
 					<select name ="searchType">
@@ -479,282 +494,157 @@ bigName{
 				</form>
 			</div>	
 	     
-	     <button class="tempBtn">
-	     		조직도 보기
-	     </button>
+		     <button class="tempBtn">
+		     		조직도 보기
+		     </button>
     	 
-	    <!-- 팝업 오버레이 -->
-	    <div class="popup-overlay-tree" id="popupOverlay">
-		    <!-- 팝업 창 -->
-		    <div class="popup">
-		    	<div class="header">
-		    		<div style="width : 98%"><h2>회사 조직도</h2></div>
-		    		<button id="xmark" class="close-btn" style="">
+			 <!-- 팝업 오버레이 -->
+			 <div class="popup-overlay-tree" id="popupOverlay">
+			    <!-- 팝업 창 -->
+			    <div class="popup">
+			    	<div class="header">
+			    		<div style="width : 98%"><h2>회사 조직도</h2></div>
+			    		<button id="xmark" class="close-btn" style="">
 							<i class="fa-solid fa-xmark"></i>
-							<%-- <img src="<%= ctxPath%>/resources/images/common/xmark.svg" alt=""> --%>
-					</button>
-		    	</div>
-
-		    	<div class="section">
-		    		<div class="img-box">
-		    			<img src="<%= ctxPath%>/resources/images/common/ptree.png" alt="">
-		    		</div>
-		    	</div>
-		    	
-        
-		    </div>
+						</button>
+			    	</div>
+			    	<div class="section">
+			    		<div class="img-box">
+			    			<img src="<%= ctxPath%>/resources/images/common/ptree.png" alt="">
+			    		</div>
+			    	</div>
+			    </div>
 			</div>
-			
+				
 			<div class="sch_right">
-				<span style="font-size: 12pt; font-weight: bold;">페이지당 회원명수&nbsp;-&nbsp;</span>
-				<select name="sizePerPage">
-					<option value="10">10명</option>
-					<option value="30">30명</option>
-					<option value="50">50명</option>		
-				</select>
+				<span style="font-size: 12pt; font-weight: bold;">페이지당 직원명수&nbsp;-&nbsp;</span>
+					<select name="sizePerPage">
+						<option value="3">3명</option>
+						<option value="5">5명</option>
+						<option value="10">10명</option>		
+					</select>
 			</div> 
-	</div>
-					
-		<table id="" class="emp_table">
-				   <thead>
-				       <tr>
-				          <th id ="depart">부서</th>
-				          <th id ="position">직위</th>
-				          <th id="name">이름</th>
-				          <th id="tel">회사전화</th>
-				          <th id="email">이메일</th>
-				       </tr>
-				   </thead>
-				
-				   <tbody>
-				 	   <tr>
-			   			 <td>회계팀</td>
-			   			 <td>대리</td>
-			   			 <td class="emp-name">
-				   				김철수
-			  			 </td>
-			  			 <td>010-2222-3333</td>
-			  			 <td>cheolsu@naver.com</td>
-		  			</tr>
-		  		<tr>
-		  			 <td>개발 1팀</td>
-		  			 <td>차장</td>
-		  			 <td class="emp-name">
-		  			 		윤한나
-		  			 </td>
-		  			 <td>010-3333-4444</td>
-		  			 <td>hanna@naver.com</td>
-		  		</tr>
-		  		<tr>
-		  			 <td>회계팀</td>
-		  			 <td>부장</td>
-		  			 <td class="emp-name">
-		  			 		정유리
-		  			 </td>
-		  			 <td>010-4444-5555</td>
-		  			 <td>glass@naver.com</td>
-		  		</tr>
-		  		<tr>
-		  			 <td>마케팅부</td>
-		  			 <td>대리</td>
-		  			 <td class="emp-name">
-		  			 		조규리	
-		  			 </td>
-		  			 <td>010-5555-6666</td>
-		  			 <td>tangerin@naver.com</td>
-		  		</tr>
-		  		<tr>
-		  			 <td>회계팀</td>
-		  			 <td>대리</td>
-		  			 <td class="emp-name">
-		  					김철수
-		  			 </td>
-		  			 <td>010-2222-3333</td>
-		  			 <td>cheolsu@naver.com</td>
-		  		</tr>
-		  		<tr>
-		  			 <td>회계팀</td>
-		  			 <td>대리</td>
-		  			 <td class="emp-name">
-		  					김철수
-		  			 </td>
-		  			 <td>010-2222-3333</td>
-		  			 <td>cheolsu@naver.com</td>
-		  		</tr>
-		  		<tr>
-		  			 <td>회계팀</td>
-		  			 <td>대리</td>
-		  			 <td class="emp-name">
-		  					김철수
-		  			 </td>
-		  			 <td>010-2222-3333</td>
-		  			 <td>cheolsu@naver.com</td>
-		  		</tr>
-		  		<tr>
-		  			 <td>회계팀</td>
-		  			 <td>대리</td>
-		  			 <td class="emp-name">
-		  					김철수
-		  			 </td>
-		  			 <td>010-2222-3333</td>
-		  			 <td>cheolsu@naver.com</td>
-		  		</tr>
-		  		<tr>
-		  			 <td>회계팀</td>
-		  			 <td>대리</td>
-		  			 <td class="emp-name">
-		  					김철수
-			   		 </td>
-			   		 <td>010-2222-3333</td>
-			   		 <td>cheolsu@naver.com</td>
-			   		</tr>
-			   		
-			   		</tbody>
-				</table>
-			</div>	
-		</div>		
-				
-		<div class="pagenation">
-			<button>&lt;</button>
-			<ul>
-				<li>1</li>
-				<li>2</li>
-				<li>3</li>
-				<li>4</li>
-				<li>...</li>
-			</ul>
-			<button>&gt;</button>
 		</div>
+					
+			<table id="" class="emp_table">
+			   <thead>
+			       <tr>
+			          <th id ="depart">부서</th>
+			          <th id ="position">직위</th>
+			          <th id="name">이름</th>
+			          <th id="dept-tel">내선번호</th>
+			          <th id="personal-tel">휴대폰번호</th>
+			          <th id="email">E-MAIL</th>
+			       </tr>
+			   </thead>
+			   <tbody>
+			   	<c:forEach var="membervo" items="${requestScope.membervoList}" varStatus="status">
+			 	   <tr>
+		   			 <td class="emp-dept">${membervo.dvo.dept_name}</td>
+		   			 <td class="emp-rank">${membervo.jvo.job_name}</td>
+		   			 <td class="emp-name">${membervo.name}</td>
+		  			 <td class="dept-tel">${membervo.dept_tel}</td>
+		  			 <td class="personal-tel">${(membervo.mobile).substring(0,3)}-${(membervo.mobile).substring(3,7)}-${(membervo.mobile).substring(7,11)}</td>
+		  			 <td class="emp-email">${membervo.email}</td>
+	  			   </tr>
+	  			</c:forEach>   
+		   		</tbody>
+			</table>
+		</div>	
+	</div>		
+				
+	<div class="pagenation">
+		<button>&lt;</button>
+		<ul>
+			<li>1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>...</li>
+		</ul>
+		<button>&gt;</button>
+	</div>
 
 
 
 	<%-- 팝업 클릭시 보이는 직원 상세 테이블 --%>
-<div class="popup-overlay-emp">
-	<div class="emp-detail popup">
-		<div class="header">
-			<h2>직원정보 상세보기</h2>
-		</div>
-		<div class="section">
-			<div class="article left">
-				<div class="img-box">
-					<img src="<%= ctxPath%>/resources/images/common/picture.png">
-				</div>
+	<div class="popup-overlay-emp">
+		<div class="emp-detail popup">
+			<div class="header">
+				<h2>직원정보 상세보기</h2>
 			</div>
-			<div class="article right">
-				<div class="input-forms">
-					<label> 
-						<span>이름</span> 
-						<input type="text" class="form-control" value="유선우" readonly>
-					</label> 
-					<label> 
-						<span>닉네임</span>
-						<input type="text" class="form-control" value="qwldnjs" readonly>
-					</label> 
-					<label> 
-						<span>부서</span>
-						<input type="text" class="form-control" value="디자인부" readonly>
-					</label> 
-					<label> 
-						<span>직위</span> 
-						<input type="text" class="form-control" value="부장" readonly>
-					</label> 
-					<label> 
-						<span>Email</span> 
-						<input type="text" class="form-control" value="qwldnjs@hanmail.net" readonly>
-					</label> 
-					<label> 
-						<span>내선전화</span> 
-						<input type="text" class="form-control" value="000#" readonly>
-					</label>
-					<label>
-					 	<span>휴대폰번호</span>
-					 	<input type="text" class="form-control" value="000#" readonly>
-					</label>
-					<label> 
-						<span>입사일자</span> 
-						<input type="text" class="form-control" value="000#" readonly>
-					</label>
-					<label> 
-						<span>기본급여</span> 
-						<input type="text" class="form-control" value="000#" readonly>
-					</label>
-					<label> 
-						<span>포인트</span> 
-						<input type="text" class="form-control" value="000#" readonly>
-					</label>
+			<div class="section">
+				<div class="article left">
+					<div class="img-box">
+						<img src="<%= ctxPath%>/resources/images/common/picture.png">
+					</div>
+				</div>
+					<div class="article right">
+						<div class="input-forms">
+							<label> 
+								<span>이름</span> 
+								<input type="text" class="form-control" value="유선우" readonly>
+							</label> 
+							<label> 
+								<span>닉네임</span>
+								<input type="text" class="form-control" value="qwldnjs" readonly>
+							</label> 
+							<label> 
+								<span>부서</span>
+								<input type="text" class="form-control" value="디자인부" readonly>
+							</label> 
+							<label> 
+								<span>직위</span> 
+								<input type="text" class="form-control" value="부장" readonly>
+							</label> 
+							<label> 
+								<span>Email</span> 
+								<input type="text" class="form-control" value="qwldnjs@hanmail.net" readonly>
+							</label> 
+							<label> 
+								<span>내선전화</span> 
+								<input type="text" class="form-control" value="000#" readonly>
+							</label>
+							<label>
+							 	<span>휴대폰번호</span>
+							 	<input type="text" class="form-control" value="000#" readonly>
+							</label>
+							
+						<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+							<label> 
+								<span>입사일자</span> 
+								<input type="text" class="form-control" value="000#" readonly>
+							</label>
+							<label> 
+								<span>기본급여</span> 
+								<input type="text" class="form-control" value="000#" readonly>
+							</label>
+							<label> 
+								<span>포인트</span> 
+								<input type="text" class="form-control" value="000#" readonly>
+							</label>
 					
+							</div>
+								<div class="input-address">
+									<label>
+										<span>주소</span>
+										<span>						
+											<input type="text" id="sample6_postcode" placeholder="우편번호" class="form-control" readonly>
+											<!-- <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" readonly> -->
+										</span>					
+									</label>
+									<input type="text" id="sample6_address" placeholder="주소"class="form-control" readonly>
+									<input type="text" id="sample6_detailAddress" placeholder="상세주소"class="form-control" readonly>
+									<input type="text" id="sample6_extraAddress" placeholder="참고항목"class="form-control" readonly>
+								</div>
+						</c:if>
+					</div>
 				</div>
-				<div class="input-address">
-					<label>
-						<span>주소</span>
-						<span>						
-							<input type="text" id="sample6_postcode" placeholder="우편번호" class="form-control" readonly>
-							<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" readonly>
-						</span>					
-					</label>
-					<input type="text" id="sample6_address" placeholder="주소"class="form-control" readonly>
-					<input type="text" id="sample6_detailAddress" placeholder="상세주소"class="form-control" readonly>
-					<input type="text" id="sample6_extraAddress" placeholder="참고항목"class="form-control" readonly>
-				
-				<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-				<script>
-			    function sample6_execDaumPostcode() {
-			        new daum.Postcode({
-			            oncomplete: function(data) {
-			                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-			
-			                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-			                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-			                var addr = ''; // 주소 변수
-			                var extraAddr = ''; // 참고항목 변수
-			
-			                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-			                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-			                    addr = data.roadAddress;
-			                } else { // 사용자가 지번 주소를 선택했을 경우(J)
-			                    addr = data.jibunAddress;
-			                }
-			
-			                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-			                if(data.userSelectedType === 'R'){
-			                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-			                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-			                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-			                        extraAddr += data.bname;
-			                    }
-			                    // 건물명이 있고, 공동주택일 경우 추가한다.
-			                    if(data.buildingName !== '' && data.apartment === 'Y'){
-			                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-			                    }
-			                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-			                    if(extraAddr !== ''){
-			                        extraAddr = ' (' + extraAddr + ')';
-			                    }
-			                    // 조합된 참고항목을 해당 필드에 넣는다.
-			                    document.getElementById("sample6_extraAddress").value = extraAddr;
-			                
-			                } else {
-			                    document.getElementById("sample6_extraAddress").value = '';
-			                }
-			
-			                // 우편번호와 주소 정보를 해당 필드에 넣는다.
-			                document.getElementById('sample6_postcode').value = data.zonecode;
-			                document.getElementById("sample6_address").value = addr;
-			                // 커서를 상세주소 필드로 이동한다.
-			                document.getElementById("sample6_detailAddress").focus();
-			            }
-			        }).open();
-			    }
-				</script>				
+				<div class="close-btn">
+					<button><i class="fa-solid fa-xmark"></i></button>
 				</div>
 			</div>
 		</div>
-		<div class="close-btn">
-			<button><i class="fa-solid fa-xmark"></i></button>
-			<%-- <button><img src="<%= ctxPath%>/resources/images/common/xmark.svg"></button> --%>
-		</div>
-	</div>
-</div>
 
 
 

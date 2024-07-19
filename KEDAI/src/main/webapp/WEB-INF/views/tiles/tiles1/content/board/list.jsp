@@ -159,12 +159,12 @@
 </script>
 
 <%-- content start --%>
-<div style="border: 0px solid red; padding: 1% 3% 3% 0;">
+<div style="border: 0px solid red; padding: 2% 3% 0 0;">
 	<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;게시판</h3>
 
 	<section>
 		<div class="d-md-flex justify-content-md-end">
-			<form name="searchFrm" style="width: 37%; position: relative;">
+			<form name="searchFrm" style="width: 34%; position: relative;">
 		   		<select name="searchType" style="height: 30px;">
 		      		<option value="subject">글제목</option>
 		      		<option value="content">글내용</option>
@@ -181,7 +181,7 @@
 			</form>
 			
 			<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-				<a href="<%= ctxPath%>/board/add.kedai" class="btn add_btn">등록하기</a>
+				&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%= ctxPath%>/board/add.kedai" class="btn add_btn">등록하기</a>
 			</c:if>
 		</div>
 	
@@ -213,7 +213,7 @@
 			      				<c:if test="${empty bvo.filename}">
 			      					<%-- 원글인 경우  --%>
 		      						<c:if test="${bvo.depthno == 0}">
-			      						<span class="subject" onclick="goView('${bvo.board_seq}')">[ ${bvo.categoryvo.category_name} ]&nbsp;&nbsp;${bvo.subject}</span>
+			      						<span class="subject" onclick="goView('${bvo.board_seq}')">[ ${bvo.category_name} ]&nbsp;&nbsp;${bvo.subject}</span>
 		      						</c:if>
 		      						<%-- 답변글인 경우  --%>
 		      						<c:if test="${bvo.depthno > 0}">
@@ -225,7 +225,7 @@
 			      				<c:if test="${not empty bvo.filename}">
 			      					<%-- 원글인 경우  --%>
 		      						<c:if test="${bvo.depthno == 0}">
-		      							<span class="subject" onclick="goView('${bvo.board_seq}')">[ ${bvo.categoryvo.category_name} ]&nbsp;&nbsp;${bvo.subject}&nbsp;<i class="fa-solid fa-paperclip"></i></span>
+		      							<span class="subject" onclick="goView('${bvo.board_seq}')">[ ${bvo.category_name} ]&nbsp;&nbsp;${bvo.subject}&nbsp;<i class="fa-solid fa-paperclip"></i></span>
 		      						</c:if>
 		      						<%-- 답변글인 경우  --%>
 		      						<c:if test="${bvo.depthno > 0}">

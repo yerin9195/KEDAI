@@ -47,7 +47,7 @@ public class BoardController {
 	
 	// 게시판 글 등록하는 페이지 이동
 	@GetMapping("/board/add.kedai")
-	public ModelAndView requiredLogin_add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView add(ModelAndView mav, HttpServletRequest request) {
 		
 		// 답변 글쓰기가 추가된 경우
 		String subject = "[답변] " + request.getParameter("subject");
@@ -765,4 +765,16 @@ public class BoardController {
 	
 	}
 	
+	// 게시글수 조회하기
+	@ResponseBody
+	@GetMapping(value="/board/boardTotalCountJSON.kedai", produces="text/plain;charset=UTF-8")
+	public String boardTotalCountJSON(HttpServletRequest request) {
+		
+		int totalCount = service.boardTotalCountJSON();
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("totalCount", totalCount*10);
+		
+		return jsonObj.toString();
+	}
 }

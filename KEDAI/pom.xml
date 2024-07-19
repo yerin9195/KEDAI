@@ -15,7 +15,7 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<org.apache.tiles-version>3.0.7</org.apache.tiles-version> <!-- ===== #9. Spring 프레임워크 버전 4.x 이상 시  tiles 관련 추가하기 ===== -->
 		
-		<!-- ===== 몽고디비(mongodb) : 버전을 변경할 경우 확인 해야한다. ===== -->
+		<!-- ==== #228. (웹채팅관련10) 몽고디비(mongodb) : 버전을 변경할 경우 확인 해야한다. ==== -->
 		<org.mongodb-version>3.12.10</org.mongodb-version>
       	<org.spring-data-commons-version>2.5.6</org.spring-data-commons-version>
       	<org.spring-data-mongodb-version>3.2.6</org.spring-data-mongodb-version>
@@ -270,7 +270,7 @@
           	<version>2.9.1</version>
       	</dependency>
       	
-      	<!-- ===== #10.  tiles 관련 jar 추가하기 ===== -->
+      	<!-- ===== #10. tiles 관련 jar 추가하기 ===== -->
       	<dependency>
         	<groupId>org.springframework</groupId>
          	<artifactId>spring-test</artifactId>
@@ -354,14 +354,14 @@
           	<version>0.4.8</version>
       	</dependency>
       	
-      	<!-- === #191. Spring websocket dependency를 에 추가(웹채팅관련1) === -->
+      	<!-- === #219. Spring websocket dependency를 에 추가(웹채팅관련1) === -->
       	<dependency>
        		<groupId>org.springframework</groupId>
            	<artifactId>spring-websocket</artifactId>
            	<version>${org.springframework-version}</version>
       	</dependency>
       	
-      	<!-- === #192-2. (웹채팅관련2) Gson 은 Java 객체를 JSON 표현식으로 변환할 수 있게 해주는 Java 라이브러리임. 
+      	<!-- === #220. (웹채팅관련2) Gson 은 Java 객체를 JSON 표현식으로 변환할 수 있게 해주는 Java 라이브러리임. 
                     또한 거꾸로 JSON 표현식 형태의 String 을 Java 객체로 변환도 가능하게 해주는 라이브러리임. === -->
       	<dependency>
         	<groupId>com.google.code.gson</groupId>
@@ -413,7 +413,7 @@
           	<scope>provided</scope>
       	</dependency>
       	
-      	<!-- ===== 몽고디비(mongodb) ===== -->
+      	<!-- ==== #229. (웹채팅관련11) 몽고디비(mongodb) ==== -->
       	<dependency>
         	<groupId>org.mongodb</groupId>
          	<artifactId>mongo-java-driver</artifactId>

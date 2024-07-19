@@ -447,9 +447,24 @@ div#register_com {
 		
 		// 유효성 검사 통과 시 submit 호출
 		if (_validate()) {
+			$("#partRegisterForm").attr("action", "othercom_register.kedai");
 			$("#partRegisterForm").submit();
 		}
 	};
+	
+	function _onModify(){
+		let validateChk = false;
+		console.log("수정버튼 누름");
+		
+		// 유효성 검사 통과시 submit 호출
+		if(_validate()){
+			$("#partRegisterForm").attr("action", "othercom_register.kedai");
+			$("#partRegisterForm").submit();
+		}
+	}
+	
+	
+	
 	
 	function _validate() {
 		/* 거래처이름 유효성검사 시작 */
@@ -542,7 +557,7 @@ div#register_com {
 			
 		/* 이미지 파일이름 유효성검사 시작 */	
 		const fileInput = $("input#fileInput").val().trim();
-		if(fileInput == ""){
+		if(fileInput == "" && !isModify){
 			// 입력하지 않거나 공백만 입력했을 경우 
 			alert("이미지 파일을 등록하셔야 합니다.");
 			return false;
@@ -777,7 +792,8 @@ div#register_com {
 </script>
 
 <div id="register_com" style="padding-right:10%;">
-	<form id="partRegisterForm" name="" action="othercom_register.kedai" method="POST" enctype="multipart/form-data" class="clientWrap">
+	<form id="partRegisterForm" name="" action="" method="POST" enctype="multipart/form-data" class="clientWrap">
+		<input type="hidden" name="is_modify" id="is_modify" value="${isModify}">
 		<div class="clientHeader">
 			<button style="background-image: url(<%=ctxPath%>/resources/images/common/arrow-left-solid.svg)">
 			</button>
@@ -877,8 +893,14 @@ div#register_com {
 		</div>
 		<div class="clientConfirm">
 			<input type="reset" id="resetButton" value="취소">
-			<input type="button" onclick="_onSubmit()" value="등록">
 			
+						
+			<c:if test="${!isModify}"><input type="button" onclick="_onSubmit()" value="등록"/></c:if>
+			<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+				<c:if test="${isModify}">
+					<input type="button" onclick="_onModify()" value="수정"/>
+				</c:if>
+			</c:if>
 		</div>
 	</form>
 	<!--//들고가야함  -->
