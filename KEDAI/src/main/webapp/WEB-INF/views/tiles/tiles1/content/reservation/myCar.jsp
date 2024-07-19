@@ -40,7 +40,11 @@
 
 // Function Declaration
 function goEdit(){
-	location.href=`<%= ctxPath%>/myCarEdit.kedai`;
+    // 폼 제출 로직
+    const frm = document.editFrm;
+    frm.action = "<%= ctxPath%>/myCarEdit.kedai"; 
+    frm.method = "post";
+    frm.submit();
 } // end of function goRegister() ----------
 
 function goBack(){
@@ -62,68 +66,70 @@ function goRegister(){
 <div style="border: 0px solid red; padding: 5% 0;">
 <h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;나의 차량 정보</h3>
 <hr style="color: gray; width: 90%;">
-<div style="border-top: 5px solid #2c4459; border-left: 1px solid lightgray; border-bottom: 1px solid lightgray; border-right: 1px solid lightgray; padding: 1% 0; width: 90%; display:flex;">
-        <c:if test="${not empty requestScope.myCar}">
-            <c:forEach var="car" items="${requestScope.myCar}">
-                <div class="col-4" style="border: 0px solid blue; text-align:center;">
-                    <br><br>
-                    <img src="<%= ctxPath %>/resources/images/car/${car.car_orgimgfilename}" style="width:90%;" />
-                    <br><br><br>
-                </div>
-                <div class="col-8" style="border: 0px solid red; padding-top:3%; padding-left: 3%;">
-                    <h2>차종<span style="font-size: 15pt; font-weight:bold;">&nbsp;&nbsp;${car.car_type}</span></h2>
-                    <hr style="color: gray; width: 90%;">
-                    <div style="display: flex;">
-                        <div class="col-6" style="border-right: 2px solid lightgray;">
-                            <h4>운전 종별</h4>
-                            <span style="display:block; text-align: center; font-size: 30pt;">
-                                <i class="fa-solid fa-id-card"></i>&nbsp;&nbsp;
-                                <span style="font-size:23pt;">${car.license }</span>
-                                
-                            </span>
-                        </div>
-                        <div class="col-6">
-                            <h4>운전 경력</h4>
-                            <span style="display:block; text-align: center; font-size: 30pt;">
-                                <i class="fa-solid fa-car"></i>&nbsp;&nbsp;
-                                <span style="font-size:23pt;">${car.drive_year}</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div style="display: flex; margin-top: 4%;">
-                        <div class="col-6" style="border-right: 2px solid lightgray;">
-                            <h4>보험가입여부</h4>
-                            <span style="display:block; text-align: center; font-size: 30pt;">
-                                <i class="fa-solid fa-circle-check"></i>
-                            </span>
-                        </div>
-                        <div class="col-6">
-                            <h4>약관동의여부</h4>
-                            <span style="display:block; text-align: center; font-size: 30pt;">
-                                <i class="fa-solid fa-circle-check"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </c:forEach>
-	</c:if>
-	<c:if test="${empty requestScope.myCar}">
-		등록되어있는 차량이 없습니다.
-	</c:if>
-</div>
-<div class="mt-3" style="position: relative; left: 500px; top: 85px;">
-	<div class="btnRegister">
-	<c:if test="${empty requestScope.myCar}">
-        <button type="button" onclick="goRegister()">등록하기</button>
-    </c:if>
-    <c:if test="${not empty requestScope.myCar}">
-        <button type="button" onclick="goEdit()">수정하기</button>
-    </c:if>
-        <button type="reset" onclick="goBack()">뒤로가기</button>
-        <button type="reset" onclick="goOwner()">카셰어링현황(차주)</button>
-        <button type="reset" onclick="goCustomer()">카셰어링신청현황(신청자)</button>
-    </div>
-</div>
+	<form name="editFrm" enctype="multipart/form-data" class="row mt-5" style="border: 0px solid green;">
+	<div style="border-top: 5px solid #2c4459; border-left: 1px solid lightgray; border-bottom: 1px solid lightgray; border-right: 1px solid lightgray; padding: 1% 0; width: 90%; display:flex;">
+	        <c:if test="${not empty requestScope.myCar}">
+	            <c:forEach var="car" items="${requestScope.myCar}">
+	                <div class="col-4" style="border: 0px solid blue; text-align:center;">
+	                    <br><br>
+	                    <img src="<%= ctxPath %>/resources/images/car/${car.car_orgimgfilename}" style="width:90%;" />
+	                    <br><br><br>
+	                </div>
+	                <div class="col-8" style="border: 0px solid red; padding-top:3%; padding-left: 3%;">
+	                    <h2>차종<span style="font-size: 15pt; font-weight:bold;">&nbsp;&nbsp;${car.car_type}</span></h2>
+	                    <hr style="color: gray; width: 90%;">
+	                    <div style="display: flex;">
+	                        <div class="col-6" style="border-right: 2px solid lightgray;">
+	                            <h4>운전 종별</h4>
+	                            <span style="display:block; text-align: center; font-size: 30pt;">
+	                                <i class="fa-solid fa-id-card"></i>&nbsp;&nbsp;
+	                                <span style="font-size:23pt;">${car.license }</span>
+	                                
+	                            </span>
+	                        </div>
+	                        <div class="col-6">
+	                            <h4>운전 경력</h4>
+	                            <span style="display:block; text-align: center; font-size: 30pt;">
+	                                <i class="fa-solid fa-car"></i>&nbsp;&nbsp;
+	                                <span style="font-size:23pt;">${car.drive_year}</span>
+	                            </span>
+	                        </div>
+	                    </div>
+	                    <div style="display: flex; margin-top: 4%;">
+	                        <div class="col-6" style="border-right: 2px solid lightgray;">
+	                            <h4>보험가입여부</h4>
+	                            <span style="display:block; text-align: center; font-size: 30pt;">
+	                                <i class="fa-solid fa-circle-check"></i>
+	                            </span>
+	                        </div>
+	                        <div class="col-6">
+	                            <h4>약관동의여부</h4>
+	                            <span style="display:block; text-align: center; font-size: 30pt;">
+	                                <i class="fa-solid fa-circle-check"></i>
+	                            </span>
+	                        </div>
+	                    </div>
+	                </div>
+	            </c:forEach>
+		</c:if>
+		<c:if test="${empty requestScope.myCar}">
+			등록되어있는 차량이 없습니다.
+		</c:if>
+	</div>
+	<div class="mt-3" style="position: relative; left: 500px; top: 85px;">
+		<div class="btnRegister">
+		<c:if test="${empty requestScope.myCar}">
+	        <button type="button" onclick="goRegister()">등록하기</button>
+	    </c:if>
+	    <c:if test="${not empty requestScope.myCar}">
+	        <button type="button" onclick="goEdit()">수정하기</button>
+	    </c:if>
+	        <button type="reset" onclick="goBack()">뒤로가기</button>
+	        <button type="reset" onclick="goOwner()">카셰어링현황(차주)</button>
+	        <button type="reset" onclick="goCustomer()">카셰어링신청현황(신청자)</button>
+	    </div>
+	</div>
+	</form>
 </div>
 
 <!-- 차량정보가 없을때는 등록된 차량정보가 없다고 띄우고 수정하기 버튼이 등록하기 버튼으로 표시되어야한다. -->

@@ -199,10 +199,99 @@ public class CarController {
 	}
 	
 	// 마이페이지에서 나의 차량 정보 등록 클릭시 들어가는 페이지 만들기
-	@GetMapping("/myCarEdit.kedai")
-	public ModelAndView requiredLogin_myCarEdit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
+	@PostMapping("/myCarEdit.kedai")
+	public ModelAndView myCarEdit(HttpServletRequest request, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
 		
 		mav.setViewName("tiles1/reservation/myCarEdit.tiles"); 
+		return mav;
+		
+	}
+	// 마이페이지에서 나의 차량 정보 등록 클릭시 들어가는 페이지 만들기
+	@PostMapping("/myCarEditEnd.kedai")
+	public ModelAndView myCarEditEnd(MultipartHttpServletRequest mrequest, CarVO cvo, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
+
+		Map<String, Object> paraMap = new HashMap<>();
+        
+		HttpSession session = mrequest.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		
+        String fk_empid = loginuser.getEmpid();
+        
+		MultipartFile attach = cvo.getAttach();
+		
+		if(attach != null) { // 첨부파일이 있는 경우
+			
+			// WAS 의 webapp 의 절대경로 알아오기
+			String root = session.getServletContext().getRealPath("/"); 
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
+			
+			String path = root+"resources"+File.separator+"files";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			
+			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
+			byte[] bytes = null;     // 첨부파일의 내용물을 담는 것
+			
+			try {
+				bytes = attach.getBytes(); 
+				
+				String originalFilename = attach.getOriginalFilename(); // 첨부파일명의 파일명
+				
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path); // 첨부되어진 파일을 업로드
+				
+				paraMap.put("newFileName", newFileName);
+				paraMap.put("originalFilename", originalFilename);
+				
+			} catch (Exception e) {
+				e.printStackTrace(); 
+			}
+			
+		} // end of if(attach != null) ----------
+		
+		String car_type = mrequest.getParameter("car_type");
+		String car_num = mrequest.getParameter("car_num");
+		int max_num = Integer.parseInt(mrequest.getParameter("max_num"));
+		int insurance = Integer.parseInt(mrequest.getParameter("insurance"));
+		String license = mrequest.getParameter("license");
+		String drive_year = mrequest.getParameter("drive_year");
+		
+	    System.out.println("~~~ 확인용 : "+ fk_empid);
+		System.out.println("~~~ 확인용 : "+ car_type);
+		System.out.println("~~~ 확인용 : "+ car_num);
+		System.out.println("~~~ 확인용 : "+ max_num);
+		System.out.println("~~~ 확인용 : "+ insurance);
+		System.out.println("~~~ 확인용 : "+ drive_year);
+		System.out.println("~~~ 확인용 : " + license);
+		
+		paraMap.put("fk_empid",fk_empid);
+		paraMap.put("car_type",car_type);
+		paraMap.put("car_num",car_num);
+		paraMap.put("max_num",max_num);
+		paraMap.put("insurance",insurance);
+		paraMap.put("license",license);
+		paraMap.put("drive_year",drive_year);
+		
+		
+		/*
+		 * try { int n = service.editMycar(cvo);
+		 * 
+		 * if(n ==1) { String message = "내 차 정보가 정상적으로 수정되었습니다."; String loc =
+		 * mrequest.getContextPath()+"/index.kedai";
+		 * 
+		 * mav.addObject("message",message); mav.addObject("loc",loc);
+		 * 
+		 * mav.setViewName("msg");
+		 * 
+		 * } }catch(Exception e) { String message = "내 차 정보 수정이 실패했습니다. \\n 다시 시도해주세요.";
+		 * String loc = "javascript:history.back()";
+		 * 
+		 * mav.addObject("message",message); mav.addObject("loc",loc);
+		 * 
+		 * mav.setViewName("msg");
+		 * 
+		 * 
+		 * }
+		 */
 		return mav;
 		
 	}
