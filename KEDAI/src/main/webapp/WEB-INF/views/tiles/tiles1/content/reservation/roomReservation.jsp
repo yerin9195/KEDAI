@@ -155,7 +155,11 @@
     $("#allDay").click(function() {
         var isChecked = $(this).is(":checked");
         if (isChecked) {
-            $("#startHour, #startMinute, #endHour, #endMinute").val("00").prop("disabled", true);
+            $("#startMinute").val("00").prop("disabled", true);
+            $("#endMinute").val("30").prop("disabled", true);
+            $("#startHour").val("09").prop("disabled", true);
+            $("#endHour").val("21").prop("disabled", true);
+            
         } else {
             $("#startHour, #startMinute, #endHour, #endMinute").prop("disabled", false);
         }
