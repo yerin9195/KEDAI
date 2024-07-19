@@ -1,6 +1,7 @@
 package com.spring.app.company.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,33 @@ public class CompanyDAO_imple implements CompanyDAO{
 		
 		int n = sqlsession.delete("company.delPartnerNo",partner_no);
 		return n;
+	}
+
+	// 총 페이지 건수 (TotalCount) 구하기
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		
+		int totalCount = sqlsession.selectOne("company.getTotalCount",paraMap);
+		
+		return totalCount;
+	}
+
+	// 글목록 가져오기(페이징처리를 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것)
+	@Override
+	public List<PartnerVO> PartnerListSearch_withPaging(Map<String, String> paraMap) {
+		
+		List<PartnerVO> partnerList = sqlsession.selectList("company.PartnerListSearch_withPaging", paraMap);
+		
+		return partnerList;
+	}
+
+	// 검색어 입력 시 자동글 완성하기 
+	@Override
+	public List<String> wordSearchShowJSON(Map<String, String> paraMap) {
+		
+		List<String> wordList = sqlsession.selectList("company.wordSearchShowJSON", paraMap);
+		
+		return null;
 	}
 
 

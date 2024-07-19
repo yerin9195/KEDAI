@@ -43,7 +43,7 @@ public class EmployeeController {
 	public ModelAndView employeelist_select(
 			@RequestParam(required = false) String searchType, 
 			@RequestParam(required = false) String searchWord, 
-			//@PageableDefault() Pageable pageable, // page=, size=
+			@PageableDefault() Pageable pageable, // page=, size=
 			ModelAndView mav) {
 		System.out.println("searchType:" + searchType + ", searchWord: " + searchWord);
 		
@@ -53,7 +53,7 @@ public class EmployeeController {
 		
 		// mav.addObject("pagedResult", pagedResult);
 		// mav.addObject("employeeList", pagedResult.getContent());
-		mav.addObject("employeeList",employeeList);
+		// mav.addObject("employeeList",employeeList);
 		mav.addObject("searchType", searchType);
 		mav.addObject("searchWord", searchWord);
 		mav.setViewName("tiles1/employee/employee.tiles");

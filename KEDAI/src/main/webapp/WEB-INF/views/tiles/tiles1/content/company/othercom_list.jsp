@@ -284,9 +284,83 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 }
 
 </style>
-
+<!-- 유선우 제작 페이지 페이징 처리와 검색 기능 Board(list.jsp) 참고함  -->
 <script type="text/javascript">
-
+	
+	$(document).ready(function(){
+		
+		$("input:text[name='searchWord']").bind("keydown", function(e){
+			if(e.keyCode == 13){
+				goSearch();
+			}
+		});
+		
+		// 검색시 검색조건 및 검색어 값 유지시키기
+		if(${not empty requestScope.paraMap}){// paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다.
+			$("select[name='searchType']").val("${requestScope.paraMap.searchType}");		
+			$("input[name='searchWord']").val("${requestScope.paraMap.searchWord}");
+		}
+		
+		// 검색어 입력 시 자동글 완성하기 
+		$("div#displayList").hide();
+		
+		$("input[name='searchWord']").keydown(function(){
+			const wordLength = $(this).val().trim().length;
+			
+			if(wordLength == 0){
+				$("div#displayList").hide();
+			}
+			else{
+				if($("select[name='searchType']").val() == "partner_name" ||
+				   $("select[name='searchType']").val() == "partner_type" ||
+				   $("select[name='searchType']").val() == "part_emp_name"){
+					
+					$.ajax({
+						url: "<%=ctxPath%>/company/wordSearchShowJSON.kedai",
+						type: "get",
+						data:{"searchType":$("select[name='searchType']").val(),
+							  "searchWord":$("input[name='searchWord']").val()},
+					    dataType:"json",
+					    success: function(json){
+					    	console.log(JSON.stringify(json));
+					    	
+					    	if(json.length > 0){
+					    		let v_html = ``;
+					    		
+					    		$.each
+					    	}
+					    }
+					})
+				}
+			}
+		})
+	})
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	$(function(){
 	  $('.cardHead button').click(function(){
 		  var partner_no = $(this).closest('article').attr('partner_no');
@@ -391,10 +465,6 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 		}
 	
 	}; // end of function delPopup(){}------------------------------------------------------
-
-
-
-	
 	
 </script>
 
@@ -412,12 +482,16 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
     <form name="employee_search_frm" style="display:flex;">
 		<select name ="searchType" style="margin-right:10px;">
 			<option value="">검색대상</option>
-			<option value="department">부서</option>
-			<option value="position">직위</option>
-			<option value="name">이름</option>
+			<option value="partner_name">거래처명</option>
+			<option value="partner_type">업종</option>
+			<option value="part_emp_name">담당자명</option>
 		</select>
-		<input type="search" name="searchWord;" style="margin-right:10px"/>
+		<input type="text" name="searchWord" style="margin-right:10px"/>
 		<input type="button" name="searchWord;" onclick="goSearch()" value="검색"/>
+	
+		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 22.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
+		
+		</div>
 	</form>
 </div>  
    
@@ -516,6 +590,11 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
         </div>
       </c:if>
     </div>
+    
+    
+    <div align="center" style="border: solid 0px gray; width: 50%; margin: 2% auto;">
+			${requestScope.pageBar}
+	</div>
   </div>
 </div>
 </div>

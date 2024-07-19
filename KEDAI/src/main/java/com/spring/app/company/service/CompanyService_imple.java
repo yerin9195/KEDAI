@@ -2,6 +2,7 @@ package com.spring.app.company.service;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,6 +85,28 @@ public class CompanyService_imple implements CompanyService{
 		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
 					
 		return path;
+	}
+
+	// 총 페이지 건수 (TotalCount) 구하기
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int totalCount = dao.getTotalCount(paraMap);
+		return totalCount;
+	}
+	
+	// 글목록 가져오기(페이징처리를 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것)
+	@Override
+	public List<PartnerVO> PartnerListSearch_withPaging(Map<String, String> paraMap) {
+		List<PartnerVO> partnerList = dao.PartnerListSearch_withPaging(paraMap);
+		return partnerList;
+	}
+	
+	// 검색어 입력 시 자동글 완성하기 
+	@Override
+	public List<String> wordSearchShowJSON(Map<String, String> paraMap) {
+		
+		List<String> wordList = dao.wordSearchShowJSON(paraMap);
+		return wordList;
 	}
 	
 

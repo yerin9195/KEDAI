@@ -35,8 +35,19 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 	 * @Override public Long employeeListTotal(Map<String, String> paraMap) { Long
 	 * employeeListTotal = sqlsession.selectOne("employee.employeeListTotal",
 	 * paraMap); // System.out.println("111employeeList : " + employeeList); return
-	 * employeeListTotal; }
+	 * employeeListTotal;
+	 *  }
 	 */
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// 직원정보 상세보기 팝업 어떤것 클릭했는지 알아오기(직원 아이디로 가져오기)
 	@Override
 	public List<Map<String, String>> empDetailList (Map<String, String> paraMap) {

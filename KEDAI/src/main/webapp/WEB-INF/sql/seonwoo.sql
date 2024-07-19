@@ -254,6 +254,76 @@ where empid = '2024500-001';
 select * 
 from tbl_employees;
 
+select * 
+from tbl_business_part;   
+
+-----------------------------------------------------------------------------------------------------------------
+
+SELECT partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+FROM
+(
+    select row_number() over(order by partner_name asc) AS rno,
+           partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+    from tbl_business_part
+) V
+WHERE rno between 1 and 10
+----------------------------------------------------------------------------------------------------------------------------
+
+desc tbl_business_part;
+
+
+<select id="wordSearchShow" parameterType="HashMap" resultType="String">
+		<choose>
+			<when test='searchType == "subject"'>
+				select subject
+			</when>
+			<when test='searchType == "name"'>
+				select distinct name
+			</when>
+		</choose>
+		from tbl_board
+		where status = 1 
+		<choose>
+			<when test='searchType == "subject" and searchWord != ""'>
+				and lower(subject) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+			<when test='searchType == "name" and searchWord != ""'>
+				and lower(name) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+		</choose>
+		<choose>
+			<when test='searchType == "subject"'>
+				order by registerday desc
+			</when>
+			<when test='searchType == "name"'>
+				order by name asc
+			</when>
+		</choose>
+	</select>s
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
