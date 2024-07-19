@@ -97,17 +97,6 @@ public class ApprovalController {
 		}
 			
 		//	/WEB-INF/views/tiles/tiles1/content/approval/newdoc.jsp 페이지를 만들어야 한다.
-
-		/*else {
-		
-			if(doctype_code.equals("100")) {
-				mav.setViewName("tiles1/approval/newdayoff.tiles");
-			}
-			else if(doctype_code.equals("101")){
-				
-				mav.setViewName("tiles1/approval/newmeeting.tiles");
-			}		
-		}*/
 		
 		return mav;
 	}
@@ -233,18 +222,8 @@ public class ApprovalController {
 		int n2 = 0;
 		
 		for(int i=1; i<lineNumber+1; i++) {
-			String level_no = "level_no_"+i;
-			paraMap.put("empId", mtp_request.getParameter(level_no));
-			paraMap.put("level_no", i);
-			
-			n1 = service.noFile_doc(paraMap); // 서류 작성 insert 하기
-			
-			if(n1>0) {
-				System.out.println("Document inserted successfully for empId: " + paraMap.get("empId"));
-			}else {
-		        // 삽입 실패 처리
-		        System.out.println("Failed to insert document for empId: " + paraMap.get("empId"));
-		    }
+			String level_no_key = "level_no_" + i; // 예: "level_no_1", "level_no_2", ...
+			paraMap.put(level_no_key, mtp_request.getParameter(level_no_key));
 		}
 		/*
 		paraMap.put("empId1", mtp_request.getParameter("level_no_1"));
@@ -252,7 +231,15 @@ public class ApprovalController {
 		paraMap.put("empId3", mtp_request.getParameter("level_no_3"));
 		 	*/
 		
-		
+		n1 = service.noFile_doc(paraMap); // 서류 작성 insert 하기
+	/*	
+		if(n1>0) {
+			System.out.println("Document inserted successfully for empId: " + paraMap.get("empId"));
+		}else {
+	        // 삽입 실패 처리
+	        System.out.println("Failed to insert document for empId: " + paraMap.get("empId"));
+	    }
+		*/
 		
 
 		int cnt = 0;
@@ -280,11 +267,16 @@ public class ApprovalController {
         	}
 		}// end of if(n1 ==1 && fileList != null && fileList.size() > 0)-----------------------
 		JSONObject jsonObj = new JSONObject();
-        jsonObj.put("result", n1*n2);
-        
+		
+		if(fileList != null && fileList.size() > 0) {
+			jsonObj.put("result", n1*n2);
+		}
+		else {
+			jsonObj.put("result", n1);
+		}        
         return jsonObj.toString(); 
 	}
-	
+
 	@GetMapping(value="/approval/newDocEnd.kedai")
 	public String newDocEnd() {
 	      
@@ -292,6 +284,17 @@ public class ApprovalController {
 	    //  /WEB-INF/views/tiles1/email/emailWrite_done.jsp 페이지를 만들어야 한다.
 	}
 
+	
+	
+	@GetMapping(value="/approval/newDocTest.kedai")
+	public String newDocTest() {
+	    
+		//List<Map<String, String>> mapList = dao.get();
+		
+		
+		return "tiles1/approval/newDocTest.tiles";
+	    //  /WEB-INF/views/tiles1/email/emailWrite_done.jsp 페이지를 만들어야 한다.
+	}
 	
 	
 	

@@ -1,5 +1,6 @@
 package com.spring.app.approval.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,16 +56,25 @@ public class ApprovalService_imple implements ApprovalService {
 		
 		int n1 = dao.noFile_newdoc(paraMap);
 		int n2 = dao.noFile_minutes(paraMap);
-
+		int n3 = 0;
 		
-		int lineNumber = (int) paraMap.get("lineNumber");
+		int lineNumber =(Integer) paraMap.get("lineNumber");
 		
-		for(int i=0; i<lineNumber+1; i++);
-		int n3 = dao.noFile_approval(paraMap);
+		for(int i=1; i<lineNumber+1; i++) {
+			String level_no_key = "level_no_" + i;
+			String level_no_value = (String) paraMap.get(level_no_key);
 			
+			paraMap.put("level_no", i);
+			paraMap.put("empId", level_no_value);			
+			
+			n3 = dao.noFile_approval(paraMap);
+			if(n3 != 1) {
+				n3=0;
+				break;
+			}
+		}
 		
 		int result = n1*n2*n3;
-		
 		return result;
 	}
 	

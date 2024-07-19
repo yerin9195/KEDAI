@@ -423,7 +423,16 @@ GROUP BY D.dept_code, D.dept_name
 ORDER BY D.dept_code desc;
 
 select *
-from tbl_employees
+from tbl_minutes;
+
+select *
+from tbl_approval;
+
+select *
+from tbl_doc;
+
+select *
+from tbl_doc_file;
 
 
 select minutes_no.nextval
@@ -442,3 +451,129 @@ DELETE FROM tbl_doc;
 
 commit;
 
+
+
+
+----------- 연습용 데이터 모두 삭제하기
+--1. tbl_doc_file 삭제 
+DELETE FROM tbl_doc_file;
+
+select *
+from tbl_doc_file;
+
+--2. tbl_minutes 삭제
+DELETE FROM tbl_minutes;
+
+select *
+from tbl_minutes;
+
+--3. tbl_approval 삭제
+DELETE FROM tbl_approval;
+
+select *
+from tbl_approval;
+
+--4. tbl_doc 삭제
+DELETE FROM tbl_doc;
+
+select *
+from tbl_doc;
+
+
+
+-- seq 삭제 및 재생성
+--1. doc_noSeq
+
+DROP SEQUENCE doc_noSeq;
+
+create sequence doc_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+SELECT *
+FROM all_sequences
+WHERE sequence_name = 'doc_noSeq';
+
+--SELECT doc_noSeq.NEXTVAL, doc_noSeq.CURRVAL
+--FROM dual;
+
+--2.doc_file_noSeq
+
+DROP SEQUENCE doc_file_noSeq;
+
+create sequence doc_file_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+SELECT sequence_name
+FROM all_sequences
+WHERE sequence_name = 'doc_file_noSeq';
+
+--3. minutes_noSeq
+
+DROP SEQUENCE minutes_noSeq;
+
+create sequence minutes_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+SELECT sequence_name
+FROM all_sequences
+WHERE sequence_name = 'minutes_noSeq';
+
+--4. approval_noSeq
+
+DROP SEQUENCE approval_noSeq;
+
+create sequence approval_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+SELECT sequence_name
+FROM all_sequences
+WHERE sequence_name = 'approval_noSeq';
+
+commit;
+
+select *
+from tbl_approval
+order by approval_no, level_no;
+
+select *
+from tbl_doc_file;
+
+select *
+FROM tbl_doc;
+
+select D.doc_no, D.fk_doctype_code, D.fk_empid, D.doc_subject, D.doc_content, D.created_date, D.doc_comment
+    , T.doctype_name, A.approval_no, A.status, A.approval_comment, A.approval_date, A.level_no
+    , F.doc_file_no, F.doc_org_filename, F.doc_filename, F.doc_filesize
+    , M.minutes_no, meeting_date, attendees, host_dept
+from tbl_doc D
+JOIN tbl_doctype T
+ON T.doctype_code = D.fk_doctype_code
+JOIN tbl_approval A
+ON A.fk_doc_no = D.doc_no
+JOIN tbl_minutes M
+ON M.fk_doc_no = D.doc_no
+LEFT JOIN tbl_doc_file F
+ON F.fk_doc_no = D.doc_no
+
+select *
+from tbl_approval

@@ -285,6 +285,9 @@ span.clear{clear: both;}
                 	if(json.result == 1) {
             	    	location.href="<%= ctxPath%>/approval/newDocEnd.kedai"; 
                   	}
+                	else {
+                        alert("문서 등록에 실패하였습니다.");
+                    }
               	},
               	error: function(request, status, error){
   					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -711,7 +714,7 @@ span.clear{clear: both;}
 	
 	function modalSubmit(){
 
-		var login_jobCode = ${(sessionScope.loginuser).jvo.job_code}; // 로그인한 사람의 직급코드
+		var login_jobCode = ${sessionScope.loginuser.fk_job_code}; // 로그인한 사람의 직급코드
 		var v_html ="";
 		
 		const isChecked = $("input[type='checkbox']:checked").length;
