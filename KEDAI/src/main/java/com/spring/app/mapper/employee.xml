@@ -42,11 +42,11 @@
 		         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
 		         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
 		         , dept_tel
-		        <!--  , rownum row_num -->
+		         , rownum row_num
 		    from tbl_employees E1 
 		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
 		    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
-		    <!-- WHERE rownum &lt; ((#{page} * #{size}) + 1 ) -->
+		    WHERE rownum &lt; ((#{page} * #{size}) + 1 )
 	    <choose>
 			<when test="searchType == 'department'">
 			and dept_name like '%${searchWord}%'
@@ -63,7 +63,7 @@
 		</choose>
 		    order by dept_name asc, job_code asc
 		) E
-		<!-- WHERE row_num &gt;= (((#{page}-1) * #{size}) + 1) -->
+		WHERE row_num &gt;= (((#{page}-1) * #{size}) + 1)
 	</select>
 
  

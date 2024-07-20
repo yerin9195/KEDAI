@@ -53,8 +53,8 @@ public class EmployeeService_imple implements EmployeeService{
 		 		String.valueOf(pageable.getPageSize()));
 		 }
 	
-
-		List<Map<String, String>> employeeList = dao.employeeList(paraMap);
+		//List<Map<String, String>> emloyeeList = dao.employeeList(paraMap);
+		Long employeeList = dao.employeeList(paraMap);
 		employeeList.forEach( map -> {
 			
 			try {			
@@ -65,14 +65,14 @@ public class EmployeeService_imple implements EmployeeService{
 			} 
 		});
 
-		Long total = dao.employeeListTotal(paraMap);
+		Long total = dao.employeeList(paraMap);
 		Page<Map<String,String>> page = new PageImpl<Map<String,String>>(employeeList, pageable, total);
-		
+										
 		return page;
 	}
 	*/
 	
-	@Override
+	/*@Override
 	public List<Map<String,String>> employeeList(String searchType, String searchWord) {
 		Map<String, String> paraMap = new HashMap<String, String>();
 		if (StringUtils.hasText(searchWord)) {
@@ -99,13 +99,13 @@ public class EmployeeService_imple implements EmployeeService{
 			} 
 		});
 
-		// Long total = dao.employeeListTotal(paraMap);
+		Long total = dao.employeeList(paraMap);
 		// List<Map<String,String>> employeeList = dao.employeeList();
 		
 		return employeeList;
 	}
 	
-	
+	*/
 	
 	
 	

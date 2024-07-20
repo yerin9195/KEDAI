@@ -327,36 +327,73 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 					    	if(json.length > 0){
 					    		let v_html = ``;
 					    		
-					    		$.each
+					    		$.each(json, function(index, item){
+					    			const word = item.word;
+					    			const idx = word. toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
+					    			const len = $("input[name='searchWord']").val().length;
+					   				const result = word.substring(0, idx)+"<sapn style='color: #2c4459; font-weight: bold;'>"+word.substring(idx, idx+len)+"</span>"+word.substring(idx+len);
+					    		
+					   				v_html += `<span style='cursor: pointer;' class='result'>\${result}</span><br>`;
+					    		}); // end of $.each(json, function(index, item){}-------------------------------------
+					    		
+					    		// 검색어 input 태그의 width 값 알아오기
+								const input_width = $("input[name='searchWord']").css("width");
+					    		
+								// 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
+								$("div#displayList").css({"width":input_width});
+								
+								$("div#displayList").html(v_html);
+								$("div#displayList").show();
 					    	}
+					    },
+					    error: function(request, status, error){
+					    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 					    }
-					})
+					});
 				}
 			}
+		}); // $("input[name='searchWord']").keydown(function(){}
+	
+		$(document).on("click", "span.result", function(e){
+			const word = $(e.target).text();
+			
+			$("input[name='searchWord']").val(word);// 텍스트박스에 검색된 결과의 문자열을 입력
+			$("div#displayList").hide();
+			goSearch();
 		})
-	})
+	}); // end of $(document).ready(function(){}-----------------------------\
 	
+			
+	function goSearch(){
+		
+		const frm = document.searchFrm;
+		
+		frm.method = "get";
+		frm.action = "<%= ctxPath%>/company/othercom_list.kedai";
+		frm.submit();
+	}// end of function goSearch(){}---------------------
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	function goView(partner_no){
+		
+		const goBackURL = "${requestScope.goBackURL}";
+		const frm = document.goBackURL;
+		
+		frm.partner_no.value = partner_no;
+		frm.goBackURL.value = goBackURL;
+		
+		if(${not empty requestScope.paraMap}){	//paraMap 에 넘겨준 값이 존재하는 경우
+			frm.searchType.value = "${requestScope.paraMap.searchType}";
+			frm.searchWord.value = "${requestScope.paraMap.searchWord}";
+		}
+		
+		// "get" 방식에서 & 는 전송될 데이터의 구분자로 사용되기 때문에 "post" 방식으로 보내줘야 한다.
+		frm.method = "post";
+		frm.action = "<%= ctxPath%>/board/view.kedai";
+		frm.submit();
+		
+	} // end of function goView(partner_no){} ----------
+	/* 여기 까지 검색기능  */
+/////////////////////////////////////////////////////////////////////////////	
 	
 	
 	
@@ -418,9 +455,9 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	 
 	  
 	  
-	  $('.popupHead button').click(function(){
-	    $('.popupWrap').css({display: 'none'});
-	  });
+	  	$('.popupHead button').click(function(){
+	    	$('.popupWrap').css({display: 'none'});
+	  	});
 	});
 	/* 카드 팝업 열고 닫기 끝 */
 
@@ -590,11 +627,17 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
         </div>
       </c:if>
     </div>
-    
-    
     <div align="center" style="border: solid 0px gray; width: 50%; margin: 2% auto;">
 			${requestScope.pageBar}
 	</div>
   </div>
 </div>
 </div>
+<%-- 사용자가 "검색된결과목록보기" 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다. --%>
+<form name="goViewFrm">
+	<input type="hidden" name="board_seq" />
+	<input type="hidden" name="goBackURL" />
+	<input type="hidden" name="searchType" />
+	<input type="hidden" name="searchWord" />
+</form> 
+<%-- content end --%>

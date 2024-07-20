@@ -311,7 +311,7 @@ public class CompanyController {
 		paraMap.put("searchWord", searchWord);
 		
 		int totalCount = 0;        // 총 게시물 건수
-		int sizePerPage = 10; 	   // 한 페이지 당 보여줄 게시물 건수
+		int sizePerPage = 6; 	   // 한 페이지 당 보여줄 게시물 건수
 		int currentShowPageNo = 0; // 현재 보여주는 페이지 번호, 초기값는 1페이지로 설정 
 		int totalPage = 0; 		   // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
 		

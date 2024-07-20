@@ -40,19 +40,21 @@ public class EmployeeController {
 	//////////////////////////////////////////////////////////////////////////
 	// 사원리스트  
 	@RequestMapping(value="/employee.kedai") 
-	public ModelAndView employeelist_select(
+	/*public ModelAndView employeelist_select(
 			@RequestParam(required = false) String searchType, 
 			@RequestParam(required = false) String searchWord, 
-			@PageableDefault() Pageable pageable, // page=, size=
+			@PageableDefault(page= 0,size = 10) Pageable pageable, // page=, size=
 			ModelAndView mav) {
 		System.out.println("searchType:" + searchType + ", searchWord: " + searchWord);
 		
-		List<Map<String,String>> employeeList = service.employeeList(searchType, searchWord);
-		// Page<Map<String,String>> pagedResult = service.employeeList(searchType, searchWord, pageable);
+		List<Map<String,String>> employeeList = service.employeeList(searchType, searchWord, pageable);
+		// System.out.println("222employeeList : " + employeeList);
+		Page<Map<String,String>> pagedResult = new PageImpl<>(employeeList);
 		// System.out.println("page : " + page);
 		
-		// mav.addObject("pagedResult", pagedResult);
-		// mav.addObject("employeeList", pagedResult.getContent());
+		
+		mav.addObject("pagedResult", pagedResult);
+		mav.addObject("employeeList", pagedResult.getContent());
 		// mav.addObject("employeeList",employeeList);
 		mav.addObject("searchType", searchType);
 		mav.addObject("searchWord", searchWord);
@@ -61,7 +63,7 @@ public class EmployeeController {
 		return mav;
 	}
 
-	
+	*/
 	
 	@ResponseBody
 	@GetMapping(value="/employeeDetail.kedai",produces = "text/plain;charset=UTF-8")
