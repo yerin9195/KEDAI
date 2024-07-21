@@ -46,7 +46,8 @@
 		    from tbl_employees E1 
 		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
 		    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
-		    WHERE rownum &lt; ((#{page} * #{size}) + 1 )
+		    WHERE rownum &lt;= ((#{page} * #{size}))
+			and dept_code is not null
 	    <choose>
 			<when test="searchType == 'department'">
 			and dept_name like '%${searchWord}%'
@@ -67,7 +68,7 @@
 	</select>
 
  
-<!-- 	<select id="employeeListTotal" parameterType="map" resultType="long">
+ 	<select id="employeeListTotal" parameterType="map" resultType="long">
 		    select count(1)
 		    from tbl_employees E1
 	    <choose>
@@ -84,7 +85,7 @@
 			WHERE mobile = #{searchWord}
 			</when>
 		</choose>
-	</select> -->
+	</select> 
 
 	<!-- 클릭한 사원정보 가져오기 -->
 	<select id="empDetailList" resultMap="MemberJoinDeptJob">

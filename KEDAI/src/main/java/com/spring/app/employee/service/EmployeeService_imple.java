@@ -30,7 +30,7 @@ public class EmployeeService_imple implements EmployeeService{
 	
 	
 	// 직원정보 가져오기
-	/*@Override
+	@Override
 	public Page<Map<String,String>> employeeList(String searchType, String searchWord, Pageable pageable) {
 		Map<String, String> paraMap = new HashedMap<String, String>();
 		if (StringUtils.hasText(searchWord)) {
@@ -53,8 +53,7 @@ public class EmployeeService_imple implements EmployeeService{
 		 		String.valueOf(pageable.getPageSize()));
 		 }
 	
-		//List<Map<String, String>> emloyeeList = dao.employeeList(paraMap);
-		Long employeeList = dao.employeeList(paraMap);
+		List<Map<String, String>> employeeList = dao.employeeList(paraMap);
 		employeeList.forEach( map -> {
 			
 			try {			
@@ -65,12 +64,12 @@ public class EmployeeService_imple implements EmployeeService{
 			} 
 		});
 
-		Long total = dao.employeeList(paraMap);
+		Long total = dao.employeeListTotal(paraMap);
 		Page<Map<String,String>> page = new PageImpl<Map<String,String>>(employeeList, pageable, total);
 										
 		return page;
 	}
-	*/
+	
 	
 	/*@Override
 	public List<Map<String,String>> employeeList(String searchType, String searchWord) {

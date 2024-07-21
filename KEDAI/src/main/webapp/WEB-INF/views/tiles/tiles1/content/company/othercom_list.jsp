@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 
@@ -322,7 +323,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 							  "searchWord":$("input[name='searchWord']").val()},
 					    dataType:"json",
 					    success: function(json){
-					    	console.log(JSON.stringify(json));
+					    	// console.log(JSON.stringify(json));
 					    	
 					    	if(json.length > 0){
 					    		let v_html = ``;
@@ -331,7 +332,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 					    			const word = item.word;
 					    			const idx = word. toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
 					    			const len = $("input[name='searchWord']").val().length;
-					   				const result = word.substring(0, idx)+"<sapn style='color: #2c4459; font-weight: bold;'>"+word.substring(idx, idx+len)+"</span>"+word.substring(idx+len);
+					   				const result = word.substring(0, idx)+"<span style='color: #2c4459; font-weight: bold;'>"+word.substring(idx, idx+len)+"</span>"+word.substring(idx+len);
 					    		
 					   				v_html += `<span style='cursor: pointer;' class='result'>\${result}</span><br>`;
 					    		}); // end of $.each(json, function(index, item){}-------------------------------------
@@ -361,24 +362,25 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 			$("div#displayList").hide();
 			goSearch();
 		})
+		
 	}); // end of $(document).ready(function(){}-----------------------------\
 	
 			
 	function goSearch(){
 		
-		const frm = document.searchFrm;
-		
+		const frm = document.employee_search_frm;
+		// console.log(frm);
 		frm.method = "get";
 		frm.action = "<%= ctxPath%>/company/othercom_list.kedai";
 		frm.submit();
 	}// end of function goSearch(){}---------------------
-	
-	function goView(partner_no){
-		
+	<%--	
+	/*  function goViewFrm(partner_name){
+		console.log(partner_name);
 		const goBackURL = "${requestScope.goBackURL}";
-		const frm = document.goBackURL;
+		const frm = document.goViewFrm;
 		
-		frm.partner_no.value = partner_no;
+		frm.partner_name.value = partner_name;
 		frm.goBackURL.value = goBackURL;
 		
 		if(${not empty requestScope.paraMap}){	//paraMap 에 넘겨준 값이 존재하는 경우
@@ -388,10 +390,11 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 		
 		// "get" 방식에서 & 는 전송될 데이터의 구분자로 사용되기 때문에 "post" 방식으로 보내줘야 한다.
 		frm.method = "post";
-		frm.action = "<%= ctxPath%>/board/view.kedai";
-		frm.submit();
+		frm.action = "<%= ctxPath%>/company/othercom_list.kedai";
+		// frm.submit();
 		
 	} // end of function goView(partner_no){} ----------
+	--%>
 	/* 여기 까지 검색기능  */
 /////////////////////////////////////////////////////////////////////////////	
 	
@@ -534,37 +537,44 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
    
 <div id="othercom_list" class="othercom_list">
   <div class="artWrap">
-    <c:forEach var="partvo" items="${requestScope.partnervoList}">
-      <article partner_no="${partvo.partner_no}">
-        <div class="cardHead">
-          <div class="h5"><span id="asdasd">${partvo.partner_name}</span>&nbsp;&nbsp;&nbsp;<span class="h6">업종:${partvo.partner_type}</span></div>
-          <button class="detailbtn"><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt="" id="detailbtn"></button>
-        </div>
-        <ul class="cardBody">
-          <li>
-            <div class="listImg">
-              <img src="<%= ctxPath%>/resources/images/common/team.svg" alt="">
-            </div>
-            <div class="listTxt">${partvo.part_emp_dept}</div>
-          </li>
-          <li>
-            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
-            <div class="listTxt">
-              <span>${partvo.part_emp_name}</span>
-              <span>${partvo.part_emp_rank}</span>
-            </div>
-          </li>
-          <li>
-            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
-            <div class="listTxt">${partvo.part_emp_tel}</div>
-          </li>
-          <li>
-            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
-            <div class="listTxt">${partvo.partner_url}</div>
-          </li>
-        </ul>
-      </article>
-    </c:forEach>
+  	<c:if test="${not empty requestScope.partnervoList}">
+	    <c:forEach var="partvo" items="${requestScope.partnervoList}">
+	      	<article partner_no="${partvo.partner_no}">
+	      	
+	      	<fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" />
+	        <fmt:parseNumber var="sizePerPage" value="${requestScope.sizePerPage}" /> 
+	        <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%>
+	      	
+	        <div class="cardHead">
+	          <div class="h5"><span id="asdasd">${partvo.partner_name}</span>&nbsp;&nbsp;&nbsp;<span class="h6">업종:${partvo.partner_type}</span></div>
+	          <button class="detailbtn"><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt="" id="detailbtn"></button>
+	        </div>
+	        <ul class="cardBody">
+	          <li>
+	            <div class="listImg">
+	              <img src="<%= ctxPath%>/resources/images/common/team.svg" alt="">
+	            </div>
+	            <div class="listTxt">${partvo.part_emp_dept}</div>
+	          </li>
+	          <li>
+	            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
+	            <div class="listTxt">
+	              <span>${partvo.part_emp_name}</span>
+	              <span>${partvo.part_emp_rank}</span>
+	            </div>
+	          </li>
+	          <li>
+	            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
+	            <div class="listTxt">${partvo.part_emp_tel}</div>
+	          </li>
+	          <li>
+	            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
+	            <div class="listTxt">${partvo.partner_url}</div>
+	          </li>
+	        </ul>
+	      </article>
+	    </c:forEach>
+    </c:if>
   </div>
 </div>
 
@@ -627,9 +637,6 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
         </div>
       </c:if>
     </div>
-    <div align="center" style="border: solid 0px gray; width: 50%; margin: 2% auto;">
-			${requestScope.pageBar}
-	</div>
   </div>
 </div>
 </div>

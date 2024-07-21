@@ -24,23 +24,23 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 	
 	// 직원정보 가져오기
 	//@Override
-	/*public Long employeeList(Map<String, String> paraMap) {
+	public List<Map<String, String>> employeeList(Map<String, String> paraMap) {
 		
-		Long employeeList = sqlsession.selectList("employee.employeeList", paraMap);
+		List<Map<String, String>> employeeList = sqlsession.selectList("employee.employeeList", paraMap);
 		System.out.println("111employeeList : " + employeeList);
 		return employeeList;
 	}
-	*/
 	
-	/*@Override 
+	
+	@Override 
 	public Long employeeListTotal(Map<String, String> paraMap) { 
 		Long employeeListTotal = sqlsession.selectOne("employee.employeeListTotal" , paraMap); 
 		// System.out.println("111employeeList : " + employeeList); 
 		
 		return employeeListTotal;
 	 
-	 }
-	*/
+	}
+	
 	
 	
 	

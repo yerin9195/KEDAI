@@ -97,7 +97,7 @@ public class CompanyDAO_imple implements CompanyDAO{
 		
 		List<String> wordList = sqlsession.selectList("company.wordSearchShowJSON", paraMap);
 		
-		return null;
+		return wordList;
 	}
 
 

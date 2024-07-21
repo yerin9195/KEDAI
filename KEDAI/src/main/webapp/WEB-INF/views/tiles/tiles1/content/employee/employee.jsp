@@ -513,10 +513,19 @@ bigName{
 	});
 			
 	
-	function goSearch() {
-		document.employee_search_frm.submit();
+	function goSearch(page) {
+		const frm = document.employee_search_frm;
+		frm.pageSize.value = $("#sizePerPage option:selected").val();
+		if (page) {
+			frm.pageNumber.value = page;
+		}
+		
+		frm.submit();
 	}
 
+	function goPage(page) {
+		goSearch(page);
+	}
 
 	
 	
@@ -540,8 +549,8 @@ bigName{
 						<option value="personal-tel" <c:if test="${'personal-tel' eq searchType}">selected</c:if>>휴대폰번호</option>
 					</select>
 					<input type="text" name="searchWord" value="${searchWord}" />
-					<%-- <input type="hidden" name="page" value="${pagedResult.pageable.page}" /> --%>
-				<%-- 	<input type="hidden" name="size" value="${pagedResult.pageable.size}" /> --%>
+					<input type="hidden" name="pageNumber" value="${pagedResult.pageable.pageNumber}" />
+					<input type="hidden" name="pageSize" value="${pagedResult.pageable.pageSize}" />
 					<input type="button" onclick="goSearch()" value="검색"/>
 				</form>
 			</div>	
@@ -570,10 +579,10 @@ bigName{
 				
 			<div class="sch_right">
 				<span style="font-size: 12pt; font-weight: bold;">페이지당 직원명수&nbsp;-&nbsp;</span>
-					<select name="sizePerPage">
-						<option value="3">3명</option>
-						<option value="5">5명</option>
-						<option value="10">10명</option>		
+					<select name="sizePerPage" id="sizePerPage" onchange="goSearch(1)">
+						<option value="3" <c:if test="${3 == pagedResult.pageable.pageSize}">selected</c:if>>3명</option>
+						<option value="5" <c:if test="${5 == pagedResult.pageable.pageSize}">selected</c:if>>5명</option>
+						<option value="10" <c:if test="${10 == pagedResult.pageable.pageSize}">selected</c:if>>10명</option>		
 					</select>
 			</div> 
 		</div>
@@ -591,22 +600,18 @@ bigName{
 			       </tr>
 			   </thead>
 			   <tbody>
-			   <!-- ${requestScope.pagedResult.pageable.size}  -->
+			   <!-- ${requestScope.pagedResult.pageable.pageSize}  -->
 			   <c:forEach var="empList" items="${requestScope.employeeList}" varStatus="status">
-			     <tr class="emp-row">
-				 	  <c:if test="${empList.job_code != '1'}">
-					 	   <tr id="empInfo">
-					 	     <td class="empid" hidden>${empList.empid}</td>
-					 	   	<%--  <td class="empid type=hidden">${empList.empid}</td> <!-- 이렇게 하면 값까지 아예 날려버림 (empid 이용해서 값가져올 수 없음) --> --%>
-					 	   	 <td class="emp-dept">${empList.dept_name}</td>
-				   			 <td class="emp-rank">${empList.job_name}</td>
-				   			 <td class="emp-name">${empList.name}</td>
-				  			 <td class="dept-tel">${empList.dept_tel}</td>
-				  			 <td class="personal-tel">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
-				  			 <td class="emp-email">${empList.email}</td>
-			  			   </tr>
-		  			  </c:if>
-	  			  </tr>
+			 	   <tr id="empInfo">
+			 	     <td class="empid" hidden>${empList.empid}</td>
+			 	   	<%--  <td class="empid type=hidden">${empList.empid}</td> <!-- 이렇게 하면 값까지 아예 날려버림 (empid 이용해서 값가져올 수 없음) --> --%>
+			 	   	 <td class="emp-dept">${empList.dept_name}</td>
+		   			 <td class="emp-rank">${empList.job_name}</td>
+		   			 <td class="emp-name">${empList.name}</td>
+		  			 <td class="dept-tel">${empList.dept_tel}</td>
+		  			 <td class="personal-tel">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
+		  			 <td class="emp-email">${empList.email}</td>
+	  			   </tr>
 	  			</c:forEach>   
 		   		</tbody>
 			</table>
@@ -616,11 +621,9 @@ bigName{
 	<div class="pagenation">
 		<button>&lt;</button>
 		<ul>
-			<li>1</li>
-			<li>2</li>
-			<li>3</li>
-			<li>4</li>
-			<li>...</li>
+		<c:forEach var="p" begin="1" end="${pagedResult.totalPages}">
+			<li class="paging" onclick="goPage(${p})"> ${p} </li>&nbsp;
+		</c:forEach>
 		</ul>
 		<button>&gt;</button>
 	</div>

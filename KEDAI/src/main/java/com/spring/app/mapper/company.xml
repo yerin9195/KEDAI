@@ -159,6 +159,7 @@
 			</when>
 		</choose>
 		from tbl_business_part
+		where 1 = 1
 		<choose>
 			<when test='searchType == "partner_name" and searchWord != ""'>
 				and lower(partner_name) like '%' ||lower(#{searchWord})|| '%'
