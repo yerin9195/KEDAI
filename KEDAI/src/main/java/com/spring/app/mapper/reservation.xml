@@ -87,9 +87,105 @@
 		where fk_empid = #{fk_empid}
 	</select>	
 	
-	<insert id="addMyCar" parameterType="CarVO">
+	<select id="getmyCar2" resultType="CarVO" parameterType="String">
+		select car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year, license, car_imgfilename, car_orgimgfilename
+		from tbl_car
+		where fk_empid = #{fk_empid}
+	</select>	
+
+	<insert id="addMyCar" parameterType="HashMap">
 		insert into tbl_car(car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year, license, car_imgfilename, car_orgimgfilename)
 		values(car_seq.nextval, #{fk_empid}, #{car_num}, #{car_type}, #{max_num}, #{insurance}, #{drive_year}, #{license}, #{car_imgfilename}, #{car_orgimgfilename})
 	</insert>
 	
+	<update id="editMycar" parameterType="HashMap">
+		update tbl_car set car_num = #{car_num}
+		<choose>
+						 <when test='car_orgimgfilename != ""'>
+						 , car_orgimgfilename = #{car_orgimgfilename}
+						 </when>
+						 <when test='car_orgimgfilename == ""'></when>
+						 <when test="'car_imgfilenname == null"></when>
+						 <when test="car_imgfilename != null">
+		                 , car_imgfilename = #{car_imgfilename}
+		                 </when>
+	    </choose>
+		                 , car_type = #{car_type}
+		                 , max_num = #{max_num}
+		                 , drive_year = #{drive_year}
+		where fk_empid = #{fk_empid}
+	</update>
+	
+	<insert id="addcarRegister" parameterType="HashMap">
+		insert into tbl_day_share(res_num, fk_car_seq, start_date, last_date, dp_name, dp_add, dp_lat, dp_lng, start_time, ds_name, ds_add, ds_lat, ds_lng, want_max, end_status, cancel_status)
+		values(res_num.nextval, #{car_seq}, #{start}, #{last}, #{departure_name}, #{departure_address}, #{dp_lat}, #{dp_lng}, #{startTime}, #{arrive_name}, #{arrive_address}, #{ds_lat}, #{ds_lng}, #{fk_cnum}, default, default)
+	
+	</insert>
+	
+	<resultMap id="carShareList" type="HashMap">
+		<result property="res_num" column="res_num" javaType="int"/>
+	    <result property="start_date" column="start_date" javaType="String"/>
+	    <result property="last_date" column="last_date"	javaType="String"/>
+	    <result property="dp_name" column="dp_name"	javaType="String"/>
+	    <result property="ds_name" column="ds_name"	javaType="String"/>
+	    <result property="want_max" column="want_max"	javaType="int"/>
+	    <result property="end_status" column="end_status"	javaType="int"/>
+	    <result property="cancel_status" column="cancel_status"	javaType="int"/>
+	    <result property="start_time" column="start_time"	javaType="String"/>
+	    <result property="nickname" column="nickname"	javaType="String"/>
+	</resultMap>
+	<select id="getcarShareList" resultMap="carShareList">
+		select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname
+		from 
+		(
+		select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, fk_car_seq
+		from tbl_day_share
+		where end_status = 1 and cancel_status = 1
+		)a cross join
+		(
+		    select car_seq, fk_empid, car_num, car_type, max_num, nickname
+		    from 
+		    (
+		        select *
+		        from tbl_car
+		    ) v cross join
+		    (
+		        select *
+		        from tbl_employees
+		    ) h
+		    where fk_empid = h.empid
+		)b
+		where fk_car_seq = b.car_seq
+	</select>
+	
+	<resultMap id="dayShareDetail" type="Day_shareVO">
+		<result property="res_num" column="res_num" javaType="int"/>
+	    <result property="fk_car_seq" column="fk_car_seq"	javaType="int"/>
+	    <result property="start_date" column="start_date" javaType="String"/>
+	    <result property="last_date" column="last_date"	javaType="String"/>
+	    <result property="dp_name" column="dp_name"	javaType="String"/>
+	    <result property="dp_add" column="dp_add"	javaType="String"/>
+	    <result property="dp_lat" column="dp_lat"	javaType="double"/>
+	    <result property="dp_lng" column="dp_lng"	javaType="double"/>
+	    <result property="ds_name" column="ds_name"	javaType="String"/>
+	    <result property="ds_add" column="ds_add"	javaType="String"/>
+	    <result property="ds_lat" column="ds_lat"	javaType="double"/>
+	    <result property="ds_lng" column="ds_lng"	javaType="double"/>
+	    <result property="want_max" column="want_max"	javaType="int"/>
+	    <result property="end_status" column="end_status"	javaType="int"/>
+	    <result property="cancel_status" column="cancel_status"	javaType="int"/>
+	    <result property="start_time" column="start_time"	javaType="String"/>
+	</resultMap>
+	<select id="getday_shareInfo" resultMap="dayShareDetail">
+		select res_num, fk_car_seq, start_date,last_date,dp_name,dp_add,dp_lat, dp_lng, ds_name, ds_add, ds_lat, ds_lng, want_max, end_status, cancel_status, start_time
+		from tbl_day_share
+		where res_num = #{res_num}
+	</select>
+	
+	
+	<insert id="addcarApply_detail" parameterType="HashMap">
+		insert into tbl_car_share(pf_res_num, pf_empid, share_date, share_may_time, accept_yon, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng)
+		values(#{pf_res_num}, #{pf_empid}, #{share_date}, #{share_may_time}, default, #{rdp_name}, #{rdp_add}, #{rdp_lat}, #{rdp_lng}, #{rds_name}, #{rds_add}, #{rds_lat}, #{rds_lng})
+	
+	</insert>
 </mapper>

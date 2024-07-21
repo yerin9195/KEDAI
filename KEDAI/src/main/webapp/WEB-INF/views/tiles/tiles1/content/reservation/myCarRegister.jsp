@@ -238,7 +238,7 @@
                 <h5>차량 정보 확인 및 작성<span style="font-size: 8pt; color: #e68c0e;">&nbsp;&nbsp;* 표시는 필수입력 사항입니다.</span></h5><br>
                 <div style="position: relative;">
                     <h6>차종&nbsp;<span class="star">*</span><span class="error" id="carTypeError">&nbsp;필수</span></h6>
-                    <input type="text" name="car_type" id="car_type" size="6" maxlength="20" class="requiredInfo" placeholder="차종" />
+                    <input type="text" name="car_type" id="car_type" size="6" maxlength="20" class="requiredInfo" placeholder="차종" value="${car.car_type }"/>
                 </div>
                 <div class="mt-3">
                     <h6>차량번호&nbsp;<span class="star">*</span><span class="error" id="carNumError" style="font-size: 8pt;">&nbsp;필수 차량번호를 올바르게 입력하세요.</span></h6>

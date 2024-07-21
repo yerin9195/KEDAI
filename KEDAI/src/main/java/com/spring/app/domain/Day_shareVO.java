@@ -5,6 +5,8 @@ public class Day_shareVO {
 	private int fk_car_seq;
 	private String start_date;
 	private String last_date;
+	private String start_time;
+
 	private String dp_name;
 	private String dp_add;
 	private double dp_lat;
@@ -129,4 +131,10 @@ public class Day_shareVO {
 		this.total_nonpay = total_nonpay;
 	}
 
+	public String getStart_time() {
+		return start_time;
+	}
+	public void setStart_time(String start_time) {
+		this.start_time = start_time;
+	}
 }

@@ -76,14 +76,14 @@ function goRegister(){
 	                    <br><br><br>
 	                </div>
 	                <div class="col-8" style="border: 0px solid red; padding-top:3%; padding-left: 3%;">
-	                    <h2>차종<span style="font-size: 15pt; font-weight:bold;">&nbsp;&nbsp;${car.car_type}</span></h2>
+	                    <h4>차종&nbsp;&nbsp;<input type="text" style="font-size: 15pt; font-weight:bold; border:none;" name="car_type" id="car_type" value="${car.car_type}"/><span>차량번호&nbsp;</span><input type="text" name="car_num" id="car_num" style="font-size: 15pt; font-weight:bold; border:none; width:20%;" value="${car.car_num}"/><span>최대탑승인원&nbsp;</span><input type="text" name="max_num" id="max_num" style="font-size: 15pt; font-weight:bold; border:none; width:10%;" value="${car.max_num}"/></h4>
 	                    <hr style="color: gray; width: 90%;">
 	                    <div style="display: flex;">
 	                        <div class="col-6" style="border-right: 2px solid lightgray;">
 	                            <h4>운전 종별</h4>
 	                            <span style="display:block; text-align: center; font-size: 30pt;">
 	                                <i class="fa-solid fa-id-card"></i>&nbsp;&nbsp;
-	                                <span style="font-size:23pt;">${car.license }</span>
+	                                <input type="text" style="font-size:23pt; border:none;" name="car_type" id="car_type" value="${car.license }"/>
 	                                
 	                            </span>
 	                        </div>
@@ -91,7 +91,7 @@ function goRegister(){
 	                            <h4>운전 경력</h4>
 	                            <span style="display:block; text-align: center; font-size: 30pt;">
 	                                <i class="fa-solid fa-car"></i>&nbsp;&nbsp;
-	                                <span style="font-size:23pt;">${car.drive_year}</span>
+	                                <input type="text" name="drive_year" id="drive_year" style="font-size:23pt; border:none;" value="${car.drive_year}">
 	                            </span>
 	                        </div>
 	                    </div>

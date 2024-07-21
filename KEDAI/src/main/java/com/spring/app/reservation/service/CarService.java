@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.spring.app.domain.BusVO;
 import com.spring.app.domain.CarVO;
+import com.spring.app.domain.Day_shareVO;
 
 public interface CarService {
 
@@ -14,7 +15,20 @@ public interface CarService {
 
 	List<Map<String, String>> myCar(String fk_empid);
 
+	CarVO myCar2(String fk_empid);
+
 	int addMycar(CarVO cvo);
+
+	int editMycar(Map<String, Object> paraMap);
+
+	int addcarRegister(Map<String, Object> paraMap);
+
+	List<Map<String, String>> carShareList();
+
+	Day_shareVO day_shareInfo(int res_num);
+
+	int addcarApply_detail(Map<String, Object> paraMap);
+
 
 
 

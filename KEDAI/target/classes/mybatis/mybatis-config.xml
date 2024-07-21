@@ -13,6 +13,8 @@
 		<typeAlias type="com.spring.app.domain.RoomMainVO" alias="RoomMainVO" />
 		<typeAlias type="com.spring.app.domain.RoomSubVO" alias="RoomSubVO" />
 		<typeAlias type="com.spring.app.domain.CarVO" alias="CarVO" />
+		<typeAlias type="com.spring.app.domain.Car_shareVO" alias="Car_shareVO" />
+		<typeAlias type="com.spring.app.domain.Day_shareVO" alias="Day_shareVO" />
 	</typeAliases>		
 
 </configuration>

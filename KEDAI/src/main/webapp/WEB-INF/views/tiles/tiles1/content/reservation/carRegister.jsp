@@ -131,14 +131,17 @@ $(document).ready(function(){
 	            console.log(place);
 	            var place_name = place.place_name;
 	            var road_address_name = place.road_address_name;
-	    		
+	    		var dp_lat = place.x;
+	    		var dp_lng = place.y;
+
 	            //document.getElementById("departure_name").value = place_name;
 	            //document.getElementById("departure_address").value = address_name;
 	            // alert(document.getElementById("departure_name").value); -- 문제: refresh가 되서 초기화됨.  clickEvent.preventDefault(); 이부분 추가.
 	            // 또는
 	            $("input[name='departure_name']").val(place_name);		
 	       		$("input[name='departure_address']").val(road_address_name);
-	
+	       		$("input[name='dp_lat']").val(dp_lat);	
+	       		$("input[name='dp_lng']").val(dp_lng);	
 	            modal.style.display = "none";
 	
 	
@@ -151,13 +154,16 @@ $(document).ready(function(){
 	            console.log(place);
 	            var place_name = place.place_name;
 	            var road_address_name = place.road_address_name;
-	    		
+	    		var ds_lat = place.x;
+	    		var ds_lng = place.y;
 	            //document.getElementById("departure_name").value = place_name;
 	            //document.getElementById("departure_address").value = address_name;
 	            // alert(document.getElementById("departure_name").value); -- 문제: refresh가 되서 초기화됨.  clickEvent.preventDefault(); 이부분 추가.
 	            // 또는
 	            $("input[name='arrive_name']").val(place_name);		
 	       		$("input[name='arrive_address']").val(road_address_name);
+	       		$("input[name='ds_lat']").val(ds_lat);	
+	       		$("input[name='ds_lng']").val(ds_lng);	
 	            modal.style.display = "none";
 	
 	
@@ -466,12 +472,11 @@ function goRegister() {
       <span style="font-size: 15pt; font-weight: bold;">카셰어링&nbsp;등록</span>   
    </div>
    <br/>
-   
+   <c:if test=""></c:if>
    <%-- !!!!! ==== 중요 ==== !!!!! --%>
    <%-- 폼에서 파일을 업로드 하려면 반드시 method 는 POST 이어야 하고 
         enctype="multipart/form-data" 으로 지정해주어야 한다.!! --%>
    <form name="prodInputFrm" enctype="multipart/form-data"> 
-         
       <table id="tblProdInput" style="width: 80%;">
       <tbody>
          <tr>
@@ -510,7 +515,7 @@ function goRegister() {
           <tr>
                 <td class="prodInputName">출발시간&nbsp;</td>
                 <td style="border-top: hidden; border-bottom: hidden;">
-                <input type="text" name="startTime" id="startTime" style="padding: 5px;" value="" placeholder="출발시간"/><span class="error time">&nbsp;필수항목입니다.</span>
+                <input type="text" name="startTime" id="startTime" class = "requiredInfo" style="padding: 5px;" value="" placeholder="출발시간"/><span class="error time">&nbsp;필수항목입니다.</span>
                 </td>
           </tr>
 		<tr>
@@ -540,7 +545,7 @@ function goRegister() {
                <input type="text" name="arrive_name" id="arrive_name" class="requiredInfo name" size="40" maxlength="40" data-index="1" style="padding: 5px;" placeholder="도착지 이름" readonly/>&nbsp;&nbsp;
                <button type="button" style="background-color: white; padding: 5px;" class="icon" id="arrive_zipcodeSearch" data-index="1"><i class="fa-solid fa-magnifying-glass"></i></button><span class="error arrive">필수항목입니다.</span><br>
                <input type="text" name="arrive_address" id="arrive_address" class="requiredInfo address" size="80" maxlength="80" style="padding: 5px;" placeholder="도착지 주소" data-index="1" readonly/> 
-               <!-- 출발지 이름에서 주소를 가지고 온 값을 넣어주고 수정 불가능하다. -->
+               <!-- 도착지 이름에서 주소를 가지고 온 값을 넣어주고 수정 불가능하다. -->
 			    <!-- The Modal start -->
                 <div id="mapModal" class="modal">
                     <!-- Modal content -->
@@ -553,6 +558,10 @@ function goRegister() {
                     </div>
                 </div>
                 <!-- The Modal end -->
+               <input type="hidden" name="dp_lat" id="dp_lat" value=""/> 
+               <input type="hidden" name="dp_lng" id="dp_lng" value=""/> 
+               <input type="hidden" name="ds_lat" id="ds_lat" value=""/> 
+               <input type="hidden" name="ds_lng" id="ds_lng" value=""/> 
             </td>
          </tr>
          <tr>

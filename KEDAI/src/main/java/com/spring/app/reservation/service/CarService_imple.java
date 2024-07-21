@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.app.common.AES256;
 import com.spring.app.domain.BusVO;
 import com.spring.app.domain.CarVO;
+import com.spring.app.domain.Day_shareVO;
 import com.spring.app.reservation.model.CarDAO;
 
 @Service
@@ -41,10 +42,46 @@ public class CarService_imple implements CarService {
 		return myCar;
 	}
 
+	@Override
+	public CarVO myCar2(String fk_empid) {
+		CarVO myCar = dao.getmyCar2(fk_empid);
+		return myCar;
+	}
+
 	// 파일첨부가 없는 차량등록
 	@Override
 	public int addMycar(CarVO cvo) {
 		int n = dao.addMycar(cvo);
+		return n;
+	}
+
+	@Override
+	public int editMycar(Map<String, Object> paraMap) {
+		int n = dao.editMycar(paraMap);
+		return n;
+	}
+
+	@Override
+	public int addcarRegister(Map<String, Object> paraMap) {
+		int n = dao.addcarRegister(paraMap);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> carShareList() {
+		List<Map<String, String>> carShareList = dao.getcarShareList();
+		return carShareList;
+	}
+
+	@Override
+	public Day_shareVO day_shareInfo(int res_num) {
+		Day_shareVO day_shareInfo = dao.getday_shareInfo(res_num);
+		return day_shareInfo;
+	}
+
+	@Override
+	public int addcarApply_detail(Map<String, Object> paraMap) {
+		int n = dao.addcarApply_detail(paraMap);
 		return n;
 	}
 
