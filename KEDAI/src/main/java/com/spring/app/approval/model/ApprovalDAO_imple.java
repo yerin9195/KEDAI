@@ -95,6 +95,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return approval_noSeq;
 	}
 
+	// 서류 목록 가져오기
+	@Override
+	public List<Map<String, String>> myDocList(String loginEmpId) {
+		List<Map<String, String>> myDocList = sqlsession.selectList("approval.getMyDocList", loginEmpId);
+		return myDocList;
+	}
+
 
 
 

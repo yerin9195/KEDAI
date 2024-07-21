@@ -136,6 +136,20 @@
 		values( doc_file_noSeq.nextval, #{fk_doc_no}, #{doc_org_filename}, #{doc_filename}, to_number(#{doc_filesize}))
 	</insert>
 
+
+	<resultMap type="HashMap" id="myDocList_Map">
+ 		<result property="empid" column="empid" javaType="String" ></result>
+		<result property="name" column="name" javaType="String" ></result>
+		<result property="fk_dept_code" column="fk_dept_code" javaType="String" ></result>
+		<result property="dept_name" column="dept_name" javaType="String" ></result>
+		<result property="job_code" column="job_code" javaType="String" ></result>
+		<result property="job_name" column="job_name" javaType="String" ></result>
+ 	</resultMap>
+
+	<select id="getMyDocList" resultMap="myDocList_Map">
+	
+	
+	</select>
  
  	
 </mapper>

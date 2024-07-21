@@ -30,19 +30,19 @@ public class ApprovalService_imple implements ApprovalService {
 	}
 	
 	// 결재 라인에서 찾을 모든 사원 목록 보기
-	@Override
+/*	@Override
 	public List<Map<String, String>> allEmployeeList(String login_empid) {
 		List<Map<String, String>> allEmployeeList = dao.allEmployeeList(login_empid);
 		return allEmployeeList;
-	}
+	}*/
 
 	// 현재 근무중인 사원이 있는 모든 부서 가져오기
-	@Override
+/*	@Override
 	public List<DeptVO> allDeptList() {
 		List<DeptVO> allDeptList = dao.allDeptList();
 		return allDeptList;
-	}
-
+	}*/
+	
 	// 해당 부서에 근무중인 사원 정보 가져오기
 	@Override
 	public List<Map<String, String>> deptEmpList(Map<String, String> paraMap) {
@@ -98,6 +98,13 @@ public class ApprovalService_imple implements ApprovalService {
 		paraMap.put("approval_noSeq", approval_noSeq);
 		
 		return paraMap;
+	}
+
+	// 서류 목록 가져오기
+	@Override
+	public List<Map<String, String>> myDocList(String loginEmpId) {
+		List<Map<String, String>> myDocList = dao.myDocList(loginEmpId);
+		return myDocList;
 	}
 
 

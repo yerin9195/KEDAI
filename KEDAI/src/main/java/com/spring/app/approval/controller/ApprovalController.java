@@ -74,18 +74,19 @@ public class ApprovalController {
 		mav.addObject("str_now", str_now);
 		mav.addObject("dept_name", dept_name);
 		
-	//	List<Map<String, String>> allEmployeeList = service.allEmployeeList(loginuser.getEmpid());
+		String loginEmpId = loginuser.getEmpid();
+		List<Map<String, String>> myDocList = service.myDocList(loginEmpId);
+		
+	//	List<DeptVO> allDeptList = service.allDeptList();
 		
 		
-		
-		List<DeptVO> allDeptList = service.allDeptList();
 		
 		/*
 		 * List<Map<String, String>> numByDept = service.numByDept(); // 각 부서별 당 인원수
 		 * 가져오기
 		 */		
 	//	mav.addObject("allEmployeeList", allEmployeeList);
-		mav.addObject("allDeptList", allDeptList);
+	//	mav.addObject("allDeptList", allDeptList);
 		
 		
 		if(doctype_code.equals("100")) {
@@ -278,7 +279,13 @@ public class ApprovalController {
 	}
 
 	@GetMapping(value="/approval/newDocEnd.kedai")
-	public String newDocEnd() {
+	public String newDocEnd(ModelAndView mav, HttpServletRequest request ) {
+		
+		
+		
+		System.out.println(request.getParameter("meeting_date"));
+		
+		System.out.println();
 	      
 		return "tiles1/approval/newDocEnd.tiles";
 	    //  /WEB-INF/views/tiles1/email/emailWrite_done.jsp 페이지를 만들어야 한다.
@@ -290,6 +297,8 @@ public class ApprovalController {
 	public String newDocTest() {
 	    
 		//List<Map<String, String>> mapList = dao.get();
+		
+		
 		
 		
 		return "tiles1/approval/newDocTest.tiles";
@@ -319,7 +328,8 @@ public class ApprovalController {
 		Map<String,String> paraMap = new HashMap<>();
 		paraMap.put("dept_code", dept_code);
 		paraMap.put("loginuser_id", loginuser_id);
-				
+		
+		// 본인을 제외한 모든 사원의 정보 가져오기 - 부서번호가 없는 대표이사가 있기 때문에 dept_code도 같이 paraMap에 담는다.
 		List<Map<String,String>> deptEmpList = service.deptEmpList(paraMap);
 		
 		JSONArray jsonArr = new JSONArray();
