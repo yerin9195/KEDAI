@@ -12,7 +12,20 @@ public class CommunityVO {
 	private String read_count;
 	private String registerday;
 	private String status;
-	private String commentCount;
+	private String comment_count;;
+	
+	// select 용
+	private String previousseq;     // 이전글번호
+	private String previoussubject; // 이전글제목
+	private String nextseq;         // 다음글번호
+	private String nextsubject;     // 다음글제목
+	
+	private String category_name;
+	private String nickname;
+	private String imgfilename;
+	private String orgfilename;
+	
+	///////////////////////////////////////////////////////////////	
 	
 	// getters & setters
 	public String getCommunity_seq() {
@@ -94,13 +107,77 @@ public class CommunityVO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	public String getCommentCount() {
-		return commentCount;
+
+	public String getComment_count() {
+		return comment_count;
 	}
-	
-	public void setCommentCount(String commentCount) {
-		this.commentCount = commentCount;
+
+	public void setComment_count(String comment_count) {
+		this.comment_count = comment_count;
+	}
+
+	public String getPreviousseq() {
+		return previousseq;
+	}
+
+	public void setPreviousseq(String previousseq) {
+		this.previousseq = previousseq;
+	}
+
+	public String getPrevioussubject() {
+		return previoussubject;
+	}
+
+	public void setPrevioussubject(String previoussubject) {
+		this.previoussubject = previoussubject;
+	}
+
+	public String getNextseq() {
+		return nextseq;
+	}
+
+	public void setNextseq(String nextseq) {
+		this.nextseq = nextseq;
+	}
+
+	public String getNextsubject() {
+		return nextsubject;
+	}
+
+	public void setNextsubject(String nextsubject) {
+		this.nextsubject = nextsubject;
+	}
+
+	public String getCategory_name() {
+		return category_name;
+	}
+
+	public void setCategory_name(String category_name) {
+		this.category_name = category_name;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getImgfilename() {
+		return imgfilename;
+	}
+
+	public void setImgfilename(String imgfilename) {
+		this.imgfilename = imgfilename;
+	}
+
+	public String getOrgfilename() {
+		return orgfilename;
+	}
+
+	public void setOrgfilename(String orgfilename) {
+		this.orgfilename = orgfilename;
 	}
 	
 }

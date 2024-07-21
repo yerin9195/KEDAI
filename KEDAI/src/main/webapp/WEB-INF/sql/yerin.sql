@@ -642,6 +642,11 @@ create table tbl_community
 );
 -- Table TBL_COMMUNITY이(가) 생성되었습니다.
 
+ALTER TABLE tbl_community RENAME COLUMN commentCount TO comment_count;
+-- Table TBL_COMMUNITY이(가) 변경되었습니다.
+
+desc tbl_community;
+
 create sequence community_seq
 start with 1
 increment by 1
@@ -800,3 +805,96 @@ comment on column tbl_community_like.fk_community_seq is '글번호';
 select category_code, category_name
 from tbl_community_category
 order by category_code asc;
+
+drop table tbl_community_file;
+-- Table TBL_COMMUNITY_FILE이(가) 삭제되었습니다.
+
+flashback table tbl_community_file to before drop;
+-- Flashback을(를) 성공했습니다.
+
+desc tbl_community_file;
+
+ALTER TABLE tbl_community_file DROP PRIMARY KEY;
+-- Table TBL_COMMUNITY_FILE이(가) 변경되었습니다.
+
+ALTER TABLE tbl_community_file ADD CONSTRAINT PK_tbl_community_file_seq PRIMARY KEY(file_seq);
+-- Table TBL_COMMUNITY_FILE이(가) 변경되었습니다.
+
+ALTER TABLE tbl_community_file
+ADD CONSTRAINT FK_tbl_community_file_com_seq FOREIGN KEY(fk_community_seq)
+REFERENCES tbl_community(community_seq) ON DELETE CASCADE; 
+-- Table TBL_COMMENT이(가) 변경되었습니다.
+
+select *
+from user_constraints
+where table_name in('TBL_COMMUNITY_FILE');
+
+-----------------------------------------------------------------------
+
+-- 커뮤니티 글쓰기
+desc tbl_community;
+
+insert into tbl_community(community_seq, fk_category_code, fk_empid, name, subject, content, pwd, read_count, registerday, status, commentcount)
+values(community_seq.nextval, to_number(#{fk_category_code}), #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, default);
+
+-- 첨부파일 등록하기
+desc tbl_community_file;
+
+insert into tbl_community_file(file_seq, fk_community_seq, orgfilename, filename, filesize)
+values(file_seq.nextval, #{fk_community_seq}, #{orgfilename}, #{filename}, #{filesize});
+
+select *
+from tbl_community;
+
+select *
+from tbl_community_file;
+
+select count(*)
+from tbl_community
+where status = 1 and subject like '%' ||'t'||'%';
+
+SELECT community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, orgfilename, read_count, registerday, comment_count
+FROM
+(
+    SELECT rownum AS rno
+         , community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, orgfilename, read_count, registerday, comment_count
+    FROM 
+    (
+        select community_seq, fk_category_code, A.category_name, fk_empid, C.name, E.nickname, E.imgfilename, subject, content, F.orgfilename, read_count, registerday, comment_count
+        from tbl_community C 
+        LEFT JOIN tbl_community_category A ON C.fk_category_code = A.category_code
+        LEFT JOIN tbl_community_file F ON C.community_seq = F.fk_community_seq
+        LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
+        where C.status = 1
+        order by community_seq desc
+    ) V
+) T
+WHERE RNO between 1 and 10
+
+SELECT previousseq, previoussubject
+     , community_seq, fk_category_code, fk_empid, name, nickname, subject, content, pwd, orgfilename
+     , read_count, registerday, comment_count
+     , nextseq, nextsubject
+FROM
+(
+    select lag(community_seq, 1) over(order by community_seq desc) AS previousseq
+         , lag(subject, 1) over(order by community_seq desc) AS previoussubject
+    
+         , community_seq, fk_category_code, fk_empid, C.name, E.nickname, subject, content, C.pwd, F.orgfilename
+         , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count
+         
+         , lead(community_seq, 1) over(order by community_seq desc) AS nextseq
+         , lead(subject, 1) over(order by community_seq desc) AS nextsubject
+    from tbl_community C
+    LEFT JOIN tbl_community_file F ON C.community_seq = F.fk_community_seq
+    LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
+    where C.status = 1
+) V
+WHERE V.community_seq = 3;
+
+desc tbl_community_file;
+desc tbl_employees;
+
+update tbl_community set read_count = read_count + 1
+where community_seq = 1;
+

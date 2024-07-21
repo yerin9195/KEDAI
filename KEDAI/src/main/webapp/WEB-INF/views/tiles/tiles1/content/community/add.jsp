@@ -213,9 +213,10 @@
             	contentType: false, // 파일 전송 시 설정 => 파일이 있다면 꼭 넣어주어야 한다. default 는 true 이다.
             	dataType: "json",
             	success: function(json){
-            		console.log("~~~ 확인용 : " + JSON.stringify(json));
+            	//	console.log("~~~ 확인용 : " + JSON.stringify(json));
                 	
                 	if(json.result == 1) { // insert 가 성공되어진 경우
+                		alert("글 등록이 성공했습니다.");
                 		location.href="<%= ctxPath%>/community/addEnd.kedai"; 
                 	}
                 	else{
@@ -250,7 +251,7 @@
 	   			<input type="text" name="name" id="name" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).name}" readonly />
 	   		</div>
 	   		<div class="mb-3">
-	   			<label for="name" style="width: 30%;">닉네임</label>
+	   			<label for="nickname" style="width: 30%;">닉네임</label>
 	   			<input type="text" name="nickname" id="nickname" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).nickname}" readonly />
 	   		</div>
 	   		<div class="mb-3" style="display: flex;">
