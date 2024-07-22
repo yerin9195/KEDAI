@@ -632,6 +632,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
   </div>
 </div>
 </div>
+
 <%-- 사용자가 "검색된결과목록보기" 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다. --%>
 <form name="goViewFrm">
 	<input type="hidden" name="board_seq" />

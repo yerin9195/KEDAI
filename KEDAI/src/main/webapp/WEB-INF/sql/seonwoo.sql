@@ -418,3 +418,9 @@ select partner_no, partner_type, partner_name, partner_url, partner_postcode, pa
    originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank
 from tbl_business_part
 where partner_no = '333-33-33333'
+
+desc tbl_business_part;
+
+imgfilename 
+select * 
+from tbl_business_part;
