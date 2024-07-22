@@ -19,6 +19,9 @@
 		<org.mongodb-version>3.12.10</org.mongodb-version>
       	<org.spring-data-commons-version>2.5.6</org.spring-data-commons-version>
       	<org.spring-data-mongodb-version>3.2.6</org.spring-data-mongodb-version>
+	
+		<!-- ==== #255. 스프링보안01 Spring Security ==== -->
+		<spring-security.version>4.2.2.RELEASE</spring-security.version>
 	</properties>
 	
 	<!-- ===== #1. 네이버 스마트 에디터에서 사진첨부 관련하여 이미지의 크기를 구하기 위한 라이브러리 다운받는 곳 ===== -->
@@ -436,6 +439,31 @@
       		<artifactId>javaSDK</artifactId>
       		<version>2.2</version>
       	</dependency>
+      	
+      	<!-- ===== #256. 스프링보안03 Spring Security ===== --> 
+      	<dependency>
+			<groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring-security.version}</version>
+      	</dependency>
+      	<dependency>
+          	<groupId>org.springframework.security</groupId>
+          	<artifactId>spring-security-web</artifactId>
+          	<version>${spring-security.version}</version>
+      	</dependency>
+      	<dependency>
+			<groupId>org.springframework.security</groupId>
+          	<artifactId>spring-security-config</artifactId>
+          	<version>${spring-security.version}</version>
+      	</dependency>
+      	
+      	<!-- ===== #257. 스프링보안04 Spring Security 태그들을 사용하기 위해 taglibs 라이브러리를 추가  ===== -->
+      	<dependency>
+         	<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+          	<version>${spring-security.version}</version>
+      	</dependency>
+      	
 	</dependencies>
     <build>
         <plugins>

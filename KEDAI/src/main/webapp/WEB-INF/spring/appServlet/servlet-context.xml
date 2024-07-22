@@ -4,8 +4,10 @@
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:aop="http://www.springframework.org/schema/aop"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+	 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
@@ -113,4 +115,10 @@
    		</mvc:interceptor>
    	</mvc:interceptors>
     <!-- ======================== #인터셉터관련2. 끝  ======================== -->
+
+	<!-- ===== #261. 스프링보안08 @Secured 어노테이션등 Spring Security 어노테이션을 사용하도록 설정하기  ===== -->
+	<security:global-method-security proxy-target-class="true"
+          secured-annotations="enabled"
+          jsr250-annotations="enabled"
+          pre-post-annotations="enabled" />
 </beans:beans>
