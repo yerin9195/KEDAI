@@ -1,8 +1,6 @@
 package com.spring.app.approval.controller;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -20,22 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.approval.service.ApprovalService;
-
 import com.spring.app.common.FileManager;
-import com.spring.app.domain.ApprovalVO;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
 import com.spring.app.domain.MemberVO;
-import com.spring.app.domain.MinutesVO;
+
 
 @Controller 
 //@RequestMapping(value="/approval/*") // 이렇게 하면 @GetMapping("/approval/newdoc.kedai")에서 /approval를 빼도 됨. /approval 가 붙는 효과가 있음.
@@ -48,10 +40,28 @@ public class ApprovalController {
 	private FileManager fileManager;
 	
 	@GetMapping(value = "/approval/main.kedai")
-	public ModelAndView approval(ModelAndView mav) {
+	public ModelAndView approval(ModelAndView mav, HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		
+		String loginEmpId = loginuser.getEmpid();
+		
+		List<Map<String, String>> myapprovalinfo = service.myapprovalinfo(loginEmpId);
+		
+		System.out.println("확인용 myapprovalinfo" + myapprovalinfo);
+		
+		List<Map<String, String>> docList = service.docListNoSearch(loginEmpId);
+		System.out.println("확인용 docList" + docList);
+		
+		mav.addObject("myapprovalinfo", myapprovalinfo);
+		mav.addObject("docList", docList);
+
+		
 		mav.setViewName("tiles1/approval/main.tiles");
 		// /WEB-INF/views/tiles/tiles1/content/approval/main.jsp
 	//	/WEB-INF/views/tiles/tiles1/content/approval/main.tiles.jsp 페이지를 만들어야 한다.
+		
 		return mav;
 	}
 	
@@ -74,10 +84,10 @@ public class ApprovalController {
 		mav.addObject("str_now", str_now);
 		mav.addObject("dept_name", dept_name);
 		
-		String loginEmpId = loginuser.getEmpid();
-		List<Map<String, String>> myDocList = service.myDocList(loginEmpId);
+	//	String loginEmpId = loginuser.getEmpid();
+	//	List<Map<String, String>> myDocList = service.myDocList(loginEmpId);
 		
-	//	List<DeptVO> allDeptList = service.allDeptList();
+		List<DeptVO> allDeptList = service.allDeptList();
 		
 		
 		
@@ -86,7 +96,7 @@ public class ApprovalController {
 		 * 가져오기
 		 */		
 	//	mav.addObject("allEmployeeList", allEmployeeList);
-	//	mav.addObject("allDeptList", allDeptList);
+		mav.addObject("allDeptList", allDeptList);
 		
 		
 		if(doctype_code.equals("100")) {

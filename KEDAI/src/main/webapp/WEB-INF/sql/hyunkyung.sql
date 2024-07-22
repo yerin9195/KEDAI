@@ -561,19 +561,179 @@ from tbl_doc_file;
 select *
 FROM tbl_doc;
 
-select D.doc_no, D.fk_doctype_code, D.fk_empid, D.doc_subject, D.doc_content, D.created_date, D.doc_comment
-    , T.doctype_name, A.approval_no, A.status, A.approval_comment, A.approval_date, A.level_no
-    , F.doc_file_no, F.doc_org_filename, F.doc_filename, F.doc_filesize
-    , M.minutes_no, meeting_date, attendees, host_dept
+select *
+from tbl_approval
+
+/*
+select D.doc_no, D.fk_empid, D.doc_subject, D.created_date
+    , T.doctype_name, A.approval_no, A.status, A.level_no, A.fk_empid AS APPROVAL_EMPID
+    , F.doc_file_no
 from tbl_doc D
 JOIN tbl_doctype T
 ON T.doctype_code = D.fk_doctype_code
 JOIN tbl_approval A
 ON A.fk_doc_no = D.doc_no
-JOIN tbl_minutes M
-ON M.fk_doc_no = D.doc_no
 LEFT JOIN tbl_doc_file F
 ON F.fk_doc_no = D.doc_no
+where D.fk_empid = '2020200-006' */
+
+SELECT fk_doc_no, MAX(level_no) AS max_level_no
+FROM tbl_approval
+GROUP BY fk_doc_no
+
+-- 내가 작성한 서류 찾는 sql
+SELECT  D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
+    , T.doctype_name, AP.status, AP.level_no, AP.APPROVAL_EMPID
+    , CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+FROM tbl_doc D
+JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
+JOIN ( 
+    SELECT A1.fk_doc_no, A2.status, A1.level_no, A2.fk_empid AS APPROVAL_EMPID
+    FROM (
+        SELECT fk_doc_no, MIN(level_no) AS level_no
+        FROM tbl_approval 
+        GROUP BY fk_doc_no
+    ) A1
+    JOIN tbl_approval A2 
+    ON A1.fk_doc_no = A2.fk_doc_no AND A1.level_no = A2.level_no
+) AP
+ON AP.fk_doc_no = D.doc_no
+LEFT JOIN ( 
+    SELECT fk_doc_no
+    FROM tbl_doc_file
+    GROUP BY fk_doc_no
+) F ON F.fk_doc_no = D.doc_no
+WHERE D.fk_empid = '2020200-006'
+ORDER BY D.created_date DESC, D.DOC_NO DESC;
+
+SELECT *
+FROM tbl_approval
+
+SELECT D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
+    		, T.doctype_name, A.status, A.level_no, A.fk_empid AS APPROVAL_EMPID
+    		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+		from tbl_doc D
+		JOIN tbl_doctype T
+		ON T.doctype_code = D.fk_doctype_code
+		JOIN tbl_approval A
+		ON A.fk_doc_no = D.doc_no
+		LEFT JOIN (
+		        SELECT fk_doc_no
+		        FROM tbl_doc_file
+		        GROUP BY fk_doc_no
+		) F ON F.fk_doc_no = D.doc_no
+		where A.fk_empid = #{loginEmpId}
+        
+        
+
+from tbl_doc D
+JOIN tbl_doctype T
+
+
+
+SELECT A.fk_doc_no, A.status, A.level_no
+FROM (
+    SELECT fk_doc_no, status, level_no
+    FROM tbl_approval
+    WHERE fk_empid = '2011300-001'
+) A
+CROSS JOIN tbl_approval B 
+ON A.fk_doc_no = B.fk_doc_no
+
+SELECT A.fk_doc_no, A.status, A.level_no
+FROM tbl_approval A
+WHERE A.fk_doc_no IN (
+    SELECT B.fk_doc_no
+    FROM tbl_approval B
+    WHERE B.fk_empid = '2013100-002' AND STATUS = 0 
+);
+
+update tbl_approval set STATUS = 1 WHERE FK_DOC_NO ='KD24-101-1' AND fk_empid = '2013100-002'
+
+update tbl_approval set STATUS = 0 WHERE FK_DOC_NO ='KD24-101-1' AND fk_empid = '2012100-001'
+COMMIT;
+
+SELECT *
+FROM tbl_approval
+WHERE fK_DOC_NO IN  ('KD24-101-4', 'KD24-101-6') 
+ORDER BY APPROVAL_NO, LEVEL_NO
+
+DESC tbl_approval
+
+select *
+FROM tbl_doc
+
+SELECT *
+FROM tbl_employees
+WHERE EMPID='2011300-001'
+
+SELECT *
+FROM TBL_APPROVAL 
+
+COMMIT;
+
+SELECT *
+FROM TBL_DOC
+
+insert into tbl_doc(doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date)
+values(doc_noSeq.nextval, '101', '2020200-006', 'test5 - 첨부파일 무', 'test5 - 첨부파일 무', sysdate);
+
+insert into tbl_doc(doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date)
+values(doc_noSeq.nextval, '101', '2020200-006', 'test6 - 첨부파일 무', 'test6 - 첨부파일 무', sysdate);
+
+insert into tbl_doc(doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date)
+values(doc_noSeq.nextval, '101', '2020200-006', 'test7 - 첨부파일 무', 'test7 - 첨부파일 무', sysdate);
+
+commit;
+
 
 select *
 from tbl_approval
+ORDER BY APPROVAL_NO
+
+update tbl_doc set doc_no = 'KD24-101-8' WHERE doc_no = '8'
+update tbl_doc set doc_no = 'KD24-101-7' WHERE doc_no = '7'
+update tbl_doc set doc_no = 'KD24-101-9' WHERE doc_no = '9'
+
+INSERT
+
+SELECT *
+FROM tbl_minutes
+
+insert into tbl_minutes(minutes_no, fk_doc_no, meeting_date, attendees, host_dept)
+values( minutes_noSeq.nextval, 'KD24-101-7', '24/07/22','이주빈, 서강준' , '상품개발부')
+
+insert into tbl_minutes(minutes_no, fk_doc_no, meeting_date, attendees, host_dept)
+values( minutes_noSeq.nextval, 'KD24-101-8', '24/07/22','이주빈, 서강준' , '상품개발부')
+
+insert into tbl_minutes(minutes_no, fk_doc_no, meeting_date, attendees, host_dept)
+values( minutes_noSeq.nextval, 'KD24-101-9', '24/07/22','이주빈, 서강준' , '상품개발부')
+
+
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(approval_noSeq.nextval , 'KD24-101-7', '2012100-001', 0, 1)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(7 , 'KD24-101-7', '2013100-002', 0, 2)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(7 , 'KD24-101-7', '2014100-003', 0, 3)	
+
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(approval_noSeq.nextval , 'KD24-101-8', '2012100-001', 0, 1)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(8 , 'KD24-101-7', '2013100-002', 0, 2)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(8 , 'KD24-101-7', '2014100-003', 0, 3)
+
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(approval_noSeq.nextval , 'KD24-101-9', '2012100-001', 0, 1)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(9 , 'KD24-101-7', '2013100-002', 0, 2)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(9 , 'KD24-101-7', '2014100-003', 0, 3)
+
+
+select *
+from tbl_approval
+order by approval_no;
+
+update tbl_approval set fk_doc_no = 'KD24-101-9' WHERE approval_no=9

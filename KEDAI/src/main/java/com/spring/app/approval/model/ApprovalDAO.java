@@ -42,7 +42,13 @@ public interface ApprovalDAO {
 	// 첨부파일이 있을 때 첨부파일 insert하기
 	int withFile_doc(Map<String, String> docFileMap);
 
-	// 서류 목록 가져오기
+	// 메인화면에 보여줄 내가 작성한 기안문서 목록 가져오기
 	List<Map<String, String>> myDocList(String loginEmpId);
+
+	// 메인화면에 보여줄 
+	List<Map<String, String>> myApprovalDoc(String loginEmpId);
+
+	// 결재 할 문서의 정보 가져오기
+	List<Map<String, String>> myapprovalinfo(String loginEmpId);
 
 }

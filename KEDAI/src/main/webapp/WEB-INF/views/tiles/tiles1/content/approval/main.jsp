@@ -100,7 +100,7 @@ div.col-md-6 {
  </div> --%>
 		<div id="22" class="col-md-6">	
 			<div class="document_inProgress">
-      			<h5 style="margin: 1.5% 1%;"> 기안 진행 문서 </h5>
+      			<h5 style="margin: 1.5% 1%;"> 결재할 문서 </h5>
       			<table class="table table-hover">
       				<thead>
         				<tr>
@@ -111,7 +111,13 @@ div.col-md-6 {
         				</tr>
       				</thead>
       				<tbody>
-			        	<tr>
+      					<c:if test="${not empty requestScope.docList}">
+      						<c:forEach var="appList" items="${requestScope.docList}" varStatus="status">
+      							<tr>
+      								<td></td>
+      						</c:forEach>
+      					</c:if>
+			        	
 			               <td>2024-01-01</td>
 			               <td>증명서신청(회사)</td>
 			               <td>김땡땡 사장님</td>

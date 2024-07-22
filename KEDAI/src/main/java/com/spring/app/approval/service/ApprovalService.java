@@ -19,7 +19,7 @@ public interface ApprovalService {
 	 */
 
 	// 현재 근무중인 사원이 있는 모든 부서 가져오기
-//	List<DeptVO> allDeptList();
+	List<DeptVO> allDeptList();
 
 	// 해당 부서에 근무중인 사원 정보 가져오기
 	List<Map<String, String>> deptEmpList(Map<String, String> paraMap);
@@ -35,6 +35,14 @@ public interface ApprovalService {
 
 	// 해당 서류 가져오기
 	List<Map<String, String>> myDocList(String loginEmpId);
+
+	// 메인화면에 보여줄 기안문서 목록 가져오기
+	List<Map<String, String>> docListNoSearch(String loginEmpId);
+
+	// 결재 할 문서의 정보 가져오기
+	List<Map<String, String>> myapprovalinfo(String loginEmpId);
+
+
 
 	
 

@@ -95,11 +95,25 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return approval_noSeq;
 	}
 
-	// 서류 목록 가져오기
+	// 메인화면에 보여줄 나의 기안문서 목록 가져오기
 	@Override
 	public List<Map<String, String>> myDocList(String loginEmpId) {
-		List<Map<String, String>> myDocList = sqlsession.selectList("approval.getMyDocList", loginEmpId);
+		List<Map<String, String>> myDocList = sqlsession.selectList("approval.myDocList", loginEmpId);
 		return myDocList;
+	}
+
+	// 메인화면에 보여줄 나의 결재 문서 목록 가져오기
+	@Override
+	public List<Map<String, String>> myApprovalDoc(String loginEmpId) {
+		List<Map<String, String>> myApprovalDoc = sqlsession.selectList("approval.myApprovalDoc", loginEmpId);
+		return myApprovalDoc;
+	}
+
+	// 결재 할 문서의 정보 가져오기
+	@Override
+	public List<Map<String, String>> myapprovalinfo(String loginEmpId) {
+		List<Map<String, String>> myapprovalinfo = sqlsession.selectList("approval.myapprovalinfo", loginEmpId);
+		return myapprovalinfo;
 	}
 
 

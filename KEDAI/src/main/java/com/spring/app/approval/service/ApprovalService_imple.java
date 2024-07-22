@@ -37,11 +37,11 @@ public class ApprovalService_imple implements ApprovalService {
 	}*/
 
 	// 현재 근무중인 사원이 있는 모든 부서 가져오기
-/*	@Override
+	@Override
 	public List<DeptVO> allDeptList() {
 		List<DeptVO> allDeptList = dao.allDeptList();
 		return allDeptList;
-	}*/
+	}
 	
 	// 해당 부서에 근무중인 사원 정보 가져오기
 	@Override
@@ -106,6 +106,29 @@ public class ApprovalService_imple implements ApprovalService {
 		List<Map<String, String>> myDocList = dao.myDocList(loginEmpId);
 		return myDocList;
 	}
+	
+	// 메인화면에 보여줄 기안문서 목록 가져오기
+	@Override
+	public List<Map<String, String>> docListNoSearch(String loginEmpId) {
+		List<Map<String, String>> myDocList = dao.myDocList(loginEmpId);
+		List<Map<String, String>> myApprovalDoc = dao.myApprovalDoc(loginEmpId);
+		
+		List<Map<String, String>> resultList = new ArrayList<>();
+	    resultList.addAll(myDocList);
+	    resultList.addAll(myApprovalDoc);
+	    
+		return resultList;
+	}
+
+	// 결재 할 문서의 정보 가져오기
+	@Override
+	public List<Map<String, String>> myapprovalinfo(String loginEmpId) {
+		List<Map<String, String>> myapprovalinfo = dao.myapprovalinfo(loginEmpId);
+		
+		return myapprovalinfo;
+	}
+
+	
 
 
 		

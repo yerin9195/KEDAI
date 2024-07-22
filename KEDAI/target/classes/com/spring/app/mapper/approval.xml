@@ -137,19 +137,78 @@
 	</insert>
 
 
-	<resultMap type="HashMap" id="myDocList_Map">
- 		<result property="empid" column="empid" javaType="String" ></result>
-		<result property="name" column="name" javaType="String" ></result>
-		<result property="fk_dept_code" column="fk_dept_code" javaType="String" ></result>
-		<result property="dept_name" column="dept_name" javaType="String" ></result>
-		<result property="job_code" column="job_code" javaType="String" ></result>
-		<result property="job_name" column="job_name" javaType="String" ></result>
+	<resultMap type="HashMap" id="docList_Map">
+ 		<result property="doc_no" 			column="doc_no" 			javaType="String" ></result>
+		<result property="fk_empid" 		column="fk_empid" 			javaType="String" ></result>
+		<result property="doc_subject" 		column="doc_subject" 		javaType="String" ></result>
+		<result property="created_date" 	column="created_date" 		javaType="String" ></result>
+		<result property="doctype_name" 	column="doctype_name" 		javaType="String" ></result>
+		<result property="status" 			column="status" 			javaType="String" ></result>
+		<result property="level_no" 		column="level_no" 			javaType="String" ></result>
+		<result property="APPROVAL_EMPID" 	column="APPROVAL_EMPID" 	javaType="String" ></result>
+		<result property="isAttachment" 	column="isAttachment" 		javaType="String" ></result>
  	</resultMap>
 
-	<select id="getMyDocList" resultMap="myDocList_Map">
-	
-	
+	<select id="myDocList" resultMap="docList_Map">
+		SELECT  D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
+    		, T.doctype_name, AP.status, AP.level_no, AP.APPROVAL_EMPID
+    		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+		FROM tbl_doc D
+		JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
+		JOIN ( 
+		    SELECT A1.fk_doc_no, A2.status, A1.level_no, A2.fk_empid AS APPROVAL_EMPID
+		    FROM (
+		        SELECT fk_doc_no, MIN(level_no) AS level_no
+		        FROM tbl_approval 
+		        GROUP BY fk_doc_no
+		    ) A1
+		    JOIN tbl_approval A2 
+		    ON A1.fk_doc_no = A2.fk_doc_no AND A1.level_no = A2.level_no
+		) AP
+		ON AP.fk_doc_no = D.doc_no
+		LEFT JOIN ( 
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F 
+		ON F.fk_doc_no = D.doc_no
+		WHERE D.fk_empid = #{loginEmpId}
+		ORDER BY D.created_date DESC, D.DOC_NO DESC
 	</select>
  
+ 
+ 	<select id="myApprovalDoc" resultMap="docList_Map">
+ 		SELECT D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
+    		, T.doctype_name, A.status, A.level_no, A.fk_empid AS APPROVAL_EMPID
+    		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+		from tbl_doc D
+		JOIN tbl_doctype T
+		ON T.doctype_code = D.fk_doctype_code
+		JOIN tbl_approval A
+		ON A.fk_doc_no = D.doc_no
+		LEFT JOIN (
+		        SELECT fk_doc_no
+		        FROM tbl_doc_file
+		        GROUP BY fk_doc_no
+		) F ON F.fk_doc_no = D.doc_no
+		where A.fk_empid = #{loginEmpId}
+ 	</select>
+ 	
+ 	
+ 	<resultMap type="HashMap" id="docInfo_Map">
+ 		<result property="fk_doc_no" 		column="fk_doc_no" 			javaType="String" ></result>
+		<result property="status" 			column="status" 			javaType="String" ></result>
+		<result property="level_no" 		column="level_no" 			javaType="String" ></result>
+ 	</resultMap>
+ 	
+ 	<select id="myapprovalinfo" resultMap="docInfo_Map">
+ 		SELECT A.fk_doc_no, A.status, A.level_no
+		FROM tbl_approval A
+		WHERE A.fk_doc_no IN (
+    		SELECT B.fk_doc_no
+    		FROM tbl_approval B
+    		WHERE B.fk_empid = #{loginEmpId} AND STATUS = 0 
+		)
+ 	</select>
  	
 </mapper>
