@@ -1,6 +1,7 @@
 package com.spring.app.reservation.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.RoomMainVO;
@@ -20,5 +21,7 @@ public interface RoomService {
 
 	//	급여명세서 계산
 	int salaryCal(SalaryVO salaryvo);
+
+	int insertreserve(Map<String, String> paraMap);
 
 }

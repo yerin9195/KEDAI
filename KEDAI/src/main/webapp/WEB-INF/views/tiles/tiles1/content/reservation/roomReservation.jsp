@@ -133,22 +133,10 @@
  $(document).ready(function(){
 	showallsub();
 	setToday();
-    
+	populateTimeSelect();        // 시간과 분 드롭다운 초기화
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	  function populateTimeSelect() {
-        var hourHtml = "";
-        for (var i = 9; i <= 21; i++) {
-            hourHtml += "<option value='" + (i < 10 ? '0' + i : i) + "'>" + (i < 10 ? '0' + i : i) + "</option>";
-        }
-        $("select#startHour, select#endHour").html(hourHtml);
-
-        var minuteHtml = "";
-        for (var i = 0; i < 60; i += 30) {
-            minuteHtml += "<option value='" + (i < 10 ? '0' + i : i) + "'>" + (i < 10 ? '0' + i : i) + "</option>";
-        }
-        $("select#startMinute, select#endMinute").html(minuteHtml);
-    }    
-    populateTimeSelect(); // 시간과 분 드롭다운 초기화
+	      
 
 	
  // '종일' 체크박스 클릭 시
@@ -178,21 +166,22 @@
     });
 
 
-	   $("#endDate").datepicker({
-	        onSelect: function(dateText) {
-	        	 const selectedDate = $(this).datepicker("getDate");
-	             const formattedDate = formatDate(selectedDate);
-	             $(this).val(formattedDate); // 선택한 날짜를 예약일(input id="startDate")에 설정
-	        }
-	    });
+   $("#endDate").datepicker({
+        onSelect: function(dateText) {
+        	 const selectedDate = $(this).datepicker("getDate");
+             const formattedDate = formatDate(selectedDate);
+             $(this).val(formattedDate); // 선택한 날짜를 예약일(input id="startDate")에 설정
+        }
+    });
 	   
     // 예약 버튼 클릭 시 모달 보이기
- $(document).on("click", ".reserveBtn", function() {
-            var hour = $(this).data('hour');
+ 	$(document).on("click", ".reserveBtn", function() {
+ 		var hour = $(this).data('hour');
             var minute = $(this).data('minute');
 
             var formattedTime = (hour < 10 ? '0' : '') + hour + ":" + (minute === 0 ? "00" : minute);
 
+            
             $("#reservationModal").modal("show");
             $("#reservationModal .modal-title").text("예약: " + $(this).closest('tr').find("td:first").text());
             $("#startDate").val($("#currentDate").text());
@@ -204,9 +193,7 @@
         });
 
         $(".reserveBtn").on("click", function() {
-            var hour = $(this).data('hour');
-            var minute = $(this).data('minute');
-            var formattedTime = (hour < 10 ? '0' : '') + hour + ":" + (minute === 0 ? "00" : minute);
+            
             $("#startTime").val(formattedTime);
             $("#endTime").val(formattedTime);
         });
@@ -299,10 +286,10 @@
                             leftCell.text(roomSubName);
                             row.append(leftCell);
                             for (var hour = 9; hour <= 21; hour++) {
-                                var cell1 = $("<td>").addClass("time-slot").append("<button class='reserveBtn'></button>");
-                                var cell2 = $("<td>").addClass("time-slot").append("<button class='reserveBtn'></button>");
-                                row.append(cell1);
-                                row.append(cell2);
+                            	var cell1 = $("<td>").addClass("time-slot").append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='00'></button>");
+         	                    var cell2 = $("<td>").addClass("time-slot").append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='30'></button>");
+         	                    row.append(cell1);
+         	                    row.append(cell2);
                             }
                             tableBody.append(row);
                         }
@@ -316,25 +303,7 @@
              $("#additionalSelect").html("");
          }
      });
-     
-     // 시간 슬롯 클릭 이벤트 추가
-     $(document).on("click", ".time-slot button", function() {
-         var cell = $(this).closest("td");
-         var row = cell.closest("tr");
-         var assetName = row.find("td:first").text();
 
-         // 클릭된 버튼의 data-hour와 data-minute 값을 가져옵니다.
-         var hour = $(this).data('hour');
-         var minute = $(this).data('minute');
-
-         // 시간 포맷팅
-         var formattedTime = (hour < 10 ? '0' : '') + hour + ":" + (minute === 0 ? "00" : minute);
-
-         $("#reservationModal").modal("show");
-         $("#reservationModal .modal-title").text("예약: " + assetName);
-         $("#startTime").val(formattedTime);
-         $("#endTime").val(formattedTime); // 필요에 따라 종료 시간을 설정합니다.
-     });
 
      // 모달 내 예약일자 및 시간 초기화
      $(".reserveBtn").on("click", function() {
@@ -424,17 +393,6 @@
 	        $("#endDate").val(formattedDate);
 	    }
 
-	    function formatDate(date) {
-	        const year = date.getFullYear();
-	        const month = ('0' + (date.getMonth() + 1)).slice(-2);
-	        const day = ('0' + date.getDate()).slice(-2);
-	        const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
-	        return year + '-' + month + '-' + day + ' (' + dayOfWeek + ')';
-	    }
-
-	    // 초기 날짜 설정
-	    setToday();
-
 	    // 날짜 변경 버튼 클릭 핸들러
 	    $(document).on("click", "[data-change-date]", function() {
 	        const days = parseInt($(this).attr("data-change-date"));
@@ -463,6 +421,7 @@
  	                    row.append(cell2);
  	                }
  	                tableBody.append(row);
+ 	                
  	            }
  	        },
  	        error: function(request, status, error) {
@@ -474,6 +433,74 @@
  		
  	}
  	
+ 	function populateTimeSelect() {
+        var hourHtml = "";
+        for (var i = 9; i <= 21; i++) {
+            hourHtml += "<option value='" + (i < 9 ? '0' + i : i) + "'>" + (i < 10 ? '0' + i : i) + "</option>";
+        }
+        $("select#startHour, select#endHour").html(hourHtml);
+
+        var minuteHtml = "";
+        for (var i = 0; i < 60; i += 30) {
+            minuteHtml += "<option value='" + (i < 10 ? '0' + i : i) + "'>" + (i < 10 ? '0' + i : i) + "</option>";
+        }
+        $("select#startMinute, select#endMinute").html(minuteHtml);
+        
+ 
+    }    
+
+ 	////////////////////////////////////////////////////////////////////////////////////////////////
+ 	//	예약하기 기능 구현
+ 	// 예약 정보 저장을 위한 form 태그 추가
+
+	
+	// 예약 버튼 클릭 시 예약 정보를 서버로 전송
+	$("#reservationModal .btn-primary").click(function() {
+	    $.ajax({
+	        url: '<%= ctxPath %>/reserve.kedai',
+	        type: 'POST',
+	        data: $("#reservationForm").serialize(),
+	        success: function(response) {
+	            if (response.success) {
+	                alert("예약이 완료되었습니다.");
+	                $("#reservationModal").modal("hide");
+	                loadReservations(); // 예약 정보 다시 로드
+	            } else {
+	                alert("예약에 실패하였습니다.");
+	            }
+	        }
+	    });
+	});
+ 	
+	function loadReservations() {
+	    var currentDate = $("#currentDate").text().split(' ')[0];
+	    $.ajax({
+	        url: '<%= ctxPath %>/getReservations',
+	        method: 'GET',
+	        data: { date: currentDate },
+	        success: function(data) {
+	            updateTable(data);
+	        }
+	    });
+	}
+
+	function updateTable(data) {
+	    data.forEach(function(reservation) {
+	        var startHour = new Date(reservation.start_time).getHours();
+	        var startMinute = new Date(reservation.start_time).getMinutes();
+	        var endHour = new Date(reservation.end_time).getHours();
+	        var endMinute = new Date(reservation.end_time).getMinutes();
+
+	        for (var hour = startHour; hour <= endHour; hour++) {
+	            for (var minute = (hour === startHour ? startMinute : 0); minute <= (hour === endHour ? endMinute : 59); minute += 30) {
+	                var button = $(".reserveBtn[data-hour='" + hour + "'][data-minute='" + minute + "']");
+	                button.prop("disabled", true);
+	                button.css("background-color", "blue");
+	            }
+	        }
+	    });
+	}
+	
  </script>
 
  <div class="header">
@@ -567,11 +594,19 @@
                     <button type="button" class="btn btn-secondary" id="reserveCancel" data-dismiss="modal">취소</button>
                 </div>
 
+
             </div>
         </div>
     </div>
 
-    
-    
+	<form id="reservationForm">
+	    <!-- 예약 정보 입력 필드들 -->
+	    <input type="text" id="fk_empid" name="empid">
+	    <input type="text" id="fk_room_name" name="fk_room_name">
+	    <input type="text" id="start_time" name="start_time">
+	    <input type="text" id="end_time" name="end_time">
+	    <input type="text" id="content" name="content">
+	</form>
+        
 </body>
 </html>

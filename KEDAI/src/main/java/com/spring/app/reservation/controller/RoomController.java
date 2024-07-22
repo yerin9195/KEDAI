@@ -1,16 +1,21 @@
 package com.spring.app.reservation.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
@@ -87,4 +92,42 @@ public class RoomController {
 		
 		 return "tiles1/reservation/roomReservation.tiles";
 	 }
+	 
+	 @ResponseBody
+	 @PostMapping(value="/reserve.kedai", produces = "application/json;charset=UTF-8")
+	 public ModelAndView reserve(ModelAndView mav, HttpServletRequest request) throws Throwable {
+	     
+		 String fk_empid = request.getParameter("empid");
+         String fk_room_name = request.getParameter("fk_room_name");
+         String start_time = request.getParameter("start_time");
+         String end_time = request.getParameter("end_time");
+         String content = request.getParameter("content");
+		
+         Map<String,String> paraMap = new HashMap<String, String>();
+         paraMap.put("fk_empid", fk_empid);
+         paraMap.put("fk_room_name", fk_room_name);
+         paraMap.put("start_time", start_time);
+         paraMap.put("end_time", end_time);
+         paraMap.put("content", content);
+         
+         
+         int n = service.insertreserve(paraMap);
+         
+         if(n == 0) {
+				mav.addObject("message", "예약 실패하였습니다.");
+			}
+			else {
+				mav.addObject("message", "예약되었습니다..");
+			}
+			
+			mav.addObject("loc", request.getContextPath()+"/schedule/scheduleManagement.action");
+			
+			mav.setViewName("msg");
+			
+			return mav;
+	     
+	 }
+	 
+	 
+	 
 }
