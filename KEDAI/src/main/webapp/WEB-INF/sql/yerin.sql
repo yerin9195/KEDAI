@@ -898,3 +898,21 @@ desc tbl_employees;
 update tbl_community set read_count = read_count + 1
 where community_seq = 1;
 
+desc tbl_community;
+desc tbl_comment;
+
+insert into tbl_comment(comment_seq, fk_community_seq, fk_empid, name, content, registerday, status)
+values(comment_seq.nextval, fk_community_seq, fk_empid, name, content, default, default)
+
+update tbl_community set comment_count = comment_count + 1
+where community_seq = #{fk_community_seq}
+
+desc tbl_employees;
+
+update tbl_employees set point = point + to_number(#{point}) 
+where empid = #{empid}
+
+select *
+from tbl_employees
+where nickname = 'Liam';
+

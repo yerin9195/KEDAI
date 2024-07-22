@@ -13,6 +13,7 @@
 		<typeAlias type="com.spring.app.domain.RoomMainVO" alias="RoomMainVO" />
 		<typeAlias type="com.spring.app.domain.RoomSubVO" alias="RoomSubVO" />
 		<typeAlias type="com.spring.app.domain.CommunityVO" alias="CommunityVO" />
+		<typeAlias type="com.spring.app.domain.CommentVO" alias="CommentVO" />
 	</typeAliases>	
 	
 </configuration>

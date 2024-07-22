@@ -26,6 +26,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import com.spring.app.board.service.CommunityService;
 import com.spring.app.common.FileManager;
 import com.spring.app.common.MyUtil;
+import com.spring.app.domain.CommentVO;
 import com.spring.app.domain.CommunityCategoryVO;
 import com.spring.app.domain.CommunityVO;
 import com.spring.app.domain.MemberVO;
@@ -469,5 +470,35 @@ public class CommunityController {
 		
 		return mav;
 	}
+	
+	// 댓글쓰기(Ajax 로 처리)
+	@ResponseBody
+	@PostMapping(value="/community/addComment.kedai", produces="text/plain;charset=UTF-8")
+	public String addComment(CommentVO commentvo) {
+		
+		int n = 0;
+		try {
+			n = service.addComment(commentvo);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		
+		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("n", n);
+		jsonObj.put("name", commentvo.getName());
+		
+		return jsonObj.toString();
+	}
+	
+	// 댓글 내용들을 페이징 처리하기
+	@ResponseBody
+	@GetMapping(value="/community/commentList.kedai", produces="text/plain;charset=UTF-8")
+	public String commentList(HttpServletRequest request) {
+		
+		
+		
+		return "";
+	}
+	
 	
 }

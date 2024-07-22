@@ -52,11 +52,19 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 	
+		goViewComment(1); // 페이징처리를 한 댓글 읽어오기
+		
 		$("span.move").hover(function(e){
 			$(e.target).addClass("moveColor");
 		}, 
 		function(e){
 			$(e.target).removeClass("moveColor");
+		});
+		
+		$("input:text[name='content']").bind("keydown", function(e){
+			if(e.keyCode == 13){ // enter 인 경우
+				goAddWrite();
+			}
 		});
 		
 	}); // end of $(document).ready(function(){}) ----------
@@ -80,6 +88,66 @@
 		frm.submit();
 		
 	} // end of function goView(community_seq) ----------
+	
+	function goAddWrite(){
+		
+		const comment_content = $("input:text[name='content']").val().trim();
+		if(comment_content == ""){
+			alert("댓글 내용을 입력하세요.");
+  			return; 
+		}
+		
+		goAddWrite_noAttach();
+		
+	} // end of function goAddWrite() ----------
+	
+	function goAddWrite_noAttach(){
+		
+		const queryString = $("form[name='addWriteFrm']").serialize();
+		// .serialize() => form 태그 내의 모든  name 값을 키값으로 만들어서 보내준다.
+		
+		$.ajax({
+			url: "<%= ctxPath%>/community/addComment.kedai",
+			data: queryString, 
+			type: "post",
+            dataType: "json",
+            success: function(json){
+            //	console.log(JSON.stringify(json));
+            	
+            	if(json.n == 0){
+            		alert(json.name + "님의 포인트는 300점을 초과할 수 없으므로 댓글쓰기가 불가합니다.");
+            	}
+            	else{
+            		goViewComment(1); // 페이징처리를 한 댓글 읽어오기
+            	}
+            	
+            	$("input:text[name='content']").val("");
+            },
+            error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+		});
+	
+	} // end of function goAddWrite_noAttach() ----------
+	
+	function goViewComment(currentShowPageNo){
+		
+		$.ajax({
+			url: "<%= ctxPath%>/community/commentList.kedai",
+			data: {"fk_community_seq":"${requestScope.cvo.community_seq}",
+				   "currentShowPageNo":currentShowPageNo},
+			dataType: "json",
+			success: function(json){
+				console.log(JSON.stringify(json));
+				
+				
+			},
+            error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+		});
+		
+	} // end of function goViewComment(currentShowPageNo) ----------
 </script>
 
 <%-- content start --%>
@@ -153,6 +221,7 @@
 		                  		<th style="width: 15%;">작성자</th>
 	               				<td>
 	               					<input type="hidden" name="fk_empid" value="${sessionScope.loginuser.empid}" readonly />
+	               					<input type="hidden" name="name" value="${sessionScope.loginuser.name}" readonly />
 	               					<input type="text" name="nickname" value="${sessionScope.loginuser.nickname}" readonly />
 	               				</td>
 							</tr>
@@ -162,7 +231,7 @@
 								<td>
 	                  				<input type="text" name="content" size="90" maxlength="1000" placeholder="댓글을 남겨보세요." style="height: 30px;" />
 	                  				<%-- 댓글에 달리는 원게시물 글번호(댓글의 부모글 글번호) --%>
-	                  				<input type="hidden" name="parentSeq" value="${requestScope.cvo.community_seq}" readonly />
+	                  				<input type="hidden" name="fk_community_seq" value="${requestScope.cvo.community_seq}" readonly />
 	                  			</td>
 							</tr>
 						</table>
