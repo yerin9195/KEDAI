@@ -323,7 +323,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 							  "searchWord":$("input[name='searchWord']").val()},
 					    dataType:"json",
 					    success: function(json){
-					    	// console.log(JSON.stringify(json));
+					    	console.log(JSON.stringify(json));
 					    	
 					    	if(json.length > 0){
 					    		let v_html = ``;
@@ -371,30 +371,10 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 		const frm = document.employee_search_frm;
 		// console.log(frm);
 		frm.method = "get";
-		frm.action = "<%= ctxPath%>/company/othercom_list.kedai";
+		frm.action = "<%= ctxPath%>/othercom_list.kedai";
 		frm.submit();
 	}// end of function goSearch(){}---------------------
-	<%--	
-	/*  function goViewFrm(partner_name){
-		console.log(partner_name);
-		const goBackURL = "${requestScope.goBackURL}";
-		const frm = document.goViewFrm;
-		
-		frm.partner_name.value = partner_name;
-		frm.goBackURL.value = goBackURL;
-		
-		if(${not empty requestScope.paraMap}){	//paraMap 에 넘겨준 값이 존재하는 경우
-			frm.searchType.value = "${requestScope.paraMap.searchType}";
-			frm.searchWord.value = "${requestScope.paraMap.searchWord}";
-		}
-		
-		// "get" 방식에서 & 는 전송될 데이터의 구분자로 사용되기 때문에 "post" 방식으로 보내줘야 한다.
-		frm.method = "post";
-		frm.action = "<%= ctxPath%>/company/othercom_list.kedai";
-		// frm.submit();
-		
-	} // end of function goView(partner_no){} ----------
-	--%>
+	
 	/* 여기 까지 검색기능  */
 /////////////////////////////////////////////////////////////////////////////	
 	
@@ -402,10 +382,12 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	
 	
 	$(function(){
-	  $('.cardHead button').click(function(){
-		  var partner_no = $(this).closest('article').attr('partner_no');
+	  $('.cardHead button').click(function(e){
+		 //  var partner_no = $(this).('article').attr('partner_no');
+		 var partner_no = $(e.target).closest('.cardHead').find('input[name="partner_no"]').val();
+		 // console.log(partner_no)
 		  
-		  /* console.log(partner_no) */
+		  
 	    // 클릭한 거래처 정보 상세보기
 	    $.ajax({
 	      url: "<%= ctxPath%>/partnerPopupClick.kedai?partner_no=" + partner_no,
@@ -416,11 +398,12 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	      },
  */	      dataType: "json",
 	      success: function(json){
+	    	// console.log(JSON.stringify(json));
 	        // 서버에서 거래처이름으로 정보 얻어오기\images\partne
-	        if(json.partner_name != null){
+	        if(json.partner_no != null){
 	          $("#pop_partnerName").html(json.partner_name);
 	          $("#pop_partnerNo").html(json.partner_no);
-	          $("#pop_partnerImg").attr("src", "./resources/images/partner" + json.origninalfilename);// http://localhost:9099/KEDAI/resources/images/partner/%EB%84%A4%EB%AA%A8%EB%84%A4%EB%AA%A8.png
+	          $("#pop_partnerImg").attr("src", "<%= ctxPath%>/resources/images/partner/" + json.imgfilename);
 	          $("#pop_partnerAddress").html(json.partner_address + " " + json.partner_detailaddress + " " + json.partner_extraaddress);
 	          $("#pop_partnerUrl").html(json.partner_url);
 	          $("#pop_partEmpTel").html(json.part_emp_tel);
@@ -428,7 +411,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	          $("#pop_partEmpName").html(json.part_emp_name);
 	          $("#pop_partEmpRank").html(json.part_emp_rank);
 	      
-	          
+	         
 	          /*
 				private String partner_type;
 				private String partner_url; 
@@ -527,7 +510,8 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 			<option value="part_emp_name">담당자명</option>
 		</select>
 		<input type="text" name="searchWord" style="margin-right:10px"/>
-		<input type="button" name="searchWord;" onclick="goSearch()" value="검색"/>
+		<input type="text" style="display: none;"/> 
+		<button type="button" onclick="goSearch()">검색</button>
 	
 		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 22.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
 		
@@ -537,9 +521,10 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
    
 <div id="othercom_list" class="othercom_list">
   <div class="artWrap">
-  	<c:if test="${not empty requestScope.partnervoList}">
-	    <c:forEach var="partvo" items="${requestScope.partnervoList}">
-	      	<article partner_no="${partvo.partner_no}">
+  	<c:if test="${not empty requestScope.partnerList}">
+	    <c:forEach var="partvo" items="${requestScope.partnerList}">
+	      	<article>
+	      	
 	      	
 	      	<fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" />
 	        <fmt:parseNumber var="sizePerPage" value="${requestScope.sizePerPage}" /> 
@@ -548,6 +533,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	        <div class="cardHead">
 	          <div class="h5"><span id="asdasd">${partvo.partner_name}</span>&nbsp;&nbsp;&nbsp;<span class="h6">업종:${partvo.partner_type}</span></div>
 	          <button class="detailbtn"><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt="" id="detailbtn"></button>
+	          <input type="hidden" name="partner_no" value="${partvo.partner_no}" />
 	        </div>
 	        <ul class="cardBody">
 	          <li>
@@ -575,9 +561,15 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	      </article>
 	    </c:forEach>
     </c:if>
+    <c:if test="${empty requestScope.partnerList}">
+    	<div>거래처가 존재하지 않습니다.</div>
+    </c:if>
   </div>
+ 
 </div>
-
+ 	<div align="center" style="border: solid 1px gray; width: 50%; margin: 2% auto;  height: 100px;">
+		${requestScope.pageBar}
+	</div>
 
 <!-- popup area -->
 <div class="popupWrap">

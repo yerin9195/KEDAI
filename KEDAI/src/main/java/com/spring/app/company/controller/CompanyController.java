@@ -203,6 +203,7 @@ public class CompanyController {
 	}
 
 	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기
+	
 	@ResponseBody
 	@GetMapping(value = "/partnerPopupClick.kedai", produces = "text/plain;charset=UTF-8")
 	public String otherCom_get_select(String partner_no) throws JsonProcessingException {
@@ -215,19 +216,19 @@ public class CompanyController {
 
 		return jsonString;
 	} // end of public String partnerPopupClick(HttpServletRequest request) {
-
+	/*
 	// 거래처 상세보기 팝업 어떤것 클릭했는지 알아오기
 	@ResponseBody
-	@PostMapping(value = "/partnerPopupClick.kedai", produces = "text/plain;charset=UTF-8")
+	@GetMapping(value = "/partnerPopupClick.kedai", produces = "text/plain;charset=UTF-8")
 	public String partnerPopupClick(PartnerVO partvo) {
 
-		List<PartnerVO> partnervoList = service.partnerPopupClick(partvo);
+		List<PartnerVO> partnerList = service.partnerPopupClick(partvo);
 
 		JSONArray jsonArr = new JSONArray();
 
-		if (partnervoList != null) {
+		if (partnerList != null) {
 
-			for (PartnerVO pvo : partnervoList) {
+			for (PartnerVO pvo : partnerList) {
 				JSONObject jsonObj = new JSONObject();
 				jsonObj.put("partner_no", pvo.getPartner_no());
 				jsonObj.put("partner_name", pvo.getPartner_name());
@@ -255,7 +256,7 @@ public class CompanyController {
 		return jsonString;
 
 	} // end of public String partnerPopupClick(HttpServletRequest request) {
-
+*/
 	// 거래처 삭제하기 //
 	@ResponseBody
 	@PostMapping(value = "/company/delPartner_com.kedai", produces = "text/plain;charset=UTF-8")
@@ -280,7 +281,7 @@ public class CompanyController {
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	// 거래처 목록 보여주기 (여기서 페이징 처리 && 검색
-	@GetMapping("/partner/othercom_list.kedai")
+	@GetMapping("/othercom_list.kedai")
 	public ModelAndView partnerComList(ModelAndView mav, HttpServletRequest request) {
 		
 		List<PartnerVO> partnerList = null;
@@ -291,7 +292,9 @@ public class CompanyController {
 		
 		// 페이징 처리를 한 검색어가 있는 전체 글목록 보여주기
 		String searchType = request.getParameter("searchType");
+		// System.out.println(searchType);
 		String searchWord = request.getParameter("searchWord");
+		// System.out.println(searchWord);
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 				
 		if(searchType == null) {
@@ -317,7 +320,8 @@ public class CompanyController {
 		
 		// 총 게시물 건수(totalCount)
 		totalCount = service.getTotalCount(paraMap);
-				
+		// System.out.println("totalCount : " + totalCount);		
+		
 		totalPage = (int)Math.ceil((double)totalCount/sizePerPage);
 		// (double)124/10 => 12.4 ==> Math.ceil(12.4) => 13.0 ==> (int)13.0 ==> 13
 		
@@ -347,16 +351,16 @@ public class CompanyController {
 		
 		
         mav.addObject("partnerList", partnerList);
-		
+		System.out.println("");
         // 검색 시 검색조건 및 검색어 값 유지시키기	
-		if("partcom_name".equals(searchType) ||
-		   "partcom_type".equals(searchType) ||
-		   "partcom_emp".equals(searchType)) {
+		if("partner_name".equals(searchType) ||
+		   "partner_type".equals(searchType) ||
+		   "part_emp_name".equals(searchType)) {
 			mav.addObject("paraMap" , paraMap);
 		}
 		
 		// 페이지바 만들기
-        int blockSize = 6; // 1개 블럭(토막)당 보여지는 페이지번호의 개수
+        int blockSize = 3; // 1개 블럭(토막)당 보여지는 페이지번호의 개수
         int loop = 1;      // 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수[지금은 5개(== blockSize)] 까지만 증가하는 용도
         int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1; 
         // 공식 
@@ -393,7 +397,7 @@ public class CompanyController {
         }
         
         pageBar += "</ul>";
-        
+        // System.out.println(pageBar);
         mav.addObject("pageBar", pageBar);
         
         // 특정 글제목을 클릭하여 상세내용을 본 이후 사용자가 "검색된결과목록보기" 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다.
@@ -402,6 +406,7 @@ public class CompanyController {
         
         // 페이징처리 시 순번을 나타내기 위한 것
         mav.addObject("totalCount", totalCount);
+        // System.out.println("1111totalCount : " + totalCount);
         mav.addObject("currentShowPageNo", currentShowPageNo);
         mav.addObject("sizePerPage", sizePerPage);
         

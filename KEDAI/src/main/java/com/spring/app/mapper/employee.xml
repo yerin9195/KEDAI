@@ -29,7 +29,7 @@
     </resultMap>
 	
 	<!-- 직원 리스트 가져오기 -->
-	<select id="employeeList" parameterType="map" resultMap="MemberJoinDeptJob">
+	<select id="employeeList" parameterType="HashMap" resultMap="MemberJoinDeptJob">
 		SELECT empid, name, nickname, mobile, email
 		     , postcode, address, detailaddress, extraaddress
 		     , imgfilename, orgimgfilename, hire_date, salary, point
@@ -50,13 +50,13 @@
 			and dept_code is not null
 	    <choose>
 			<when test="searchType == 'department'">
-			and dept_name like '%${searchWord}%'
+			AND dept_name like '%'||#{searchWord}||'%'
 			</when>
 			<when test="searchType == 'position'">
-			and job_name like '%${searchWord}%'
+			AND job_name like '%'||#{searchWord}||'%'
 			</when>
 			<when test="searchType == 'name'">
-			and name like '%${searchWord}%'
+			AND name like '%'||#{searchWord}||'%'
 			</when>
 			<when test="searchType == 'personal-tel'">
 			and mobile = #{searchWord}
@@ -68,24 +68,28 @@
 	</select>
 
  
- 	<select id="employeeListTotal" parameterType="map" resultType="long">
-		    select count(1)
+ 	<select id="employeeListTotal" parameterType="HashMap" resultType="long">
+		    select count(*)
 		    from tbl_employees E1
+		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+			LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+			WHERE status = 1 
 	    <choose>
 			<when test="searchType == 'department'">
-			WHERE dept_name like '%${searchWord}%'
+			AND dept_name like '%'||#{searchWord}||'%'
 			</when>
 			<when test="searchType == 'position'">
-			WHERE job_name like '%${searchWord}%'
+			AND job_name like '%'||#{searchWord}||'%'
 			</when>
 			<when test="searchType == 'name'">
-			WHERE name like '%${searchWord}%'
+			AND name like '%'||#{searchWord}||'%'
 			</when>
 			<when test="searchType == 'personal-tel'">
-			WHERE mobile = #{searchWord}
+			AND mobile = #{searchWord}
 			</when>
 		</choose>
 	</select> 
+	
 
 	<!-- 클릭한 사원정보 가져오기 -->
 	<select id="empDetailList" resultMap="MemberJoinDeptJob">

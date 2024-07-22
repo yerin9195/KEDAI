@@ -60,8 +60,8 @@ public class CompanyService_imple implements CompanyService{
 	@Override
 	public List<PartnerVO> partnerPopupClick(PartnerVO partvo) {
 	//	System.out.println("test " +partvo.getPartner_name());
-		List<PartnerVO> partnervoList = dao.partnerPopupClick(partvo.getPartner_name());
-		return partnervoList;
+		List<PartnerVO> partnerList = dao.partnerPopupClick(partvo.getPartner_name());
+		return partnerList;
 	}
 	
 	// 거래처 삭제하기 

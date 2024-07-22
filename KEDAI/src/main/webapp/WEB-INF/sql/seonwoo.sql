@@ -272,60 +272,149 @@ WHERE rno between 1 and 10
 desc tbl_business_part;
 
 
-<select id="wordSearchShow" parameterType="HashMap" resultType="String">
-		<choose>
-			<when test='searchType == "subject"'>
-				select subject
-			</when>
-			<when test='searchType == "name"'>
-				select distinct name
-			</when>
-		</choose>
-		from tbl_board
-		where status = 1 
-		<choose>
-			<when test='searchType == "subject" and searchWord != ""'>
-				and lower(subject) like '%' ||lower(#{searchWord})|| '%'
-			</when>
-			<when test='searchType == "name" and searchWord != ""'>
-				and lower(name) like '%' ||lower(#{searchWord})|| '%'
-			</when>
-		</choose>
-		<choose>
-			<when test='searchType == "subject"'>
-				order by registerday desc
-			</when>
-			<when test='searchType == "name"'>
-				order by name asc
-			</when>
-		</choose>
-	</select>s
+select *
+from tbl_employees;
+
+
+select * from 
+tbl_dept
+
+SELECT empid, name, nickname, mobile, email
+ , postcode, address, detailaddress, extraaddress
+ , imgfilename, orgimgfilename, hire_date, salary, point
+ , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel
+FROM 
+(
+select empid, name, nickname
+     , email, mobile, postcode, address, detailaddress, extraaddress
+     , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, point
+     , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+     , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
+     , dept_tel
+     , rownum row_num
+from tbl_employees E1 
+LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+
+
+select COUNT(*) 
+from tbl_employees E1
+LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+WHERE status = 1 
+AND dept_name like '%'||${searchWord}||'%'
+
+
+
+select count(*)
+from tbl_business_part
+where lower(partner_name) like '%' ||'네오'|| '%'
+
+
+
+SELECT partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+FROM
+    (
+        select row_number() over(order by partner_name asc) AS rno,
+               partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+        from tbl_business_part
+    ) V
+WHERE rno between 1 and 10
+and lower(partner_name) like '%'||'네'||'%'
+and lower(partner_type) like '%'||'업'||'%'
+and lower(part_emp_name) like '%' ||'박'|| '%'
+and RNO between 1 and 10
+
+select partner_name
+from tbl_business_part
+where 1 = 1
+and lower(partner_name) like '%' ||'삼'|| '%'
+
+
+
+select count(*)
+from tbl_business_part
+where 1 = 1
+and lower(partner_name) like '%' ||'삼'|| '%'
+
+
+SELECT partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+FROM
+(
+    select row_number() over(order by partner_name asc) AS rno,
+           partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+    from tbl_business_part
+) V
+WHERE rno between 1 and 10
+and lower(partner_name) like '%'||'두현'||'%'
+
+select count(*)
+from tbl_business_part
+where lower(part_emp_name) like '%' ||'용'|| '%'
+
+
+
+SELECT partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+FROM
+(
+    select row_number() over(order by partner_name asc) AS rno,
+           partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+    from tbl_business_part
+) V
+WHERE rno between 1 and 10
+and lower(partner_name) like '%'||'삼'||'%'
+and lower(partner_type) like '%'||''||'%'
 
 
 
 
+SELECT partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+FROM
+(
+    select row_number() over(order by partner_name asc) AS rno,
+           partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+    from tbl_business_part
+    and lower(partner_name) like '%'||'삼'||'%'
+) V
+WHERE rno between 1 and 10
+
+
+select * 
+from tbl_business_part;
+
+
+SELECT partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+FROM
+(
+  SELECT rownum AS rno
+       , partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+  FROM 
+  (
+      select partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+      from tbl_business_part 
+      order by partner_name asc
+  ) V
+) T
+WHERE RNO between 6 and 8
 
 
 
+<choose>
+    <!-- 검색조건과 검색어가 존재하는 경우 -->
+    <when test='searchType == "partner_name" and searchWord != ""'>
+        and lower(partner_name) like '%'||lower(#{searchWord})||'%'
+    </when>
+    <when test='searchType == "partner_type" and searchWord != ""'>
+        and lower(partner_type) like '%'||lower(#{searchWord})||'%'
+    </when>
+    <when test='searchType == "part_emp_name" and searchWord != ""'>
+        and lower(part_emp_name) like '%'||lower(#{searchWord})||'%'
+    </when>
+    <otherwise></otherwise>
+</choose>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+select partner_no, partner_type, partner_name, partner_url, partner_postcode, partner_address, partner_detailaddress, partner_extraaddress,
+   originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank
+from tbl_business_part
+where partner_no = '333-33-33333'

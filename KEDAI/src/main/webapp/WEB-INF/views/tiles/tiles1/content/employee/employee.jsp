@@ -412,9 +412,29 @@ bigName{
 	width:5%;
 }
 
+.pagenation {
+	display: flex;
+	margin-top: 20px;
+}
 
 
+.pagenation li.paging {
+  background-color: #f2f2f2;
+  border: none;
+  color: #333;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
 
+.paging:hover {
+  background-color: #ddd;
+  color: #2c4459;
+}
 </style>
 
 
@@ -457,14 +477,10 @@ bigName{
 	
 	
 	function formatNumber(num) {
-		  return parseFloat(num).toLocaleString('ko-KR');
-		}
-
-		
 	
+		return parseFloat(num).toLocaleString('ko-KR');
 	
-	
-	
+	}
 	
 	// 클릭한 직원 상세정보 불러오는 이벤트
 	$(document).on('click','#empInfo', function(e){
@@ -619,13 +635,13 @@ bigName{
 	</div>		
 				
 	<div class="pagenation">
-		<button>&lt;</button>
+		<button></button>
 		<ul>
 		<c:forEach var="p" begin="1" end="${pagedResult.totalPages}">
 			<li class="paging" onclick="goPage(${p})"> ${p} </li>&nbsp;
 		</c:forEach>
 		</ul>
-		<button>&gt;</button>
+		<button></button>
 	</div>
 
 

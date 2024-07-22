@@ -60,9 +60,9 @@ public class CompanyDAO_imple implements CompanyDAO{
 	// 거래처 상세보기 어떤거 선택했는지 알아오기
 	@Override
 	public List<PartnerVO> partnerPopupClick(String partner_name) {
-		List<PartnerVO> partnervoList = sqlsession.selectList("company.partnerPopupClick", partner_name);
+		List<PartnerVO> partnerList = sqlsession.selectList("company.partnerPopupClick", partner_name);
 	//	System.out.println("asd" + partnervoList.toString());
-		return partnervoList;
+		return partnerList;
 	}
 
 	// 삭제할 거래처 사업자 번호 알아오기

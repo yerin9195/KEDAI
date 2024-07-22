@@ -15,8 +15,7 @@
 		from tbl_job
 		order by job_code asc
 	</select>
-	
-	<select id="idDuplicateCheck" resultType="String">
+		<select id="idDuplicateCheck" resultType="String">
 		select empid
 		from tbl_employees
 		where empid = #{empid}

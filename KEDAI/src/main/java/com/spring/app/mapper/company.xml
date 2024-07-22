@@ -16,7 +16,7 @@
 		select partner_no, partner_type, partner_name, partner_url, partner_postcode, partner_address, partner_detailaddress, partner_extraaddress,
 		       originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank
 		from tbl_business_part
-        where partner_name = #{partner_name}
+        where partner_no = #{partner_no}
 	</select>
 	
 	
@@ -101,13 +101,13 @@
 		from tbl_business_part
 		<choose>
 			<when test='searchType == "partner_name" and searchWord != ""'>
-				and lower(partner_name) like '%' ||lower(#{searchWord})|| '%'
+			where lower(partner_name) like '%' ||lower(#{searchWord})|| '%'
 			</when>
 			<when test='searchType == "partner_type" and searchWord != ""'>
-				and lower(partner_type) like '%' ||lower(#{searchWord})|| '%'
+			where lower(partner_type) like '%' ||lower(#{searchWord})|| '%'
 			</when>
 			<when test='searchType == "part_emp_name" and searchWord != ""'>
-				and lower(part_emp_name) like '%' ||lower(#{searchWord})|| '%'
+			where lower(part_emp_name) like '%' ||lower(#{searchWord})|| '%'
 			</when>
 			<otherwise></otherwise>
 		</choose>
@@ -117,27 +117,32 @@
 	
 	<!-- // 글목록 가져오기(페이징처리를 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것) -->
 	<select id="PartnerListSearch_withPaging" parameterType="HashMap" resultType="PartnerVO">
-		SELECT partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+		SELECT partner_no, partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
 		FROM
-			(
-			    select row_number() over(order by partner_name asc) AS rno,
-			           partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
-			    from tbl_business_part
-			) V
-		WHERE rno between 1 and 10
-        <choose>
-        	<!-- 검색조건과 검색어가 존재하는 경우 -->
-			<when test='searchType == "partner_name" and searchWord != ""'>
-				and lower(partner_name) like '%'||lower(#{searchWord})||'%'
-			</when>
-			<when test='searchType == "partner_type" and searchWord != ""'>
-				and lower(partner_type) like '%'||lower(#{searchWord})||'%'
-			</when>
-			<when test='searchType == "part_emp_name" and searchWord != ""'>
-				and lower(part_emp_name) like '%'||lower(#{searchWord})||'%'
-			</when>
-			<otherwise></otherwise>
-		</choose>
+		(
+		  SELECT rownum AS rno ,partner_no
+		       , partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+		  FROM 
+		  (
+		      select partner_no, partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
+		      from tbl_business_part 
+		      
+		      <choose>
+				    <!-- 검색조건과 검색어가 존재하는 경우 -->
+				    <when test='searchType == "partner_name" and searchWord != ""'>
+				        where lower(partner_name) like '%'||lower(#{searchWord})||'%'
+				    </when>
+				    <when test='searchType == "partner_type" and searchWord != ""'>
+				        where lower(partner_type) like '%'||lower(#{searchWord})||'%'
+				    </when>
+				    <when test='searchType == "part_emp_name" and searchWord != ""'>
+				       where lower(part_emp_name) like '%'||lower(#{searchWord})||'%'
+				    </when>
+				    <otherwise></otherwise>
+				</choose>
+		      order by partner_name asc
+		  ) V
+		) T
 		WHERE RNO between #{startRno} and #{endRno}
 	</select>
 	<!-- 
