@@ -27,7 +27,7 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 	public List<Map<String, String>> employeeList(Map<String, String> paraMap) {
 		
 		List<Map<String, String>> employeeList = sqlsession.selectList("employee.employeeList", paraMap);
-		System.out.println("111employeeList : " + employeeList);
+		// System.out.println("111employeeList : " + employeeList);
 		return employeeList;
 	}
 	

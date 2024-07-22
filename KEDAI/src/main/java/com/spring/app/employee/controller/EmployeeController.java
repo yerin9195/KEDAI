@@ -44,13 +44,13 @@ public class EmployeeController {
 	public ModelAndView employeelist_select(
 			@RequestParam(required = false) String searchType, 
 			@RequestParam(required = false) String searchWord, 
-			@RequestParam(required = false, defaultValue="1") Integer pageNumber, 
+			@RequestParam(required = false, defaultValue="0") Integer pageNumber, 
 			@RequestParam(required = false, defaultValue="3") Integer pageSize,
 			ModelAndView mav) {
 		Pageable pageable = PageRequest.of(pageNumber, pageSize); 
 		
-		System.out.println("searchType:" + searchType + ", searchWord: " + searchWord +
-				", pageNumber: " + pageNumber + ", pageSize:" + pageSize);
+		// System.out.println("searchType:" + searchType + ", searchWord: " + searchWord +
+		//", pageNumber: " + pageNumber + ", pageSize:" + pageSize);
 		
 		Page<Map<String,String>> pagedResult = service.employeeList(searchType, searchWord, pageable);
 		// System.out.println("page : " + page);

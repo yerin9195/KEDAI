@@ -532,7 +532,7 @@ bigName{
 	function goSearch(page) {
 		const frm = document.employee_search_frm;
 		frm.pageSize.value = $("#sizePerPage option:selected").val();
-		if (page) {
+		if (page >= 0) {
 			frm.pageNumber.value = page;
 		}
 		
@@ -638,7 +638,7 @@ bigName{
 		<button></button>
 		<ul>
 		<c:forEach var="p" begin="1" end="${pagedResult.totalPages}">
-			<li class="paging" onclick="goPage(${p})"> ${p} </li>&nbsp;
+			<li class="paging" onclick="goPage(${p-1})"> ${p} </li>&nbsp;
 		</c:forEach>
 		</ul>
 		<button></button>
