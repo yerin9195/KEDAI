@@ -39,4 +39,7 @@ public interface CommunityService {
 	// 댓글쓰기(Transaction 처리)
 	int addComment(CommentVO commentvo) throws Throwable; // java.lang.Throwable => java.lang.Exception, java.lang.Error 의 부모이다. => 어떠한 오류가 발생하던지 처리하겠다는 의미이다. 
 
+	// 댓글 내용들을 페이징 처리하기
+	List<CommentVO> getCommentList_Paging(Map<String, String> paraMap);
+
 }

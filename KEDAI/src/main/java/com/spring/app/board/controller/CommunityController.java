@@ -495,9 +495,45 @@ public class CommunityController {
 	@GetMapping(value="/community/commentList.kedai", produces="text/plain;charset=UTF-8")
 	public String commentList(HttpServletRequest request) {
 		
+		String fk_community_seq = request.getParameter("fk_community_seq");
+		String currentShowPageNo = request.getParameter("currentShowPageNo");
 		
+		if(currentShowPageNo == null) {
+			currentShowPageNo = "1"; // default 로 1 페이지를 보여준다.
+		}
 		
-		return "";
+		int sizePerPage = 5; // 한 페이지당 5개의 댓글을 보여준다.
+		
+		int startRno = ((Integer.parseInt(currentShowPageNo) - 1) * sizePerPage) + 1; // 시작 행번호 
+        int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		
+        Map<String, String> paraMap = new HashMap<>();
+        paraMap.put("fk_community_seq", fk_community_seq);
+        paraMap.put("currentShowPageNo", currentShowPageNo);
+        paraMap.put("startRno", String.valueOf(startRno));
+        paraMap.put("endRno", String.valueOf(endRno));
+        
+		List<CommentVO> commentList = service.getCommentList_Paging(paraMap);
+
+		JSONArray jsonArr = new JSONArray(); // []
+		
+		if(commentList != null) {
+			for(CommentVO commentvo : commentList) {
+				JSONObject jsonObj = new JSONObject(); // {}
+				
+				jsonObj.put("comment_seq", commentvo.getComment_seq());
+				jsonObj.put("fk_empid", commentvo.getFk_empid());
+				
+				jsonObj.put("name", commentvo.getName());
+				jsonObj.put("nickname", commentvo.getNickname());
+				jsonObj.put("content", commentvo.getContent());
+				jsonObj.put("registerday", commentvo.getRegisterday());
+				
+				jsonArr.put(jsonObj);
+			} // end of for ----------
+		}
+		
+		return jsonArr.toString();
 	}
 	
 	

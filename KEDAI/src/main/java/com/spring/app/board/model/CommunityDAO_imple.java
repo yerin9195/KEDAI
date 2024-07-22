@@ -90,4 +90,11 @@ public class CommunityDAO_imple implements CommunityDAO {
 		int result = sqlsession.update("community.updateMemberPoint", paraMap);
 		return result;
 	}
+
+	@Override
+	public List<CommentVO> getCommentList_Paging(Map<String, String> paraMap) {
+		List<CommentVO> commentList = sqlsession.selectList("community.getCommentList_Paging", paraMap);
+		return commentList;
+	}
+
 }

@@ -166,9 +166,13 @@
 		where community_seq = #{fk_community_seq}
 	</update>
 	
-	<update id="updateMemberPoint" >
+	<update id="updateMemberPoint" parameterType="HashMap">
 		update tbl_employees set point = point + to_number(#{point}) 
 		where empid = #{empid}
 	</update>
+	
+	<select id="getCommentList_Paging" parameterType="HashMap" resultType="CommentVO">
+	
+	</select>
 
 </mapper>

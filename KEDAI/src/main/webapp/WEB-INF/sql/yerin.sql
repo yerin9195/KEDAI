@@ -916,3 +916,11 @@ select *
 from tbl_employees
 where nickname = 'Liam';
 
+select comment_seq, fk_empid, C.name, nickname, content, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday
+from tbl_comment C
+LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
+where C.status = 1 and fk_community_seq = 17
+order by comment_seq desc;
+
+
+

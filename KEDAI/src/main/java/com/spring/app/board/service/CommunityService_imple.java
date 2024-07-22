@@ -122,6 +122,11 @@ public class CommunityService_imple implements CommunityService {
 		return result;
 	}
 
-	
-	
+	// 댓글 내용들을 페이징 처리하기
+	@Override
+	public List<CommentVO> getCommentList_Paging(Map<String, String> paraMap) {
+		List<CommentVO> commentList = dao.getCommentList_Paging(paraMap);
+		return commentList;
+	}
+
 }

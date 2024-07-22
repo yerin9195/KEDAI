@@ -10,6 +10,9 @@ public class CommentVO {
 	public String registerday;       
 	public String status;
 	
+	// select 용
+	private String nickname;
+	
 	///////////////////////////////////////////////////////////////	
 		
 	// getters & setters
@@ -67,6 +70,14 @@ public class CommentVO {
 	
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}  
 	
 }
