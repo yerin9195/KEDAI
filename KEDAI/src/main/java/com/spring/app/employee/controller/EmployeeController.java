@@ -37,10 +37,7 @@ public class EmployeeController {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
-	
-	
-	
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// 사원리스트  
 	@RequestMapping(value="/employee.kedai") 
