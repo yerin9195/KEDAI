@@ -513,7 +513,7 @@ bigName{
 	 	      			$('#empAddress').val(item.address);
 	 	      			$('#empDetailAddress').val(item.detailaddress);
 	 	      			$('#empExtraAddress').val(item.extraaddress);
-	 	      			$("#pop_partnerImg").attr("src", "<%= ctxPath%>/resources/images/employee/" + item.orgimgfilename);
+	 	      			$("#pop_partnerImg").attr("src", "<%= ctxPath%>/resources/files/employees/" + item.imgfilename);
 	 	      			// console.log("empName : " + item.name);
 	 	      		})
 	 	        }
@@ -523,7 +523,7 @@ bigName{
 	 	      },
 	 	      error: function(request, status, error) {
 	 	    	  
-	 	      	alert("11111code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+	 	      	// alert("11111code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
 	 	      }
 	 	 });
 	});
@@ -633,7 +633,7 @@ bigName{
 			</table>
 		</div>	
 	</div>		
-				
+				            
 	<div class="pagenation">
 		<button></button>
 		<ul>
@@ -655,7 +655,7 @@ bigName{
 			<div class="section">
 				<div class="article left">
 					<div class="popupImg" style="width:200px; border: 1px solid red; height:200px; overflow: hidden;">
-						<img id="pop_partnerImg" src="" alt="" style="object-fit:none;">
+						<img id="pop_partnerImg" src="" alt="" style="object-fit:cover; width:100%; height:100%;">
 					</div>
 				</div>
 					<div class="article right">

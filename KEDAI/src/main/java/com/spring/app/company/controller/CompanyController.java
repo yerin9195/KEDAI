@@ -129,6 +129,8 @@ public class CompanyController {
 
 			// WAS의 webapp 의 절대 경로 알아오기
 			String root = mrequest.getSession().getServletContext().getRealPath("/");
+			
+			//String path = root+"resources"+File.separator+"files"+File.separator+"company";
 			// System.out.println(root);
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 

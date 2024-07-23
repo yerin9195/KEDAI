@@ -403,7 +403,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	        if(json.partner_no != null){
 	          $("#pop_partnerName").html(json.partner_name);
 	          $("#pop_partnerNo").html(json.partner_no);
-	          $("#pop_partnerImg").attr("src", "<%= ctxPath%>/resources/images/partner/" + json.imgfilename);
+	          $("#pop_partnerImg").attr("src", "<%= ctxPath%>/resources/files/company/" + json.imgfilename);
 	          $("#pop_partnerAddress").html(json.partner_address + " " + json.partner_detailaddress + " " + json.partner_extraaddress);
 	          $("#pop_partnerUrl").html(json.partner_url);
 	          $("#pop_partEmpTel").html(json.part_emp_tel);
@@ -581,7 +581,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
     <div class="popupBody">
       <div class="forAlign">
         <div class="popupImg" style="width:200px; border: 1px solid red; height:200px; overflow: hidden;">
-          <img id="pop_partnerImg" src="" alt="" style="object-fit: cover;">
+          <img id="pop_partnerImg" src="" alt="" style="object-fit: cover; width:100%; height:100%;">
 			<!-- 사진들어오는곳  -->
         </div>
         <ul class="popupList">

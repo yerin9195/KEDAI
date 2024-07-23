@@ -80,7 +80,7 @@ public class CompanyService_imple implements CompanyService{
 
 	@Override
 	public String getPartnerImagePath(String rootPath) {
-		String path = rootPath+"resources"+File.separator+"files";
+		String path = rootPath+"resources"+File.separator+"files"+File.separator+"company";
 		// System.out.println(path);
 		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
 					
