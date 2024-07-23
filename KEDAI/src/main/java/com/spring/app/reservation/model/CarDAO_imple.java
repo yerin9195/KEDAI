@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.spring.app.domain.BoardVO;
 import com.spring.app.domain.BusVO;
 import com.spring.app.domain.CarVO;
 import com.spring.app.domain.Day_shareVO;
@@ -85,6 +86,24 @@ public class CarDAO_imple implements CarDAO {
 	public int addcarApply_detail(Map<String, Object> paraMap) {
 		int n = sqlsession.insert("reservation.addcarApply_detail", paraMap);
 		return n;
+	}
+
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("reservation.getTotalCount", paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<Map<String, String>> carShareListSearch_withPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> carShareList = sqlsession.selectList("reservation.carShareListSearch_withPaging", paraMap);
+		return carShareList;
+	}
+
+	@Override
+	public List<String> searchShow(Map<String, String> paraMap) {
+		List<String> wordList = sqlsession.selectList("reservation.searchShow", paraMap);
+		return wordList;
 	}
 
 

@@ -653,3 +653,47 @@ select car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year
 from tbl_car
 where fk_empid = '2010400-001';
 
+select res_num, fk_car_seq, start_date,last_date,dp_name,dp_add,dp_lat, dp_lng, ds_name, ds_add, ds_lat, ds_lng, want_max, end_status, cancel_status, start_time
+from tbl_day_share
+order by res_num;
+
+select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname
+from
+(
+select row_number() over(order by res_num desc) AS rno, res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname
+from 
+(
+select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, fk_car_seq
+from tbl_day_share
+where end_status = 1 and cancel_status = 1 and lower(dp_name) like '%'|| lower(#{searchWord})||'%'
+)a cross join
+(
+    select car_seq, fk_empid, car_num, car_type, max_num, nickname
+    from 
+    (
+        select *
+        from tbl_car
+    ) v cross join
+    (
+        select *
+        from tbl_employees
+    ) h
+    where fk_empid = h.empid
+)b
+where fk_car_seq = b.car_seq
+)C
+where c.rno between 1 and 5
+
+
+
+
+
+desc tbl_day_share
+
+   alter table tbl_day_share
+   add readCount number;
+   
+   commit;
+select count(*)
+from tbl_day_share
+where cancel_status = 1

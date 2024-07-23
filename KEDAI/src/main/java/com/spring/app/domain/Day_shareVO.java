@@ -22,6 +22,11 @@ public class Day_shareVO {
 	private int total_pay;
 	private int total_nonpay;
 	
+	
+	/////////////select 용/////////////
+	private String nickname;
+	private int readCount;
+	
 	public int getRes_num() {
 		return res_num;
 	}
@@ -137,4 +142,21 @@ public class Day_shareVO {
 	public void setStart_time(String start_time) {
 		this.start_time = start_time;
 	}
+	
+	///////////////////////////////////////////////////////////////////
+	
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public int getReadCount() {
+		return readCount;
+	}
+	public void setReadCount(int readCount) {
+		this.readCount = readCount;
+	}
+	
+	
 }

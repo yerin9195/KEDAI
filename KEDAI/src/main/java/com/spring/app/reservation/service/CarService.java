@@ -29,6 +29,12 @@ public interface CarService {
 
 	int addcarApply_detail(Map<String, Object> paraMap);
 
+	int getTotalCount(Map<String, String> paraMap);
+
+	List<Map<String, String>> carShareListSearch_withPaging(Map<String, String> paraMap);
+
+	List<String> searchShow(Map<String, String> paraMap);
+
 
 
 

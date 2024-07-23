@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.AES256;
+import com.spring.app.domain.BoardVO;
 import com.spring.app.domain.BusVO;
 import com.spring.app.domain.CarVO;
 import com.spring.app.domain.Day_shareVO;
@@ -83,6 +84,25 @@ public class CarService_imple implements CarService {
 	public int addcarApply_detail(Map<String, Object> paraMap) {
 		int n = dao.addcarApply_detail(paraMap);
 		return n;
+	}
+
+	// 총 게시물 건수(totalCount) 구하기
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int totalCount = dao.getTotalCount(paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<Map<String, String>> carShareListSearch_withPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> carShareList = dao.carShareListSearch_withPaging(paraMap);
+		return carShareList;
+	}
+
+	@Override
+	public List<String> searchShow(Map<String, String> paraMap) {
+		List<String> wordList = dao.searchShow(paraMap);
+		return wordList;
 	}
 
 
