@@ -3,6 +3,7 @@ package com.spring.app.board.model;
 import java.util.List;
 import java.util.Map;
 
+import com.spring.app.domain.CommentVO;
 import com.spring.app.domain.CommunityCategoryVO;
 import com.spring.app.domain.CommunityVO;
 
@@ -34,5 +35,16 @@ public interface CommunityDAO {
 
 	// 글조회수 1 증가하기
 	int increase_readCount(String community_seq);
+
+	// 댓글쓰기(Transaction 처리)
+	int addComment(CommentVO commentvo); // 댓글쓰기(tbl_comment 테이블에 insert)
+	int updateCommentCount(String fk_community_seq); // tbl_board 테이블에 commentCount 컬럼이 1증가(update)
+	int updateMemberPoint(Map<String, String> paraMap); // tbl_employees 테이블의 point 컬럼의 값을 50점 증가(update)
+
+	// 댓글 내용들을 페이징 처리하기
+	List<CommentVO> getCommentList_Paging(Map<String, String> paraMap);
+
+	// 페이징처리 시 보여주는 순번을 나타내기 위한 것
+	int getCommentTotalCount(String fk_community_seq);
 
 }
