@@ -43,6 +43,9 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		
+		loopshowNowTime();
+	//	showWeather();
+		
 		// 사원수 조회하기
 		$.ajax({
 			url: "${pageContext.request.contextPath}/member/memberTotalCountJSON.kedai",
@@ -143,6 +146,64 @@
 		});
 		
 	} // end of function goCoinUpdate(ctxPath, coinmoney, empid) ----------
+	
+	// 현재 시간 나타내기
+	function showNowTime(){
+		
+		const now = new Date();
+		
+		let month = now.getMonth() + 1;
+		if(month < 10){
+			month = "0"+month;
+		}
+		
+		let date = now.getDate();
+		if(date < 10){
+			date = "0"+date;
+		}
+		
+		let strNow = "<span style='font-size: 14pt; color: #363636;'>"+now.getFullYear()+"-"+month+"-"+date+"</span><br>";
+		
+		let hour = "";
+		if(now.getHours() < 10){
+			hour = "0"+now.getHours();
+		}
+		else{
+			hour = now.getHours();
+		}
+		
+		let minute = "";
+		if(now.getMinutes() < 10){
+			minute = "0"+now.getMinutes();
+		}
+		else{
+			minute = now.getMinutes();
+		}
+		
+		let second = "";
+		if(now.getSeconds() < 10){
+			second = "0"+now.getSeconds();
+		}
+		else{
+			second = now.getSeconds();
+		}
+		
+		strNow += "<span style='font-size: 28pt; font-weight: bold; color: #e68c0e;'>"+hour+":"+minute+":"+second+"</span>";
+		
+		$("span#clock").html(strNow);
+		
+	} // end of function showNowTime() ----------
+	
+	// 현재 시간 갱신하기
+	function loopshowNowTime(){
+		
+		showNowTime();
+		
+		setTimeout(function(){
+			loopshowNowTime();
+		}, 1000); // 시간을 1초 마다 자동 갱신하는 것이다.
+		
+	} // end of function loopshowNowTime() ----------
 </script>
 
 <%-- content start --%>
@@ -150,27 +211,30 @@
 	<section class="row justify-content-between">
 		<div class="col-9" style="border: 1px solid red;">
 			<div class="row justify-content-between mt-2">
-				<div class="col-5 pl-5 pr-2" style="height: 100px; display: flex; align-items: center;">
-					<div style="width: 60%">
-						<h6>사원 수</h6>
-						<h3><span class="memberTotalCount"></span></h3>
-					</div>
+				<div class="col-4 pl-5 pr-2" style="height: 100px; display: flex; align-items: center;">
 					<div style="width: 20%">
 						<div style="width: 80px; height: 80px; border-radius: 50%; background: #e68c0e; text-align: center; align-content: center;">
 							<img alt="people" src="<%= ctxPath%>/resources/images/common/people.png" width="60%" />
 						</div>
 					</div>
-				</div>
-				<div class="col-5 pl-5 pr-2" style="height: 100px; display: flex; align-items: center;">
-					<div style="width: 60%">
-						<h6>게시글 수</h6>
-						<h3><span class="boardTotalCount"></span></h3>
+					<div style="width: 60%; margin-left: 20%;">
+						<h6>사원 수</h6>
+						<h3><span class="memberTotalCount"></span></h3>
 					</div>
+				</div>
+				<div class="col-4 pl-5 pr-2" style="height: 100px; display: flex; align-items: center;">
 					<div style="width: 20%">
 						<div style="width: 80px; height: 80px; border-radius: 50%; background: #e68c0e; text-align: center; align-content: center;">
 							<img alt="note" src="<%= ctxPath%>/resources/images/common/note.png" width="60%" />
 						</div>
 					</div>
+					<div style="width: 60%; margin-left: 20%;">
+						<h6>게시글 수</h6>
+						<h3><span class="boardTotalCount"></span></h3>
+					</div>
+				</div>
+				<div class="col-3 pr-5" style="align-content: center; text-align: right;">
+					<span id="clock"></span>
 				</div>
 			</div>
 			

@@ -7,6 +7,11 @@
 	//     /KEDAI
 %>
 <style type="text/css">
+	.content {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 	.add_btn {
 		text-align: center;
 		align-content: center;
@@ -68,6 +73,63 @@
 		// 검색어 입력 시 자동글 완성하기 
 		$("div#displayList").hide();
 		
+		$("input[name='searchWord']").keydown(function(){
+			const wordLength = $(this).val().trim().length;
+			
+			if(wordLength == 0){
+				$("div#displayList").hide();
+			}
+			else{
+				if($("select[name='searchType']").val() == "subject" ||
+				   $("select[name='searchType']").val() == "name"){
+					
+					$.ajax({
+						url: "<%= ctxPath%>/community/wordSearchShow.kedai",
+						type: "get",
+						data: {"searchType":$("select[name='searchType']").val(),
+							   "searchWord":$("input[name='searchWord']").val()},
+						dataType: "json",
+						success: function(json){
+							console.log(JSON.stringify(json));
+							
+							if(json.length > 0){
+								let v_html = ``;
+								
+								$.each(json, function(index, item){
+									const word = item.word;
+									const idx = word.toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
+									const len = $("input[name='searchWord']").val().length;
+									const result = word.substring(0, idx)+"<sapn style='color: #2c4459; font-weight: bold;'>"+word.substring(idx, idx+len)+"</span>"+word.substring(idx+len);
+									
+									v_html += `<span style='cursor: pointer;' class='result'>\${result}</span><br>`; 
+								}); // end of $.each(json, function(index, item) ----------
+								
+								// 검색어 input 태그의 width 값 알아오기
+								const input_width = $("input[name='searchWord']").css("width"); 
+										
+								// 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
+								$("div#displayList").css({"width":input_width}); 
+								
+								$("div#displayList").html(v_html);
+								$("div#displayList").show();
+							}
+						},
+						error: function(request, status, error){
+			            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			            }
+					});
+				}
+			}
+		}); // end of $("input[name='searchWord']").keyup(function(){}) ----------
+		
+		$(document).on("click", "span.result", function(e){
+			const word = $(e.target).text();
+			
+			$("input[name='searchWord']").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력
+			$("div#displayList").hide();
+			goSearch();
+		});
+		
 	}); // end of $(document).ready(function(){}) ----------
 	
 	function goSearch(){
@@ -119,7 +181,7 @@
 		   		<input type="text" style="display: none;"/> 
 		   		<button type="button" class="search_btn" onclick="goSearch()">검색</button>
 		   		
-		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 22.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
+		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 25.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
 				</div>
 			</form>
 			&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%= ctxPath%>/community/add.kedai" class="btn add_btn">등록하기</a>
@@ -128,10 +190,8 @@
 		<table class="table table-bordered mt-3" id="communityTbl">
 			<thead>
 	       		<tr>
-	          		<th style="width: 10%; text-align: center;">순번</th>
-	          		<th style="width: 10%; text-align: center;">글번호</th>
-	         		<th style="width: 40%; text-align: center;">글제목</th>
-	         		<th style="width: 10%; text-align: center;">작성자</th>
+	          		<th style="width: 5%; text-align: center;">글번호</th>
+	         		<th style="width: 55%; text-align: center;" colspan="3">글제목</th>
 	         		<th style="width: 20%; text-align: center;">작성일자</th>
 	         		<th style="width: 10%; text-align: center;">조회수</th>
 	       		</tr>
@@ -139,7 +199,45 @@
 		
 			<tbody>
 				<c:if test="${not empty requestScope.communityList}">
-				
+					<c:forEach var="cvo" items="${requestScope.communityList}" varStatus="status">
+						<tr>
+							<td align="center" style="vertical-align: middle;">${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
+							<%-- 
+		      					>>> 페이징 처리시 보여주는 순번 공식 <<<
+		      					데이터개수-(페이지번호-1)*1페이지당보여줄개수-인덱스번호 => 순번
+		      				--%>
+		      				<td align="center" width="8%" style="vertical-align: middle; align-items: center;"><span style="display: inline-block; width: 50px; height: 50px; border-radius: 50%; overflow: hidden;"><img style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/files/${cvo.imgfilename}" /></span><span style="display: block;">${cvo.nickname}</span></td>
+		      				<td style="vertical-align: middle;">
+		      					<%-- === 댓글쓰기 및 파일첨부가 있는 게시판 시작 === --%>
+		      					<%-- 첨부파일이 없는 경우 --%>
+		      					<c:if test="${empty cvo.orgfilename}">
+		      						<c:if test="${cvo.comment_count > 0}">
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}<span style="vertical-align: super;">&nbsp;<span style="color: #e68c0e; font-size: 9pt; font-weight: bold;">[&nbsp;{$cvo.comment_count}&nbsp;]</span></span>
+		      								<br><span class="content">${cvo.content}</span> 
+		      							</span>
+		      						</c:if>
+		      						<c:if test="${cvo.comment_count == 0}">
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}<br><span class="content">${cvo.content}</span></span>
+		      						</c:if>
+		      					</c:if>
+		      					
+		      					<%-- 첨부파일이 있는 경우 --%>
+		      					<c:if test="${not empty cvo.orgfilename}">
+		      						<c:if test="${cvo.comment_count > 0}">
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}<span style="vertical-align: super;">&nbsp;<span style="color: #e68c0e; font-size: 9pt; font-weight: bold;">[&nbsp;{$cvo.comment_count}&nbsp;]</span></span>&nbsp;<i class="fa-solid fa-paperclip"></i>
+		      								<br><span class="content">${cvo.content}</span>
+		      							</span>
+		      						</c:if>
+		      						<c:if test="${cvo.comment_count == 0}">
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;<i class="fa-solid fa-paperclip"></i><br><span class="content">${cvo.content}</span></span>
+		      						</c:if>
+		      					</c:if>
+		      				</td>
+		      				<td align="center" width="5%" style="vertical-align: middle;"><img alt="heart" src="<%= ctxPath%>/resources/images/common/heart.png" width="50%" class="heart" /><span style="display: block;">0</span></td>
+		      				<td align="center" style="vertical-align: middle;">${cvo.registerday}</td>
+		      				<td align="center" style="vertical-align: middle;">${cvo.read_count}</td>
+						</tr>
+					</c:forEach>
 				</c:if>
 				
 				<c:if test="${empty requestScope.communityList}">

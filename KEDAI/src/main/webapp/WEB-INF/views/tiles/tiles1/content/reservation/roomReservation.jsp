@@ -5,6 +5,7 @@
    String ctxPath = request.getContextPath();
 %>
 
+
  <style type="text/css">
      .header { 
       display: flex; 
@@ -232,7 +233,7 @@
      const today = new Date();
      document.getElementById('currentDate').innerText = formatDate(today);
  }
-  
+  // test
  	function showallsub(){
  		 $.ajax({
  	        url: "<%= ctxPath %>/roomall.kedai",

@@ -340,7 +340,7 @@ public class BoardController {
 		
 		if(wordList != null) {
 			for(String word : wordList) {
-				JSONObject jsonObj = new JSONObject();
+				JSONObject jsonObj = new JSONObject(); // {}
 				
 				jsonObj.put("word", word);
 				
@@ -380,7 +380,6 @@ public class BoardController {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			
 		}
 		else { // redirect 되어서 넘어온 데이터가 아닌 경우 => sendRedirect 하지않고 직접 넘어온 경우
 			board_seq = request.getParameter("board_seq"); // 조회하고자 하는 글번호 받아오기
@@ -397,7 +396,6 @@ public class BoardController {
 			if(searchWord == null) { // 검색어가 없는 경우 원복한다.
 				searchWord = "";
 			}
-			
 		}
 		
 		mav.addObject("goBackURL", goBackURL);

@@ -182,11 +182,53 @@
      			return; // 종료
      		}
      		
-     		// 폼(form)을 전송(submit)
-     		const frm = document.addFrm;
-     		frm.method = "post";
-     		frm.action = "<%= ctxPath%>/community/addEnd.kedai";
-     		frm.submit();
+     		var formData = new FormData($("form[name='addFrm']").get(0)); // 폼에 작성된 모든 데이터 보내기 
+     		
+     		if(file_arr.length > 0){ // 첨부파일이 있을 경우
+     			
+     			// 첨부한 파일의 총합의 크기가 10MB 이상인 경우 전송되지 못하도록 한다.
+     			let sum_file_size = 0;
+     			for(let i=0; i<file_arr.length; i++){
+     				sum_file_size += file_arr[i].size;
+     			}
+     			
+     			if(sum_file_size >= 10*1024*1024){ // 첨부한 파일의 총합의 크기가 10MB 이상인 경우
+     				alert("첨부한 파일의 총합의 크기가 10MB 이상이라서 파일을 업로드할 수 없습니다.");
+  	        	  	return; // 종료
+     			}
+     			else{
+     				file_arr.forEach(function(item){
+     					formData.append("file_arr", item); // 첨부파일 추가하기
+     					// item 은 file_arr 배열 속에 저장되어진 배열요소인 첨부파일이 되어진다.
+     					// 같은 key를 가진 값을 여러 개 넣을 수 있다.
+     				});
+     			}
+     		}
+     		
+     		$.ajax({ 
+            	url: "<%= ctxPath%>/community/add.kedai",
+            	type: "post",
+            	data: formData,     // 이것은 객체이다. 객체 속에 보내야 할 데이터가 포함되어 있다.
+            	processData: false, // 파일 전송 시 설정 => 파일이 있다면 꼭 넣어주어야 한다. default 는 true 이다. 
+            	contentType: false, // 파일 전송 시 설정 => 파일이 있다면 꼭 넣어주어야 한다. default 는 true 이다.
+            	dataType: "json",
+            	success: function(json){
+            	//	console.log("~~~ 확인용 : " + JSON.stringify(json));
+                	
+                	if(json.result == 1) { // insert 가 성공되어진 경우
+                		alert("글 등록이 성공했습니다.");
+                		location.href="<%= ctxPath%>/community/addEnd.kedai"; 
+                	}
+                	else{
+                		alert("글 등록이 실패했습니다.");
+                	}
+            	},
+            	error: function(request, status, error){
+            		alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+          		}
+            
+			});
+     		
      	});
 		
 	}); // end of $(document).ready(function(){}) ----------
@@ -209,7 +251,7 @@
 	   			<input type="text" name="name" id="name" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).name}" readonly />
 	   		</div>
 	   		<div class="mb-3">
-	   			<label for="name" style="width: 30%;">닉네임</label>
+	   			<label for="nickname" style="width: 30%;">닉네임</label>
 	   			<input type="text" name="nickname" id="nickname" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).nickname}" readonly />
 	   		</div>
 	   		<div class="mb-3" style="display: flex;">
