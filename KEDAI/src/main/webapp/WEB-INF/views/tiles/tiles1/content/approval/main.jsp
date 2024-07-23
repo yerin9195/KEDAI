@@ -100,7 +100,10 @@ div.col-md-6 {
  </div> --%>
 		<div id="22" class="col-md-6">	
 			<div class="document_inProgress">
-      			<h5 style="margin: 1.5% 1%;"> 결재할 문서 </h5>
+      			<div  style="display:flex; align-items: center;">
+      				<span style="margin: 1.5% 1%; font-size: 15pt;"> 결재할 문서 </span>
+      				<span style="margin-left:auto; align-self: flex-end; padding: 1% 2%;" onclick="showAllMyDoc()">전체보기</span>
+      			</div>
       			<table class="table table-hover">
       				<thead>
         				<tr>
@@ -178,18 +181,18 @@ div.col-md-6 {
 	      									</c:if>  								
 	      								</td>
 	      								<c:if test="${empty pre_status}">
-	      									<td><span style="border : solid 0px green; background-color:gray; color:white; margin-top:10%;">미결재</span></td>
+	      									<td><span style="background-color:gray; color:white; margin-top:10%;">미결재</span></td>
 	      								</c:if>
 	      								<c:if test="${not empty pre_status}">
-	      									<td><span style="border : solid 0px green; background-color:#e68c0e; color:white; margin-top:10%;">결재중</span></td>
+	      									<td><span style="background-color:#e68c0e; color:white; margin-top:10%;">결재중</span></td>
 	      								</c:if>
 	      							</tr>
 	      						</c:if>
       						</c:forEach>
       					</c:if>
-      					<c:if test="${empty requestScope.nowApproval}">
+      					<c:if test="${empty requestScope.myDocList}">
       						<tr>
-      							<td colspan="4" align="center"> 결재할 문서가 없습니다. </td>
+      							<td colspan="4" align="center"> 기안이 진행중인 문서가 없습니다. </td>
       						</tr>
       					</c:if>
           			<!-- 	<tr>
