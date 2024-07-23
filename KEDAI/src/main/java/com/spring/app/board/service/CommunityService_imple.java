@@ -129,4 +129,11 @@ public class CommunityService_imple implements CommunityService {
 		return commentList;
 	}
 
+	// 페이징처리 시 보여주는 순번을 나타내기 위한 것
+	@Override
+	public int getCommentTotalCount(String fk_community_seq) {
+		int totalCount = dao.getCommentTotalCount(fk_community_seq);
+		return totalCount;
+	}
+
 }

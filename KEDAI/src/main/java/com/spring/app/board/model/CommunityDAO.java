@@ -44,4 +44,7 @@ public interface CommunityDAO {
 	// 댓글 내용들을 페이징 처리하기
 	List<CommentVO> getCommentList_Paging(Map<String, String> paraMap);
 
+	// 페이징처리 시 보여주는 순번을 나타내기 위한 것
+	int getCommentTotalCount(String fk_community_seq);
+
 }

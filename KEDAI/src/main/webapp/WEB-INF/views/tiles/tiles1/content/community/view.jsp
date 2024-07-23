@@ -48,6 +48,23 @@
 		background: #e68c0e;
 		color: #fff;
 	}
+	td.comment {
+		text-align: center;
+	}
+	.btnUpdateComment,
+	.btnDeleteComment {
+		border: solid 1px #2c4459;
+		color: #2c4459;
+		font-size: 9pt;
+		width: 60px;
+		height: 30px;
+	}
+	.btnUpdateComment:hover,
+	.btnDeleteComment:hover {
+		border: none;
+		background: #e68c0e;
+		color: #fff;
+	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -138,9 +155,48 @@
 				   "currentShowPageNo":currentShowPageNo},
 			dataType: "json",
 			success: function(json){
-				console.log(JSON.stringify(json));
+			//	console.log(JSON.stringify(json));
 				
+				let v_html = "";
 				
+				if(json.length > 0){
+					$.each(json, function(index, item){
+						v_html += "<tr>";
+						
+						v_html += "<td class='comment'>"+(item.totalCount-(currentShowPageNo-1)*item.sizePerPage-index)+"</td>";
+						<%-- 
+	                		>>> 페이징 처리시 보여주는 순번 공식 <<<
+	    			                    데이터개수 - (페이지번호 - 1) * 1페이지당보여줄개수 - 인덱스번호 => 순번 
+    			       	--%>
+	    			    v_html += "<td>"+item.content+"</td>";
+	    			    v_html += "<td class='comment'>"+item.nickname+"</td>";
+            			v_html += "<td class='comment'>"+item.registerday+"</td>";
+            			
+            			if(${sessionScope.loginuser != null} && "${sessionScope.loginuser.empid}" == item.fk_empid){
+            				v_html += "<td class='comment'><button class='btn btnUpdateComment'>수정</button><input type='hidden' value='"+item.comment_seq+"' />&nbsp;<button class='btn btnDeleteComment'>삭제</button><input type='hidden' value='"+currentShowPageNo+"' class='currentShowPageNo' /></td>";
+            			}
+            			else{
+            				v_html += "<td></td>"
+            			}
+						
+						v_html += "</tr>";
+						
+						
+					}); // end of $.each(json, function(index, item){}) ----------
+				}
+				else{
+					v_html += "<tr>";
+					v_html += 	"<td colspan='' class='comment'>댓글이 존재하지 않습니다.</td>";
+					v_html += "</tr>";
+				}
+				
+				$("tbody#commentDisplay").html(v_html);
+				
+				// 페이지바 함수 호출
+				const totalPage = Math.ceil(json[0].totalCount/json[0].sizePerPage);
+				// 12 / 5 = 2.4 ==> Math.ceil(2.4) ==> 3
+				
+				makeCommentPageBar(currentShowPageNo, totalPage);
 			},
             error: function(request, status, error){
             	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -148,6 +204,47 @@
 		});
 		
 	} // end of function goViewComment(currentShowPageNo) ----------
+	
+	function makeCommentPageBar(currentShowPageNo, totalPage){
+		
+		const blockSize = 5; // blockSize 는 1개 블럭(토막)당 보여지는 페이지번호의 개수
+		
+		let loop = 1; // 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수 => blockSize(5) 까지만 증가
+		let pageNo = Math.floor((currentShowPageNo-1)/blockSize)*blockSize+1;
+		/*
+			currentShowPageNo 가 3페이지인 경우
+			((3-1)/5)*5+1 => (2/5)*5+1 => Math.floor(0.4)*5+1 => 0*5+1 => 1
+		*/
+		
+		let pageBar_HTML = "<ul style='list-style: none;'>";
+		
+		// [처음][이전] 만들기 
+		if(pageNo != 1){
+			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment(1)'>[처음]</a></li>"; 
+			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment("+(pageNo-1)+")'>[이전]</a></li>"; 
+		}
+		
+		while(!(loop > blockSize || pageNo > totalPage)) {
+			if(pageNo == currentShowPageNo) {
+				pageBar_HTML += "<li style='display: inline-block; width: 30px; height: 30px; align-content: center; color: #fff; font-size: 12pt; border-radius: 50%; background: #e68c0e'>"+pageNo+"</li>";
+			}
+			else{
+				pageBar_HTML += "<li style='display: inline-block; width: 30px; font-size: 12pt;><a href='javascript:goViewComment("+pageNo+")'>"+pageNo+"</a><li>";
+			}
+			
+			loop++;
+        	pageNo++;
+		} // end of while() ----------
+		
+		// [다음][마지막] 만들기
+		if(pageNo <= totalPage) {
+			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment("+pageNo+")'>[다음]</a></li>"; 
+			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment("+totalPage+")'>[마지막]</a></li>"; 
+		}
+		
+		
+		
+	} // end of function makeCommentPageBar(currentShowPageNo, totalPage) ----------
 </script>
 
 <%-- content start --%>
@@ -239,13 +336,13 @@
 				</c:if>
 				
 				<%-- 댓글 내용 보여주기 --%>
-				<table class="table" style="margin-top: 5%; margin-bottom: 2%;">
+				<table class="table" style="margin-top: 10%; margin-bottom: 2%;">
 	         		<thead>
 	         			<tr>
 	           			 	<th style="width: 8%; text-align: center;">순번</th>
-	           			 	<th style="width: 52%; text-align: center;">내용</th>
+	           			 	<th style="width: 30%; text-align: center;">내용</th>
 				            <th style="width: 10%; text-align: center;">작성자</th>
-				            <th style="width: 15%; text-align: center;">작성일자</th>
+				            <th style="width: 20%; text-align: center;">작성일자</th>
 				            <th style="width: 15%; text-align: center;">수정/삭제</th>
 	         			</tr>
 	         		</thead>

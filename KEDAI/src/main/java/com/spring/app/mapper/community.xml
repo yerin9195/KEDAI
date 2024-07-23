@@ -172,7 +172,23 @@
 	</update>
 	
 	<select id="getCommentList_Paging" parameterType="HashMap" resultType="CommentVO">
+		SELECT comment_seq, fk_community_seq, fk_empid, name, nickname, content, registerday 
+		FROM
+		(
+		    select row_number() over(order by comment_seq desc) AS rno
+		         , comment_seq, fk_community_seq, fk_empid, C.name, nickname, content, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday
+		    from tbl_comment C
+		    LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
+		    where C.status = 1 and fk_community_seq = #{fk_community_seq}
+		    order by comment_seq desc
+		) V
+		WHERE V.rno between #{startRno} and #{endRno}
+	</select>
 	
+	<select id="getCommentTotalCount" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_comment
+		where fk_community_seq = #{fk_community_seq}
 	</select>
 
 </mapper>

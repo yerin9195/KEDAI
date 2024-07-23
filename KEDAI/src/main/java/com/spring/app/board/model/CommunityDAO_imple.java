@@ -97,4 +97,10 @@ public class CommunityDAO_imple implements CommunityDAO {
 		return commentList;
 	}
 
+	@Override
+	public int getCommentTotalCount(String fk_community_seq) {
+		int totalCount = sqlsession.selectOne("community.getCommentTotalCount", fk_community_seq);
+		return totalCount;
+	}
+
 }

@@ -269,7 +269,6 @@ public class CommunityController {
         }
 		
         while(!(loop > blockSize || pageNo > totalPage)) {
-        	
         	if(pageNo == currentShowPageNo) {
         		pageBar += "<li style='display: inline-block; width: 30px; height: 30px; align-content: center; color: #fff; font-size: 12pt; border-radius: 50%; background: #e68c0e'>"+pageNo+"</li>";
         	}
@@ -514,7 +513,8 @@ public class CommunityController {
         paraMap.put("endRno", String.valueOf(endRno));
         
 		List<CommentVO> commentList = service.getCommentList_Paging(paraMap);
-
+		int totalCount = service.getCommentTotalCount(fk_community_seq); // 페이징처리 시 보여주는 순번을 나타내기 위한 것
+		
 		JSONArray jsonArr = new JSONArray(); // []
 		
 		if(commentList != null) {
@@ -528,6 +528,9 @@ public class CommunityController {
 				jsonObj.put("nickname", commentvo.getNickname());
 				jsonObj.put("content", commentvo.getContent());
 				jsonObj.put("registerday", commentvo.getRegisterday());
+				
+				jsonObj.put("totalCount", totalCount);
+				jsonObj.put("sizePerPage", sizePerPage);
 				
 				jsonArr.put(jsonObj);
 			} // end of for ----------
