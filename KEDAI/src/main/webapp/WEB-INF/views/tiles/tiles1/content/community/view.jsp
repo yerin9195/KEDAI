@@ -48,15 +48,40 @@
 		background: #e68c0e;
 		color: #fff;
 	}
+	td.comment {
+		text-align: center;
+	}
+	.btnUpdateComment,
+	.btnDeleteComment {
+		border: solid 1px #2c4459;
+		color: #2c4459;
+		font-size: 9pt;
+		width: 60px;
+		height: 30px;
+	}
+	.btnUpdateComment:hover,
+	.btnDeleteComment:hover {
+		border: none;
+		background: #e68c0e;
+		color: #fff;
+	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
 	
+		goViewComment(1); // 페이징처리를 한 댓글 읽어오기
+		
 		$("span.move").hover(function(e){
 			$(e.target).addClass("moveColor");
 		}, 
 		function(e){
 			$(e.target).removeClass("moveColor");
+		});
+		
+		$("input:text[name='content']").bind("keydown", function(e){
+			if(e.keyCode == 13){ // enter 인 경우
+				goAddWrite();
+			}
 		});
 		
 	}); // end of $(document).ready(function(){}) ----------
@@ -80,6 +105,146 @@
 		frm.submit();
 		
 	} // end of function goView(community_seq) ----------
+	
+	function goAddWrite(){
+		
+		const comment_content = $("input:text[name='content']").val().trim();
+		if(comment_content == ""){
+			alert("댓글 내용을 입력하세요.");
+  			return; 
+		}
+		
+		goAddWrite_noAttach();
+		
+	} // end of function goAddWrite() ----------
+	
+	function goAddWrite_noAttach(){
+		
+		const queryString = $("form[name='addWriteFrm']").serialize();
+		// .serialize() => form 태그 내의 모든  name 값을 키값으로 만들어서 보내준다.
+		
+		$.ajax({
+			url: "<%= ctxPath%>/community/addComment.kedai",
+			data: queryString, 
+			type: "post",
+            dataType: "json",
+            success: function(json){
+            //	console.log(JSON.stringify(json));
+            	
+            	if(json.n == 0){
+            		alert(json.name + "님의 포인트는 300점을 초과할 수 없으므로 댓글쓰기가 불가합니다.");
+            	}
+            	else{
+            		goViewComment(1); // 페이징처리를 한 댓글 읽어오기
+            	}
+            	
+            	$("input:text[name='content']").val("");
+            },
+            error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+		});
+	
+	} // end of function goAddWrite_noAttach() ----------
+	
+	function goViewComment(currentShowPageNo){
+		
+		$.ajax({
+			url: "<%= ctxPath%>/community/commentList.kedai",
+			data: {"fk_community_seq":"${requestScope.cvo.community_seq}",
+				   "currentShowPageNo":currentShowPageNo},
+			dataType: "json",
+			success: function(json){
+			//	console.log(JSON.stringify(json));
+				
+				let v_html = "";
+				
+				if(json.length > 0){
+					$.each(json, function(index, item){
+						v_html += "<tr>";
+						
+						v_html += "<td class='comment'>"+(item.totalCount-(currentShowPageNo-1)*item.sizePerPage-index)+"</td>";
+						<%-- 
+	                		>>> 페이징 처리시 보여주는 순번 공식 <<<
+	    			                    데이터개수 - (페이지번호 - 1) * 1페이지당보여줄개수 - 인덱스번호 => 순번 
+    			       	--%>
+	    			    v_html += "<td>"+item.content+"</td>";
+	    			    v_html += "<td class='comment'>"+item.nickname+"</td>";
+            			v_html += "<td class='comment'>"+item.registerday+"</td>";
+            			
+            			if(${sessionScope.loginuser != null} && "${sessionScope.loginuser.empid}" == item.fk_empid){
+            				v_html += "<td class='comment'><button class='btn btnUpdateComment'>수정</button><input type='hidden' value='"+item.comment_seq+"' />&nbsp;<button class='btn btnDeleteComment'>삭제</button><input type='hidden' value='"+currentShowPageNo+"' class='currentShowPageNo' /></td>";
+            			}
+            			else{
+            				v_html += "<td></td>"
+            			}
+						
+						v_html += "</tr>";
+						
+						
+					}); // end of $.each(json, function(index, item){}) ----------
+				}
+				else{
+					v_html += "<tr>";
+					v_html += 	"<td colspan='' class='comment'>댓글이 존재하지 않습니다.</td>";
+					v_html += "</tr>";
+				}
+				
+				$("tbody#commentDisplay").html(v_html);
+				
+				// 페이지바 함수 호출
+				const totalPage = Math.ceil(json[0].totalCount/json[0].sizePerPage);
+				// 12 / 5 = 2.4 ==> Math.ceil(2.4) ==> 3
+				
+				makeCommentPageBar(currentShowPageNo, totalPage);
+			},
+            error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+		});
+		
+	} // end of function goViewComment(currentShowPageNo) ----------
+	
+	function makeCommentPageBar(currentShowPageNo, totalPage){
+		
+		const blockSize = 5; // blockSize 는 1개 블럭(토막)당 보여지는 페이지번호의 개수
+		
+		let loop = 1; // 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수 => blockSize(5) 까지만 증가
+		let pageNo = Math.floor((currentShowPageNo-1)/blockSize)*blockSize+1;
+		/*
+			currentShowPageNo 가 3페이지인 경우
+			((3-1)/5)*5+1 => (2/5)*5+1 => Math.floor(0.4)*5+1 => 0*5+1 => 1
+		*/
+		
+		let pageBar_HTML = "<ul style='list-style: none;'>";
+		
+		// [처음][이전] 만들기 
+		if(pageNo != 1){
+			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment(1)'>[처음]</a></li>"; 
+			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment("+(pageNo-1)+")'>[이전]</a></li>"; 
+		}
+		
+		while(!(loop > blockSize || pageNo > totalPage)) {
+			if(pageNo == currentShowPageNo) {
+				pageBar_HTML += "<li style='display: inline-block; width: 30px; height: 30px; align-content: center; color: #fff; font-size: 12pt; border-radius: 50%; background: #e68c0e'>"+pageNo+"</li>";
+			}
+			else{
+				pageBar_HTML += "<li style='display: inline-block; width: 30px; font-size: 12pt;><a href='javascript:goViewComment("+pageNo+")'>"+pageNo+"</a><li>";
+			}
+			
+			loop++;
+        	pageNo++;
+		} // end of while() ----------
+		
+		// [다음][마지막] 만들기
+		if(pageNo <= totalPage) {
+			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment("+pageNo+")'>[다음]</a></li>"; 
+			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment("+totalPage+")'>[마지막]</a></li>"; 
+		}
+		
+		
+		
+	} // end of function makeCommentPageBar(currentShowPageNo, totalPage) ----------
 </script>
 
 <%-- content start --%>
@@ -153,6 +318,7 @@
 		                  		<th style="width: 15%;">작성자</th>
 	               				<td>
 	               					<input type="hidden" name="fk_empid" value="${sessionScope.loginuser.empid}" readonly />
+	               					<input type="hidden" name="name" value="${sessionScope.loginuser.name}" readonly />
 	               					<input type="text" name="nickname" value="${sessionScope.loginuser.nickname}" readonly />
 	               				</td>
 							</tr>
@@ -162,7 +328,7 @@
 								<td>
 	                  				<input type="text" name="content" size="90" maxlength="1000" placeholder="댓글을 남겨보세요." style="height: 30px;" />
 	                  				<%-- 댓글에 달리는 원게시물 글번호(댓글의 부모글 글번호) --%>
-	                  				<input type="hidden" name="parentSeq" value="${requestScope.cvo.community_seq}" readonly />
+	                  				<input type="hidden" name="fk_community_seq" value="${requestScope.cvo.community_seq}" readonly />
 	                  			</td>
 							</tr>
 						</table>
@@ -170,13 +336,13 @@
 				</c:if>
 				
 				<%-- 댓글 내용 보여주기 --%>
-				<table class="table" style="margin-top: 5%; margin-bottom: 2%;">
+				<table class="table" style="margin-top: 10%; margin-bottom: 2%;">
 	         		<thead>
 	         			<tr>
 	           			 	<th style="width: 8%; text-align: center;">순번</th>
-	           			 	<th style="width: 52%; text-align: center;">내용</th>
+	           			 	<th style="width: 30%; text-align: center;">내용</th>
 				            <th style="width: 10%; text-align: center;">작성자</th>
-				            <th style="width: 15%; text-align: center;">작성일자</th>
+				            <th style="width: 20%; text-align: center;">작성일자</th>
 				            <th style="width: 15%; text-align: center;">수정/삭제</th>
 	         			</tr>
 	         		</thead>

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.spring.app.domain.CommentVO;
 import com.spring.app.domain.CommunityCategoryVO;
 import com.spring.app.domain.CommunityVO;
 
@@ -71,4 +72,35 @@ public class CommunityDAO_imple implements CommunityDAO {
 		int n = sqlsession.update("community.increase_readCount", community_seq);
 		return n;
 	}
+
+	@Override
+	public int addComment(CommentVO commentvo) {
+		int n = sqlsession.insert("community.addComment", commentvo);
+		return n;
+	}
+
+	@Override
+	public int updateCommentCount(String fk_community_seq) {
+		int n = sqlsession.update("community.updateCommentCount", fk_community_seq);
+		return n;
+	}
+
+	@Override
+	public int updateMemberPoint(Map<String, String> paraMap) {
+		int result = sqlsession.update("community.updateMemberPoint", paraMap);
+		return result;
+	}
+
+	@Override
+	public List<CommentVO> getCommentList_Paging(Map<String, String> paraMap) {
+		List<CommentVO> commentList = sqlsession.selectList("community.getCommentList_Paging", paraMap);
+		return commentList;
+	}
+
+	@Override
+	public int getCommentTotalCount(String fk_community_seq) {
+		int totalCount = sqlsession.selectOne("community.getCommentTotalCount", fk_community_seq);
+		return totalCount;
+	}
+
 }

@@ -26,6 +26,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import com.spring.app.board.service.CommunityService;
 import com.spring.app.common.FileManager;
 import com.spring.app.common.MyUtil;
+import com.spring.app.domain.CommentVO;
 import com.spring.app.domain.CommunityCategoryVO;
 import com.spring.app.domain.CommunityVO;
 import com.spring.app.domain.MemberVO;
@@ -268,7 +269,6 @@ public class CommunityController {
         }
 		
         while(!(loop > blockSize || pageNo > totalPage)) {
-        	
         	if(pageNo == currentShowPageNo) {
         		pageBar += "<li style='display: inline-block; width: 30px; height: 30px; align-content: center; color: #fff; font-size: 12pt; border-radius: 50%; background: #e68c0e'>"+pageNo+"</li>";
         	}
@@ -469,5 +469,75 @@ public class CommunityController {
 		
 		return mav;
 	}
+	
+	// 댓글쓰기(Ajax 로 처리)
+	@ResponseBody
+	@PostMapping(value="/community/addComment.kedai", produces="text/plain;charset=UTF-8")
+	public String addComment(CommentVO commentvo) {
+		
+		int n = 0;
+		try {
+			n = service.addComment(commentvo);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		
+		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("n", n);
+		jsonObj.put("name", commentvo.getName());
+		
+		return jsonObj.toString();
+	}
+	
+	// 댓글 내용들을 페이징 처리하기
+	@ResponseBody
+	@GetMapping(value="/community/commentList.kedai", produces="text/plain;charset=UTF-8")
+	public String commentList(HttpServletRequest request) {
+		
+		String fk_community_seq = request.getParameter("fk_community_seq");
+		String currentShowPageNo = request.getParameter("currentShowPageNo");
+		
+		if(currentShowPageNo == null) {
+			currentShowPageNo = "1"; // default 로 1 페이지를 보여준다.
+		}
+		
+		int sizePerPage = 5; // 한 페이지당 5개의 댓글을 보여준다.
+		
+		int startRno = ((Integer.parseInt(currentShowPageNo) - 1) * sizePerPage) + 1; // 시작 행번호 
+        int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		
+        Map<String, String> paraMap = new HashMap<>();
+        paraMap.put("fk_community_seq", fk_community_seq);
+        paraMap.put("currentShowPageNo", currentShowPageNo);
+        paraMap.put("startRno", String.valueOf(startRno));
+        paraMap.put("endRno", String.valueOf(endRno));
+        
+		List<CommentVO> commentList = service.getCommentList_Paging(paraMap);
+		int totalCount = service.getCommentTotalCount(fk_community_seq); // 페이징처리 시 보여주는 순번을 나타내기 위한 것
+		
+		JSONArray jsonArr = new JSONArray(); // []
+		
+		if(commentList != null) {
+			for(CommentVO commentvo : commentList) {
+				JSONObject jsonObj = new JSONObject(); // {}
+				
+				jsonObj.put("comment_seq", commentvo.getComment_seq());
+				jsonObj.put("fk_empid", commentvo.getFk_empid());
+				
+				jsonObj.put("name", commentvo.getName());
+				jsonObj.put("nickname", commentvo.getNickname());
+				jsonObj.put("content", commentvo.getContent());
+				jsonObj.put("registerday", commentvo.getRegisterday());
+				
+				jsonObj.put("totalCount", totalCount);
+				jsonObj.put("sizePerPage", sizePerPage);
+				
+				jsonArr.put(jsonObj);
+			} // end of for ----------
+		}
+		
+		return jsonArr.toString();
+	}
+	
 	
 }

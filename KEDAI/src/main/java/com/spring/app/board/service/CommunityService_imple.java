@@ -1,12 +1,17 @@
 package com.spring.app.board.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.app.board.model.CommunityDAO;
+import com.spring.app.domain.CommentVO;
 import com.spring.app.domain.CommunityCategoryVO;
 import com.spring.app.domain.CommunityVO;
 
@@ -90,6 +95,45 @@ public class CommunityService_imple implements CommunityService {
 		return cvo;
 	}
 
-	
-	
+	// 댓글쓰기(Transaction 처리)
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int addComment(CommentVO commentvo) throws Throwable {
+		
+		int n1 = 0, n2 = 0, result = 0;
+		
+		// 댓글쓰기(tbl_comment 테이블에 insert)
+		n1 = dao.addComment(commentvo);
+
+		if(n1 == 1) {
+			// tbl_board 테이블에 commentCount 컬럼이 1 증가(update)
+			n2 = dao.updateCommentCount(commentvo.getFk_community_seq());
+		}
+		
+		if(n2 == 1) {
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("empid", commentvo.getFk_empid());
+			paraMap.put("point", "50");
+			
+			// tbl_employees 테이블의 point 컬럼의 값을 50점 증가(update)
+			result = dao.updateMemberPoint(paraMap);
+		}
+		
+		return result;
+	}
+
+	// 댓글 내용들을 페이징 처리하기
+	@Override
+	public List<CommentVO> getCommentList_Paging(Map<String, String> paraMap) {
+		List<CommentVO> commentList = dao.getCommentList_Paging(paraMap);
+		return commentList;
+	}
+
+	// 페이징처리 시 보여주는 순번을 나타내기 위한 것
+	@Override
+	public int getCommentTotalCount(String fk_community_seq) {
+		int totalCount = dao.getCommentTotalCount(fk_community_seq);
+		return totalCount;
+	}
+
 }
