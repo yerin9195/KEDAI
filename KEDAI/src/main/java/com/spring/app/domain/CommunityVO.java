@@ -12,7 +12,7 @@ public class CommunityVO {
 	private String read_count;
 	private String registerday;
 	private String status;
-	private String comment_count;;
+	private String comment_count;
 	
 	// select 용
 	private String previousseq;     // 이전글번호
@@ -21,9 +21,11 @@ public class CommunityVO {
 	private String nextsubject;     // 다음글제목
 	
 	private String category_name;
+	
 	private String nickname;
 	private String imgfilename;
-	private String orgfilename;
+	
+	private String fk_community_seq;
 	
 	///////////////////////////////////////////////////////////////	
 	
@@ -172,12 +174,12 @@ public class CommunityVO {
 		this.imgfilename = imgfilename;
 	}
 
-	public String getOrgfilename() {
-		return orgfilename;
+	public String getFk_community_seq() {
+		return fk_community_seq;
 	}
 
-	public void setOrgfilename(String orgfilename) {
-		this.orgfilename = orgfilename;
+	public void setFk_community_seq(String fk_community_seq) {
+		this.fk_community_seq = fk_community_seq;
 	}
 	
 }

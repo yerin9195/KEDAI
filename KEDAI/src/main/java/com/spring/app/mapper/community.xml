@@ -60,18 +60,19 @@
 		<result property="read_count" 		column="read_count" 	  javaType="String" />
 		<result property="registerday" 		column="registerday" 	  javaType="String" />
 		<result property="comment_count" 	column="comment_count" 	  javaType="String" />
+		<result property="fk_community_seq" column="fk_community_seq" javaType="String" />
 	</resultMap>
 	
 	<select id="communityListSearch_withPaging" parameterType="HashMap" resultType="CommunityVO" resultMap="communityJoinCategory">
-		SELECT community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count
+		SELECT community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count, fk_community_seq
 		FROM
 		(
 		    SELECT rownum AS rno
-		         , community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count
+		         , community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count, fk_community_seq
 		    FROM 
 		    (
 		        select community_seq, fk_category_code, A.category_name, fk_empid, C.name, E.nickname, E.imgfilename, subject, content 
-		             , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count
+		             , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count, fk_community_seq
 		        from tbl_community C 
 		        LEFT JOIN tbl_community_category A ON C.fk_category_code = A.category_code
 		        LEFT JOIN (select fk_community_seq from tbl_community_file group by fk_community_seq) F ON C.community_seq = F.fk_community_seq
@@ -130,7 +131,7 @@
 	
 	<select id="getView" parameterType="HashMap" resultType="CommunityVO">
 		SELECT previousseq, previoussubject
-		     , community_seq, fk_category_code, fk_empid, name, nickname, subject, content, pwd, orgfilename
+		     , community_seq, fk_category_code, fk_empid, name, nickname, subject, content, pwd
 		     , read_count, registerday, comment_count
 		     , nextseq, nextsubject
 		FROM
@@ -138,13 +139,13 @@
 			select lag(community_seq, 1) over(order by community_seq desc) AS previousseq
 			     , lag(subject, 1) over(order by community_seq desc) AS previoussubject
 			
-			     , community_seq, fk_category_code, fk_empid, C.name, E.nickname, subject, content, C.pwd, F.orgfilename
+			     , community_seq, fk_category_code, fk_empid, C.name, E.nickname, subject, content, C.pwd
 			     , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count
 			     
 			     , lead(community_seq, 1) over(order by community_seq desc) AS nextseq
 			     , lead(subject, 1) over(order by community_seq desc) AS nextsubject
 			from tbl_community C
-			LEFT JOIN tbl_community_file F ON C.community_seq = F.fk_community_seq
+			LEFT JOIN (select fk_community_seq from tbl_community_file group by fk_community_seq) F ON C.community_seq = F.fk_community_seq
 			LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
 			where C.status = 1
 			<choose>

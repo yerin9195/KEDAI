@@ -169,6 +169,7 @@ public class CommunityController {
 	
 		try {
 			jsonObj.put("result", result); // 성공된 경우
+			jsonObj.put("fk_empid", cvo.getFk_empid());
 		} catch (Exception e) {
 			e.printStackTrace();
 			jsonObj.put("result", result); // 실패된 경우
@@ -188,11 +189,10 @@ public class CommunityController {
 	}
 	
 	// 커뮤니티 글 등록 후 포인트 증가시키기
-	@RequestMapping("/community/addEnd.kedai")
+	@GetMapping("/community/addEnd.kedai")
 	public ModelAndView pointPlus_addEnd(Map<String, String> paraMap, ModelAndView mav, HttpServletRequest request) {
 		
 		String fk_empid = request.getParameter("fk_empid");
-		System.out.println("~~~ 확인용 fk_empid =>" + fk_empid);
 		
 		paraMap.put("empid", fk_empid);
 		paraMap.put("point", "100");
