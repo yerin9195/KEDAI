@@ -54,22 +54,22 @@
 		where status = 1
 		<choose>
 			<when test='searchType == "subject" and searchWord != ""'>
-				and lower(subject) like '%'||lower(#{searchWord})||'%'
+				and lower(subject) like '%' ||lower(#{searchWord})|| '%'
 			</when>
 			<when test='searchType == "content" and searchWord != ""'>
-				and lower(content) like '%'||lower(#{searchWord})||'%'
+				and lower(content) like '%' ||lower(#{searchWord})|| '%'
 			</when>
 			<when test='searchType == "subject_content" and searchWord != ""'>
-				and (lower(subject) like '%'||lower(#{searchWord})||'%' or lower(content) like '%'||lower(#{searchWord})||'%')
+				and (lower(subject) like '%' ||lower(#{searchWord})|| '%' or lower(content) like '%' ||lower(#{searchWord})|| '%')
 			</when>
 			<when test='searchType == "name" and searchWord != ""'>
-				and lower(name) like '%'||lower(#{searchWord})||'%'
+				and lower(name) like '%' ||lower(#{searchWord})|| '%'
 			</when>
 			<otherwise></otherwise>
 		</choose>
 	</select>
 	
-	<resultMap type="BoardVO" id="boardJoinCategory">
+	<resultMap id="boardJoinCategory" type="BoardVO">
         <result property="board_seq" 		column="board_seq"        javaType="String" />
         <result property="fk_category_code" column="fk_category_code" javaType="String" />
         <result property="category_name"    column="category_name"    javaType="String" />
@@ -142,10 +142,10 @@
 		where status = 1 
 		<choose>
 			<when test='searchType == "subject" and searchWord != ""'>
-				and lower(subject) like '%'||lower(#{searchWord})||'%'
+				and lower(subject) like '%' ||lower(#{searchWord})|| '%'
 			</when>
 			<when test='searchType == "name" and searchWord != ""'>
-				and lower(name) like '%'||lower(#{searchWord})||'%'
+				and lower(name) like '%' ||lower(#{searchWord})|| '%'
 			</when>
 		</choose>
 		<choose>

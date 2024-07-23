@@ -10,10 +10,6 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.stereotype.Component;
-
-//==== #242. GoogleMail 클래스를 빈으로 등록 시키기 ==== 
-@Component
 public class GoogleMail {
 
 	public void send_certification_code(String empid, String name, String recipient, String certification_code) throws Exception { 
