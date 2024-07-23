@@ -115,5 +115,43 @@
         where empid = #{empid}
 	</select>
 		
+		
+	<!-- // 검색어 입력 시 자동글 완성하기  -->
+	<select id="wordSearchShowJSON" parameterType="HashMap" resultType="String">
+		<choose>
+			<when test='searchType == "department"'>
+				select dept_name
+			</when>
+			<when test='searchType == "position"'>
+				select job_name
+			</when>
+			<when test='searchType == "name"'>
+				select name
+			</when>
+			<when test='searchType == "personal-tel"'>
+				select mobile
+			</when>
+		</choose>		
+			from tbl_employees E1
+		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+			LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+		<choose>
+			<when test='searchType == "department" and searchWord != ""'>
+				where lower(dept_name) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+			<when test='searchType == "position" and searchWord != ""'>
+				where lower(job_name) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+			<when test='searchType == "name" and searchWord != ""'>
+				where lower(name) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+			<when test='searchType == "personal-tel" and searchWord != ""'>
+				where lower(mobile) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+		</choose>
+	</select>	
+		
+		
+		
 	
 </mapper>

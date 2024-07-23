@@ -475,7 +475,79 @@ bigName{
 	});
 
 	
+	$(document).ready(function(){
+		$("input:text[name='searchWord']").bind("keydown", function(e){
+			if(e.keyCode == 13){
+				goSearch();
+			}
+		});
+		
+		
+		$("div#displayList").hide();
+		
+		$("input[name='searchWord']").keydown(function(){
+			const wordLength = $(this).val().trim().length;
+			
+			if(wordLength == 0){
+				$("div#displayList").hide();
+			}
+			else{
+				if($("select[name='searchType']").val() == "dept_name" ||
+				   $("select[name='searchType']").val() == "job_name" ||
+				   $("select[name='searchType']").val() == "name" ||
+				   $("select[name='searchType']").val() == "mobile"){
+					
+					$.ajax({
+						url: "<%=ctxPath%>/employee/wordSearchShowJSON.kedai",
+						type: "get",
+						data:{"searchType":$("select[name='searchType']").val(),
+							  "searchWord":$("input[name='searchWord']").val()},
+					    dataType:"json",
+					    success: function(json){
+					    	console.log(JSON.stringify(json));
+					    	
+					    	if(json.length > 0){
+					    		let v_html = ``;
+					    		
+					    		$.each(json, function(index, item){
+					    			const word = item.word;
+					    			const idx = word. toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
+					    			const len = $("input[name='searchWord']").val().length;
+					   				const result = word.substring(0, idx)+"<span style='color: #2c4459; font-weight: bold;'>"+word.substring(idx, idx+len)+"</span>"+word.substring(idx+len);
+					    		
+					   				v_html += `<span style='cursor: pointer;' class='result'>\${result}</span><br>`;
+					    		}); // end of $.each(json, function(index, item){}-------------------------------------
+					    		
+					    		// 검색어 input 태그의 width 값 알아오기
+								const input_width = $("input[name='searchWord']").css("width");
+					    		
+								// 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
+								$("div#displayList").css({"width":input_width});
+								
+								$("div#displayList").html(v_html);
+								$("div#displayList").show();
+					    	}
+					    },
+					    error: function(request, status, error){
+					    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					    }
+					});
+				}
+			}
+		});	
+					
+		$(document).on("click", "span.result", function(e){
+			const word = $(e.target).text();
+			
+			$("input[name='searchWord']").val(word);// 텍스트박스에 검색된 결과의 문자열을 입력
+			$("div#displayList").hide();
+			goSearch();
+		})
+					
+	});
 	
+	
+	// 기본 월급에 세자리 마다 , 붙이기
 	function formatNumber(num) {
 	
 		return parseFloat(num).toLocaleString('ko-KR');
@@ -527,7 +599,6 @@ bigName{
 	 	      }
 	 	 });
 	});
-			
 	
 	function goSearch(page) {
 		const frm = document.employee_search_frm;
@@ -567,7 +638,10 @@ bigName{
 					<input type="text" name="searchWord" value="${searchWord}" />
 					<input type="hidden" name="pageNumber" value="${pagedResult.pageable.pageNumber}" />
 					<input type="hidden" name="pageSize" value="${pagedResult.pageable.pageSize}" />
-					<input type="button" onclick="goSearch()" value="검색"/>
+					<button type="button" onclick="goSearch()">검색</button>
+				
+					<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 10%; background: #fff; overflow: hidden; overflow-y: scroll;">
+					</div>
 				</form>
 			</div>	
 	     

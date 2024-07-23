@@ -114,4 +114,35 @@ public class EmployeeController {
 		
 		return jsonArr.toString();
 	}
+	
+	// 검색어 입력 시 자동글 완성하기
+	@ResponseBody
+	@GetMapping(value="/employee/wordSearchShowJSON.kedai", produces="text/plain;charset=UTF-8")
+	public String wordSearchShowJSON (HttpServletRequest request) {
+		
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+		
+		List<String> wordList = service.wordSearchShowJSON(paraMap);
+		
+		JSONArray jsonArr = new JSONArray(); // []
+		
+		if(wordList != null) {
+			for(String word : wordList) {
+				JSONObject jsonObj = new JSONObject();
+				
+				jsonObj.put("word", word);
+				
+				jsonArr.put(jsonObj); // [{}, {}, {}]
+			} // end of for ----------
+		}
+		
+		return jsonArr.toString();
+		
+		
+	}
 }

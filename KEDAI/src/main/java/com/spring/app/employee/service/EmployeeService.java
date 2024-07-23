@@ -17,6 +17,9 @@ public interface EmployeeService {
 	
 	// 클릭한 직원 상세 정보 가져오기
 	List<Map<String, String>> empDetailList (Map<String, String> paraMap);
+	
+	// 검색어 입력 시 자동글 완성하기 
+	List<String> wordSearchShowJSON(Map<String, String> paraMap);
 
 
 

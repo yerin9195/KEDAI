@@ -41,14 +41,7 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 	 
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	// 직원정보 상세보기 팝업 어떤것 클릭했는지 알아오기(직원 아이디로 가져오기)
 	@Override
@@ -58,5 +51,13 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 		return empDetailList;
 	}
 
+	// 검색어 입력 시 자동글 완성하기 
+	@Override
+	public List<String> wordSearchShowJSON(Map<String, String> paraMap) {
+		
+		List<String> wordList = sqlsession.selectList("employee.wordSearchShowJSON", paraMap);
+		
+		return wordList;
+	}
 	
 }

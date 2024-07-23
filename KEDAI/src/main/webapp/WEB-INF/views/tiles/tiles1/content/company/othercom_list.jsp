@@ -489,6 +489,11 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	
 	}; // end of function delPopup(){}------------------------------------------------------
 	
+	
+	
+	
+	
+	
 </script>
 
 
@@ -499,8 +504,9 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 <div class="reg-search">
 	
     <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-        <div class="reg"><a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처등록하기</a></div>
-    </c:if> 
+     	
+     	<a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처 등록하기</a>
+    </c:if>
 	
     <form name="employee_search_frm" style="position:relative;">
 		<select name ="searchType" style="margin-right:10px;">
@@ -511,7 +517,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 		</select>
 		<input type="text" name="searchWord" style="margin-right:10px"/>
 		<input type="text" style="display: none;"/> 
-		<button type="button" onclick="goSearch()">검색</button>
+		<button type="button" onclick="goSearch()" style="border:1px solid #2C4459;">검색</button>
 	
 		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 8.1%; background: #fff; overflow: hidden; overflow-y: scroll;">
 		

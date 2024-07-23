@@ -71,58 +71,8 @@ public class EmployeeService_imple implements EmployeeService{
 	}
 	
 	
-	/*@Override
-	public List<Map<String,String>> employeeList(String searchType, String searchWord) {
-		Map<String, String> paraMap = new HashMap<String, String>();
-		if (StringUtils.hasText(searchWord)) {
-			paraMap.put("searchType", searchType);
-			if ("personal-tel".equals(searchType)) {
-				try {
-					paraMap.put("searchWord", aES256.encrypt(searchWord.replaceAll("-", "")));
-				} catch (UnsupportedEncodingException | GeneralSecurityException e) {
-					e.printStackTrace();
-				}
-			} else {
-				paraMap.put("searchWord", searchWord);				
-			}
-		}
+	
 
-		List<Map<String, String>> employeeList = dao.employeeList(paraMap);
-		employeeList.forEach( map -> {
-			
-			try {			
-				map.put("email",(aES256.decrypt(map.get("email"))));   // 복호화되어진 email 을 넣어준다.
-				map.put("mobile",(aES256.decrypt(map.get("mobile")))); // 복호화되어진 mobile 을 넣어준다.
-			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
-				e.printStackTrace();
-			} 
-		});
-
-		Long total = dao.employeeList(paraMap);
-		// List<Map<String,String>> employeeList = dao.employeeList();
-		
-		return employeeList;
-	}
-	
-	*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	// 직원정보 상세보기 팝업 어떤것 클릭했는지 알아오기(직원 아이디로 가져오기)
@@ -142,6 +92,15 @@ public class EmployeeService_imple implements EmployeeService{
 		});
 		
 		return empDetailList;
+	}
+
+
+	// 검색어 입력 시 자동글 완성하기 
+	@Override
+	public List<String> wordSearchShowJSON(Map<String, String> paraMap) {
+			
+		List<String> wordList = dao.wordSearchShowJSON(paraMap);
+		return wordList;
 	}
 	
 }	
