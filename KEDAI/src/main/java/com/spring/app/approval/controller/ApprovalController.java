@@ -51,11 +51,22 @@ public class ApprovalController {
 		List<Map<String, String>> myapprovalinfo = service.myapprovalinfo(loginEmpId);
 		System.out.println("확인용 myapprovalinfo" + myapprovalinfo);
 		
-		for(Map<String, String> map : myapprovalinfo) {
-			if(loginEmpId.equals(map.get("fk_empid"))) {
-				int level_no = Integer.parseInt(map.get("level_no"));
+		List<Map<String, String>> nowApproval = new ArrayList<>(); // 내가 지금 승인할 문서
+		List<Map<String, String>> laterApproval = new ArrayList<>(); // 내가 나중에 승인할 문서
+		for(Map<String, String> map : myapprovalinfo){
+			if("1".equals(map.get("pre_status"))) { //이전 레벨의 담당자가 승인한 기안서만  map에 담기
+				nowApproval.add(map);
+	        }
+			else if((map.get("pre_status") == null)) {
+				nowApproval.add(map);
 			}
-		}
+			
+			else if("0".equals(map.get("pre_status"))) {
+				laterApproval.add(map);
+			}
+	    }
+		
+		System.out.println("확인용 nowApproval" + nowApproval);
 		
 		List<Map<String, String>> docList = service.docListNoSearch(loginEmpId);
 		System.out.println("확인용 docList" + docList);
@@ -67,12 +78,13 @@ public class ApprovalController {
 	        }
 	    }
 		
-
-		
 		System.out.println(myDocList);
+		System.out.println("확인용 laterApproval" + laterApproval);
 		
-		mav.addObject("myapprovalinfo", myapprovalinfo);
-		mav.addObject("docList", docList);
+		
+		mav.addObject("nowApproval", nowApproval);
+		mav.addObject("laterApproval", laterApproval);
+		mav.addObject("myDocList", myDocList);
 
 		
 		mav.setViewName("tiles1/approval/main.tiles");

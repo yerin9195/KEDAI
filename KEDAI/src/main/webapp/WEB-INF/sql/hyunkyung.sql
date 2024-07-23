@@ -794,9 +794,69 @@ JOIN tbl_approval t2 ON t1.FK_DOC_NO = t2.FK_DOC_NO
 WHERE t1.FK_EMPID = '2012100-001'
   AND t2.LEVEL_NO = t1.LEVEL_NO + 1;
   
-  SELECT t1.APPROVAL_NO, t1.FK_DOC_NO, t1.FK_EMPID, t1.STATUS, t1.LEVEL_NO,
-       t2.APPROVAL_NO AS NEXT_APPROVAL_NO, t2.STATUS AS NEXT_STATUS, t2.LEVEL_NO AS NEXT_LEVEL_NO, T2.FK_EMPID
-FROM tbl_approval t1
-JOIN tbl_approval t2 ON t1.FK_DOC_NO = t2.FK_DOC_NO
-WHERE t1.FK_EMPID = '2012100-001'
-  AND t2.LEVEL_NO = t1.LEVEL_NO + 1;
+
+SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+        D.doc_subject, D.doc_content, D.created_date,T.doctype_name,
+        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
+        CASE WHEN F.doc_org_filename IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+FROM tbl_approval A1
+JOIN tbl_doc D 
+ON D.doc_no = A1.fk_doc_no
+JOIN tbl_doctype T 
+ON T.doctype_code = D.fk_doctype_code
+LEFT JOIN tbl_doc_file F 
+ON F.fk_doc_no = A1.fk_doc_no
+LEFT JOIN tbl_approval A2 
+ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+WHERE A1.FK_EMPID = '2010001-001' AND A1.STATUS = 0 
+
+select *
+from tbl_approval A
+join tbl_doc_file D
+on A.fk_doc_no = D.fk_doc_no
+order by approval_no, LEVEL_NO
+
+
+
+
+
+
+
+SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+        D.doc_subject, D.doc_content, D.created_date,T.doctype_name,
+        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
+        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+FROM tbl_approval A1
+JOIN tbl_doc D 
+ON D.doc_no = A1.fk_doc_no
+JOIN tbl_doctype T 
+ON T.doctype_code = D.fk_doctype_code
+LEFT JOIN tbl_approval A2 
+ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+LEFT JOIN (
+    SELECT fk_doc_no
+    FROM tbl_doc_file
+    GROUP BY fk_doc_no
+) F ON F.fk_doc_no = D.doc_no
+WHERE A1.FK_EMPID = '2013200-001' AND A1.STATUS = 0 
+
+
+
+SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+		        D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+		        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
+		        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+		FROM tbl_approval A1
+		JOIN tbl_doc D 
+		ON D.doc_no = A1.fk_doc_no
+		JOIN tbl_doctype T 
+		ON T.doctype_code = D.fk_doctype_code
+		LEFT JOIN tbl_approval A2 
+		ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+		LEFT JOIN (
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F ON F.fk_doc_no = D.doc_no
+		WHERE A1.FK_EMPID = '2014100-003' AND A1.STATUS = 0 
+		ORDER BY D.created_date DESC, D.DOC_NO DESC

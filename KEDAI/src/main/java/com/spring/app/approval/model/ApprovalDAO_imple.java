@@ -103,11 +103,11 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	}
 
 	// 메인화면에 보여줄 나의 결재 문서 목록 가져오기
-	@Override
+/*	@Override
 	public List<Map<String, String>> myApprovalDoc(String loginEmpId) {
 		List<Map<String, String>> myApprovalDoc = sqlsession.selectList("approval.myApprovalDoc", loginEmpId);
 		return myApprovalDoc;
-	}
+	}*/
 
 	// 결재 할 문서의 정보 가져오기
 	@Override

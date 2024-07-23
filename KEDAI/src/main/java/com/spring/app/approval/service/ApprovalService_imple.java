@@ -111,13 +111,14 @@ public class ApprovalService_imple implements ApprovalService {
 	@Override
 	public List<Map<String, String>> docListNoSearch(String loginEmpId) {
 		List<Map<String, String>> myDocList = dao.myDocList(loginEmpId);
-		List<Map<String, String>> myApprovalDoc = dao.myApprovalDoc(loginEmpId);
+	/*	List<Map<String, String>> myApprovalDoc = dao.myApprovalDoc(loginEmpId);
 		
 		List<Map<String, String>> resultList = new ArrayList<>();
 	    resultList.addAll(myDocList);
 	    resultList.addAll(myApprovalDoc);
-	    
-		return resultList;
+	  */
+		
+		return myDocList;
 	}
 
 	// 결재 할 문서의 정보 가져오기

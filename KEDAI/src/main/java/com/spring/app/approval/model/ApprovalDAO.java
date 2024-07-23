@@ -46,7 +46,7 @@ public interface ApprovalDAO {
 	List<Map<String, String>> myDocList(String loginEmpId);
 
 	// 메인화면에 보여줄 
-	List<Map<String, String>> myApprovalDoc(String loginEmpId);
+//	List<Map<String, String>> myApprovalDoc(String loginEmpId);
 
 	// 결재 할 문서의 정보 가져오기
 	List<Map<String, String>> myapprovalinfo(String loginEmpId);
