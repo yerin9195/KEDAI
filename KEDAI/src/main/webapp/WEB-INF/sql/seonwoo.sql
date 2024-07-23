@@ -433,7 +433,12 @@ from tbl_employees;
 
 ------------------------------------------------------------------------------------------------------
 
-
+select dept_name
+from tbl_employees E1
+		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+			LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+          
+            where lower(name) like '%' ||'주지훈'|| '%';
 
 
 
