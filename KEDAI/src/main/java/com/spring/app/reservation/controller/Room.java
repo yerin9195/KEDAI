@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
-import com.spring.app.reservation.service.RoomService2;
 
 
-//	qwe
-//@Controller
-public class Room {
+import com.spring.app.reservation.service.RoomService;
+
+@Controller
+public class RoomController {
+
 
 	@Autowired
 	private RoomService2 service;
