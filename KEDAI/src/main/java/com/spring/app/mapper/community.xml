@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="community">
+
+	<select id="category_select" resultType="com.spring.app.domain.CommunityCategoryVO">
+		select category_code, category_name
+		from tbl_community_category
+		order by category_code asc
+	</select>
+	
+	<select id="getCseqOfCommunity" resultType="int">
+		select community_seq.nextval AS community_seq
+		from dual
+	</select>
+	
+	<insert id="add" parameterType="CommunityVO">
+		insert into tbl_community(community_seq, fk_category_code, fk_empid, name, subject, content, pwd, read_count, registerday, status, commentcount)
+		values(to_number(#{community_seq}), to_number(#{fk_category_code}), #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, default)
+	</insert>
+	
+	<insert id="community_attachfile_insert" parameterType="HashMap">
+		insert into tbl_community_file(file_seq, fk_community_seq, orgfilename, filename, filesize)
+		values(file_seq.nextval, to_number(#{community_seq}), #{orgfilename}, #{filename}, #{filesize})
+	</insert>
+	
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_community
+		where status = 1 
+		<choose>
+			<when test='searchType == "subject" and searchWord != ""'>
+				and lower(subject) like '%'||lower(#{searchWord})||'%'
+			</when>
+			<when test='searchType == "content" and searchWord != ""'>
+				and lower(content) like '%'||lower(#{searchWord})||'%'
+			</when>
+			<when test='searchType == "subject_content" and searchWord != ""'>
+				and (lower(subject) like '%'||lower(#{searchWord})||'%' or lower(content) like '%'||lower(#{searchWord})||'%')
+			</when>
+			<when test='searchType == "name" and searchWord != ""'>
+				and lower(name) like '%'||lower(#{searchWord})||'%'
+			</when>
+			<otherwise></otherwise>
+		</choose>
+	</select>
+	
+	<resultMap type="CommunityVO" id="communityJoinCategory">
+		<result property="community_seq" 	column="community_seq" 	  javaType="String" />
+		<result property="fk_category_code" column="fk_category_code" javaType="String" />
+		<result property="category_name" 	column="category_name" 	  javaType="String" />
+		<result property="fk_empid" 		column="fk_empid" 		  javaType="String" />
+		<result property="name" 			column="name" 			  javaType="String" />
+		<result property="nickname" 		column="nickname" 		  javaType="String" />
+		<result property="imgfilename" 		column="imgfilename" 	  javaType="String" />
+		<result property="subject" 			column="subject" 		  javaType="String" />
+		<result property="content" 			column="content" 		  javaType="String" />
+		<result property="orgfilename" 		column="orgfilename" 	  javaType="String" />
+		<result property="read_count" 		column="read_count" 	  javaType="String" />
+		<result property="registerday" 		column="registerday" 	  javaType="String" />
+		<result property="comment_count" 	column="comment_count" 	  javaType="String" />
+	</resultMap>
+	
+	<select id="communityListSearch_withPaging" parameterType="HashMap" resultType="CommunityVO" resultMap="communityJoinCategory">
+		SELECT community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, orgfilename, read_count, registerday, comment_count
+		FROM
+		(
+		    SELECT rownum AS rno
+		         , community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, orgfilename, read_count, registerday, comment_count
+		    FROM 
+		    (
+		        select community_seq, fk_category_code, A.category_name, fk_empid, C.name, E.nickname, E.imgfilename, subject, content, F.orgfilename
+		             , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count
+		        from tbl_community C 
+		        LEFT JOIN tbl_community_category A ON C.fk_category_code = A.category_code
+		        LEFT JOIN tbl_community_file F ON C.community_seq = F.fk_community_seq
+		        LEFT JOIN tbl_employees E ON C.fk_empid = E.empid 
+		        where C.status = 1
+		        <choose>
+		        	<!-- 검색조건과 검색어가 존재하는 경우 -->
+					<when test='searchType == "subject" and searchWord != ""'>
+						and lower(subject) like '%'||lower(#{searchWord})||'%'
+					</when>
+					<when test='searchType == "content" and searchWord != ""'>
+						and lower(content) like '%'||lower(#{searchWord})||'%'
+					</when>
+					<when test='searchType == "subject_content" and searchWord != ""'>
+						and (lower(subject) like '%'||lower(#{searchWord})||'%' or lower(content) like '%'||lower(#{searchWord})||'%')
+					</when>
+					<when test='searchType == "name" and searchWord != ""'>
+						and lower(name) like '%'||lower(#{searchWord})||'%'
+					</when>
+					<otherwise></otherwise>
+				</choose>
+		        order by community_seq desc
+		    ) V
+		) T
+		WHERE RNO between #{startRno} and #{endRno}
+	</select>
+	
+	<select id="wordSearchShow" parameterType="HashMap" resultType="String">
+		<choose>
+			<when test='searchType == "subject"'>
+				select subject
+			</when>
+			<when test='searchType == "name"'>
+				select distinct name
+			</when>
+		</choose>
+		from tbl_community
+		where status = 1 
+		<choose>
+			<when test='searchType == "subject" and searchWord != ""'>
+				and lower(subject) like '%'||lower(#{searchWord})||'%'
+			</when>
+			<when test='searchType == "name" and searchWord != ""'>
+				and lower(name) like '%'||lower(#{searchWord})||'%'
+			</when>
+		</choose>
+		<choose>
+			<when test='searchType == "subject"'>
+				order by registerday desc
+			</when>
+			<when test='searchType == "name"'>
+				order by name asc
+			</when>
+		</choose>
+	</select>
+	
+	<select id="getView" parameterType="HashMap" resultType="CommunityVO">
+		SELECT previousseq, previoussubject
+		     , community_seq, fk_category_code, fk_empid, name, nickname, subject, content, pwd, orgfilename
+		     , read_count, registerday, comment_count
+		     , nextseq, nextsubject
+		FROM
+		(
+			select lag(community_seq, 1) over(order by community_seq desc) AS previousseq
+			     , lag(subject, 1) over(order by community_seq desc) AS previoussubject
+			
+			     , community_seq, fk_category_code, fk_empid, C.name, E.nickname, subject, content, C.pwd, F.orgfilename
+			     , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count
+			     
+			     , lead(community_seq, 1) over(order by community_seq desc) AS nextseq
+			     , lead(subject, 1) over(order by community_seq desc) AS nextsubject
+			from tbl_community C
+			LEFT JOIN tbl_community_file F ON C.community_seq = F.fk_community_seq
+			LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
+			where C.status = 1
+		) V
+		WHERE V.community_seq = #{community_seq}
+	</select>
+	
+	<update id="increase_readCount" parameterType="String">
+		update tbl_community set read_count = read_count + 1
+		where community_seq = #{community_seq}
+	</update>
+
+</mapper>

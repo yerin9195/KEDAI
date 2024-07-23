@@ -189,7 +189,7 @@
 					<span class="icon"><i class="fa-solid fa-chalkboard-user"></i></span>
 				</li>
 				<li>
-					<a href="#">커뮤니티</a>
+					<a href="<%= ctxPath%>/community/list.kedai">커뮤니티</a>
 					<span class="icon"><i class="fa-regular fa-comments"></i></span>
 				</li>
 				<li>
