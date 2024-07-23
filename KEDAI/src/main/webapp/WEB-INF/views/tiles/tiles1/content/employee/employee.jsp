@@ -513,7 +513,7 @@ bigName{
 	 	      			$('#empAddress').val(item.address);
 	 	      			$('#empDetailAddress').val(item.detailaddress);
 	 	      			$('#empExtraAddress').val(item.extraaddress);
-	 	      			$("#pop_partnerImg").attr("src", "./resources/images/member/" + item.orgimgfilename);
+	 	      			$("#pop_partnerImg").attr("src", "<%= ctxPath%>/resources/images/employee/" + item.orgimgfilename);
 	 	      			// console.log("empName : " + item.name);
 	 	      		})
 	 	        }
