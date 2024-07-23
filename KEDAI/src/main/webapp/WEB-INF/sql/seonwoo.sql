@@ -424,3 +424,8 @@ desc tbl_business_part;
 imgfilename 
 select * 
 from tbl_business_part;
+
+desc tbl_employees;
+imgfilename
+select * 
+from tbl_employees;

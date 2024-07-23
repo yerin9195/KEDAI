@@ -502,7 +502,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
         <div class="reg"><a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처등록하기</a></div>
     </c:if> 
 	
-    <form name="employee_search_frm" style="display:flex;">
+    <form name="employee_search_frm" style="position:relative;">
 		<select name ="searchType" style="margin-right:10px;">
 			<option value="">검색대상</option>
 			<option value="partner_name">거래처명</option>
@@ -513,7 +513,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 		<input type="text" style="display: none;"/> 
 		<button type="button" onclick="goSearch()">검색</button>
 	
-		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 22.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
+		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 8.1%; background: #fff; overflow: hidden; overflow-y: scroll;">
 		
 		</div>
 	</form>
