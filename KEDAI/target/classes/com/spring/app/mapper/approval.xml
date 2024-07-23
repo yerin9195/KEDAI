@@ -145,13 +145,13 @@
 		<result property="doctype_name" 	column="doctype_name" 		javaType="String" ></result>
 		<result property="status" 			column="status" 			javaType="String" ></result>
 		<result property="level_no" 		column="level_no" 			javaType="String" ></result>
-		<result property="APPROVAL_EMPID" 	column="APPROVAL_EMPID" 	javaType="String" ></result>
+		<result property="approval_empid" 	column="approval_empid" 	javaType="String" ></result>
 		<result property="isAttachment" 	column="isAttachment" 		javaType="String" ></result>
  	</resultMap>
 
 	<select id="myDocList" resultMap="docList_Map">
 		SELECT  D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
-    		, T.doctype_name, AP.status, AP.level_no, AP.APPROVAL_EMPID
+    		, T.doctype_name, AP.status, AP.level_no, AP.approval_empid
     		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
 		FROM tbl_doc D
 		JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
@@ -198,16 +198,26 @@
  	<resultMap type="HashMap" id="docInfo_Map">
  		<result property="fk_doc_no" 		column="fk_doc_no" 			javaType="String" ></result>
 		<result property="status" 			column="status" 			javaType="String" ></result>
+		<result property="fk_empid" 		column="fk_empid" 			javaType="String" ></result>
 		<result property="level_no" 		column="level_no" 			javaType="String" ></result>
+		<result property="doc_subject" 		column="doc_subject"		javaType="String" ></result>
+		<result property="doc_content" 		column="doc_content" 		javaType="String" ></result>
+		<result property="created_date"		column="created_date" 		javaType="String" ></result>
+		<result property="isAttachment"		column="isAttachment" 		javaType="String" ></result>
+		<result property="doctype_name" 	column="doctype_name" 		javaType="String" ></result>
  	</resultMap>
  	
  	<select id="myapprovalinfo" resultMap="docInfo_Map">
- 		SELECT A.fk_doc_no, A.status, A.level_no
+ 		SELECT A.fk_doc_no, A.status, A.fk_empid, A.level_no, D.doc_subject, D.doc_content, D.created_date,
+        CASE WHEN F.doc_org_filename IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, T.doctype_name
 		FROM tbl_approval A
+		JOIN tbl_doc D ON D.doc_no = A.fk_doc_no
+		LEFT JOIN tbl_doc_file F ON F.fk_doc_no = A.fk_doc_no
+		JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
 		WHERE A.fk_doc_no IN (
     		SELECT B.fk_doc_no
     		FROM tbl_approval B
-    		WHERE B.fk_empid = #{loginEmpId} AND STATUS = 0 
+    		WHERE B.fk_empid = #{loginEmpId} AND B.STATUS = 0
 		)
  	</select>
  	

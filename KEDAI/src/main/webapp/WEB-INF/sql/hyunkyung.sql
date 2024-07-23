@@ -737,3 +737,66 @@ from tbl_approval
 order by approval_no;
 
 update tbl_approval set fk_doc_no = 'KD24-101-9' WHERE approval_no=9
+
+
+SELECT A.fk_doc_no, A.status, A.level_no, fk_empid
+FROM tbl_approval A
+WHERE A.fk_doc_no IN (
+    SELECT B.fk_doc_no
+    FROM tbl_approval B
+    WHERE B.fk_empid = '2013200-001' AND STATUS = 0
+) 
+JOIN TBL_DOC D ON D.doc_no = A.fk_doc_no
+
+SELECT A.fk_doc_no, A.fk_empid, A.status, A.level_no, D.doc_subject, D.doc_content, D.created_date,
+        CASE WHEN F.doc_org_filename IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, T.doctype_name
+FROM tbl_approval A
+JOIN tbl_doc D ON D.doc_no = A.fk_doc_no
+LEFT JOIN tbl_doc_file F ON F.fk_doc_no = A.fk_doc_no
+JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
+WHERE A.fk_doc_no IN (
+    SELECT B.fk_doc_no
+    FROM tbl_approval B
+    WHERE B.fk_empid = '2013200-001' AND B.STATUS = 0
+) and 
+
+
+(select fk_doc_no, fk_empid, status, level_no 
+from tbl_approval a
+where A.fk_empid = '2013200-001' AND A.STATUS = 0)
+
+SELECT A.fk_doc_no, A.fk_empid, A.status, A.level_no
+FROM tbl_approval A
+WHERE A.fk_empid = '2013200-001' 
+  AND A.STATUS = 0
+  AND EXISTS (
+    SELECT 1
+    FROM tbl_approval B
+    WHERE B.fk_doc_no = A.fk_doc_no
+      AND B.level_no = A.level_no + 1
+)
+
+select *
+FROM tbl_approval A
+
+DESC tbl_approval A
+ 
+WITH 
+V AS
+(SELECT A.fk_doc_no, 
+FROM tbl_approval A
+WHERE A.fk_empid = '2013200-001' AND STATUS = 0
+)
+
+SELECT t1.APPROVAL_NO, t1.FK_DOC_NO, t1.FK_EMPID, t1.STATUS, t1.LEVEL_NO, t2.LEVEL_NO AS NEXT_LEVEL_NO
+FROM tbl_approval t1
+JOIN tbl_approval t2 ON t1.FK_DOC_NO = t2.FK_DOC_NO
+WHERE t1.FK_EMPID = '2012100-001'
+  AND t2.LEVEL_NO = t1.LEVEL_NO + 1;
+  
+  SELECT t1.APPROVAL_NO, t1.FK_DOC_NO, t1.FK_EMPID, t1.STATUS, t1.LEVEL_NO,
+       t2.APPROVAL_NO AS NEXT_APPROVAL_NO, t2.STATUS AS NEXT_STATUS, t2.LEVEL_NO AS NEXT_LEVEL_NO, T2.FK_EMPID
+FROM tbl_approval t1
+JOIN tbl_approval t2 ON t1.FK_DOC_NO = t2.FK_DOC_NO
+WHERE t1.FK_EMPID = '2012100-001'
+  AND t2.LEVEL_NO = t1.LEVEL_NO + 1;

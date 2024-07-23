@@ -2,6 +2,7 @@ package com.spring.app.approval.controller;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,11 +49,27 @@ public class ApprovalController {
 		String loginEmpId = loginuser.getEmpid();
 		
 		List<Map<String, String>> myapprovalinfo = service.myapprovalinfo(loginEmpId);
-		
 		System.out.println("확인용 myapprovalinfo" + myapprovalinfo);
+		
+		for(Map<String, String> map : myapprovalinfo) {
+			if(loginEmpId.equals(map.get("fk_empid"))) {
+				int level_no = Integer.parseInt(map.get("level_no"));
+			}
+		}
 		
 		List<Map<String, String>> docList = service.docListNoSearch(loginEmpId);
 		System.out.println("확인용 docList" + docList);
+		
+		List<Map<String, String>> myDocList = new ArrayList<>(); // 내가 작성한 기안서
+		for(Map<String, String> map : docList){
+			if(loginEmpId.equals(map.get("fk_empid"))) {
+				myDocList.add(map);
+	        }
+	    }
+		
+
+		
+		System.out.println(myDocList);
 		
 		mav.addObject("myapprovalinfo", myapprovalinfo);
 		mav.addObject("docList", docList);
