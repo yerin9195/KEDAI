@@ -922,5 +922,25 @@ LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
 where C.status = 1 and fk_community_seq = 17
 order by comment_seq desc;
 
+SELECT community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count
+FROM
+(
+    SELECT rownum AS rno
+         , community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count
+    FROM 
+    (
+        select community_seq, fk_category_code, A.category_name, fk_empid, C.name, E.nickname, E.imgfilename, subject, content 
+             , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count
+        from tbl_community C 
+        LEFT JOIN tbl_community_category A ON C.fk_category_code = A.category_code
+        LEFT JOIN (select fk_community_seq from tbl_community_file group by fk_community_seq) F ON C.community_seq = F.fk_community_seq
+        LEFT JOIN tbl_employees E ON C.fk_empid = E.empid 
+        where C.status = 1
+        order by community_seq desc
+    ) V
+) T
+WHERE RNO between 1 and 10
 
-
+select fk_community_seq
+from tbl_community_file
+group by fk_community_seq

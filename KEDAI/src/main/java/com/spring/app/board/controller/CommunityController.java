@@ -1,8 +1,10 @@
 package com.spring.app.board.controller;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -58,6 +61,59 @@ public class CommunityController {
 	@PostMapping(value="/community/add.kedai", produces="text/plain;charset=UTF-8")
 	public String add(MultipartHttpServletRequest mrequest, CommunityVO cvo) {
 		
+		List<MultipartFile> fileList = mrequest.getFiles("file_arr");
+		
+		// WAS 의 webapp 의 절대경로 알아오기
+		HttpSession session = mrequest.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root+"resources"+File.separator+"community_attach_file";
+		
+		File dir = new File(path);
+		if(!dir.exists()) { // community_attach_file 이라는 폴더가 없다면 생성하기
+			dir.mkdirs();
+		}
+		
+		String[] arr_attachOrgFilename = null; // 기존 첨부파일명들을 기록하기 위한 용도
+		String[] arr_attachNewFilename = null; // 새로운 첨부파일명들을 기록하기 위한 용도
+		String[] arr_attachFilesize = null;    // 첨부파일명들의 크기를 기록하기 위한 용도
+		
+		if(fileList != null && fileList.size() > 0) {
+			arr_attachOrgFilename = new String[fileList.size()];
+			arr_attachNewFilename = new String[fileList.size()];
+			arr_attachFilesize = new String[fileList.size()];
+			
+			for(int i=0; i<fileList.size(); i++) {
+				MultipartFile mtfile = fileList.get(i);
+			//	System.out.println("파일명 : " + mtfile.getOriginalFilename() + " / 파일크기 : " + mtfile.getSize());
+				/*
+					파일명 : berkelekle단가라포인트03.jpg / 파일크기 : 57641
+					파일명 : berkelekle덩크04.jpg / 파일크기 : 41931
+					파일명 : berkelekle트랜디05.jpg / 파일크기 : 44338
+				*/
+				
+				String orgFilename = mtfile.getOriginalFilename();
+				
+				String newFilename = orgFilename.substring(0, orgFilename.lastIndexOf(".")); // 확장자를 뺀 파일명 알아오기
+				newFilename += "_" + String.format("%1$tY%1$tm%1$td%1$tH%1$tM%1$tS", Calendar.getInstance()); // 년월일시분초
+    			newFilename += System.nanoTime(); // 나노세컨즈(nanoseconds)
+    			newFilename += orgFilename.substring(orgFilename.lastIndexOf(".")); // 확장자 붙이기
+				
+    			try {
+    				File attachFile = new File(path+File.separator+newFilename);
+					mtfile.transferTo(attachFile); // 파일을 업로드해주는 것이다.
+					
+					arr_attachOrgFilename[i] = mtfile.getOriginalFilename(); // 배열 속에 첨부파일명들을 기록한다.
+					arr_attachNewFilename[i] = newFilename;
+					arr_attachFilesize[i] = Long.toString(mtfile.getSize());
+    				
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+			} // end of for ----------
+			
+		} // end of if ----------
+		
 		// 글번호 채번해오기
 		int community_seq = service.getCseqOfCommunity();
 		
@@ -77,59 +133,29 @@ public class CommunityController {
 		cvo.setCommunity_seq(String.valueOf(community_seq));
 		cvo.setFk_category_code(fk_category_code);
 		
+		int result = 0;
 		int n = service.add(cvo);
 		
-		JSONObject jsonObj = new JSONObject();
-		int result = 0;
-        
-        if(n == 1) { // 추가 이미지 파일이 존재하지 않는 경우
-        	result = 1;
-        }
-	/*	
-		List<MultipartFile> fileList = mrequest.getFiles("file_arr");
-		System.out.println("~~~ 확인용 fileList"+ fileList);
-		
-		// WAS 의 webapp 의 절대경로 알아오기
-		HttpSession session = mrequest.getSession();
-		String root = session.getServletContext().getRealPath("/");
-		String path = root+"resources"+File.separator+"attach_file";
-		
-		String[] arr_attachFilename = null; // 첨부파일명들을 기록하기 위한 용도
-		String newFileName = ""; 			// WAS(톰캣)의 디스크에 저장될 파일명
-		byte[] bytes = null;     			// 첨부파일의 내용물을 담는 것
-		long fileSize = 0;       			// 첨부파일의 크기
+		if(n == 1) {
+			result = 1;
+		}
 		
 		if(n == 1 && fileList != null && fileList.size() > 0) {
-			arr_attachFilename = new String[fileList.size()];
-			
 			int cnt = 0;
+			
 			for(int i=0; i<fileList.size(); i++) {
-				MultipartFile mtfile = fileList.get(i);
-				System.out.println("파일명 : " + mtfile.getOriginalFilename() + " / 파일크기 : " + mtfile.getSize());
+				Map<String, Object> paraMap = new HashMap<>();
 				
-				try {
-					bytes = mtfile.getBytes();
-					arr_attachFilename[i] = mtfile.getOriginalFilename(); // 배열 속에 첨부파일명들을 기록한다.
-					newFileName = fileManager.doFileUpload(bytes, arr_attachFilename[i], path); // 첨부되어진 파일을 업로드				
-					
-					fileSize = mtfile.getSize();
-					
-					Map<String, Object> paraMap = new HashMap<>();
-					
-					paraMap.put("community_seq", community_seq); 
-					paraMap.put("orgfilename", arr_attachFilename); 
-					paraMap.put("filename", newFileName); 
-					paraMap.put("filesize", fileSize); 
-					
-					int attach_insert_result = service.community_attachfile_insert(paraMap);
-					
-					if(attach_insert_result == 1) {
-            			cnt++;
-            		}
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				paraMap.put("fk_community_seq", community_seq); 
+				paraMap.put("orgfilename", arr_attachOrgFilename[i]); 
+				paraMap.put("filename", arr_attachNewFilename[i]); 
+				paraMap.put("filesize", arr_attachFilesize[i]); 
+				
+				int attach_insert_result = service.community_attachfile_insert(paraMap);
+				
+				if(attach_insert_result == 1) {
+        			cnt++;
+        		}
 				
 			} // end of for ----------
 			
@@ -138,16 +164,18 @@ public class CommunityController {
         	}
 			
 		} // end of if ----------
-	*/	
+		
+		JSONObject jsonObj = new JSONObject();
+	
 		try {
-			jsonObj.put("result", 1); // 성공된 경우
+			jsonObj.put("result", result); // 성공된 경우
 		} catch (Exception e) {
 			e.printStackTrace();
-			jsonObj.put("result", 0); // 실패된 경우
+			jsonObj.put("result", result); // 실패된 경우
 		}
-	/*	
-		if(arr_attachFilename != null) {
-			for(String attachFilename : arr_attachFilename) {
+		
+		if(arr_attachOrgFilename != null) {
+			for(String attachFilename : arr_attachOrgFilename) {
 				try {
 					fileManager.doFileDelete(attachFilename, path);
 	            } catch (Exception e) {
@@ -155,7 +183,7 @@ public class CommunityController {
 	            }
 			} // end of for ----------
 		}
-	*/	
+	
 		return jsonObj.toString();
 	}
 	

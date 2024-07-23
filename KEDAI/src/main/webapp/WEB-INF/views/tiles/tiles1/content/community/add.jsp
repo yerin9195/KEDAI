@@ -217,7 +217,7 @@
                 	
                 	if(json.result == 1) { // insert 가 성공되어진 경우
                 		alert("글 등록이 성공했습니다.");
-                		location.href="<%= ctxPath%>/community/addEnd.kedai"; 
+                		location.href="<%= ctxPath%>/community/addEnd.kedai?fk_empid="+fk_empid;
                 	}
                 	else{
                 		alert("글 등록이 실패했습니다.");
