@@ -147,12 +147,13 @@
 		<result property="level_no" 		column="level_no" 			javaType="String" ></result>
 		<result property="approval_empid" 	column="approval_empid" 	javaType="String" ></result>
 		<result property="isAttachment" 	column="isAttachment" 		javaType="String" ></result>
+		<result property="doc_status" 		column="doc_status" 		javaType="String" ></result>
  	</resultMap>
 
-	<select id="myDocList" resultMap="docList_Map">
+	<select id="docListNoSearch" resultMap="docList_Map">
 		SELECT  D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
     		, T.doctype_name, AP.status, AP.level_no, AP.approval_empid
-    		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+    		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
 		FROM tbl_doc D
 		JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
 		JOIN ( 
@@ -209,13 +210,14 @@
 		<result property="pre_level_no" 	column="pre_level_no" 		javaType="String" ></result>
 		<result property="pre_empid" 		column="pre_empid" 			javaType="String" ></result>
 		<result property="isAttachment" 	column="isAttachment" 		javaType="String" ></result>
+		<result property="doc_status" 		column="doc_status" 		javaType="String" ></result>
  	</resultMap>
  	
  	<select id="myapprovalinfo" resultMap="docInfo_Map">
  		SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
 		        D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
 		        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
-		        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+		        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
 		FROM tbl_approval A1
 		JOIN tbl_doc D 
 		ON D.doc_no = A1.fk_doc_no
@@ -231,5 +233,6 @@
 		WHERE A1.FK_EMPID = #{loginEmpId} AND A1.STATUS = 0 
 		ORDER BY D.created_date DESC, D.DOC_NO DESC
  	</select>
+ 	
  	
 </mapper>

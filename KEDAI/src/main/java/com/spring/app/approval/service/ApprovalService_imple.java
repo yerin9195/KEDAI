@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.spring.app.approval.model.ApprovalDAO;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
+import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.MinutesVO;
 
 @Service
@@ -101,16 +102,16 @@ public class ApprovalService_imple implements ApprovalService {
 	}
 
 	// 서류 목록 가져오기
-	@Override
+/*	@Override
 	public List<Map<String, String>> myDocList(String loginEmpId) {
 		List<Map<String, String>> myDocList = dao.myDocList(loginEmpId);
 		return myDocList;
-	}
+	}*/
 	
 	// 메인화면에 보여줄 기안문서 목록 가져오기
 	@Override
 	public List<Map<String, String>> docListNoSearch(String loginEmpId) {
-		List<Map<String, String>> myDocList = dao.myDocList(loginEmpId);
+		List<Map<String, String>> docListNoSearch = dao.docListNoSearch(loginEmpId);
 	/*	List<Map<String, String>> myApprovalDoc = dao.myApprovalDoc(loginEmpId);
 		
 		List<Map<String, String>> resultList = new ArrayList<>();
@@ -118,7 +119,7 @@ public class ApprovalService_imple implements ApprovalService {
 	    resultList.addAll(myApprovalDoc);
 	  */
 		
-		return myDocList;
+		return docListNoSearch;
 	}
 
 	// 결재 할 문서의 정보 가져오기
@@ -129,7 +130,14 @@ public class ApprovalService_imple implements ApprovalService {
 		return myapprovalinfo;
 	}
 
-	
+	// 나의 모든 기안문서 가져오기
+	@Override
+	public List<Map<String, String>> myDocListSearch(String loginEmpId) {
+		List<Map<String, String>> myDocListSearch = dao.myDocListSearch(loginEmpId);
+		return myDocListSearch;
+	}
+
+
 
 
 		

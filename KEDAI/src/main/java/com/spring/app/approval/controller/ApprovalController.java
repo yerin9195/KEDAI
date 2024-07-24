@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -54,14 +55,14 @@ public class ApprovalController {
 		List<Map<String, String>> nowApproval = new ArrayList<>(); // 내가 지금 승인할 문서
 		List<Map<String, String>> laterApproval = new ArrayList<>(); // 내가 나중에 승인할 문서
 		for(Map<String, String> map : myapprovalinfo){
-			if("1".equals(map.get("pre_status"))) { //이전 레벨의 담당자가 승인한 기안서만  map에 담기
+			if("1".equals(map.get("pre_status")) && "0".equals(map.get("doc_status"))) { //이전 레벨의 담당자가 승인하고, 반려되지 않은 기안서만  map에 담기
 				nowApproval.add(map);
 	        }
 			else if((map.get("pre_status") == null)) {
 				nowApproval.add(map);
 			}
 			
-			else if("0".equals(map.get("pre_status"))) {
+			else if("0".equals(map.get("pre_status")) && "0".equals(map.get("doc_status")) ) {//이전 레벨의 담당자가 승인하지 않고,반려되지 않은 기안서만  map에 담기(나중에 결재할문서)
 				laterApproval.add(map);
 			}
 	    }
@@ -112,9 +113,6 @@ public class ApprovalController {
 		String dept_name = service.getDeptNumber(paraMap); // DB에서 부서번호 구해오기
 		mav.addObject("str_now", str_now);
 		mav.addObject("dept_name", dept_name);
-		
-	//	String loginEmpId = loginuser.getEmpid();
-	//	List<Map<String, String>> myDocList = service.myDocList(loginEmpId);
 		
 		List<DeptVO> allDeptList = service.allDeptList();
 		
@@ -317,6 +315,8 @@ public class ApprovalController {
         return jsonObj.toString(); 
 	}
 
+	
+	
 	@GetMapping(value="/approval/newDocEnd.kedai")
 	public String newDocEnd(ModelAndView mav, HttpServletRequest request ) {
 		
@@ -391,6 +391,35 @@ public class ApprovalController {
 		
 		return jsonArr.toString();
 		
+	}
+	
+	
+	@RequestMapping("approval/nowApprovalList.kedai")
+	public ModelAndView nowApprovalList(ModelAndView mav, HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		
+		mav.addObject("loginuser", loginuser); // 모델에 loginuser 객체 추가
+		mav.setViewName("tiles1/approval/nowApprval.tiles");
+		
+		return mav;
+	}
+	
+	@RequestMapping("approval/showMyDocList.kedai")
+	public ModelAndView showMyDocList(ModelAndView mav, HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		
+		String loginEmpId = loginuser.getEmpid();
+		
+		List<Map<String, String>> myAllDocList = service.myDocListSearch(loginEmpId);
+		
+		mav.addObject("loginuser", loginuser); // 모델에 loginuser 객체 추가		
+		mav.setViewName("tiles1/approval/myDocList.tiles");
+		
+		return mav;
 	}
 	
  //  	<definition name="*/*/*/*.tiles" extends="layout-tiles">

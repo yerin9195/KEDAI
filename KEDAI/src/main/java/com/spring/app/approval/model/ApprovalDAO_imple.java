@@ -97,8 +97,8 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 
 	// 메인화면에 보여줄 나의 기안문서 목록 가져오기
 	@Override
-	public List<Map<String, String>> myDocList(String loginEmpId) {
-		List<Map<String, String>> myDocList = sqlsession.selectList("approval.myDocList", loginEmpId);
+	public List<Map<String, String>> docListNoSearch(String loginEmpId) {
+		List<Map<String, String>> myDocList = sqlsession.selectList("approval.docListNoSearch", loginEmpId);
 		return myDocList;
 	}
 
@@ -114,6 +114,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	public List<Map<String, String>> myapprovalinfo(String loginEmpId) {
 		List<Map<String, String>> myapprovalinfo = sqlsession.selectList("approval.myapprovalinfo", loginEmpId);
 		return myapprovalinfo;
+	}
+
+	// 나의 모든 기안문서 가져오기
+	@Override
+	public List<Map<String, String>> myDocListSearch(String loginEmpId) {
+		List<Map<String, String>> myDocListSearch = sqlsession.selectList("approval.myDocListSearch", loginEmpId);
+		return myDocListSearch;
 	}
 
 

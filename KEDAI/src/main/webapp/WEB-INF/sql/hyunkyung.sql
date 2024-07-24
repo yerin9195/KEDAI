@@ -158,16 +158,12 @@ create table tbl_doc
 ,doc_content        NVARCHAR2(2000)      not null    -- 기안문서내용
 ,created_date       date default sysdate not null    -- 서류작성일자
 ,doc_comment            NVARCHAR2(100)                   -- 기안의견
--- ,doc_status         NUMBER  default 0    not null    -- 기안상태  0:기안 1:반려                
+,doc_status         NUMBER  default 0    not null    -- 기안상태  0:기안 1:반려  
 ,constraint PK_tbl_doc_doc_no primary key(doc_no)
 ,constraint FK_tbl_doc_fk_doctype_code foreign key(fk_doctype_code) references tbl_doctype(doctype_code)
 ,constraint FK_tbl_doc_fk_empid foreign key(fk_empid) references tbl_employees(EMPID)
 -- ,constraint ck_tbl_doc_doc_status CHECK (doc_status IN(0, 1))
 );
-
-ALTER TABLE tbl_doc
-DROP COLUMN doc_status;
-
 
 ALTER TABLE tbl_doc RENAME COLUMN content TO doc_content;
 
@@ -845,7 +841,7 @@ WHERE A1.FK_EMPID = '2013200-001' AND A1.STATUS = 0
 SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
 		        D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
 		        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
-		        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+		        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
 		FROM tbl_approval A1
 		JOIN tbl_doc D 
 		ON D.doc_no = A1.fk_doc_no

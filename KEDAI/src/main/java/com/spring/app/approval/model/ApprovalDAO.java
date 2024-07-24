@@ -43,12 +43,15 @@ public interface ApprovalDAO {
 	int withFile_doc(Map<String, String> docFileMap);
 
 	// 메인화면에 보여줄 내가 작성한 기안문서 목록 가져오기
-	List<Map<String, String>> myDocList(String loginEmpId);
+	List<Map<String, String>> docListNoSearch(String loginEmpId);
 
 	// 메인화면에 보여줄 
 //	List<Map<String, String>> myApprovalDoc(String loginEmpId);
 
 	// 결재 할 문서의 정보 가져오기
 	List<Map<String, String>> myapprovalinfo(String loginEmpId);
+
+	// 나의 모든 기안문서 가져오기
+	List<Map<String, String>> myDocListSearch(String loginEmpId);
 
 }

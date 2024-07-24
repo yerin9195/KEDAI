@@ -22,6 +22,10 @@ div.col-md-6 {
 <script type="text/javascript">
 	$(document).ready(function(){
 		
+		$("table#memberTbl tr.memberInfo").click( e => {
+			
+		};
+		
 	});
 	
 	function newDoc(){
@@ -48,13 +52,22 @@ div.col-md-6 {
 		frm.submit();
 	}// end of function newDoc()------------------
 	
+	function allMyNowApproval(){
+		
+	}
+	
+	
+	
 
 	
 </script>
 
 
+
+<div style="border : 1px red solid; display:flex; ">
+<span style="border : solid 1px #e68c0e; text-align :center; align-items: center; justify-content: center; " >전체 </span>
 <button type="button" data-toggle="modal" style="width: 150px; height:5%; margin-top:1%; background-color:white; border : solid 1px black;" data-target="#newDocModal" >결재 작성하기</button>
-	
+</div>
 	<!-- Modal -->
 	<!-- Modal 구성 요소는 현재 페이지 상단에 표시되는 대화 상자/팝업 창입니다. -->
 	<div class="modal fade" id="newDocModal">
@@ -102,15 +115,16 @@ div.col-md-6 {
 			<div class="document_inProgress">
       			<div  style="display:flex; align-items: center;">
       				<span style="margin: 1.5% 1%; font-size: 15pt;"> 결재할 문서 </span>
-      				<span style="margin-left:auto; align-self: flex-end; padding: 1% 2%;" onclick="showAllMyDoc()">전체보기</span>
+      				<span style="margin-left:auto; align-self: flex-end; padding: 1% 2%;" onclick="javascript:location.href='<%=request.getContextPath() %>/approval/nowApprovalList.kedai'">더보기</span>
       			</div>
       			<table class="table table-hover">
       				<thead>
         				<tr>
-				            <th scope="col" style="width:17%">기안일</th>
-				            <th scope="col" style="width:20%">결재양식</th>
-				            <th scope="col" style="width:50%">제목</th>
-				            <th scope="col" style="width:13%">결재상태</th>
+				            <th scope="col" style="width:15%">기안일</th>
+				            <th scope="col" style="width:15%">유형</th>
+				            <th scope="col" style="width:15%">서류번호</th>
+				            <th scope="col" style="width:55%">제목</th>
+				            
         				</tr>
       				</thead>
       				<tbody>
@@ -120,17 +134,19 @@ div.col-md-6 {
 	      							<tr>
 	      								<td>${nowApproval.created_date}</td>
 	      								<td>${nowApproval.doctype_name}</td>
-	      								<td><span class="subject" onclick="goView('${boardvo.seq}')">${nowApproval.doc_subject}</span>
+	      								<td>${nowApproval.doc_no}</td>
+	      								<td><span class="subject" onclick="goView('${nowApproval.doc_no}')">${nowApproval.doc_subject}</span>
 	      									<c:if test="${nowApproval.isAttachment eq 1}">
 	      										&nbsp;<i class="fa-solid fa-paperclip"></i>
 	      									</c:if>  								
 	      								</td>
-	      								<c:if test="${empty pre_status}">
+	      							<%-- 	<c:if test="${empty pre_status}">
 	      									<td><span style="border : solid 0px green; background-color:gray; color:white; margin-top:10%;">미결재</span></td>
 	      								</c:if>
 	      								<c:if test="${not empty pre_status}">
 	      									<td><span style="border : solid 0px green; background-color:#e68c0e; color:white; margin-top:10%;">결재중</span></td>
 	      								</c:if>
+	      								--%>
 	      							</tr>
 	      						</c:if>
       						</c:forEach>
@@ -158,14 +174,17 @@ div.col-md-6 {
   		</div>
    		<div id="33" class="col-md-6">	
      		<div class="document_approved">
-      			<h5 style="margin: 1.5% 1%;"> 기안 진행 문서 </h5>
+      			<div  style="display:flex; align-items: center;">
+      				<span style="margin: 1.5% 1%; font-size: 15pt;"> 기안 진행 문서 </span>
+      				<span style="margin-left:auto; align-self: flex-end; padding: 1% 2%;" onclick="javascript:location.href='<%=request.getContextPath() %>/approval/showMyDocList.kedai'">더보기</span>
+      			</div>
       			<table class="table table-hover">
         			<thead>
           				<tr>
-				            <th scope="col" style="width:20%">기안일</th>
-				            <th scope="col" style="width:20%">결재양식</th>
-				            <th scope="col" style="width:45%">제목</th>
-				            <th scope="col" style="width:15%">결재상태</th>
+				            <th scope="col" style="width:15%">기안일</th>
+				            <th scope="col" style="width:15%">유형</th>
+				            <th scope="col" style="width:20%">서류번호</th>
+				            <th scope="col" style="width:50%">제목</th>
 						</tr>
         			</thead>
         			<tbody>
@@ -175,24 +194,25 @@ div.col-md-6 {
 	      							<tr>
 	      								<td>${myDocList.created_date}</td>
 	      								<td>${myDocList.doctype_name}</td>
+	      								<td>${myDocList.doc_no}</td>
 	      								<td><span class="subject" onclick="goView('${myDocList.doc_no}')">${myDocList.doc_subject}</span>
 	      									<c:if test="${myDocList.isAttachment eq 1}">
 	      										&nbsp;<i class="fa-solid fa-paperclip"></i>
 	      									</c:if>  								
 	      								</td>
-	      								<c:if test="${empty pre_status}">
+	      							<%-- 	<c:if test="${empty pre_status}">
 	      									<td><span style="background-color:gray; color:white; margin-top:10%;">미결재</span></td>
 	      								</c:if>
 	      								<c:if test="${not empty pre_status}">
 	      									<td><span style="background-color:#e68c0e; color:white; margin-top:10%;">결재중</span></td>
-	      								</c:if>
+	      								</c:if>--%>
 	      							</tr>
 	      						</c:if>
       						</c:forEach>
       					</c:if>
       					<c:if test="${empty requestScope.myDocList}">
       						<tr>
-      							<td colspan="4" align="center"> 기안이 진행중인 문서가 없습니다. </td>
+      							<td colspan="4" align="center"> 진행중인 기안 문서가 없습니다. </td>
       						</tr>
       					</c:if>
           			<!-- 	<tr>

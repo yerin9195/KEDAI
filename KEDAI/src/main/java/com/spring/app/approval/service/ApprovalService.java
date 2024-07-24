@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
+import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.MinutesVO;
 
 public interface ApprovalService {
@@ -34,13 +35,17 @@ public interface ApprovalService {
 	int withFile_doc(Map<String, String> docFileMap);
 
 	// 해당 서류 가져오기
-	List<Map<String, String>> myDocList(String loginEmpId);
+//	List<Map<String, String>> myDocList(String loginEmpId);
 
 	// 메인화면에 보여줄 기안문서 목록 가져오기
 	List<Map<String, String>> docListNoSearch(String loginEmpId);
 
 	// 결재 할 문서의 정보 가져오기
 	List<Map<String, String>> myapprovalinfo(String loginEmpId);
+
+	// 나의 모든 기안문서 가져오기
+	List<Map<String, String>> myDocListSearch(String loginEmpId);
+
 
 
 
