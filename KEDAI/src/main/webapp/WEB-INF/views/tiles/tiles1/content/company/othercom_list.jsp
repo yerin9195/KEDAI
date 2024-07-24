@@ -226,12 +226,15 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	
 }
 
-.othercom-reg{
-	background-color:#e68c0e;
-	float:right;
-	font-size:17px;
+.othercom-reg {
+background-color: #e68c0e;
+float: right;
+font-size: 17px;
+}
 
-	
+.othercom-reg a {
+color: inherit; /* 링크 텍스트 색상을 버튼 색상과 동일하게 /
+text-decoration: none; / 링크 밑줄 제거 */
 }
 
 .othercom-reg:hover{
@@ -290,6 +293,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	
 	$(document).ready(function(){
 		
+
 		$("input:text[name='searchWord']").bind("keydown", function(e){
 			if(e.keyCode == 13){
 				goSearch();
@@ -489,7 +493,7 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	
 	}; // end of function delPopup(){}------------------------------------------------------
 	
-	
+
 	
 	
 	
@@ -502,10 +506,10 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 		거래처 목록
 </div>
 <div class="reg-search">
+	<input type="button" class="othercom-reg" value="거래처 등록하기 " />
 	
     <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-     	
-     	<a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처 등록하기</a>
+     	<button type="button" class="othercom-reg" onclick="goToRegisterPage()">거래처 등록하기</button>
     </c:if>
 	
     <form name="employee_search_frm" style="position:relative;">
