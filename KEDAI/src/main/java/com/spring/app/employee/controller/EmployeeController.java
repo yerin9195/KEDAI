@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,8 +35,7 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService service;
 	
-	@Autowired
-	private ObjectMapper objectMapper;
+
 	
 
 	//////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,14 @@ public class EmployeeController {
 		}
 		
 		return jsonArr.toString();
-		
-		
 	}
+	
+	// ==== #222. (웹채팅관련4) ==== //
+	@GetMapping("/chatting/multichat.kedai")
+	public String requiredLogin_multichat(HttpServletRequest request, HttpServletResponse response) {
+		
+		return "tiles1/chatting/multichat.tiles";
+	}
+	
+	
 }
