@@ -234,5 +234,32 @@
 		ORDER BY D.created_date DESC, D.DOC_NO DESC
  	</select>
  	
- 	
+ 	<!-- 내 기안 문서의 총 게시물 건수(totalCount) 구하기  - 검색이 있을 때와 검색이 없을 때로 나뉜다. -->
+ 	<!-- resultType="Integer" 원래  resultType에는 클래스가 들어가서 Integer를 넣어야 하지만 int라고 해도 다 호환된다~! -->
+ 	<select id="getTotalMyDocCount" parameterType="HashMap" resultType="int">
+ 		select count(*)
+		from tbl_doc       
+		<!-- 조인을 해야 한다. -->
+		<choose>
+			<when test='searchType == "doctype_name" and searchWord != "" '>
+				and lower(subject) like '%'|| lower(#{searchWord}) || '%'
+			</when>
+			<when test='searchType == "doc_subject" and searchWord != ""'>
+				and lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' 
+			</when>
+			<when test='searchType == "doc_content" and searchWord != ""'>
+				and lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
+			</when>
+			<when test='searchType == "doc_no" and searchWord != ""'>
+				and lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
+			</when>
+			<when test='searchType == "doc_subject_content" and searchWord != ""'>
+				and (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
+			</when>
+			<when test='searchType == "name" and searchWord != ""'>
+				and lower(name) like '%'|| lower(#{searchWord}) || '%'
+			</when>
+			<otherwise></otherwise>
+		</choose>
+ 	</select>
 </mapper>

@@ -432,8 +432,8 @@ public class ApprovalController {
 		list.action?searchType=subject&searchWord=&currentShowPageNo=3 또는
 		list.action?searchType=name&searchWord=&currentShowPageNo=3 와 같이 해주어야 한다.
 		*/
-		String searchType = request.getParameter("searchType"); // list.jsp의 form 태그 내의 name이 searchType가 넘어 온다. 
-		String searchWord = request.getParameter("searchWord"); // list.jsp의 form 태그 내의 name이 searchType가 넘어 온다. 
+		String searchType = request.getParameter("searchType"); // myDoclist.jsp의 form 태그 내의 name이 searchType가 넘어 온다. 
+		String searchWord = request.getParameter("searchWord"); // myDoclist.jsp의 form 태그 내의 name이 searchType가 넘어 온다. 
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 		
 		// System.out.println("~~ 확인용 str_currentShowPageNo : " + str_currentShowPageNo);
@@ -470,7 +470,7 @@ public class ApprovalController {
 		int totalPage = 0;         // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바) 
 		
 		//총 게시물 건수(totalCount)
-		totalCount = service.getTotalCount(paraMap);
+		totalCount = service.getTotalMyDocCount(paraMap);
 		//System.out.println("~~확인용totalCount "+totalCount);
 		//~~확인용totalCount 14
 		// 글 제목에 검색어 입력하고 검색 했을 때 

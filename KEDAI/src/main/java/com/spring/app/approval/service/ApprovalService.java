@@ -46,6 +46,9 @@ public interface ApprovalService {
 	// 나의 모든 기안문서 가져오기
 	List<Map<String, String>> myDocListSearch(String loginEmpId);
 
+	// 나의 기안 문서에서 총 페이지 수 가져오기
+	int getTotalMyDocCount(Map<String, String> paraMap);
+
 
 
 

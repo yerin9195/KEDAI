@@ -123,6 +123,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return myDocListSearch;
 	}
 
+	// 나의 기안 문서에서 총 페이지 수 가져오기
+	@Override
+	public int getTotalMyDocCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("approval.getTotalMyDocCount", paraMap);
+		return n;
+	}
+
 
 
 

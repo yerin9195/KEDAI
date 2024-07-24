@@ -3,9 +3,24 @@
 <%
     String ctxPath = request.getContextPath();
 %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>      
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<div id="around_docList">    
 <div id="title" style="margin: 1.5% 1%; font-size: 15pt;"> 기안 진행 문서</div>
 
+	<form name="searchFrm" style="margin-top: 20px;">
+    	<select name="searchType" style="height: 26px;">
+    		<option value="doctype_name">종류</option>
+        	<option value="doc_subject">제목</option>
+         	<option value="doc_content">내용</option>
+         	<option value="doc_no">문서번호</option>
+         	<option value="doc_subject_content">글제목+글내용</option>
+         	<option value="name">기안자</option>
+      	</select>
+      	<input type="text" name="searchWord" size="40" autocomplete="off" /> 
+      	<input type="text" style="display: none;"/> <%-- form 태그내에 input 태그가 오로지 1개 뿐일경우에는 엔터를 했을 경우 검색이 되어지므로 이것을 방지하고자 만든것이다. 
+      	여기 Hidden을 주면 안 된다!! --%> 
+      	<button type="button" class="btn btn-secondary btn-sm" onclick="goSearch()">검색</button>
+	</form>
 <div id="inside_docList" class="col-md-10">	
 	<table class="table table-hover">
 		<thead>
@@ -64,4 +79,5 @@
   		</tbody>
   	</table>
 </div>
+</div>  
 할루할룽
