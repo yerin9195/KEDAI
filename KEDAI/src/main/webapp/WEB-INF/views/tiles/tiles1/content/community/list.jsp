@@ -83,7 +83,7 @@
 							   "searchWord":$("input[name='searchWord']").val()},
 						dataType: "json",
 						success: function(json){
-							console.log(JSON.stringify(json));
+						//	console.log(JSON.stringify(json));
 							
 							if(json.length > 0){
 								let v_html = ``;

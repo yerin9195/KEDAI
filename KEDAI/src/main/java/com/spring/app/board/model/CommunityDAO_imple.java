@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.app.domain.CommentVO;
 import com.spring.app.domain.CommunityCategoryVO;
+import com.spring.app.domain.CommunityFileVO;
 import com.spring.app.domain.CommunityVO;
 
 @Repository
@@ -72,6 +73,18 @@ public class CommunityDAO_imple implements CommunityDAO {
 		int n = sqlsession.update("community.increase_readCount", community_seq);
 		return n;
 	}
+	
+	@Override
+	public List<String> getFilenameJSON(Map<String, String> paraMap) {
+		List<String> fileNameList = sqlsession.selectList("community.getFilenameJSON", paraMap);
+		return fileNameList;
+	}
+	
+	@Override
+	public CommunityFileVO getFilename(Map<String, String> paraMap) {
+		CommunityFileVO cfvo = sqlsession.selectOne("community.getFilename", paraMap);
+		return cfvo;
+	}
 
 	@Override
 	public int addComment(CommentVO commentvo) {
@@ -101,6 +114,12 @@ public class CommunityDAO_imple implements CommunityDAO {
 	public int getCommentTotalCount(String fk_community_seq) {
 		int totalCount = sqlsession.selectOne("community.getCommentTotalCount", fk_community_seq);
 		return totalCount;
+	}
+
+	@Override
+	public int updateComment(Map<String, String> paraMap) {
+		int n = sqlsession.update("community.updateComment", paraMap);
+		return n;
 	}
 
 }

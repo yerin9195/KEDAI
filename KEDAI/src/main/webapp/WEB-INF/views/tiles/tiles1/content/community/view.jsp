@@ -8,6 +8,13 @@
 	//     /KEDAI
 %>
 <style type="text/css">
+	.fileName a {
+		color: #363636;
+		text-decoration: none; 
+	}
+	.fileName a:hover {
+		color: #e68c0e;
+	}
 	input {
 		padding-left: 1%;
 	}
@@ -78,11 +85,119 @@
 			$(e.target).removeClass("moveColor");
 		});
 		
+		// 첨부파일명 조회하기
+		$.ajax({
+			url: "<%= ctxPath%>/community/getFilenameJSON.kedai",
+			data: {"fk_community_seq":"${requestScope.cvo.community_seq}"},
+			type: "get",
+            dataType: "json",
+            success: function(json){
+            //	console.log(JSON.stringify(json));
+            	
+            	if(json.length > 0){
+					let v_html = ``;
+					
+					$.each(json, function(index, item){
+						const fileName = item.fileName;
+						
+						v_html += `<a href="<%= ctxPath%>/community/download.kedai?fk_community_seq=${requestScope.cvo.community_seq}&orgfilename=\${fileName}"><span>\${fileName}</span></a>&nbsp;&nbsp;`;
+					}); // end of $.each(json, function(index, item) ----------
+							
+					$("div.fileName").html(v_html);
+            	}
+            },
+            error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+		});
+					
+		// 댓글쓰기(Ajax 로 처리)
 		$("input:text[name='content']").bind("keydown", function(e){
 			if(e.keyCode == 13){ // enter 인 경우
 				goAddWrite();
 			}
 		});
+		
+		// 댓글 수정하기
+		let origin_comment_content = "";
+		
+		$(document).on("click", "button.btnUpdateComment", function(e){
+			const $btn = $(e.target);
+			
+			if($(e.target).text() == "수정"){
+				const $content = $(e.target).parent().parent().children("td:nth-child(2)"); // $content 에서 $ 는 선택자(태그)를 의미한다.
+				origin_comment_content = $(e.target).parent().parent().children("td:nth-child(2)").text();
+				
+				// 댓글 내용을 수정할 수 있도록 input 태그 만들기
+				$content.html(`<input id='comment_update' type='text' value='\${origin_comment_content}' size='25' />`); // \ 가 있어야 변수로 인식한다.
+			
+				$(e.target).text("완료");
+				$(e.target).next().next().text("취소"); // $(e.target).next().next() 은 삭제 버튼이다.
+			
+				$(document).on("keydown", "input#comment_update", function(e){
+					if(e.keyCode == 13){ // enter 인 경우
+						$btn.click();
+					}
+				});
+			}
+			else if($(e.target).text() == "완료"){
+				// 수정 후 댓글 내용
+				const content = $(e.target).parent().parent().children("td:nth-child(2)").children("input").val();
+				
+				$.ajax({
+					url: "${pageContext.request.contextPath}/community/updateComment.kedai",
+					type: "post",
+					data: {"comment_seq":$(e.target).next().val(), // 수정해야 할 댓글번호
+						   "content":content},
+				   	dataType: "json",
+					success: function(json){
+					//	console.log(JSON.stringify(json));
+					
+						const currentShowPageNo = $(e.target).parent().parent().find("input.currentShowPageNo").val(); // "수정" 을 클릭한 곳
+						goViewComment(currentShowPageNo);
+						
+						$(e.target).text("수정");
+						$(e.target).next().next().text("삭제");
+					},
+		            error: function(request, status, error){
+		            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		            }
+				});
+			}
+		}); 
+		
+		// 댓글 수정 취소 & 댓글 삭제
+		$(document).on("click", "button.btnDeleteComment", function(e){
+			
+			if($(e.target).text() == "취소"){
+				const $content = $(e.target).parent().parent().children("td:nth-child(2)");
+				$content.html(`\${origin_comment_content}`);
+				
+				$(e.target).text("삭제");
+				$(e.target).prev().prev().text("수정");
+				
+			}
+			else if($(e.target).text() == "삭제"){
+				if(confirm("정말로 댓글을 삭제하시겠습니까?")){
+					$.ajax({
+						url: "${pageContext.request.contextPath}/community/deleteComment.kedai",
+						type: "post",
+						data: {"comment_seq":$(e.target).prev().val(), // 삭제해야 할 댓글번호
+							   "fk_community_seq":${requestScope.cvo.community_seq}}, // 댓글이 삭제되면 commentCount 도 변경되어야 한다.
+					   	dataType: "json",
+						success: function(json){
+							console.log(JSON.stringify(json));
+						
+							
+						},
+			            error: function(request, status, error){
+			            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			            }
+					});
+				}
+			}
+		
+		}); 
 		
 	}); // end of $(document).ready(function(){}) ----------
 	
@@ -132,7 +247,8 @@
             //	console.log(JSON.stringify(json));
             	
             	if(json.n == 0){
-            		alert(json.name + "님의 포인트는 300점을 초과할 수 없으므로 댓글쓰기가 불가합니다.");
+            	//	alert(json.name + "님의 포인트는 300점을 초과할 수 없으므로 댓글쓰기가 불가합니다.");
+            		alert(json.name + "님의 댓글 등록이 실패했습니다.");
             	}
             	else{
             		goViewComment(1); // 페이징처리를 한 댓글 읽어오기
@@ -186,7 +302,7 @@
 				}
 				else{
 					v_html += "<tr>";
-					v_html += 	"<td colspan='' class='comment'>댓글이 존재하지 않습니다.</td>";
+					v_html += 	"<td colspan='5' class='comment'>댓글이 존재하지 않습니다.</td>";
 					v_html += "</tr>";
 				}
 				
@@ -229,7 +345,7 @@
 				pageBar_HTML += "<li style='display: inline-block; width: 30px; height: 30px; align-content: center; color: #fff; font-size: 12pt; border-radius: 50%; background: #e68c0e'>"+pageNo+"</li>";
 			}
 			else{
-				pageBar_HTML += "<li style='display: inline-block; width: 30px; font-size: 12pt;><a href='javascript:goViewComment("+pageNo+")'>"+pageNo+"</a><li>";
+				pageBar_HTML += "<li style='display: inline-block; width: 30px; font-size: 12pt;'><a href='javascript:goViewComment("+pageNo+")' style='color: #363636;'>"+pageNo+"</a></li>";
 			}
 			
 			loop++;
@@ -242,7 +358,9 @@
 			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment("+totalPage+")'>[마지막]</a></li>"; 
 		}
 		
+		pageBar_HTML += "</ul>";
 		
+		$("div#pageBar").html(pageBar_HTML);
 		
 	} // end of function makeCommentPageBar(currentShowPageNo, totalPage) ----------
 </script>
@@ -277,7 +395,12 @@
 					</tr>
 					<tr>
 						<th style="width: 20%;">첨부파일</th>
-						<td colspan="3"><a href="<%= ctxPath%>/community/download.kedai?community_seq=${requestScope.cvo.community_seq}">${requestScope.cvo.orgfilename}</a></td>
+						<c:if test="${empty requestScope.cvo.fk_community_seq}">
+							<td colspan="3"><div class="fileName"></div></td>
+						</c:if>
+						<c:if test="${not empty requestScope.cvo.fk_community_seq}">
+							<td colspan="3"><div style="height: 50px; overflow-y: scroll;" class="fileName"></div></td>
+						</c:if>
 					</tr>
 				</table>
 				
@@ -339,7 +462,7 @@
 				<table class="table" style="margin-top: 10%; margin-bottom: 2%;">
 	         		<thead>
 	         			<tr>
-	           			 	<th style="width: 8%; text-align: center;">순번</th>
+	           			 	<th style="width: 8%;  text-align: center;">순번</th>
 	           			 	<th style="width: 30%; text-align: center;">내용</th>
 				            <th style="width: 10%; text-align: center;">작성자</th>
 				            <th style="width: 20%; text-align: center;">작성일자</th>

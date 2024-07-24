@@ -747,7 +747,7 @@ public class BoardController {
 				
 				if(!flag) {
 					out = response.getWriter();
-					out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+					out.println("<script type='text/javascript'>alert('파일다운로드가 실패하였습니다.'); history.back();</script>");
 				}
 			
 			}

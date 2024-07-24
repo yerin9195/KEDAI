@@ -943,6 +943,16 @@ FROM
 ) T
 WHERE RNO between 1 and 10
 
-select orgfilename, filename, filesize
+desc tbl_community_file
+
+select file_seq, fk_community_seq, orgfilename, filename, filesize
 from tbl_community_file
-where fk_community_seq = 15
+where fk_community_seq = 27 and orgfilename = 'LG_싸이킹청소기_사용설명서.pdf'
+
+desc tbl_comment;
+
+update tbl_comment set content = #{content}, registerday = sysdate
+where comment_seq = #{comment_seq}
+
+
+          

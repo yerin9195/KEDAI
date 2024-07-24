@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.spring.app.domain.CommentVO;
 import com.spring.app.domain.CommunityCategoryVO;
+import com.spring.app.domain.CommunityFileVO;
 import com.spring.app.domain.CommunityVO;
 
 public interface CommunityDAO {
@@ -35,6 +36,12 @@ public interface CommunityDAO {
 
 	// 글조회수 1 증가하기
 	int increase_readCount(String community_seq);
+	
+	// 첨부파일명 조회하기
+	List<String> getFilenameJSON(Map<String, String> paraMap);
+	
+	// 첨부파일 다운로드 받기
+	CommunityFileVO getFilename(Map<String, String> paraMap);
 
 	// 댓글쓰기(Transaction 처리)
 	int addComment(CommentVO commentvo); // 댓글쓰기(tbl_comment 테이블에 insert)
@@ -46,5 +53,8 @@ public interface CommunityDAO {
 
 	// 페이징처리 시 보여주는 순번을 나타내기 위한 것
 	int getCommentTotalCount(String fk_community_seq);
+
+	// 댓글 수정하기(Ajax 로 처리)
+	int updateComment(Map<String, String> paraMap);
 
 }

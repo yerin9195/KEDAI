@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.app.board.model.CommunityDAO;
 import com.spring.app.domain.CommentVO;
 import com.spring.app.domain.CommunityCategoryVO;
+import com.spring.app.domain.CommunityFileVO;
 import com.spring.app.domain.CommunityVO;
 
 @Service
@@ -94,6 +95,20 @@ public class CommunityService_imple implements CommunityService {
 		CommunityVO cvo = dao.getView(paraMap);
 		return cvo;
 	}
+	
+	// 첨부파일명 조회하기
+	@Override
+	public List<String> getFilenameJSON(Map<String, String> paraMap) {
+		List<String> fileNameList = dao.getFilenameJSON(paraMap);
+		return fileNameList;
+	}
+	
+	// 첨부파일 다운로드 받기
+	@Override
+	public CommunityFileVO getFilename(Map<String, String> paraMap) {
+		CommunityFileVO cfvo = dao.getFilename(paraMap);
+		return cfvo;
+	}
 
 	// 댓글쓰기(Transaction 처리)
 	@Override
@@ -134,6 +149,13 @@ public class CommunityService_imple implements CommunityService {
 	public int getCommentTotalCount(String fk_community_seq) {
 		int totalCount = dao.getCommentTotalCount(fk_community_seq);
 		return totalCount;
+	}
+
+	// 댓글 수정하기(Ajax 로 처리)
+	@Override
+	public int updateComment(Map<String, String> paraMap) {
+		int n = dao.updateComment(paraMap);
+		return n;
 	}
 
 }

@@ -132,7 +132,7 @@
 	<select id="getView" parameterType="HashMap" resultType="CommunityVO">
 		SELECT previousseq, previoussubject
 		     , community_seq, fk_category_code, fk_empid, name, nickname, subject, content, pwd
-		     , read_count, registerday, comment_count
+		     , read_count, registerday, comment_count, fk_community_seq
 		     , nextseq, nextsubject
 		FROM
 		(
@@ -140,7 +140,7 @@
 			     , lag(subject, 1) over(order by community_seq desc) AS previoussubject
 			
 			     , community_seq, fk_category_code, fk_empid, C.name, E.nickname, subject, content, C.pwd
-			     , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count
+			     , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count, fk_community_seq
 			     
 			     , lead(community_seq, 1) over(order by community_seq desc) AS nextseq
 			     , lead(subject, 1) over(order by community_seq desc) AS nextsubject
@@ -172,6 +172,18 @@
 		update tbl_community set read_count = read_count + 1
 		where community_seq = #{community_seq}
 	</update>
+	
+	<select id="getFilenameJSON" parameterType="HashMap" resultType="String">
+		select orgfilename
+		from tbl_community_file
+		where fk_community_seq = #{fk_community_seq}
+	</select>
+	
+	<select id="getFilename" parameterType="HashMap" resultType="com.spring.app.domain.CommunityFileVO">
+		select file_seq, fk_community_seq, orgfilename, filename, filesize
+		from tbl_community_file
+		where fk_community_seq = #{fk_community_seq} and orgfilename = #{orgfilename}
+	</select>
 	
 	<insert id="addComment" parameterType="CommentVO">
 		insert into tbl_comment(comment_seq, fk_community_seq, fk_empid, name, content, registerday, status)
@@ -207,5 +219,10 @@
 		from tbl_comment
 		where fk_community_seq = #{fk_community_seq}
 	</select>
+	
+	<update id="updateComment" parameterType="HashMap">
+		update tbl_comment set content = #{content}, registerday = sysdate
+		where comment_seq = #{comment_seq}
+	</update>
 
 </mapper>

@@ -1,6 +1,8 @@
 package com.spring.app.board.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -31,6 +34,7 @@ import com.spring.app.common.FileManager;
 import com.spring.app.common.MyUtil;
 import com.spring.app.domain.CommentVO;
 import com.spring.app.domain.CommunityCategoryVO;
+import com.spring.app.domain.CommunityFileVO;
 import com.spring.app.domain.CommunityVO;
 import com.spring.app.domain.MemberVO;
 
@@ -498,6 +502,93 @@ public class CommunityController {
 		return mav;
 	}
 	
+	// 첨부파일명 조회하기
+	@ResponseBody
+	@GetMapping(value="/community/getFilenameJSON.kedai", produces="text/plain;charset=UTF-8")
+	public String getFilenameJSON(HttpServletRequest request) {
+		
+		String fk_community_seq = request.getParameter("fk_community_seq");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_community_seq", fk_community_seq);
+		
+		List<String> fileNameList = service.getFilenameJSON(paraMap);
+		
+		JSONArray jsonArr = new JSONArray(); // []
+		
+		if(fileNameList != null) {
+			for(String fileName : fileNameList) {
+				JSONObject jsonObj = new JSONObject(); // {}
+				
+				jsonObj.put("fileName", fileName);
+			
+				jsonArr.put(jsonObj); // [{}, {}, {}]
+			} // end of for ----------
+		}
+		
+		return jsonArr.toString();
+	}
+	
+	// 첨부파일 다운로드 받기
+	@GetMapping("/community/download.kedai")
+	public void requiredLogin_download(HttpServletRequest request, HttpServletResponse response) {
+		
+		// 첨부파일이 있는 글번호
+		String fk_community_seq = request.getParameter("fk_community_seq");
+		String orgfilename = request.getParameter("orgfilename");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_community_seq", fk_community_seq);
+		paraMap.put("orgfilename", orgfilename);
+		
+		// html 이 출력될 때 한글이 깨지지 않고 제대로 나올 수 있도록 설정하기
+		response.setContentType("text/html; charset=UTF-8");
+		
+		PrintWriter out = null; // out 은 웹브라우저에 기술하는 대상체
+		
+		try {
+			Integer.parseInt(fk_community_seq);
+			CommunityFileVO cfvo = service.getFilename(paraMap);
+			
+			if(cfvo == null || (cfvo != null && cfvo.getOrgfilename() == null)) { // DB 에서 파일을 삭제한 경우
+				out = response.getWriter();
+				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호 이거나 첨부파일이 없으므로 파일다운로드가 불가합니다.'); history.back();</script>");
+				return;
+			}
+			else { // 정상적으로 파일을 다운로드를 할 경우
+				String fileName = cfvo.getFilename();
+				String orgFilename = cfvo.getOrgfilename();
+				
+				// WAS 의 webapp 의 절대경로 알아오기
+				HttpSession session = request.getSession();
+				String root = session.getServletContext().getRealPath("/"); 
+				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
+				
+				String path = root+"resources"+File.separator+"community_attach_file";
+				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\community_attach_file
+				
+				boolean flag = false;
+				flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+				// file 다운로드 성공시 flag 는 true, 실패시 flag 는 false
+				
+				if(!flag) {
+					out = response.getWriter();
+					out.println("<script type='text/javascript'>alert('파일다운로드가 실패하였습니다.'); history.back();</script>");
+				}
+				
+			}
+			
+		} catch (NumberFormatException | IOException e) { // 숫자가 아닌 경우 => "GET" 방식으로 조작한 경우
+			try {
+				out = response.getWriter();
+				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+			} catch (IOException e2) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 	// 댓글쓰기(Ajax 로 처리)
 	@ResponseBody
 	@PostMapping(value="/community/addComment.kedai", produces="text/plain;charset=UTF-8")
@@ -567,5 +658,37 @@ public class CommunityController {
 		return jsonArr.toString();
 	}
 	
+	// 댓글 수정하기(Ajax 로 처리)
+	@ResponseBody
+	@PostMapping(value="/community/updateComment.kedai", produces="text/plain;charset=UTF-8")
+	public String updateComment(HttpServletRequest request) {
+		
+		String comment_seq = request.getParameter("comment_seq");
+		String content = request.getParameter("content");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("comment_seq", comment_seq);
+		paraMap.put("content", content);
+		
+		int n = service.updateComment(paraMap);
+		
+		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/community/deleteComment.kedai", produces="text/plain;charset=UTF-8")
+	public String deleteComment(HttpServletRequest request) {
+		
+		String comment_seq = request.getParameter("comment_seq");
+		String fk_community_seq = request.getParameter("fk_community_seq");
+		
+		System.out.println("~~~ 확인용 comment_seq =>"+comment_seq);
+		System.out.println("~~~ 확인용 fk_community_seq =>"+fk_community_seq);
+		
+		return "";
+	}
 	
 }
