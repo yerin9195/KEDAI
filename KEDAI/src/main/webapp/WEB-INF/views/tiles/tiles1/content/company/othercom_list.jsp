@@ -37,13 +37,13 @@ div#othercom_list .artWrap {
   justify-content: space-around;
   flex-wrap: wrap;  
   gap: 20px;
-  border: solid 1px orange;
+  border: solid 0px orange;
 /*   margin: 2%; */
 }
 
 div#cover_all{
   width: 80%;
-  border: solid 1px purple;
+  border: solid 0px purple;
   margin-left : 5%;
 
 }
@@ -242,7 +242,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 }
  
 .reg{
-	border: 1px solid blue;
+	border: 0px solid blue;
 	width:20%;
 	border-radius:3px;
 	color:#2C4459;
@@ -253,7 +253,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 }
 
 .reg-search{
-	border:1px solid red;
+	border:0px solid red;
 	margin : 20px 10px;
 }
 
@@ -280,7 +280,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 
 .othercom_title{
 	font-size: 20px;
-	border: 1px solid blue;
+	border: 0px solid blue;
 	font-weight: 700;
 	line-height: 40px;
 	margin-top: 3%;
@@ -517,7 +517,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 		<input type="text" style="display: none;"/> 
 		<button type="button" onclick="goSearch()" style="border:1px solid #2C4459;">검색</button>
 	
-		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 8.1%; background: #fff; overflow: hidden; overflow-y: scroll;">
+		<div id="displayList" style="position: absolute; left: 0; border: solid 0px gray; border-top: 0px; height: 100px; margin-left: 8.1%; background: #fff; overflow: hidden; overflow-y: scroll;">
 		
 		</div>
 	</form>
@@ -577,7 +577,7 @@ text-decoration: none; / 링크 밑줄 제거 */
   </div>
  
 </div>
- 	<div align="center" style="border: solid 1px gray; width: 50%; margin: 2% auto;  height: 100px;">
+ 	<div align="center" style="border: solid 0px gray; width: 50%; margin: 2% auto;  height: 100px;">
 		${requestScope.pageBar}
 	</div>
 
@@ -590,7 +590,7 @@ text-decoration: none; / 링크 밑줄 제거 */
     </div>
     <div class="popupBody">
       <div class="forAlign">
-        <div class="popupImg" style="width:200px; border: 1px solid red; height:200px; overflow: hidden;">
+        <div class="popupImg" style="width:200px; border: 0px solid red; height:200px; overflow: hidden;">
           <img id="pop_partnerImg" src="" alt="" style="object-fit: cover; width:100%; height:100%;">
 			<!-- 사진들어오는곳  -->
         </div>
