@@ -856,3 +856,25 @@ SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no,
 		) F ON F.fk_doc_no = D.doc_no
 		WHERE A1.FK_EMPID = '2014100-003' AND A1.STATUS = 0 
 		ORDER BY D.created_date DESC, D.DOC_NO DESC
+        
+        
+
+
+SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+		        D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+		        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
+		        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
+FROM tbl_approval A1
+JOIN tbl_doc D 
+ON D.doc_no = A1.fk_doc_no
+		JOIN tbl_doctype T 
+		ON T.doctype_code = D.fk_doctype_code
+		LEFT JOIN tbl_approval A2 
+		ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+		LEFT JOIN (
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F ON F.fk_doc_no = D.doc_no
+		WHERE A1.FK_EMPID = #{loginEmpId} AND A1.STATUS = 0 
+		ORDER BY D.created_date DESC, D.DOC_NO DESC

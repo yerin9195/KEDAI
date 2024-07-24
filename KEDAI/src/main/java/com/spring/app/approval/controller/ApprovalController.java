@@ -414,7 +414,116 @@ public class ApprovalController {
 		
 		String loginEmpId = loginuser.getEmpid();
 		
-		List<Map<String, String>> myAllDocList = service.myDocListSearch(loginEmpId);
+		List<Map<String, String>> myAllDocList = null;
+		
+		//=== #122.페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 == //
+		
+		/*  페이징 처리를 통한 글목록 보여주기는 
+        
+        	예를 들어 3페이지의 내용을 보고자 한다라면 
+        	검색을 할 경우는 아래와 같이
+ 		list.action?searchType=subject&searchWord=안녕&currentShowPageNo=3 와 같이 해주어야 한다.
+ 
+        	또는
+ 
+        	검색이 없는 전체를 볼때는 아래와 같이 
+		list.action 또는 
+		list.action?searchType=&searchWord=&currentShowPageNo=3 또는 
+		list.action?searchType=subject&searchWord=&currentShowPageNo=3 또는
+		list.action?searchType=name&searchWord=&currentShowPageNo=3 와 같이 해주어야 한다.
+		*/
+		String searchType = request.getParameter("searchType"); // list.jsp의 form 태그 내의 name이 searchType가 넘어 온다. 
+		String searchWord = request.getParameter("searchWord"); // list.jsp의 form 태그 내의 name이 searchType가 넘어 온다. 
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		
+		// System.out.println("~~ 확인용 str_currentShowPageNo : " + str_currentShowPageNo);
+	    // ~~ 확인용 str_currentShowPageNo : null 
+	    // ~~ 확인용 str_currentShowPageNo : 3
+	    // ~~ 확인용 str_currentShowPageNo : dsfsdfdsfdsfㄴㄹㄴㅇㄹㄴ
+	    // ~~ 확인용 str_currentShowPageNo : -3412
+	    // ~~ 확인용 str_currentShowPageNo : 0
+	    // ~~ 확인용 str_currentShowPageNo : 32546
+	    // ~~ 확인용 str_currentShowPageNo : 35325234534623463454354534
+		
+		if(searchType == null) {
+			searchType = "";
+		}
+		if(searchWord == null) {
+			searchWord = "";
+		}
+		if(searchWord != null) {
+			searchWord = searchWord.trim();
+			// "		연습	" ==> "연습"
+			// "		 	" ==> ""
+		}
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+
+		// 먼저, 총 게시물 건수(totalCount)를 구해와야 한다.
+		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을 때로 나뉘어진다.
+		
+		int totalCount = 0;        // 총 게시물 건수
+		int sizePerPage = 10;      // 한 페이지당 보여줄 게시물 건수 
+		int currentShowPageNo = 0; // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정함. 
+		int totalPage = 0;         // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바) 
+		
+		//총 게시물 건수(totalCount)
+		totalCount = service.getTotalCount(paraMap);
+		//System.out.println("~~확인용totalCount "+totalCount);
+		//~~확인용totalCount 14
+		// 글 제목에 검색어 입력하고 검색 했을 때 
+		//~~확인용totalCount 5
+		//~~확인용totalCount 2
+		//~~확인용totalCount 3
+		
+		// 만약에 총 게시물 건수(totalCount)가 124 개 이라면 총 페이지수(totalPage)는 13 페이지가 되어야 한다.
+        // 만약에 총 게시물 건수(totalCount)가 120 개 이라면 총 페이지수(totalPage)는 12 페이지가 되어야 한다.
+		
+		totalPage = (int) Math.ceil((double)totalCount/sizePerPage);  // 하나를 더블로 바꿔주면 소수점으로 값이 나옴.
+		// (double)124/10 ==> 12.4 ==> Math.ceil(12.4) ==> 13.0 ==> (int)13.0 ==> 13
+		// (double)120/10 ==> 12.0 ==> Math.ceil(12.0) ==> 12.0 ==> (int)12.0 ==> 12
+		// Math.ceil을 이용해 1을 올려준다. 왜? 12.4가 나오면 13페이지 수가 나와야 하기 때문이다.
+		
+		
+		if(str_currentShowPageNo == null) { // 게시판에 보여지는 초기화면
+			currentShowPageNo = 1;
+		}
+		else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					// 다른 사람이 장난 쳐 왔을 때(1보다 작고 토탈 페이지보다 클 때)
+					currentShowPageNo = 1; 
+					// get 방식이므로 사용자가 str_currentShowPageNo 에 입력한 값이 0 또는 음수를 입력하여 장난친 경우 
+	                // get 방식이므로 사용자가 str_currentShowPageNo 에 입력한 값이 실제 데이터베이스에 존재하는 페이지수 보다 더 큰값을 입력하여 장난친 경우
+				}
+			}catch(NumberFormatException e) {
+				// get 방식이므로 사용자가 str_currentShowPageNo 에 입력한 값이 숫자가 아닌 문자를 입력하여 장난친 경우
+				currentShowPageNo = 1; 
+			}
+		}
+		// **** 가져올 게시글의 범위를 구한다.(공식임!!!) **** 
+         /*
+              currentShowPageNo      startRno     endRno
+             --------------------------------------------
+                  1 page        ===>    1           10
+                  2 page        ===>    11          20
+                  3 page        ===>    21          30
+                  4 page        ===>    31          40
+                  ......                ...         ...
+          */
+		int startRno = ((currentShowPageNo - 1) * sizePerPage) + 1; // 시작 행번호 
+        int endRno = startRno + sizePerPage - 1; // 끝 행번호
+        
+        paraMap.put("startRno", String.valueOf(startRno));
+        paraMap.put("endRno", String.valueOf(endRno));
+				
+		
+		
+		
+		myAllDocList = service.myDocListSearch(loginEmpId);
 		
 		mav.addObject("loginuser", loginuser); // 모델에 loginuser 객체 추가		
 		mav.setViewName("tiles1/approval/myDocList.tiles");
