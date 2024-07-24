@@ -228,7 +228,6 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 
 .othercom-reg {
 background-color: #e68c0e;
-float: right;
 font-size: 17px;
 }
 
@@ -505,14 +504,9 @@ text-decoration: none; / 링크 밑줄 제거 */
 <div class="othercom_title">
 		거래처 목록
 </div>
-<div class="reg-search">
-	<input type="button" class="othercom-reg" value="거래처 등록하기 " />
+<div class="reg-search row">
 	
-    <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-     	<button type="button" class="othercom-reg" onclick="goToRegisterPage()">거래처 등록하기</button>
-    </c:if>
-	
-    <form name="employee_search_frm" style="position:relative;">
+    <form name="employee_search_frm" style="position:relative;" class="col-10">
 		<select name ="searchType" style="margin-right:10px;">
 			<option value="">검색대상</option>
 			<option value="partner_name">거래처명</option>
@@ -527,6 +521,14 @@ text-decoration: none; / 링크 밑줄 제거 */
 		
 		</div>
 	</form>
+	
+	<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+    	<div class="col-2 d-md-flex justify-content-md-end pl-0 pr-0">
+    		<a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처  등록하기</a>
+    	</div>
+    	
+     	<!-- <button type="button" class="othercom-reg" onclick="goToRegisterPage()">거래처 등록하기</button> -->
+    </c:if>
 </div>  
    
 <div id="othercom_list" class="othercom_list">
@@ -534,8 +536,6 @@ text-decoration: none; / 링크 밑줄 제거 */
   	<c:if test="${not empty requestScope.partnerList}">
 	    <c:forEach var="partvo" items="${requestScope.partnerList}">
 	      	<article>
-	      	
-	      	
 	      	<fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" />
 	        <fmt:parseNumber var="sizePerPage" value="${requestScope.sizePerPage}" /> 
 	        <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%>
@@ -605,7 +605,7 @@ text-decoration: none; / 링크 밑줄 제거 */
             <div class="listImg">
               <img src="<%= ctxPath%>/resources/images/common/comp.svg" alt="">
             </div>
-            <div id="pop_partnerAddress" class="listTxt"></div>
+            <div id="pop_partnerAddress" class="listTxt"><a href="https://www.eland.co.kr/"></a></div>
           </li>
           <li>
             <div class="listImg">
