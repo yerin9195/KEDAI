@@ -1,5 +1,6 @@
 package com.spring.app.board.service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -54,5 +55,11 @@ public interface CommunityService {
 
 	// 댓글 수정하기(Ajax 로 처리)
 	int updateComment(Map<String, String> paraMap);
+
+	// 댓글 삭제하기(Ajax 로 처리 & Transaction 처리)
+	int deleteComment(Map<String, String> paraMap) throws Throwable;
+
+	// 좋아요 누르기
+	int likeAdd(Map<String, String> paraMap);
 
 }

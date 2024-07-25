@@ -7,6 +7,7 @@
 	String ctxPath = request.getContextPath();
 	//     /KEDAI
 %>
+
 <style type="text/css">
 	.fileName a {
 		color: #363636;
@@ -118,7 +119,7 @@
 			}
 		});
 		
-		// 댓글 수정하기
+		// 댓글 수정하기(Ajax 로 처리)
 		let origin_comment_content = "";
 		
 		$(document).on("click", "button.btnUpdateComment", function(e){
@@ -166,7 +167,7 @@
 			}
 		}); 
 		
-		// 댓글 수정 취소 & 댓글 삭제
+		// 댓글 수정 취소 & 댓글 삭제(Ajax 로 처리)
 		$(document).on("click", "button.btnDeleteComment", function(e){
 			
 			if($(e.target).text() == "취소"){
@@ -186,9 +187,10 @@
 							   "fk_community_seq":${requestScope.cvo.community_seq}}, // 댓글이 삭제되면 commentCount 도 변경되어야 한다.
 					   	dataType: "json",
 						success: function(json){
-							console.log(JSON.stringify(json));
-						
+						//	console.log(JSON.stringify(json));
 							
+							alert("댓글이 삭제되었습니다.");
+							goViewComment(1); // 페이징처리를 한 댓글 읽어오기 => 삭제 후 무조건 1 페이지로 이동한다.
 						},
 			            error: function(request, status, error){
 			            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -336,8 +338,8 @@
 		
 		// [처음][이전] 만들기 
 		if(pageNo != 1){
-			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment(1)'>[처음]</a></li>"; 
-			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment("+(pageNo-1)+")'>[이전]</a></li>"; 
+			pageBar_HTML += "<li style='display: inline-block; width: 60px; font-size: 12pt;'><a href='javascript:goViewComment(1)' style='color: #363636;'>[처음]</a></li>"; 
+			pageBar_HTML += "<li style='display: inline-block; width: 60px; font-size: 12pt;'><a href='javascript:goViewComment("+(pageNo-1)+")' style='color: #363636;'>[이전]</a></li>"; 
 		}
 		
 		while(!(loop > blockSize || pageNo > totalPage)) {
@@ -354,8 +356,8 @@
 		
 		// [다음][마지막] 만들기
 		if(pageNo <= totalPage) {
-			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment("+pageNo+")'>[다음]</a></li>"; 
-			pageBar_HTML += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='javascript:goViewComment("+totalPage+")'>[마지막]</a></li>"; 
+			pageBar_HTML += "<li style='display: inline-block; width: 60px; font-size: 12pt;'><a href='javascript:goViewComment("+pageNo+")' style='color: #363636;'>[다음]</a></li>"; 
+			pageBar_HTML += "<li style='display: inline-block; width: 60px; font-size: 12pt;'><a href='javascript:goViewComment("+totalPage+")' style='color: #363636;'>[마지막]</a></li>"; 
 		}
 		
 		pageBar_HTML += "</ul>";
@@ -363,19 +365,70 @@
 		$("div#pageBar").html(pageBar_HTML);
 		
 	} // end of function makeCommentPageBar(currentShowPageNo, totalPage) ----------
+	
+	function golikeAdd(community_seq){
+		
+		if(${empty sessionScope.loginuser}) {
+        	alert("먼저 로그인 후 '좋아요' 를 눌러주세요.");
+         	return; 
+      	}
+		
+		$.ajax({
+			url: "<%= ctxPath%>/community/likeAdd.kedai",
+			data: {"fk_community_seq":community_seq,
+				   "fk_empid":"${sessionScope.loginuser.empid}"},
+		   	dataType: "json",
+			success: function(json){
+			//	console.log(JSON.stringify(json));
+				
+				alert(json.msg); 
+            	goLikeDislikeCount(); // 좋아요 개수를 보여주는 함수 호출하기
+			},
+            error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+				
+		});
+		
+	} // end of function golikeAdd(community_seq) ----------
+	
+	function goLikeDislikeCount(){
+		
+		$.ajax({
+			url: "<%= ctxPath%>/community/likeCount.kedai",
+			data: {"fk_community_seq":"${requestScope.cvo.community_seq}"},
+			dataType: "json",
+			success: function(json){
+				console.log(JSON.stringify(json));
+			
+			},
+            error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+		});
+		
+	} // end of function goLikeDislikeCount() ----------
 </script>
 
 <%-- content start --%>
 <div style="border: 0px solid red; padding: 2% 3% 0 0;">
-	<c:if test="${requestScope.cvo.fk_category_code == 1}">
-		<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;[ 동호회 ]&nbsp;&nbsp;${requestScope.cvo.subject}</h3>
-	</c:if>
-	<c:if test="${requestScope.cvo.fk_category_code == 2}">
-		<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;[ 건의함 ]&nbsp;&nbsp;${requestScope.cvo.subject}</h3>
-	</c:if>
-	<c:if test="${requestScope.cvo.fk_category_code == 3}">
-		<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;[ 사내소식 ]&nbsp;&nbsp;${requestScope.cvo.subject}</h3>
-	</c:if>
+	<div class="row">
+		<div class="col-6">
+			<c:if test="${requestScope.cvo.fk_category_code == 1}">
+				<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;[ 동호회 ]&nbsp;&nbsp;${requestScope.cvo.subject}</h3>
+			</c:if>
+			<c:if test="${requestScope.cvo.fk_category_code == 2}">
+				<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;[ 건의함 ]&nbsp;&nbsp;${requestScope.cvo.subject}</h3>
+			</c:if>
+			<c:if test="${requestScope.cvo.fk_category_code == 3}">
+				<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;[ 사내소식 ]&nbsp;&nbsp;${requestScope.cvo.subject}</h3>
+			</c:if>
+		</div>
+		<div class="col-6 d-md-flex justify-content-md-end" data-toggle="tooltip" data-placement="left" title="좋아요 누르기">
+			<i class="fa-regular fa-heart fa-2x" style="cursor: pointer;" onclick="golikeAdd('${requestScope.cvo.community_seq}')"></i>&nbsp;&nbsp;
+			<span id="likeCnt" class="" style="align-content: center;">0</span>
+		</div>
+	</div>
 	
 	<c:if test="${not empty requestScope.cvo}">
 		<div class="row mt-5">
@@ -432,7 +485,7 @@
 						<h3><i class="fa-solid fa-comment-dots"></i>&nbsp;&nbsp;댓글</h3>
 						<div>
 							<button type="button" class="btn add_btn mr-3" onclick="goAddWrite()">등록</button>
-			                <button type="reset" class="btn add_btn">취소</button>
+		                	<button type="reset" class="btn add_btn">취소</button>
 						</div>
 					</div>
 					<form name="addWriteFrm" id="addWriteFrm" class="mt-3">

@@ -207,24 +207,28 @@
 		      					<%-- 첨부파일이 없는 경우 --%>
 		      					<c:if test="${empty cvo.fk_community_seq}">
 		      						<c:if test="${cvo.comment_count > 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}<span style="vertical-align: super;">&nbsp;<span style="color: #e68c0e; font-size: 9pt; font-weight: bold;">[&nbsp;${cvo.comment_count}&nbsp;]</span></span>
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<span style="color: #e68c0e; font-size: 12pt; font-weight: bold;"><i class="fa-regular fa-comment-dots fa-flip-horizontal" style="color: #e68c0e;"></i>&nbsp;${cvo.comment_count}</span>
 		      								<br><span class="content">${cvo.content}</span> 
 		      							</span>
 		      						</c:if>
 		      						<c:if test="${cvo.comment_count == 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}<br><span class="content">${cvo.content}</span></span>
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}
+		      								<br><span class="content">${cvo.content}</span>
+		      							</span>
 		      						</c:if>
 		      					</c:if>
 		      					
 		      					<%-- 첨부파일이 있는 경우 --%>
 		      					<c:if test="${not empty cvo.fk_community_seq}">
 		      						<c:if test="${cvo.comment_count > 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<span style="vertical-align: super;"><span style="color: #e68c0e; font-size: 12pt; font-weight: bold;">[&nbsp;{$cvo.comment_count}&nbsp;]</span></span>&nbsp;&nbsp;<i class="fa-solid fa-paperclip"></i>
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<i class="fa-solid fa-paperclip"></i>&nbsp;&nbsp;<span style="color: #e68c0e; font-size: 12pt; font-weight: bold;"><i class="fa-regular fa-comment-dots fa-flip-horizontal" style="color: #e68c0e;"></i>&nbsp;${cvo.comment_count}</span>
 		      								<br><span class="content">${cvo.content}</span>
 		      							</span>
 		      						</c:if>
 		      						<c:if test="${cvo.comment_count == 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<i class="fa-solid fa-paperclip"></i><br><span class="content">${cvo.content}</span></span>
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<i class="fa-solid fa-paperclip"></i>
+	      									<br><span class="content">${cvo.content}</span>
+		      							</span>
 		      						</c:if>
 		      					</c:if>
 		      				</td>

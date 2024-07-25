@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,8 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import com.spring.app.board.service.CommunityService;
 import com.spring.app.common.FileManager;
 import com.spring.app.common.MyUtil;
+import com.spring.app.domain.BoardVO;
+import com.spring.app.domain.CategoryVO;
 import com.spring.app.domain.CommentVO;
 import com.spring.app.domain.CommunityCategoryVO;
 import com.spring.app.domain.CommunityFileVO;
@@ -501,6 +504,65 @@ public class CommunityController {
 		
 		return mav;
 	}
+/*	
+	// 커뮤니티 글 수정하는 페이지 이동
+	@GetMapping("/community/edit.kedai")
+	public ModelAndView requiredLogin_edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		// 수정하고자하는 글번호
+		String board_seq = request.getParameter("community_seq");
+		String message = "";
+		
+		try {
+			Integer.parseInt(board_seq);
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("board_seq", board_seq);
+			
+			BoardVO bvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
+			
+			if(bvo == null) {
+				message = "글 수정이 불가합니다.";
+			}
+			else {
+				HttpSession session = request.getSession();
+				MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+				
+				if(!loginuser.getEmpid().equals(bvo.getFk_empid())){ // 로그인한 사용자와 작성자가 다른 경우(다른 사람의 글을 수정하려고 하는 경우)
+					message = "다른 사용자의 글은 수정이 불가합니다.";
+				}
+				else { // 자신의 글을 수정하려고 하는 경우
+					List<CategoryVO> categoryList = service.category_select();
+					
+					mav.addObject("categoryList", categoryList);
+					mav.addObject("bvo", bvo);
+					
+					mav.setViewName("tiles1/board/edit.tiles"); 
+					
+					return mav;
+				}
+			}
+			
+		} catch (NumberFormatException e) { // "GET" 방식으로 문자를 입력한 경우
+			message = "글 수정이 불가합니다.";
+		}
+		
+		String loc = "javascript:history.back()"; // 이전 페이지로 이동
+		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		
+		mav.setViewName("msg"); 
+		
+		return mav;
+	}
+*/	
+	
+	
+	
+	
+	
+	
 	
 	// 첨부파일명 조회하기
 	@ResponseBody
@@ -678,6 +740,7 @@ public class CommunityController {
 		return jsonObj.toString();
 	}
 	
+	// 댓글 삭제하기(Ajax 로 처리)
 	@ResponseBody
 	@PostMapping(value="/community/deleteComment.kedai", produces="text/plain;charset=UTF-8")
 	public String deleteComment(HttpServletRequest request) {
@@ -685,8 +748,64 @@ public class CommunityController {
 		String comment_seq = request.getParameter("comment_seq");
 		String fk_community_seq = request.getParameter("fk_community_seq");
 		
-		System.out.println("~~~ 확인용 comment_seq =>"+comment_seq);
-		System.out.println("~~~ 확인용 fk_community_seq =>"+fk_community_seq);
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("comment_seq", comment_seq);
+		paraMap.put("fk_community_seq", fk_community_seq);
+		
+		int n = 0;
+		try {
+			n = service.deleteComment(paraMap);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		
+		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
+	// 좋아요 누르기
+	@ResponseBody
+	@GetMapping(value="/community/likeAdd.kedai", produces="text/plain;charset=UTF-8")
+	public String likeAdd(HttpServletRequest request) {
+		
+		String fk_community_seq = request.getParameter("fk_community_seq");
+		String fk_empid = request.getParameter("fk_empid");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_community_seq", fk_community_seq);
+		paraMap.put("fk_empid", fk_empid);
+		
+		int n = service.likeAdd(paraMap);
+		 
+		// n => 1 이라면 정상투표, n => 0 이라면 중복투표
+		// fk_empid 와 fk_community_seq 는 복합 primary key 이기 때문에 중복투표를 하게 된다면 insert 시 SQLException 이 발생 => SQLException 이 발생한 경우 n 은 0 이 되도록 한다.
+		
+		String msg = "";
+		if(n == 1) {
+			msg = fk_community_seq + "번 글에 좋아요를 누르셨습니다.";
+		}
+		else { 
+			msg = "이미 좋아요를 클릭하셨기 때문에 두번 이상 좋아요는\n불가능합니다.";
+		}
+		
+		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("msg", msg);
+				
+		return jsonObj.toString();
+	}
+	
+	// 좋아요 개수 조회하기
+	@ResponseBody
+	@GetMapping(value="/community/likeCount.kedai", produces="text/plain;charset=UTF-8")
+	public String likeCount(HttpServletRequest request) {
+		
+		String fk_community_seq = request.getParameter("fk_community_seq");
+
+		
+		
+		
 		
 		return "";
 	}

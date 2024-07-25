@@ -950,9 +950,19 @@ from tbl_community_file
 where fk_community_seq = 27 and orgfilename = 'LG_싸이킹청소기_사용설명서.pdf'
 
 desc tbl_comment;
+desc tbl_community;
 
 update tbl_comment set content = #{content}, registerday = sysdate
 where comment_seq = #{comment_seq}
 
+update tbl_community set comment_count = comment_count - 1
+where community_seq = #{fk_community_seq}
 
+desc tbl_community_like;
+
+insert into tbl_community_like(fk_empid, fk_community_seq)
+values(#{fk_empid}, #{fk_community_seq})
+
+select *
+from tbl_community_like
           

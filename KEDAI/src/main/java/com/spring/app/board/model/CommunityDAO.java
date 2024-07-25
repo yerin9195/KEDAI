@@ -1,5 +1,6 @@
 package com.spring.app.board.model;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -56,5 +57,14 @@ public interface CommunityDAO {
 
 	// 댓글 수정하기(Ajax 로 처리)
 	int updateComment(Map<String, String> paraMap);
+
+	// 댓글 삭제하기(Ajax 로 처리)
+	int deleteComment(String comment_seq);
+
+	// 댓글삭제 시 tbl_community 테이블에 comment_count 컬럼이 1감소(update)
+	int updateCommentCount_decrease(String fk_community_seq);
+
+	// 좋아요 누르기
+	int likeAdd(Map<String, String> paraMap);
 
 }

@@ -570,7 +570,7 @@ public class MemberController {
 		int totalCount = service.memberTotalCountJSON();
 		
 		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("totalCount", totalCount*1000);
+		jsonObj.put("totalCount", totalCount*100);
 		
 		return jsonObj.toString();
 	}

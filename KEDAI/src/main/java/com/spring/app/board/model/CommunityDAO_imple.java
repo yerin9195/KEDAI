@@ -122,4 +122,27 @@ public class CommunityDAO_imple implements CommunityDAO {
 		return n;
 	}
 
+	@Override
+	public int deleteComment(String comment_seq) {
+		int n = sqlsession.delete("community.deleteComment", comment_seq);
+		return n;
+	}
+
+	@Override
+	public int updateCommentCount_decrease(String fk_community_seq) {
+		int m = sqlsession.update("community.updateCommentCount_decrease", fk_community_seq);
+		return m;
+	}
+
+	@Override
+	public int likeAdd(Map<String, String> paraMap) {
+		int n = 0;
+		
+		try {
+			 n = sqlsession.insert("community.likeAdd", paraMap);
+		} catch(Exception e) {}
+		
+		return n;
+	}
+
 }

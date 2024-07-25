@@ -1,5 +1,7 @@
 package com.spring.app.board.service;
 
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,5 +159,27 @@ public class CommunityService_imple implements CommunityService {
 		int n = dao.updateComment(paraMap);
 		return n;
 	}
+
+	// 댓글 삭제하기(Ajax 로 처리 & Transaction 처리)
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int deleteComment(Map<String, String> paraMap) throws Throwable {
+		int n = dao.deleteComment(paraMap.get("comment_seq"));
+		
+		int m = 0;
+		if(n == 1) { // 댓글삭제 시 tbl_community 테이블에 comment_count 컬럼이 1감소(update)
+			m = dao.updateCommentCount_decrease(paraMap.get("fk_community_seq"));
+		}
+		
+		return n*m;
+	}
+
+	// 좋아요 누르기
+	@Override
+	public int likeAdd(Map<String, String> paraMap) {
+		int n = dao.likeAdd(paraMap);
+		return n;
+	}
+
 
 }
