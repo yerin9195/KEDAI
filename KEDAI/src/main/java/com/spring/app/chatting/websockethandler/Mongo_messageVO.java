@@ -24,7 +24,7 @@ public class Mongo_messageVO {
 	private String type;    // all 이면 전체에게 채팅메시지를 보냄 
 	private String to;      // 특정 웹소켓 id
 	
-	private String Empid;      // 사용자ID
+	private String empid;      // 사용자ID
 	private String name;        // 사용자명
 	private String currentTime; // 채팅한 시간 (오후 5:05) 
 	
@@ -69,14 +69,16 @@ public class Mongo_messageVO {
 	}
 	
 	
+	
+	
 	public String getEmpid() {
-		return Empid;
+		return empid;
 	}
 
-	public void setUserid(String Empid) {
-		this.Empid = Empid;
+	public void setEmpid(String empid) {
+		this.empid = empid;
 	}
-	
+
 	public String getName() {
 		return name;
 	}

@@ -148,7 +148,7 @@ public class EmployeeController {
 	@GetMapping("/chatting/multichat.kedai")
 	public String requiredLogin_multichat(HttpServletRequest request, HttpServletResponse response) {
 		
-		return "tiles1/chatting/multichat.tiles";
+		return "multichat";
 	}
 	
 	

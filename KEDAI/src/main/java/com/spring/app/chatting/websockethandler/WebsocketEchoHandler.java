@@ -2,11 +2,14 @@ package com.spring.app.chatting.websockethandler;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -54,16 +57,17 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
              --> 한칸 띄우고 -Djava.net.preferIPv4Stack=true 
                          을 추가한다.  
        */
-		System.out.println("=====> 웹 채팅확인용 : " + wsession.getId() + "님이 접속했습니다.");
+		// System.out.println("=====> 웹 채팅확인용 : " + wsession.getId() + "님이 접속했습니다.");
+		// =====> 웹 채팅확인용 : 45cf5900-67ee-acab-749f-fb077f904ab1님이 접속했습니다.
 		
+		// System.out.println("====> 웹채팅확인용 : " + "연결 컴퓨터명 : " + wsession.getRemoteAddress().getHostName());
+		// ====> 웹채팅확인용 : 연결 컴퓨터명 : DESKTOP-6CRLQER
 		
-		System.out.println("====> 웹채팅확인용 : " + "연결 컴퓨터명 : " + wsession.getRemoteAddress().getHostName());
+		// System.out.println("====> 웹채팅확인용 : " + "연결 컴퓨터명 : " + wsession.getRemoteAddress().getAddress().getHostName());
+		// ====> 웹채팅확인용 : 연결 컴퓨터명 : DESKTOP-6CRLQER
 		
-		System.out.println("====> 웹채팅확인용 : " + "연결 컴퓨터명 : " + wsession.getRemoteAddress().getAddress().getHostName());
-		
-		
-		System.out.println("====> 웹채팅확인용 : " + "연결 IP : " + wsession.getRemoteAddress().getAddress().getHostAddress());
-	
+		// System.out.println("====> 웹채팅확인용 : " + "연결 IP : " + wsession.getRemoteAddress().getAddress().getHostAddress());
+		// ====> 웹채팅확인용 : 연결 IP : 192.168.0.210
 		
 		connectedUsers.add(wsession);
 		
@@ -97,8 +101,8 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 		}// end of for()----------------------------------------------------
 		
 		connectingUserName += "」 ";
-		System.out.println("확인용 connectingUserName : " + connectingUserName);
-		// 확인용 connectingUserName : 「유선우 」 
+		// System.out.println("확인용 connectingUserName : " + connectingUserName);
+		// 확인용 connectingUserName : 「관리자 」
 		
 		
 		for(WebSocketSession webSocketSession : connectedUsers) {
@@ -114,6 +118,8 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 		List<Mongo_messageVO> list = chattingMongo.listChatting(); // 몽고DB에 저장되어진 채팅내용을 읽어온다.
         
         SimpleDateFormat sdfrmt = new SimpleDateFormat("yyyy년 MM월 dd일 E요일", Locale.KOREAN);
+        // System.out.println("sdfrmt : " + sdfrmt);
+        // sdfrmt : java.text.SimpleDateFormat@26a8d141
         
         if(list != null && list.size() > 0) { // 이전에 나누었던 대화내용이 있다라면 
            for(int i=0; i<list.size(); i++) {
@@ -214,14 +220,140 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
      Map<String, Object> map = wsession.getAttributes(); 
      MemberVO loginuser = (MemberVO) map.get("loginuser");
      // "loginuser" 은 HttpSession에 저장된 키 값으로 로그인 되어진 사용자이다.
-     System.out.println("===> 웹채팅확인용 : 로그인ID : " + loginuser.getEmpid());
+     // System.out.println("===> 웹채팅확인용 : 로그인ID : " + loginuser.getEmpid());
+     // ===> 웹채팅확인용 : 로그인ID : 2010001-001
      
-     //    System.out.println("===> 웹채팅확인용 : 로그인ID : " + loginuser.getEmpid());
-     // ===> 웹채팅확인용 : 로그인ID : seoyh 
+     MessageVO messageVO = MessageVO.convertMessage(message.getPayload()); 
+     // System.out.println("messageVO : " + messageVO);
+     // messageVO : com.spring.app.chatting.websockethandler.MessageVO@2316779a
+     /* 
+                  파라미터 message 는  클라이언트 사용자가 웹소켓서버로 보낸 웹소켓 메시지임
+        message.getPayload() 은  클라이언트 사용자가 보낸 웹소켓 메시지를 String 타입으로 바꾸어주는 것이다.
+        /Board/src/main/webapp/WEB-INF/views/tiles1/chatting/multichat.jsp 파일에서 
+                  클라이언트가 보내준 메시지는 JSON 형태를 뛴 문자열(String) 이므로 이 문자열을 Gson을 사용하여 MessageVO 형태의 객체로 변환시켜서 가져온다.
+     */
+     
+     // System.out.println("~~~ 확인용 messageVO.getMessage() => " + messageVO.getMessage() );  
+     // ~~~ 확인용 messageVO.getMessage() => 채팅방에 <span style='color: red;'>입장</span> 했습니다.
+     // ~~~ 확인용 messageVO.getMessage() => 안녕하세요 반갑습니다. 
+     
+     // System.out.println("~~~ 확인용 messageVO.getType() => " + messageVO.getType() );
+     // ~~~ 확인용 messageVO.getType() => all
+     
+     // System.out.println("~~~ 확인용 messageVO.getTo() => " + messageVO.getTo() );
+     // ~~~ 확인용 messageVO.getTo() => all
 	
+     Date now = new Date(); // 현재시각 
+     String currentTime = String.format("%tp %tl:%tM",now,now,now); 
+     // System.out.println("currentTime : " + currentTime);
+     // currentTime : 오후 4:22
+     // %tp              오전, 오후를 출력
+     // %tl              시간을 1~12 으로 출력
+     // %tM              분을 00~59 으로 출력
+     
+     	for(WebSocketSession webSocketSession : connectedUsers) { 
+    	 
+    	 	if("all".equals(messageVO.getType())) {
+             // 채팅할 대상이 "전체" 일 경우
+             // 메시지를 자기자신을 뺀 나머지 모든 사용들에게 메시지를 보냄.
+             
+	             if( !wsession.getId().equals(webSocketSession.getId()) ) { 
+	                // wsession 은 메시지를 보낸 클라이언트임.
+	                // webSocketSession 은 웹소켓서버에 연결된 모든 클라이언트중 하나임.
+	                // wsession.getId() 와  webSocketSession.getId() 는 자동증가되는 고유한 값으로 나옴 
+	                
+	                webSocketSession.sendMessage(   
+	                      new TextMessage("<span style='display:none'>"+wsession.getId()+"</span>&nbsp;[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +loginuser.getName()+ "</span>]<br><div style='background-color: white; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all;'>"+ messageVO.getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+currentTime+"</div> <div>&nbsp;</div>" )); 
+	                                                                                                                                                                                                                                                                                                                            /* word-break: break-all; 은 공백없이 영어로만 되어질 경우 해당구역을 빠져나가므로 이것을 막기위해서 사용한다. */
+	             	}
+             
+    	 	}
+    	 	else { // 채팅할 대상이 "전체"가 아닌 특정대상(귀속말대상웹소켓.getId()임) 일 경우  
+             
+    	 		String ws_id = webSocketSession.getId();
+    	 		// webSocketSession 은 웹소켓서버에 연결한 모든 클라이언트중 하나이며, 그 클라이언트의 웹소켓의 고유한 id 값을 알아오는 것임. 
+             
+    	 		if(messageVO.getTo().equals(ws_id)) { 
+    	 			// messageVO.getTo() 는 클라이언트가 보내온 귓속말대상웹소켓.getId() 임. 
+    	 			webSocketSession.sendMessage(
+               		
+    	 				new TextMessage("<span style='display:none'>"+wsession.getId()+"</span>&nbsp;[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +loginuser.getName()+ "</span>]<br><div style='background-color: white; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all; color: red;'>"+ messageVO.getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+currentTime+"</div> <div>&nbsp;</div>" )); 
+                                                                                                                                                                                                                                                                                                                            /* word-break: break-all; 은 공백없이 영어로만 되어질 경우 해당구역을 빠져나가므로 이것을 막기위해서 사용한다. */ 
+    	 				break; // 지금의 특정대상(지금은 귓속말대상 웹소켓id)은 1개이므로 
+                          	   // 특정대상(지금은 귓속말대상 웹소켓id 임)에게만 메시지를 보내고  break;를 한다.
+    	 		}
+             
+    	 	}
+    	 
+     	} // end of for()---------------------------------------
+     
+     	// ======================== 몽고DB 시작 ======================== //
+     	// === 상대방에게 대화한 내용을 위에서 보여준 후, 몽고DB에 저장하도록 한다. === // 
+         String _id = String.format("%1$tY%1$tm%1$td%1$tH%1$tM%1$tS", Calendar.getInstance());
+         _id += System.nanoTime();
+         
+         dto.set_id(_id);
+         dto.setMessage(messageVO.getMessage());
+         dto.setTo(messageVO.getTo());
+         dto.setType(messageVO.getType());
+         
+         dto.setEmpid(loginuser.getEmpid());
+         dto.setName(loginuser.getName());
+         dto.setCurrentTime(currentTime);
+         dto.setCreated(new Date());
+         
+         chattingMongo.insertMessage(dto);
+         // ================== 몽고DB 끝 ============================== //
+    	 
+     } 
 	
+	// === 클라이언트가 웹소켓서버와의 연결을 끊을때 작업 처리하기 ===
+    /*
+     afterConnectionClosed(WebSocketSession session, CloseStatus status) 메소드는 
+            클라이언트가 연결을 끊었을 때 
+            즉, WebSocket 연결이 닫혔을 때(채팅페이지가 닫히거나 채팅페이지에서 다른 페이지로 이동되는 경우) 자동으로 호출되어지는(실행되어지는) 메소드이다.
+    */
 	
+	@Override
+    public void afterConnectionClosed(WebSocketSession wsession, CloseStatus status) throws Exception {
+        // 파라미터 WebSocketSession wsession 은 연결을 끊은 웹소켓 클라이언트임.
+        // 파라미터 CloseStatus 은 웹소켓 클라이언트의 연결 상태.
+       
+		Map<String, Object> map = wsession.getAttributes(); 
+		MemberVO loginuser = (MemberVO)map.get("loginuser");
+       
+        for (WebSocketSession webSocketSession : connectedUsers) {
+           
+           // 퇴장했다라는 메시지를 자기자신을 뺀 나머지 모든 사용자들에게 메시지를 보내도록 한다.
+           if (!wsession.getId().equals(webSocketSession.getId())) { 
+                webSocketSession.sendMessage(
+                   new TextMessage("[<span style='font-weight:bold;'>" +loginuser.getName()+ "</span>]님이 <span style='color: red;'>퇴장</span>했습니다.")
+                ); 
+            }
+        }// end of for------------------------------------------
 	
+        // System.out.println("====> 웹채팅확인용 : 웹세션ID " + wsession.getId() + "이 퇴장했습니다."); 
+        // ====> 웹채팅확인용 : 웹세션ID 4f607ce5-7d8a-dd5d-eb6b-6d86cbdbb441이 퇴장했습니다.
+        
+        connectedUsers.remove(wsession);
+        // 웹소켓 서버에 연결되어진 클라이언트 목록에서 연결은 끊은 클라이언트는 삭제시킨다.  
+        
+        ///// ===== 접속을 끊을시 접속자명단을 알려주기 위한 것 시작 ===== /////
+        String connectingUserName = "「";
+        
+        for (WebSocketSession webSocketSession : connectedUsers) {
+            Map<String, Object> map2 = webSocketSession.getAttributes();
+            MemberVO loginuser2 = (MemberVO)map2.get("loginuser");  
+          // "loginuser" 은 HttpSession에 저장된 키 값으로 로그인 되어진 사용자이다.
+  
+           connectingUserName += loginuser2.getName()+" "; 
+       }// end of for------------------------------------------
+        
+        connectingUserName += "」";
+        
+        for (WebSocketSession webSocketSession : connectedUsers) {
+            webSocketSession.sendMessage(new TextMessage(connectingUserName));
+        }// end of for------------------------------------------
+        ///// ===== 접속을 끊을시 접속자명단을 알려주기 위한 것 끝 ===== ///// 
 	}
-	
 }

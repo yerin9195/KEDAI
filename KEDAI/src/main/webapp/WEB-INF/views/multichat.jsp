@@ -1,7 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
-    
+<%
+	String ctxPath = request.getContextPath();
+	//     /KEDAI
+%>   
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<%-- Optional JavaScript --%>
+<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
 <!-- ==== #223.(웹채팅관련5) -->
 
 <script type="text/javascript">
@@ -33,7 +43,7 @@
 
 	$(document).ready(function(){
 		
-		$("div#mycontent").css({"background-color":"#cce0ff"});
+		// $("div#mycontent").css({"background-color":"#cce0ff"});
 	    // div#mycontent 는  /Board/src/main/webapp/WEB-INF/tiles/layout/layout-tiles1.jsp 파일의 내용에 들어 있는 <div id="mycontent"> 이다.
 			
 	    const url = window.location.host;	// 웹브라우저의 주소창의 포트까지 가져오는 것
@@ -42,19 +52,21 @@
 	    
 	    const pathname = window.location.pathname;	// 최초 '/' 부터 오른쪽에 있는 모든 경로를 알려준다. 
 	    // alert("pathname : " + pathname);
-	    // pathname : /board/chatting/multichat.action
+	   // pathname : /KEDAI/chatting/multichat.kedai
 		
 	    const appCtx =  pathname.substring(0, pathname.lastIndexOf("/"));	// "전체 문자열".lastIndexOf("검사할 문자"); 
 	    // alert("appCtx : " + appCtx);
-	    // appCtx : /board/chatting
+	    // appCtx : /KEDAI/chatting
 	    
 	    const root = url + appCtx;
 	    // alert("root : " + root);
-	    // root : 192.168.0.210:9099/board/chatting
+	    // root : 192.168.0.210:9099/KEDAI/chatting
 	   
 	    const wsUrl = "ws://"+root+"/multichatstart.kedai";
+	    // alert("wsUrl : " + wsUrl)
+	    // wsUrl : ws://192.168.0.210:9099/KEDAI/chatting/multichatstart.kedai
 	 	// 웹소켓통신을 하기위해서는 http:// 을 사용하는 것이 아니라 ws:// 을 사용해야 한다. 
-	    // "/multichatstart.action" 에 대한 것은 /WEB-INF/spring/config/websocketContext.xml 파일에 있는 내용이다. 
+	    // "/multichatstart.kedai" 에 대한 것은 /WEB-INF/spring/config/websocketContext.xml 파일에 있는 내용이다. 
 	    
 	    const websocket = new WebSocket(wsUrl);
 	    // 즉, const websocket = new WebSocket("ws://192.168.0.210:9099/board/chatting/multichatstart.action"); 이다. 
@@ -253,8 +265,8 @@
 
 
 </script>    
-
-
+</head>
+<body>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-10 offset-md-1">
@@ -264,7 +276,7 @@
 				   - 상대방의 대화내용이 <span style="color: red;">붉은색</span>으로 보이면 나에게만 보여지는 1:1 귓속말 입니다.<br>
 				   - 1:1 채팅(귓속말)을 하시려면 예를 들어, 채팅시 보이는 [이순신]대화내용 에서 이순신을 클릭하시면 됩니다.
 			   </div>
-			   <input type="hidden" id="to" placeholder="귓속말대상웹소켓.getId()"/>
+			   <input type="hidden" id="to" placeholder="귓속말대상웹소켓.getEmpid()"/>
 			   <br/>
 				   ♡ 귓속말대상 : <span id="privateWho" style="font-weight: bold; color: red;"></span>
 			   <br>
@@ -281,3 +293,5 @@
 		</div>
 	</div>
 </div>  
+</body>
+</html>
