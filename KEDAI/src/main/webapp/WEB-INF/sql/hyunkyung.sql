@@ -855,7 +855,7 @@ SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no,
 		    GROUP BY fk_doc_no
 		) F ON F.fk_doc_no = D.doc_no
 		WHERE A1.FK_EMPID = '2014100-003' AND A1.STATUS = 0 
-		ORDER BY D.created_date DESC, D.DOC_NO DESC
+		ORDER BY D.created_date DESC, D.DOC_NO DESC;
         
         
 
@@ -877,4 +877,60 @@ ON D.doc_no = A1.fk_doc_no
 		    GROUP BY fk_doc_no
 		) F ON F.fk_doc_no = D.doc_no
 		WHERE A1.FK_EMPID = #{loginEmpId} AND A1.STATUS = 0 
-		ORDER BY D.created_date DESC, D.DOC_NO DESC
+		ORDER BY D.created_date DESC, D.DOC_NO DESC;
+        
+        
+        
+SELECT COUNT(*)
+FROM tbl_doc D
+join tbl_doctype T
+on D.fk_doctype_code = T.doctype_code
+WHERE lower(doctype_name) LIKE '%' || lower('회의') || '%';     
+
+
+select *
+from tbl_doc D
+
+
+SELECT rno, doc_no, fk_empid, name, doc_subject, doc_content, created_date, doctype_name
+         , doc_status, isAttachment
+FROM(
+    SELECT rownum AS rno
+         , doc_no, fk_empid, name, doc_subject, doc_content, created_date, doctype_name
+         , doc_status, isAttachment
+    FROM 
+        (select D.doc_no, D.fk_empid, E.name, D.doc_subject, D.doc_content,
+                to_char(created_date, 'yyyy-mm-dd hh24:mi:ss') AS created_date, T.doctype_name, D.doc_status,
+                CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+        from tbl_doc D
+        join tbl_doctype T
+        on D.fk_doctype_code = T.doctype_code  
+        join tbl_employees E
+        on D.fk_empid = E.empid
+        LEFT JOIN (
+                SELECT fk_doc_no
+                FROM tbl_doc_file
+                GROUP BY fk_doc_no
+        ) F ON F.fk_doc_no = D.doc_no
+        <choose>
+            <when test='searchType == "doctype_name" and searchWord != "" '>
+                where lower(doctype_name) like '%'|| lower(#{searchWord}) || '%'
+            </when>
+            <when test='searchType == "doc_subject" and searchWord != ""'>
+                where lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' 
+            </when>
+            <when test='searchType == "doc_content" and searchWord != ""'>
+                where lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
+            </when>
+            <when test='searchType == "doc_no" and searchWord != ""'>
+                where lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
+            </when>
+            <when test='searchType == "doc_subject_content" and searchWord != ""'>
+                where (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
+            </when>
+            <otherwise></otherwise>
+        </choose> 
+        order by doc_no desc
+    ) V
+) T     
+WHERE rno between #{startRno} and #{endRno}

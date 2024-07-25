@@ -132,8 +132,8 @@ public class ApprovalService_imple implements ApprovalService {
 
 	// 나의 모든 기안문서 가져오기
 	@Override
-	public List<Map<String, String>> myDocListSearch(String loginEmpId) {
-		List<Map<String, String>> myDocListSearch = dao.myDocListSearch(loginEmpId);
+	public List<Map<String, String>> myDocListSearch(Map<String, String> paraMap) {
+		List<Map<String, String>> myDocListSearch = dao.myDocListSearch(paraMap);
 		return myDocListSearch;
 	}
 
@@ -142,6 +142,13 @@ public class ApprovalService_imple implements ApprovalService {
 	public int getTotalMyDocCount(Map<String, String> paraMap) {
 		int n = dao.getTotalMyDocCount(paraMap);
 		return n;
+	}
+	
+	// 나의 기안 문서에서 문서 한 개 보기
+	@Override
+	public List<Map<String, String>> getViewOneMyDoc(Map<String, String> paraMap) {
+		List<Map<String, String>> getViewOneMyDoc = dao.getViewOneMyDoc(paraMap);
+		return getViewOneMyDoc;
 	}
 
 

@@ -1,6 +1,8 @@
 package com.spring.app.approval.controller;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,9 +25,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.spring.app.approval.service.ApprovalService;
+import com.spring.app.board.domain.BoardVO;
 import com.spring.app.common.FileManager;
+import com.spring.app.common.MyUtil;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
 import com.spring.app.domain.MemberVO;
@@ -409,12 +414,15 @@ public class ApprovalController {
 	@RequestMapping("approval/showMyDocList.kedai")
 	public ModelAndView showMyDocList(ModelAndView mav, HttpServletRequest request) {
 		
+		
+		System.out.println("확인용 searchWord" + request.getParameter("searchWord"));
+		System.out.println("확인용 searchType" + request.getParameter("searchType"));
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		
 		String loginEmpId = loginuser.getEmpid();
 		
-		List<Map<String, String>> myAllDocList = null;
+		List<Map<String, String>> allMyDocList = null;
 		
 		//=== #122.페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 == //
 		
@@ -436,7 +444,7 @@ public class ApprovalController {
 		String searchWord = request.getParameter("searchWord"); // myDoclist.jsp의 form 태그 내의 name이 searchType가 넘어 온다. 
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 		
-		// System.out.println("~~ 확인용 str_currentShowPageNo : " + str_currentShowPageNo);
+	//	System.out.println("~~ 확인용 str_currentShowPageNo : " + str_currentShowPageNo);
 	    // ~~ 확인용 str_currentShowPageNo : null 
 	    // ~~ 확인용 str_currentShowPageNo : 3
 	    // ~~ 확인용 str_currentShowPageNo : dsfsdfdsfdsfㄴㄹㄴㅇㄹㄴ
@@ -471,7 +479,8 @@ public class ApprovalController {
 		
 		//총 게시물 건수(totalCount)
 		totalCount = service.getTotalMyDocCount(paraMap);
-		//System.out.println("~~확인용totalCount "+totalCount);
+		
+	//	System.out.println("~~확인용totalCount "+totalCount);
 		//~~확인용totalCount 14
 		// 글 제목에 검색어 입력하고 검색 했을 때 
 		//~~확인용totalCount 5
@@ -517,19 +526,292 @@ public class ApprovalController {
 		int startRno = ((currentShowPageNo - 1) * sizePerPage) + 1; // 시작 행번호 
         int endRno = startRno + sizePerPage - 1; // 끝 행번호
         
+        paraMap.put("loginEmpId", loginEmpId);
         paraMap.put("startRno", String.valueOf(startRno));
         paraMap.put("endRno", String.valueOf(endRno));
 				
+        allMyDocList = service.myDocListSearch(paraMap);
+     // 글 목록 가져오기(페이징 처리 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것이다.
+		
+		mav.addObject("loginuser", loginuser); // 모델에 loginuser 객체 추가
+		mav.addObject("allMyDocList", allMyDocList); 
+		
+		// 검색시 검색조건 및 검색어 값 유지시키기
+		if("subject".equals(searchType) || "content".equals(searchType) 
+				|| "subject_content".equals(searchType) || "name".equals(searchType) ) {  // select 태그 리스트에만 있는 것만 보내준다. 만약 get방식으로 abcd쓰면 select 태그에 빈칸으로 남아있기 때문에.
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		// === #129. 페이지바 만들기 === //
+		int blockSize = 10;
+		// blockSize 는 1개 블럭(토막)당 보여지는 페이지번호의 개수이다.
+	      /*
+	                       1  2  3  4  5  6  7  8  9 10 [다음][마지막]  -- 1개블럭
+	         [맨처음][이전]  11 12 13 14 15 16 17 18 19 20 [다음][마지막]  -- 1개블럭
+	         [맨처음][이전]  21 22 23
+	      */
+		
+		int loop = 1;
+     /*   loop는 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수[ 지금은 10개(== blockSize) ] 까지만 증가하는 용도이다.    */
+		
+		int pageNo =  ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+	      // *** !! 공식이다. !! *** //
+	      
+	//	System.out.println("~~확인용pageNo : " + pageNo);
+	   /*
+	       1  2  3  4  5  6  7  8  9  10  -- 첫번째 블럭의 페이지번호 시작값(pageNo)은 1 이다.
+	       11 12 13 14 15 16 17 18 19 20  -- 두번째 블럭의 페이지번호 시작값(pageNo)은 11 이다.
+	       21 22 23 24 25 26 27 28 29 30  -- 세번째 블럭의 페이지번호 시작값(pageNo)은 21 이다.
+	       
+	       currentShowPageNo         pageNo
+	      ----------------------------------
+	            1                      1 = ((1 - 1)/10) * 10 + 1
+	            2                      1 = ((2 - 1)/10) * 10 + 1
+	            3                      1 = ((3 - 1)/10) * 10 + 1
+	            4                      1
+	            5                      1
+	            6                      1
+	            7                      1 
+	            8                      1
+	            9                      1
+	            10                     1 = ((10 - 1)/10) * 10 + 1
+	           
+	            11                    11 = ((11 - 1)/10) * 10 + 1
+	            12                    11 = ((12 - 1)/10) * 10 + 1
+	            13                    11 = ((13 - 1)/10) * 10 + 1
+	            14                    11
+	            15                    11
+	            16                    11
+	            17                    11
+	            18                    11 
+	            19                    11 
+	            20                    11 = ((20 - 1)/10) * 10 + 1
+	            
+	            21                    21 = ((21 - 1)/10) * 10 + 1
+	            22                    21 = ((22 - 1)/10) * 10 + 1
+	            23                    21 = ((23 - 1)/10) * 10 + 1
+	            ..                    ..
+	            29                    21
+	            30                    21 = ((30 - 1)/10) * 10 + 1
+	   */
+		
+		String pageBar = "<ul style='list-style:none;'>";
+		String url="list.action";
+		
+		// === [맨처음][이전]만들기 ===//
+	//	if(pageNo <= totalPage) { // 맨 마지막에는 나오지 않도록!
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'"+pageNo+">[맨처음]</a></li>";	
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo='"+(pageNo-1)+"'>[이전]</a></li>";	
+		}
 		
 		
+		while( !(loop > blockSize || pageNo > totalPage) ) {
+			
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+			}
+			loop++;
+			pageNo++;	
+		}// end of while------------------------
 		
-		myAllDocList = service.myDocListSearch(loginEmpId);
+		// === [다음][마지막]만들기 ===//
+		if(pageNo <= totalPage) { // 맨 마지막에는 나오지 않도록!
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";	
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";	
+		}		
 		
-		mav.addObject("loginuser", loginuser); // 모델에 loginuser 객체 추가		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
+		
+		// === #131. 페이징 처리되어진 후 특정 글제목을 클릭하여 상세내용을 본 이후
+	      //           사용자가 "검색된결과목록보기" 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
+	      //           현재 페이지 주소를 뷰단으로 넘겨준다.
+		String goBackURL = MyUtil.getCurrentURL(request);
+		//System.out.println(" 확인용(list.action) goBackURL " + goBackURL);
+		/*
+		  확인용(list.action) goBackURL /list.action
+		  확인용(list.action) goBackURL /list.action?searchType=&searchWord=&currentShowPageNo=5
+		  확인용(list.action) goBackURL /list.action?searchType=subject&searchWord=java
+		  확인용(list.action) goBackURL /list.action?searchType=subject&searchWord=정화&currentShowPageNo=3 
+		 */
+		
+		mav.addObject("goBackURL", goBackURL);
+		
+		/////////////////////////////////////////////////////////////// ///////////////////////////////////////////////////
+		mav.addObject("totalCount", totalCount); //  페이징 처리시 보여주는 순번 공식을 위해 값을 넘겨준다.
+		mav.addObject("currentShowPageNo", currentShowPageNo); //  페이징 처리시 보여주는 순번 공식을 위해 값을 넘겨준다.
+		mav.addObject("sizePerPage", sizePerPage); //  페이징 처리시 보여주는 순번 공식을 위해 값을 넘겨준다.
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		
 		mav.setViewName("tiles1/approval/myDocList.tiles");
 		
 		return mav;
 	}
+	
+	@RequestMapping("/approval/viewOneMyDoc.kedai")
+	public ModelAndView viewOneMyDoc(ModelAndView mav, HttpServletRequest request) {
+		//String seq = request.getParameter("seq");
+		String doc_no="";
+		String goBackURL = "";
+		String searchType = "";
+		String searchWord = "";
+		
+		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+		// redirect 되어서 넘어온 데이터가 있는지 꺼내어 와본다.
+		// Map<String, ?>에서 ?은 아무거나. object를 말한다.
+		
+		if(inputFlashMap != null) { // redirect 되어서 넘어온 데이터가 있다 라면 
+			
+			@SuppressWarnings("unchecked") // 경고 표시를 하지 말라는 뜻
+			Map<String, String> redirect_map = (Map<String, String>) inputFlashMap.get("redirect_map"); 
+			// redirect_map이 Map이기 때문에 다시 캐스팅 해줘야 한다.inputFlashMap.get("redirect_map")의 값은 object이다.
+			// "redirect_map" 값은  /view_2.action 에서  redirectAttr.addFlashAttribute("키", 밸류값); 을 할때 준 "키" 이다. 
+	        // "키" 값을 주어서 redirect 되어서 넘어온 데이터를 꺼내어 온다. 
+	        // "키" 값을 주어서 redirect 되어서 넘어온 데이터의 값은 Map<String, String> 이므로 Map<String, String> 으로 casting 해준다.
+			
+
+	   //     System.out.println("~~~ 확인용 seq : " + redirect_map.get("seq"));
+	     //   seq = redirect_map.get("seq");
+			
+		}
+
+		/////////////////////////////////////////////////////////////////////////		
+		else {// redirect 되어서 넘어온 데이터가 아닌 경우(직접 해 온 경우)
+			
+			// == 조회하고자 하는 글번호 받아오기 ==
+	           
+	        // 글목록보기인 /list.action 페이지에서 특정 글제목을 클릭하여 특정글을 조회해온 경우  
+	        // 또는 
+	        // 글목록보기인 /list.action 페이지에서 특정 글제목을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는 원본이 form 을 사용해서 POST 방식으로 넘어온 경우이므로 "양식 다시 제출 확인" 이라는 대화상자가 뜨게 되며 "계속" 이라는 버튼을 클릭하면 이전에 입력했던 데이터를 자동적으로 입력해서 POST 방식으로 진행된다. 그래서  request.getParameter("seq"); 은 null 이 아닌 번호를 입력받아온다.     
+	        // 그런데 "이전글제목" 또는 "다음글제목" 을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는 원본이 /view_2.action 을 통해서 redirect 되어진 경우이므로 form 을 사용한 것이 아니라서 "양식 다시 제출 확인" 이라는 alert 대화상자가 뜨지 않는다. 그래서  request.getParameter("seq"); 은 null 이 된다. 
+			doc_no= request.getParameter("doc_no");
+			System.out.println("~~~~~~ 확인용 doc_no : " + doc_no);
+	        // ~~~~~~ 확인용 seq : 213
+	        // ~~~~~~ 확인용 seq : null
+			
+
+			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.  시작  // 
+			
+			searchType = request.getParameter("searchType");
+			searchWord = request.getParameter("searchWord");
+			
+			if(searchType == null) {
+				searchType = ""; // Mapper에서 null을 파악하려면 글자 자체가 'null'인지 값이 null인건지 헷갈리기 때문에 컨트롤러에서 해주는 것이 훨씬 낫다!
+			}
+			
+			if(searchWord == null) {
+				searchWord = "";
+			}
+			
+			//System.out.println("~~ 확인용(view.action) searchType : "+searchType);
+			//~~ 확인용(view.action) searchType : name
+			
+			//System.out.println("~~ 확인용(view.action) searchWord : "+searchWord);
+			//~~ 확인용(view.action) searchWord : 정화
+			
+			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.  끝  // 
+			
+			// ===#134. 특정글을 조회한 후 "검색된결과목록보기" 버튼을 클릭했을 때 돌아갈 페이지를 만들기 위함.
+			goBackURL = request.getParameter("goBackURL");
+		//	System.out.println("~~ 확인용(view.action) goBackURL : " + goBackURL);
+			//~~ 확인용(view.action) goBackURL : /list.action?searchType=name&searchWord=%EC%A0%95%ED%99%94
+		/*
+		 	잘못된 것(get방식일 경우)
+		 	~~ 확인용(view.action) goBackURL : /list.action?searchType=subject
+		 	
+		 	올바른 것(post방식일 경우)
+		 	~~ 확인용(view.action) goBackURL :/list.action?searchType=subject&searchWord=%EC%A0%95%ED%99%94&currentShowPageNo=4
+		*/
+			request.setAttribute("goBackURL", goBackURL);
+		}
+		try {
+			//Integer.parseInt(seq);
+			 /* 
+		     "이전글제목" 또는 "다음글제목" 을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는   
+		         원본이 /view_2.action 을 통해서 redirect 되어진 경우이므로 form 을 사용한 것이 아니라서   
+		     "양식 다시 제출 확인" 이라는 alert 대화상자가 뜨지 않는다. 
+		         그래서  request.getParameter("seq"); 은 null 이 된다. 
+		         즉, 글번호인 seq 가 null 이 되므로 DB 에서 데이터를 조회할 수 없게 된다.     
+		         또한 seq 는 null 이므로 Integer.parseInt(seq); 을 하면  NumberFormatException 이 발생하게 된다. 
+		  */
+			
+			
+			HttpSession session =  request.getSession();
+			MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+			
+			String login_userid = null;		
+			if(loginuser != null) {
+				login_userid = loginuser.getEmpid();
+				// login_userid 는 로그인 되어진 사용자의 userid 이다.
+			}
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("doc_no", doc_no);
+			paraMap.put("login_userid", login_userid);
+			
+			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.  시작  // 
+			paraMap.put("searchType", searchType);
+			paraMap.put("searchWord", searchWord);
+			
+			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.  끝  // 
+
+			// === #68. !!! 중요 !!! 
+            //     글1개를 보여주는 페이지 요청은 select 와 함께 
+          //     DML문(지금은 글조회수 증가인 update문)이 포함되어져 있다.
+          //     이럴경우 웹브라우저에서 페이지 새로고침(F5)을 했을때 DML문이 실행되어
+          //     매번 글조회수 증가가 발생한다.
+          //     그래서 우리는 웹브라우저에서 페이지 새로고침(F5)을 했을때는
+          //     단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은 
+          //     실행하지 않도록 해주어야 한다. !!! === //
+			
+			// 위의 글목록보기 #69. 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
+			List<Map<String,String>> myDocVo = null;
+			
+			if("yes".equals(session.getAttribute("readCountPermission"))){
+			// 글목록보기인 /list.action 페이지를 클릭한 다음에 특정글을 조회해온 경우이다.
+				
+				myDocVo = service.getViewOneMyDoc(paraMap);
+				// 글 조회수 증가와 함께 글 1개를 조회를 해 오는 것
+				//	System.out.println("~~ 확인용 글 내용 : " + boardvo.getContent());
+				
+				session.removeAttribute("readCountPermission");
+				// 중요함!! session 에 저장된 readCountPermission 을 삭제한다. 
+			}
+			else { // 글 목록 보기를 하면 무조건 session의 readCountPermission이 "yes"로 저장된다. 그러나 위의 if절에서 저장된 정보를 삭제 했기 때문에 session에 readCountPermission 정보가 없다.
+				// 글목록에서 특정 글제목을 클릭하여 본 상태에서
+                // 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
+            //   System.out.println("글목록에서 특정 글제목을 클릭하여 본 상태에서 웹브라우저에서 새로고침(F5)을 클릭한 경우");
+				
+				boardvo = service.getView_no_increase_readCount(paraMap);
+				// 글 조회수 증가는 없고 단순히 글 1개만 조회를 해오는 것
+				
+				// 또는 redirect 해주기 (예 : 버거킹 www.burgerking.co.kr 메뉴소개)
+			/*	mav.setViewName("redirect:/list.action");
+				return mav; */				
+				if(boardvo == null) {
+					mav.setViewName("redirect:/list.action");
+					return mav;
+				}
+			}
+			mav.addObject("boardvo", boardvo);
+			
+			// === #140. 이전글 제목, 다음글 제목 보기  시작 ===//
+			mav.addObject("paraMap", paraMap);
+			// === #140. 이전글 제목, 다음글 제목 보기  끝 ===//
+			
+			mav.setViewName("board/view.tiles1");
+			// /WEB-INF/views/tiles1/board/view.jsp 파일을 생성한다.
+		}catch (NumberFormatException e ) {
+			mav.setViewName("redirect:/list.action");
+		}
+		return mav;
+	}
+	
 	
  //  	<definition name="*/*/*/*.tiles" extends="layout-tiles">
 //  	<put-attribute name="content" value="/WEB-INF/views/tiles/{1}/content/{2}/{3}/{4}.jsp"/>

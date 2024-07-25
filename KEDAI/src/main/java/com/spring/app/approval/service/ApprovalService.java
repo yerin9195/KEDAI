@@ -44,10 +44,13 @@ public interface ApprovalService {
 	List<Map<String, String>> myapprovalinfo(String loginEmpId);
 
 	// 나의 모든 기안문서 가져오기
-	List<Map<String, String>> myDocListSearch(String loginEmpId);
+	List<Map<String, String>> myDocListSearch(Map<String, String> paraMap);
 
 	// 나의 기안 문서에서 총 페이지 수 가져오기
 	int getTotalMyDocCount(Map<String, String> paraMap);
+
+	// 나의 기안 문서에서 문서 한 개 보기
+	List<Map<String, String>> getViewOneMyDoc(Map<String, String> paraMap);
 
 
 

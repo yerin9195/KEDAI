@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.spring.app.domain.DeptVO;
-import com.spring.app.domain.DocVO;
-import com.spring.app.domain.MinutesVO;
 
 @Repository 
 public class ApprovalDAO_imple implements ApprovalDAO {
@@ -118,8 +116,8 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 
 	// 나의 모든 기안문서 가져오기
 	@Override
-	public List<Map<String, String>> myDocListSearch(String loginEmpId) {
-		List<Map<String, String>> myDocListSearch = sqlsession.selectList("approval.myDocListSearch", loginEmpId);
+	public List<Map<String, String>> myDocListSearch(Map<String, String> paraMap) {
+		List<Map<String, String>> myDocListSearch = sqlsession.selectList("approval.myDocListSearch", paraMap);
 		return myDocListSearch;
 	}
 
@@ -128,6 +126,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	public int getTotalMyDocCount(Map<String, String> paraMap) {
 		int n = sqlsession.selectOne("approval.getTotalMyDocCount", paraMap);
 		return n;
+	}
+
+	// 나의 기안 문서에서 문서 한 개 보기
+	@Override
+	public List<Map<String, String>> getViewOneMyDoc(Map<String, String> paraMap) {
+		List<Map<String, String>> getViewOneMyDoc = sqlsession.selectList("approval.getViewOneMyDoc", paraMap);
+		return getViewOneMyDoc;
 	}
 
 

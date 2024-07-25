@@ -21,10 +21,10 @@ div.col-md-6 {
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		
+		/*
 		$("table#memberTbl tr.memberInfo").click( e => {
 			
-		};
+		};*/
 		
 	});
 	
