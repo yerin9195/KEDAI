@@ -145,4 +145,10 @@ public class CommunityDAO_imple implements CommunityDAO {
 		return n;
 	}
 
+	@Override
+	public int likeCount(String fk_community_seq) {
+		int count = sqlsession.selectOne("community.likeCount", fk_community_seq);
+		return count;
+	}
+
 }

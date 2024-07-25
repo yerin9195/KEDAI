@@ -1,6 +1,5 @@
 package com.spring.app.board.model;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -66,5 +65,8 @@ public interface CommunityDAO {
 
 	// 좋아요 누르기
 	int likeAdd(Map<String, String> paraMap);
+
+	// 좋아요 개수 조회하기
+	int likeCount(String fk_community_seq);
 
 }

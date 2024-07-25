@@ -57,6 +57,20 @@
 			}
 		});
 		
+		$.ajax({
+			url: "<%= ctxPath%>/community/likeCount.kedai",
+			data: {"fk_community_seq":$("input:hidden[name='community_seq']")},
+			dataType: "json",
+			success: function(json){
+				console.log(JSON.stringify(json));
+			
+				$("span#like_cnt").html(json.count);
+			},
+            error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+		});
+		
 		// 검색 시 검색조건 및 검색어 값 유지시키기
 		if(${not empty requestScope.paraMap}){ // paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다.
 			$("select[name='searchType']").val("${requestScope.paraMap.searchType}");
@@ -201,7 +215,7 @@
 		      					데이터개수-(페이지번호-1)*1페이지당보여줄개수-인덱스번호 => 순번
 		      				--%>
 		      				<td align="center" style="vertical-align: middle;">${cvo.community_seq}</td>
-		      				<td align="center" width="10%" style="vertical-align: middle; align-items: center;"><span style="display: inline-block; width: 50px; height: 50px; border-radius: 50%; overflow: hidden;"><img style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/files/${cvo.imgfilename}" /></span><span style="display: block;">${cvo.nickname}</span></td>
+		      				<td align="center" width="10%" style="vertical-align: middle; align-items: center;"><span style="display: inline-block; width: 50px; height: 50px; border-radius: 50%; overflow: hidden;"><img style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/files/employees/${cvo.imgfilename}" /></span><span style="display: block;">${cvo.nickname}</span></td>
 		      				<td style="vertical-align: middle;">
 		      					<%-- === 댓글쓰기 및 파일첨부가 있는 게시판 시작 === --%>
 		      					<%-- 첨부파일이 없는 경우 --%>
@@ -232,7 +246,7 @@
 		      						</c:if>
 		      					</c:if>
 		      				</td>
-		      				<td align="center" width="5%" style="vertical-align: middle;"><img alt="heart" src="<%= ctxPath%>/resources/images/common/heart.png" width="50%" class="heart" /><span style="display: block;">0</span></td>
+		      				<td align="center" width="5%" style="vertical-align: middle;"><img alt="heart" src="<%= ctxPath%>/resources/images/common/heart.png" width="50%" class="heart" /><span id="like_cnt" style="display: block;"></span></td>
 		      				<td align="center" style="vertical-align: middle;">${cvo.registerday}</td>
 		      				<td align="center" style="vertical-align: middle;">${cvo.read_count}</td>
 						</tr>

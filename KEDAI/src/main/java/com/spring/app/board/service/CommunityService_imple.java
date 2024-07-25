@@ -1,7 +1,5 @@
 package com.spring.app.board.service;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -179,6 +177,13 @@ public class CommunityService_imple implements CommunityService {
 	public int likeAdd(Map<String, String> paraMap) {
 		int n = dao.likeAdd(paraMap);
 		return n;
+	}
+
+	// 좋아요 개수 조회하기
+	@Override
+	public int likeCount(String fk_community_seq) {
+		int count = dao.likeCount(fk_community_seq);
+		return count;
 	}
 
 

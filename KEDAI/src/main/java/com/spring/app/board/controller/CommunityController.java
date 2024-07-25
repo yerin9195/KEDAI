@@ -73,7 +73,7 @@ public class CommunityController {
 		// WAS 의 webapp 의 절대경로 알아오기
 		HttpSession session = mrequest.getSession();
 		String root = session.getServletContext().getRealPath("/");
-		String path = root+"resources"+File.separator+"community_attach_file";
+		String path = root+"resources"+File.separator+"files"+File.separator+"community_attach_file";
 		
 		File dir = new File(path);
 		if(!dir.exists()) { // community_attach_file 이라는 폴더가 없다면 생성하기
@@ -785,12 +785,14 @@ public class CommunityController {
 		String msg = "";
 		if(n == 1) {
 			msg = fk_community_seq + "번 글에 좋아요를 누르셨습니다.";
+			
 		}
 		else { 
 			msg = "이미 좋아요를 클릭하셨기 때문에 두번 이상 좋아요는\n불가능합니다.";
 		}
 		
 		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("n", n);
 		jsonObj.put("msg", msg);
 				
 		return jsonObj.toString();
@@ -802,12 +804,14 @@ public class CommunityController {
 	public String likeCount(HttpServletRequest request) {
 		
 		String fk_community_seq = request.getParameter("fk_community_seq");
+		System.out.println("~~~ ㅎㅎ fk_community_seq =>"+fk_community_seq);
 
+		int count = service.likeCount(fk_community_seq);
 		
+		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("count", count);
 		
-		
-		
-		return "";
+		return jsonObj.toString();
 	}
 	
 }

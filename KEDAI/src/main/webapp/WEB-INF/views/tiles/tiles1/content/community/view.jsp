@@ -78,6 +78,7 @@
 	$(document).ready(function(){
 	
 		goViewComment(1); // 페이징처리를 한 댓글 읽어오기
+		goLikeDislikeCount() // 좋아요 개수 읽어오기
 		
 		$("span.move").hover(function(e){
 			$(e.target).addClass("moveColor");
@@ -382,7 +383,14 @@
 			//	console.log(JSON.stringify(json));
 				
 				alert(json.msg); 
-            	goLikeDislikeCount(); // 좋아요 개수를 보여주는 함수 호출하기
+				
+            	if(json.n == 1){
+            		goLikeCount()+1; // 좋아요 개수를 보여주는 함수 호출하기
+            		$("span.like_btn").html(`<i class="fa-solid fa-heart fa-2x" style="color: #f43434;"></i>`);
+            	}
+            	else{
+            		goLikeCount(); // 좋아요 개수를 보여주는 함수 호출하기
+            	}
 			},
             error: function(request, status, error){
             	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -392,15 +400,16 @@
 		
 	} // end of function golikeAdd(community_seq) ----------
 	
-	function goLikeDislikeCount(){
+	function goLikeCount(){
 		
 		$.ajax({
 			url: "<%= ctxPath%>/community/likeCount.kedai",
 			data: {"fk_community_seq":"${requestScope.cvo.community_seq}"},
 			dataType: "json",
 			success: function(json){
-				console.log(JSON.stringify(json));
+			//	console.log(JSON.stringify(json));
 			
+				$("span#like_cnt").html(json.count);
 			},
             error: function(request, status, error){
             	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -425,8 +434,8 @@
 			</c:if>
 		</div>
 		<div class="col-6 d-md-flex justify-content-md-end" data-toggle="tooltip" data-placement="left" title="좋아요 누르기">
-			<i class="fa-regular fa-heart fa-2x" style="cursor: pointer;" onclick="golikeAdd('${requestScope.cvo.community_seq}')"></i>&nbsp;&nbsp;
-			<span id="likeCnt" class="" style="align-content: center;">0</span>
+			<span class="like_btn"><i class="fa-regular fa-heart fa-2x" style="cursor: pointer;" onclick="golikeAdd('${requestScope.cvo.community_seq}')"></i></span>&nbsp;&nbsp;
+			<span id="like_cnt" style="align-content: center;"></span>
 		</div>
 	</div>
 	

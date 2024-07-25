@@ -281,7 +281,7 @@ commit;
 
 select *
 from tbl_employees
-where fk_dept_code = '300'
+where fk_dept_code = '200'
 order by fk_job_code asc;   
 
 delete from tbl_employees
@@ -963,6 +963,7 @@ desc tbl_community_like;
 insert into tbl_community_like(fk_empid, fk_community_seq)
 values(#{fk_empid}, #{fk_community_seq})
 
-select *
+select count(*)
 from tbl_community_like
+where fk_community_seq = 3
           

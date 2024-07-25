@@ -85,8 +85,8 @@ public class BoardController {
 			String root = session.getServletContext().getRealPath("/"); 
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 			
-			String path = root+"resources"+File.separator+"files";
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			String path = root+"resources"+File.separator+"files"+File.separator+"board_attach_file";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\board_attach_file
 			
 			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
 			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
@@ -157,8 +157,8 @@ public class BoardController {
 		String root = session.getServletContext().getRealPath("/"); 
 		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 		
-		String path = root+"resources"+File.separator+"photo_upload";
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\photo_upload
+		String path = root+"resources"+File.separator+"files"+File.separator+"photo_upload";
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\photo_upload
 		
 		File dir = new File(path);
 		
@@ -179,7 +179,7 @@ public class BoardController {
 			
 			String strURL = "";
 			strURL += "&bNewLine=true&sFileName="+newFilename; 
-			strURL += "&sFileURL="+ctxPath+"/resources/photo_upload/"+newFilename;
+			strURL += "&sFileURL="+ctxPath+"/resources/files/photo_upload/"+newFilename;
 			
 			// 웹브라우저 상에 사진 이미지를 쓰기
 			PrintWriter out = response.getWriter();
@@ -553,8 +553,8 @@ public class BoardController {
 			String root = session.getServletContext().getRealPath("/"); 
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 			
-			String path = root+"resources"+File.separator+"files";
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			String path = root+"resources"+File.separator+"files"+File.separator+"board_attach_file";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\board_attach_file
 			
 			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
 			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
@@ -684,8 +684,8 @@ public class BoardController {
 			String root = session.getServletContext().getRealPath("/"); 
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 			
-			String path = root+"resources"+File.separator+"files";
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			String path = root+"resources"+File.separator+"files"+File.separator+"board_attach_file";;
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\board_attach_file
 		
 			paraMap.put("path", path);
 			paraMap.put("fileName", fileName);
@@ -738,8 +738,8 @@ public class BoardController {
 				String root = session.getServletContext().getRealPath("/"); 
 				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 				
-				String path = root+"resources"+File.separator+"files";
-				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+				String path = root+"resources"+File.separator+"files"+File.separator+"board_attach_file";
+				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\board_attach_file
 			
 				boolean flag = false;
 				flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
