@@ -584,11 +584,11 @@
     <table>
         <thead>
              <tr>
-            <td></td>
+            <td>
             <c:forEach var="hour" begin="9" end="21">
                 <th colspan="2">${hour}</th>
             </c:forEach>
-
+			</td>
         </tr>
         <tr>
             <c:forEach var="hour" begin="9" end="21">
