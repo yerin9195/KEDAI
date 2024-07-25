@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.SalaryVO;
 import com.spring.app.member.service.MemberService;
-import com.spring.app.reservation.service.RoomService;
+import com.spring.app.salary.service.SalaryService;
 
 @Controller
 public class SalaryController {
 	
 	@Autowired
-	private RoomService service;
+	private SalaryService service;
 	
 	@GetMapping(value = "/pay_stub.kedai")  // http://localhost:8090/board/pay_stub.action
 	public String pay_stub(HttpServletRequest request) {

@@ -34,4 +34,30 @@
 	    from tbl_room_main join tbl_room_sub
 	    on tbl_room_main.pk_roommain_seq = tbl_room_sub.fk_roommain_seq
     </select>
+    
+ 
+     <select id="getRoomData" resultType="HashMap" parameterType="String">
+        select 
+            rm.pk_roommain_seq as roomMainSeq, 
+            rm.roommain_name as roomMainName, 
+            rm.roommain_detail as roomMainDetail, 
+            rs.pk_roomsub_seq as roomSubSeq, 
+            rs.roomSub_name as roomSubName, 
+            rs.roomSub_detail as roomSub_detail, 
+            rs.room_status as room_status
+        from 
+            tbl_room_main rm 
+            join tbl_room_sub rs 
+            on rm.pk_roommain_seq = rs.fk_roomMain_seq
+        where 
+            rs.roomSub_name = #{subroom}
+    </select>
+    
+   <insert id="insertreserve" parameterType="RoomVO">
+    INSERT INTO tbl_room (
+        reservation_seq, fk_empid, fk_room_name, content, start_time, end_time, registerday, reservation_status
+    ) VALUES (
+        reservation_seq.nextval, #{fk_empid}, #{fk_room_name}, #{content}, TO_DATE(#{start_time}, 'YYYY-MM-DD HH24:MI'), TO_DATE(#{end_time}, 'YYYY-MM-DD HH24:MI'), TO_DATE(#{registerday}, 'YYYY-MM-DD HH24:MI:SS'), #{reservation_status}
+    )
+</insert>
 </mapper>

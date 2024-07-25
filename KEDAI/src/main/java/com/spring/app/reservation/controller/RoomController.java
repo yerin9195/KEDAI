@@ -1,24 +1,32 @@
 package com.spring.app.reservation.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+
 
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
+import com.spring.app.domain.RoomVO;
 import com.spring.app.reservation.service.RoomService;
 
 @Controller
@@ -93,41 +101,68 @@ public class RoomController {
 		 return "tiles1/reservation/roomReservation.tiles";
 	 }
 	 
-	 @ResponseBody
-	 @PostMapping(value="/reserve.kedai", produces = "application/json;charset=UTF-8")
-	 public ModelAndView reserve(ModelAndView mav, HttpServletRequest request) throws Throwable {
-	     
-		 String fk_empid = request.getParameter("empid");
-         String fk_room_name = request.getParameter("fk_room_name");
-         String start_time = request.getParameter("start_time");
-         String end_time = request.getParameter("end_time");
-         String content = request.getParameter("content");
-		
-         Map<String,String> paraMap = new HashMap<String, String>();
-         paraMap.put("fk_empid", fk_empid);
-         paraMap.put("fk_room_name", fk_room_name);
-         paraMap.put("start_time", start_time);
-         paraMap.put("end_time", end_time);
-         paraMap.put("content", content);
-         
-         
-         int n = service.insertreserve(paraMap);
-         
-         if(n == 0) {
-				mav.addObject("message", "예약 실패하였습니다.");
-			}
-			else {
-				mav.addObject("message", "예약되었습니다..");
-			}
-			
-			mav.addObject("loc", request.getContextPath()+"/schedule/scheduleManagement.action");
-			
-			mav.setViewName("msg");
-			
-			return mav;
-	     
-	 }
-	 
-	 
-	 
+	 @PostMapping("/reserve.kedai")
+	    public ResponseEntity<Map<String, Object>> reserveRoom(@RequestBody Map<String, Object> reservationData) {
+	        Map<String, Object> response = new HashMap<>();
+	        try {
+	            RoomVO roomVO = new RoomVO();
+	            roomVO.setFk_empid((String) reservationData.get("reserver"));
+	            roomVO.setFk_room_name((String) reservationData.get("roomname")); 
+	            roomVO.setContent((String) reservationData.get("purpose"));
+
+	            // 입력된 날짜와 시간의 형식
+	            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREAN);
+	            SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+	            String startDateTime = (String) reservationData.get("startDateTime");
+	            String endDateTime = (String) reservationData.get("endDateTime");
+
+	            // 디버깅을 위한 출력
+	            System.out.println("Received startDateTime: " + startDateTime);
+	            System.out.println("Received endDateTime: " + endDateTime);
+
+	            Date startDate = inputFormat.parse(startDateTime);
+	            Date endDate = inputFormat.parse(endDateTime);
+
+	            // 디버깅을 위한 출력
+	            System.out.println("Parsed startDate: " + startDate);
+	            System.out.println("Parsed endDate: " + endDate);
+
+	            // TO_DATE 형식과 일치하도록 문자열로 포맷
+	            String formattedStartTime = dbDateFormat.format(startDate);
+	            String formattedEndTime = dbDateFormat.format(endDate);
+
+	         
+	            roomVO.setStart_time(formattedStartTime);
+	            roomVO.setEnd_time(formattedEndTime);
+
+	            String formattedRegisterDay = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+	            roomVO.setRegisterday(formattedRegisterDay);
+	            roomVO.setReservation_status(1);
+
+	            // 서비스 호출
+	            service.insertreserve(roomVO);
+
+	            response.put("success", true);
+	        } catch (ParseException e) {
+	            response.put("success", false);
+	            response.put("message", "날짜 형식이 잘못되었습니다: " + e.getMessage());
+	        } catch (Exception e) {
+	            response.put("success", false);
+	            response.put("message", e.getMessage());
+	        }
+	        return ResponseEntity.ok(response);
+	    }
+
+	
+
+	  @GetMapping("/getRoomData.kedai")
+	    public ResponseEntity<?> getRoomData(@RequestParam String subroom) {
+	        try {
+	            List<RoomSubVO> roomData = service.getRoomData(subroom);
+	            return ResponseEntity.ok(roomData);
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching room data");
+	        }
+	    }
 }

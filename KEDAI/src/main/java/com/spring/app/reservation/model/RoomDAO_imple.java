@@ -13,6 +13,7 @@ import com.spring.app.domain.BusVO;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
+import com.spring.app.domain.RoomVO;
 import com.spring.app.domain.SalaryVO;
 
 @Repository
@@ -43,21 +44,20 @@ public class RoomDAO_imple implements RoomDAO {
 		return getRoomroomall;
 	}
 
-
-	//	급여명세서 직원목록 불러오기
 	@Override
-	public List<MemberVO> memberListView() {
-		List<MemberVO> membervoList = sqlsession.selectList("salary.memberListView");
-		return membervoList;
+	public int insertreserve(RoomVO roomVO) {
+		int insertreserve = sqlsession.insert("Room.insertreserve", roomVO);
+		return insertreserve;
 	}
 
-    
-	//	급여 전체 계산
+
 	@Override
-	public int salaryCal(SalaryVO salaryvo) {
-		int n = sqlsession.insert("salary.salaryCal", salaryvo);
-		return n;
+	public List<RoomSubVO> getRoomData(String subroom) {
+		List<RoomSubVO> getRoomData = sqlsession.selectList("Room.getRoomData", subroom);
+		return getRoomData;
 	}
 
+
+	
 
 }
