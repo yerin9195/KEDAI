@@ -16,11 +16,12 @@ public class DocVO {
 
 	///////////////////////////////////////////tbl_doctype////////////////////////////////
 	private String doctype_name;	// 기안종류명
+	private String isAttachment;	// 파일 첨부 여부
 	
-	///////////////////////////////////////////tbl_doctype////////////////////////////////
-	private String isAttachment;
+	///////////////////////////////////////////tbl_member////////////////////////////////
+	private String name; // 기안자 이름
 	
-	
+	private String dept_name; //부서이름
 	
 	
 	////////////////////////////////// 
@@ -126,6 +127,26 @@ public class DocVO {
 	public void setIsAttachment(String isAttachment) {
 		this.isAttachment = isAttachment;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDept_name() {
+		return dept_name;
+	}
+
+	public void setDept_name(String dept_name) {
+		this.dept_name = dept_name;
+	}
+	
+	
+	
+	
 /*	
 	public String getDoc_org_filename() {
 		return doc_org_filename;

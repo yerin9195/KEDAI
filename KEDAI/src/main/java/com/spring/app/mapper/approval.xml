@@ -136,7 +136,7 @@
 		values( doc_file_noSeq.nextval, #{fk_doc_no}, #{doc_org_filename}, #{doc_filename}, to_number(#{doc_filesize}))
 	</insert>
 
-
+<!--  
 	<resultMap type="HashMap" id="docList_Map">
  		<result property="doc_no" 			column="doc_no" 			javaType="String" ></result>
 		<result property="fk_empid" 		column="fk_empid" 			javaType="String" ></result>
@@ -148,32 +148,21 @@
 		<result property="approval_empid" 	column="approval_empid" 	javaType="String" ></result>
 		<result property="isAttachment" 	column="isAttachment" 		javaType="String" ></result>
 		<result property="doc_status" 		column="doc_status" 		javaType="String" ></result>
- 	</resultMap>
+ 	</resultMap>-->
 
-	<select id="docListNoSearch" resultMap="docList_Map">
+	<select id="docListNoSearch" parameterType="String" resultType="DocVO">
 		SELECT  D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
-    		, T.doctype_name, AP.status, AP.level_no, AP.approval_empid
+    		, T.doctype_name
     		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
 		FROM tbl_doc D
 		JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
-		JOIN ( 
-		    SELECT A1.fk_doc_no, A2.status, A1.level_no, A2.fk_empid AS APPROVAL_EMPID
-		    FROM (
-		        SELECT fk_doc_no, MIN(level_no) AS level_no
-		        FROM tbl_approval 
-		        GROUP BY fk_doc_no
-		    ) A1
-		    JOIN tbl_approval A2 
-		    ON A1.fk_doc_no = A2.fk_doc_no AND A1.level_no = A2.level_no
-		) AP
-		ON AP.fk_doc_no = D.doc_no
 		LEFT JOIN ( 
 		    SELECT fk_doc_no
 		    FROM tbl_doc_file
 		    GROUP BY fk_doc_no
 		) F 
 		ON F.fk_doc_no = D.doc_no
-		WHERE D.fk_empid = #{loginEmpId}
+		WHERE D.fk_empid = #{loginEmpId} and doc_status =0
 		ORDER BY D.created_date DESC, D.DOC_NO DESC
 	</select>
  
@@ -262,7 +251,7 @@
  	</select>
  	
  	
- 	 	
+ 	<!--  
  	<resultMap type="HashMap" id="myDocListSearch_Map">
  		<result property="rno" 				column="rno" 				javaType="String" ></result>
 		<result property="doc_no" 			column="doc_no" 			javaType="String" ></result>
@@ -275,18 +264,18 @@
 		<result property="doc_status" 		column="doc_status" 		javaType="String" ></result>
 		<result property="isAttachment" 	column="isAttachment" 		javaType="String" ></result>
  	</resultMap>
- 	
- 	<select id="myDocListSearch" parameterType="HashMap" resultMap="myDocListSearch_Map">
+ 	-->
+ 	<select id="myDocListSearch" parameterType="HashMap" resultType="DocVO">
  		SELECT rno, doc_no, fk_empid, name, doc_subject, doc_content, created_date, doctype_name
-        	 , doc_status, isAttachment
+        	 , doc_status, isAttachment, fk_doctype_code
 		FROM(
     		SELECT rownum AS rno
          		, doc_no, fk_empid, name, doc_subject, doc_content, created_date, doctype_name
-         		, doc_status, isAttachment
+         		, doc_status, isAttachment, fk_doctype_code
     		FROM (
     			SELECT D.doc_no, D.fk_empid, E.name, D.doc_subject, D.doc_content,
                 	to_char(created_date, 'yyyy-mm-dd') AS created_date, T.doctype_name, D.doc_status,
-                	CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+                	CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, fk_doctype_code
 		        FROM tbl_doc D
 		        JOIN tbl_doctype T
 		        ON D.fk_doctype_code = T.doctype_code  
@@ -322,8 +311,33 @@
 		WHERE rno between #{startRno} and #{endRno}
 	</select>
 
-	<select id="getViewOneMyDoc" parameterType="HashMap" resultMap="getViewOneMyDoc_Map">
-		
+	<select id="getOneDocCommon" parameterType="HashMap" resultType="DocVO">
+		SELECT doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, to_char(created_date, 'yyyy-mm-dd'), doc_comment, doc_status, doctype_name, name, dept_name
+    			, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+		FROM tbl_doc D
+		JOIN tbl_doctype T
+		ON T.doctype_code = D.fk_doctype_code
+		JOIN (
+		    SELECT empid, name, fk_dept_code
+			FROM tbl_employees
+		) E
+		ON E.empid = D.fk_empid
+		JOIN tbl_dept P
+		ON P.dept_code = E.fk_dept_code
+		LEFT JOIN ( 
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F 
+		ON F.fk_doc_no = D.doc_no
+		WHERE D.doc_no = #{doc_no}
 	</select>
  	
+ 	
+ 	<!-- 하나의 회의록 불러오기  -->
+ 	<select id="getOneMinutes" parameterType="HashMap" resultType="MinutesVO">
+ 		select minutes_no, fk_doc_no, to_char(meeting_date, 'yyyy-mm-dd'), attendees, host_dept
+		from tbl_minutes
+		where fk_doc_no = #{doc_no}
+ 	</select>
 </mapper>

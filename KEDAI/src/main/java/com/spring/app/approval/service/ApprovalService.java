@@ -38,7 +38,7 @@ public interface ApprovalService {
 //	List<Map<String, String>> myDocList(String loginEmpId);
 
 	// 메인화면에 보여줄 기안문서 목록 가져오기
-	List<Map<String, String>> docListNoSearch(String loginEmpId);
+	List<DocVO> docListNoSearch(String loginEmpId);
 
 	// 결재 할 문서의 정보 가져오기
 	List<Map<String, String>> myapprovalinfo(String loginEmpId);
@@ -49,8 +49,11 @@ public interface ApprovalService {
 	// 나의 기안 문서에서 총 페이지 수 가져오기
 	int getTotalMyDocCount(Map<String, String> paraMap);
 
-	// 나의 기안 문서에서 문서 한 개 보기
-	List<Map<String, String>> getViewOneMyDoc(Map<String, String> paraMap);
+	// 나의 기안 문서에서 문서 한 개 보기(공통 부분 가져오기)
+	DocVO getOneDocCommon(Map<String, String> paraMap);
+
+	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
+	MinutesVO getOneMinutes(Map<String, String> paraMap);
 
 
 

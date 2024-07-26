@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.spring.app.domain.DeptVO;
+import com.spring.app.domain.DocVO;
+import com.spring.app.domain.MinutesVO;
 
 @Repository 
 public class ApprovalDAO_imple implements ApprovalDAO {
@@ -95,8 +97,8 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 
 	// 메인화면에 보여줄 나의 기안문서 목록 가져오기
 	@Override
-	public List<Map<String, String>> docListNoSearch(String loginEmpId) {
-		List<Map<String, String>> myDocList = sqlsession.selectList("approval.docListNoSearch", loginEmpId);
+	public List<DocVO> docListNoSearch(String loginEmpId) {
+		List<DocVO> myDocList = sqlsession.selectList("approval.docListNoSearch", loginEmpId);
 		return myDocList;
 	}
 
@@ -130,9 +132,16 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 
 	// 나의 기안 문서에서 문서 한 개 보기
 	@Override
-	public List<Map<String, String>> getViewOneMyDoc(Map<String, String> paraMap) {
-		List<Map<String, String>> getViewOneMyDoc = sqlsession.selectList("approval.getViewOneMyDoc", paraMap);
-		return getViewOneMyDoc;
+	public DocVO getOneDocCommon(Map<String, String> paraMap) {
+		DocVO getOneDocCommon = sqlsession.selectOne("approval.getOneDocCommon", paraMap);
+		return getOneDocCommon;
+	}
+
+	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
+	@Override
+	public MinutesVO getOneMinutes(Map<String, String> paraMap) {
+		MinutesVO getOneMinutes = sqlsession.selectOne("approval.getOneMinutes", paraMap);
+		return getOneMinutes;
 	}
 
 

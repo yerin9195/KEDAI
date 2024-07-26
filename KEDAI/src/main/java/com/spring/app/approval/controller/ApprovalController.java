@@ -28,12 +28,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.spring.app.approval.service.ApprovalService;
-import com.spring.app.board.domain.BoardVO;
 import com.spring.app.common.FileManager;
 import com.spring.app.common.MyUtil;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
 import com.spring.app.domain.MemberVO;
+import com.spring.app.domain.MinutesVO;
 
 
 @Controller 
@@ -74,17 +74,11 @@ public class ApprovalController {
 		
 		System.out.println("확인용 nowApproval" + nowApproval);
 		
-		List<Map<String, String>> docList = service.docListNoSearch(loginEmpId);
-		System.out.println("확인용 docList" + docList);
+		List<DocVO> myDocList = null;
 		
-		List<Map<String, String>> myDocList = new ArrayList<>(); // 내가 작성한 기안서
-		for(Map<String, String> map : docList){
-			if(loginEmpId.equals(map.get("fk_empid"))) {
-				myDocList.add(map);
-	        }
-	    }
-		
-		System.out.println(myDocList);
+		myDocList = service.docListNoSearch(loginEmpId);
+		System.out.println("확인용 myDocList" + myDocList);
+
 		System.out.println("확인용 laterApproval" + laterApproval);
 		
 		
@@ -658,9 +652,11 @@ public class ApprovalController {
 	public ModelAndView viewOneMyDoc(ModelAndView mav, HttpServletRequest request) {
 		//String seq = request.getParameter("seq");
 		String doc_no="";
+		String fk_doctype_code="";
 		String goBackURL = "";
 		String searchType = "";
 		String searchWord = "";
+		
 		
 		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
 		// redirect 되어서 넘어온 데이터가 있는지 꺼내어 와본다.
@@ -691,6 +687,7 @@ public class ApprovalController {
 	        // 글목록보기인 /list.action 페이지에서 특정 글제목을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는 원본이 form 을 사용해서 POST 방식으로 넘어온 경우이므로 "양식 다시 제출 확인" 이라는 대화상자가 뜨게 되며 "계속" 이라는 버튼을 클릭하면 이전에 입력했던 데이터를 자동적으로 입력해서 POST 방식으로 진행된다. 그래서  request.getParameter("seq"); 은 null 이 아닌 번호를 입력받아온다.     
 	        // 그런데 "이전글제목" 또는 "다음글제목" 을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는 원본이 /view_2.action 을 통해서 redirect 되어진 경우이므로 form 을 사용한 것이 아니라서 "양식 다시 제출 확인" 이라는 alert 대화상자가 뜨지 않는다. 그래서  request.getParameter("seq"); 은 null 이 된다. 
 			doc_no= request.getParameter("doc_no");
+			fk_doctype_code = request.getParameter("fk_doctype_code");
 			System.out.println("~~~~~~ 확인용 doc_no : " + doc_no);
 	        // ~~~~~~ 확인용 seq : 213
 	        // ~~~~~~ 확인용 seq : null
@@ -752,11 +749,10 @@ public class ApprovalController {
 			}
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("doc_no", doc_no);
-			paraMap.put("login_userid", login_userid);
 			
 			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.  시작  // 
-			paraMap.put("searchType", searchType);
-			paraMap.put("searchWord", searchWord);
+			//paraMap.put("searchType", searchType);
+			//paraMap.put("searchWord", searchWord);
 			
 			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.  끝  // 
 
@@ -770,44 +766,28 @@ public class ApprovalController {
           //     실행하지 않도록 해주어야 한다. !!! === //
 			
 			// 위의 글목록보기 #69. 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
-			List<Map<String,String>> myDocVo = null;
+			DocVO getOneDocCommon = null;	
+			getOneDocCommon = service.getOneDocCommon(paraMap);
+			// 글 1개를 조회를 해 오는 것			
+			mav.addObject("getOneDocCommon", getOneDocCommon);
 			
-			if("yes".equals(session.getAttribute("readCountPermission"))){
-			// 글목록보기인 /list.action 페이지를 클릭한 다음에 특정글을 조회해온 경우이다.
+			// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
+			if("100".equals(fk_doctype_code)) {
 				
-				myDocVo = service.getViewOneMyDoc(paraMap);
-				// 글 조회수 증가와 함께 글 1개를 조회를 해 오는 것
-				//	System.out.println("~~ 확인용 글 내용 : " + boardvo.getContent());
-				
-				session.removeAttribute("readCountPermission");
-				// 중요함!! session 에 저장된 readCountPermission 을 삭제한다. 
 			}
-			else { // 글 목록 보기를 하면 무조건 session의 readCountPermission이 "yes"로 저장된다. 그러나 위의 if절에서 저장된 정보를 삭제 했기 때문에 session에 readCountPermission 정보가 없다.
-				// 글목록에서 특정 글제목을 클릭하여 본 상태에서
-                // 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
-            //   System.out.println("글목록에서 특정 글제목을 클릭하여 본 상태에서 웹브라우저에서 새로고침(F5)을 클릭한 경우");
-				
-				boardvo = service.getView_no_increase_readCount(paraMap);
-				// 글 조회수 증가는 없고 단순히 글 1개만 조회를 해오는 것
-				
-				// 또는 redirect 해주기 (예 : 버거킹 www.burgerking.co.kr 메뉴소개)
-			/*	mav.setViewName("redirect:/list.action");
-				return mav; */				
-				if(boardvo == null) {
-					mav.setViewName("redirect:/list.action");
-					return mav;
-				}
+			else if("101".equals(fk_doctype_code)) {
+				MinutesVO minutesvo = service.getOneMinutes(paraMap);
+				mav.addObject("minutesvo", minutesvo);
 			}
-			mav.addObject("boardvo", boardvo);
+			else if("102".equals(fk_doctype_code)) {
+				
+			}
 			
-			// === #140. 이전글 제목, 다음글 제목 보기  시작 ===//
-			mav.addObject("paraMap", paraMap);
-			// === #140. 이전글 제목, 다음글 제목 보기  끝 ===//
+			mav.setViewName("tiles1/approval/viewMyOneDoc.tiles");
 			
-			mav.setViewName("board/view.tiles1");
-			// /WEB-INF/views/tiles1/board/view.jsp 파일을 생성한다.
+			
 		}catch (NumberFormatException e ) {
-			mav.setViewName("redirect:/list.action");
+			mav.setViewName("redirect:/myDocList.kedai");
 		}
 		return mav;
 	}

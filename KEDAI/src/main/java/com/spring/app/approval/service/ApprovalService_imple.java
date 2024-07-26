@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.spring.app.approval.model.ApprovalDAO;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
-import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.MinutesVO;
 
 @Service
@@ -110,8 +109,8 @@ public class ApprovalService_imple implements ApprovalService {
 	
 	// 메인화면에 보여줄 기안문서 목록 가져오기
 	@Override
-	public List<Map<String, String>> docListNoSearch(String loginEmpId) {
-		List<Map<String, String>> docListNoSearch = dao.docListNoSearch(loginEmpId);
+	public List<DocVO> docListNoSearch(String loginEmpId) {
+		List<DocVO> docListNoSearch = dao.docListNoSearch(loginEmpId);
 	/*	List<Map<String, String>> myApprovalDoc = dao.myApprovalDoc(loginEmpId);
 		
 		List<Map<String, String>> resultList = new ArrayList<>();
@@ -146,10 +145,18 @@ public class ApprovalService_imple implements ApprovalService {
 	
 	// 나의 기안 문서에서 문서 한 개 보기
 	@Override
-	public List<Map<String, String>> getViewOneMyDoc(Map<String, String> paraMap) {
-		List<Map<String, String>> getViewOneMyDoc = dao.getViewOneMyDoc(paraMap);
+	public DocVO getOneDocCommon(Map<String, String> paraMap) {
+		DocVO getViewOneMyDoc = dao.getOneDocCommon(paraMap);
 		return getViewOneMyDoc;
 	}
+
+	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
+	@Override
+	public MinutesVO getOneMinutes(Map<String, String> paraMap) {
+		MinutesVO getOneMinutes = dao.getOneMinutes(paraMap);
+		return getOneMinutes;
+	}
+
 
 
 

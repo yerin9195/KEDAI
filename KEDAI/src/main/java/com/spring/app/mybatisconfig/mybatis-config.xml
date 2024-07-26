@@ -17,6 +17,7 @@
 		<typeAlias type="com.spring.app.domain.Day_shareVO" alias="Day_shareVO" />
 		<typeAlias type="com.spring.app.domain.CommunityVO" alias="CommunityVO" />
 		<typeAlias type="com.spring.app.domain.CommentVO" alias="CommentVO" />
+		<typeAlias type="com.spring.app.domain.DocVO" alias="DocVO" />
 	</typeAliases>	
 	
 </configuration>

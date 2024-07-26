@@ -29,7 +29,7 @@ $(document).ready(function(){
 
 //function Declaration
 
-function goView(doc_no){
+function goView(doc_no, fk_doctype_code){
 	<%--location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;--%>
 	<%-- 또는 location.href=`<%= ctxPath%>/view.action?seq=+seq`; --%>
 
@@ -42,10 +42,11 @@ function goView(doc_no){
 	location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;
 	--%>
 
-	<%-- 그러므로 &를 글자 그대로 인식하는 post 방식으로 보내야 한다. 
-	아래에 #132에 표기된 form태그를 먼저 만든다.	--%>
-	const frm = document.goViewFrm;
-	frm.doc_no.value=doc_no;
+	<%-- 그러므로 &를 글자 그대로 인식하는 post 방식으로 보내야 한다.	아래에 #132에 표기된 form태그를 먼저 만든다.	--%>
+
+	const frm = document.forms["goViewFrm"];
+	frm.doc_no.value = doc_no;
+	frm.fk_doctype_code.value = fk_doctype_code;
 	frm.goBackURL.value=goBackURL;
 
 	if(${not empty requestScope.paraMap}){ // 검색조건이 있을 경우
@@ -57,7 +58,7 @@ function goView(doc_no){
 	frm.action = "<%= ctxPath%>/approval/viewOneMyDoc.kedai";
 	frm.submit();
 
-}//end of function goView(seq)---------------------------
+}//end of goView(doc_no, fk_doctype_code)---------------------------
 
 function goSearch(){
 	const frm = document.searchFrm;
@@ -139,7 +140,7 @@ function goSearch(){
    							<td>${allMyDocList.created_date}</td>
    							<td>${allMyDocList.doctype_name}</td>
    							<td>${allMyDocList.doc_no}</td>
-   							<td><span class="subject" onclick="goView('${allMyDocList.doc_no}')">${allMyDocList.doc_subject}</span>
+   							<td><span class="subject" onclick="goView('${allMyDocList.doc_no}', '${allMyDocList.fk_doctype_code}')">${allMyDocList.doc_subject}</span>
    								<c:if test="${allMyDocList.isAttachment eq 1}">
    									&nbsp;<i class="fa-solid fa-paperclip"></i>
    								</c:if>  								
@@ -178,6 +179,8 @@ function goSearch(){
     //           현재 페이지 주소를 뷰단으로 넘겨준다.  --%>
     
 <form name="goViewFrm">
+	<input type="hidden" name="doc_no" />
+    <input type="hidden" name="fk_doctype_code" />
  <%-- 	<input type="hidden" name="seq" />name="겟파라미터" --%>
 	<input type="hidden" name="goBackURL" />
 	<input type="hidden" name="searchType" />

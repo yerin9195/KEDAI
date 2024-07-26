@@ -934,3 +934,79 @@ FROM(
     ) V
 ) T     
 WHERE rno between #{startRno} and #{endRno}
+
+
+
+
+
+
+SELECT  D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
+    		, T.doctype_name
+    		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
+		FROM tbl_doc D
+		JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
+		LEFT JOIN ( 
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F 
+		ON F.fk_doc_no = D.doc_no
+		WHERE D.fk_empid = '2020200-006' and doc_status =0
+		ORDER BY D.created_date DESC, D.DOC_NO DESC
+
+-- 메인화면에서 글목록 가져오기 예전 sql문
+SELECT  D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
+    		, T.doctype_name, AP.status, AP.level_no, AP.approval_empid
+    		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
+		FROM tbl_doc D
+		JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
+		JOIN ( 
+		    SELECT A1.fk_doc_no, A2.status, A1.level_no, A2.fk_empid AS APPROVAL_EMPID
+		    FROM (
+		        SELECT fk_doc_no, MIN(level_no) AS level_no
+		        FROM tbl_approval 
+		        GROUP BY fk_doc_no
+		    ) A1
+		    JOIN tbl_approval A2 
+		    ON A1.fk_doc_no = A2.fk_doc_no AND A1.level_no = A2.level_no
+		) AP
+		ON AP.fk_doc_no = D.doc_no
+		LEFT JOIN ( 
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F 
+		ON F.fk_doc_no = D.doc_no
+		WHERE D.fk_empid = #{loginEmpId}
+		ORDER BY D.created_date DESC, D.DOC_NO DESC;
+        
+        
+SELECT doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date, doc_comment, doc_status, doctype_name, name, dept_name
+    , CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+FROM tbl_doc D
+JOIN tbl_doctype T
+ON T.doctype_code = D.fk_doctype_code
+JOIN (
+    SELECT empid, name, fk_dept_code
+	FROM tbl_employees
+) E
+ON E.empid = D.fk_empid
+JOIN tbl_dept P
+ON P.dept_code = E.fk_dept_code
+LEFT JOIN ( 
+    SELECT fk_doc_no
+    FROM tbl_doc_file
+    GROUP BY fk_doc_no
+) F 
+ON F.fk_doc_no = D.doc_no
+WHERE D.doc_no = 'KD24-101-7'
+
+
+ON 
+
+JOIN tbl_minutes M
+ON D.doc_no = M.
+
+select *
+from tbl_minutes
+where fk_doc_no = 'KD24-101-7'

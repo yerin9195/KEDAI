@@ -43,7 +43,7 @@ public interface ApprovalDAO {
 	int withFile_doc(Map<String, String> docFileMap);
 
 	// 메인화면에 보여줄 내가 작성한 기안문서 목록 가져오기
-	List<Map<String, String>> docListNoSearch(String loginEmpId);
+	List<DocVO> docListNoSearch(String loginEmpId);
 
 	// 메인화면에 보여줄 
 //	List<Map<String, String>> myApprovalDoc(String loginEmpId);
@@ -58,6 +58,9 @@ public interface ApprovalDAO {
 	int getTotalMyDocCount(Map<String, String> paraMap);
 
 	// 나의 기안 문서에서 문서 한 개 보기
-	List<Map<String, String>> getViewOneMyDoc(Map<String, String> paraMap);
+	DocVO getOneDocCommon(Map<String, String> paraMap);
+
+	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
+	MinutesVO getOneMinutes(Map<String, String> paraMap);
 
 }
