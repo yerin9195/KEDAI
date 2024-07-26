@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     String ctxPath = request.getContextPath();
     //    /MyMVC
@@ -11,7 +12,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 <!-- Kakao Maps -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f8cd36a9ca80015c17a395ab719b2d8d"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f8cd36a9ca80015c17a395ab719b2d8d&libraries=services,places"></script>
 <!-- FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
 <!-- FullCalendar JS -->
@@ -131,7 +132,6 @@ div.mycontent {
   .container {
       width: 80%;
       margin: 0 auto;
-      text-align: center;
   }
   #calendar {
       max-width: 500px;
@@ -153,9 +153,15 @@ div.mycontent {
     font-weight: bold; /* hover 시 날짜 및 요일을 더 굵게 */
     color: #e68c0e; /* hover 시 날짜 및 요일 색상을 오렌지색으로 변경 */
 } 
-.selected-date {
-    background-color: lightgray; !important; /* 클릭된 날짜의 배경색을 회색으로 설정 */
-} 
+ .selected-date {
+    background-color: lightgray; !important; 
+}  
+/*  .selected-date {
+     background-color: gray !important;
+ }
+ .fc-day-disabled {
+     background-color: lightgray !important;
+ } */
   /* 달력 끝*/
   
 .requiredInfo {
@@ -177,34 +183,379 @@ div.mycontent {
 .btnRegister button:nth-child(2) {
 	background: #e68c0e;
 }
+
+/* Modal styles */
+   .modal {
+       display: none; /* Hidden by default */
+       position: fixed; /* Stay in place */
+       z-index: 1000; /* Sit on top */
+       left: 0;
+       top: 0;
+       width: 100%; /* Full width */
+       height: 100%; /* Full height */
+       overflow: auto; /* Enable scroll if needed */
+       background-color: rgb(0,0,0); /* Fallback color */
+       background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+       padding-top: 60px;
+   }
+   .modal-content {
+       background-color: #fefefe;
+       margin: 5% auto; /* 15% from the top and centered */
+       padding: 20px;
+       border: 1px solid #888;
+       width: 80%; /* Could be more or less, depending on screen size */
+   }
+   .close {
+       color: #aaa;
+       float: right;
+       font-size: 28px;
+       font-weight: bold;
+   }
+   .close:hover,
+   .close:focus {
+       color: black;
+       text-decoration: none;
+       cursor: pointer;
+   }
+   #map {
+       width: 100%;
+       height: 400px;
+       margin-top: 10px;
+   }
+   #results {
+       list-style: none;
+       padding: 0;
+       max-height: 200px;
+       overflow-y: auto;
+       margin-top: 10px;
+   }
+   #results li {
+       padding: 10px;
+       border-bottom: 1px solid #ddd;
+       cursor: pointer;
+   }
+   #results li:hover {
+       background-color: #f0f0f0;
+   }
+   .selectButton {
+    display: none;
+    margin-left: 10px;
+    padding: 5px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+   }
 </style>
 <script type="text/javascript">
 
 $(document).ready(function(){ 
+	
+	/* 날짜 바꾸기 시작 */
+	
+        function convertDateFormat(start_date) {
+            // 입력된 날짜 문자열을 확인하고 출력
+//          console.log("Input Date: ", inputDate);
+
+            // 날짜 문자열을 분리 (2024-07-17 00:00:00)
+            const dateTimeParts = start_date.split(' ');
+            const dateParts = dateTimeParts[0].split('-');
+            const timeParts = dateTimeParts[1].split(':');
+
+            // 연도, 월, 일, 시간, 분, 초 추출
+            const year = dateParts[0];
+            const month = dateParts[1] - 1; // 월은 0부터 시작
+            const day = dateParts[2];
+            const hours = timeParts[0];
+            const minutes = timeParts[1];
+            const seconds = timeParts[2];
+
+            // Date 객체 생성 (년, 월, 일, 시, 분, 초)
+            const date = new Date(year, month, day, hours, minutes, seconds);
+//          console.log("Date Object: ", date);
+//			Date Object:  Wed Jul 17 2024 00:00:00 GMT+0900 (한국 표준시)
+            // 날짜 포맷 변경
+            const formattedDate = date.toString();
+
+            return date;
+        }
+	
+        function parseDate(str, add) {
+            var datePart = str.substring(0, 10);
+            // 분리된 날짜에서 하이픈을 제거 (2024-01-01 -> 20240101)
+            var formattedDate = datePart.replace(/-/g, '');
+
+            var year = parseInt(formattedDate.substring(0, 4), 10);
+            var month = parseInt(formattedDate.substring(4, 6), 10) - 1; // 월은 0부터 시작
+            var day = parseInt(formattedDate.substring(6, 8), 10) + add;
+            return new Date(year, month, day);
+        }
+        
+     var start_date = $("input:hidden[name='start_date']").val();
+     var convertedstart_date = parseDate(start_date, 0);
+     var last_date = $("input:hidden[name='last_date']").val();
+     var convertedlast_date = parseDate(last_date, 1);
+  // console.log(convertedDate); // "Mon Jul 01 2024 00:00:00 GMT+0900 (한국 표준시)"
+     //Wed Jul 17 2024 00:00:00 GMT+0900 (한국 표준시)
+     
+    /* 날짜 바꾸기 끝 */
 	/* 달력 시작 */
+	
     var calendarEl = document.getElementById('calendar');
     var today = new Date();
     var year = today.getFullYear();
     var month = today.getMonth();
+//  console.log("~~~확인용 start: " + new Date(year, month, 1));
+//  ~~~확인용 start: Mon Jul 01 2024 00:00:00 GMT+0900 (한국 표준시)
+    var startDate = convertedstart_date;
+    var endDate = convertedlast_date;
+//  console.log("~~~ 확인용  startDate ; " + startDate);
+//  console.log("~~~ 확인용  endDate ; " + endDate);
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',  // 월간 달력으로 표시
         
         dateClick: function(info) {
-//          alert('Date: ' + info.dateStr);
- 
+ //         alert('Date: ' + info.dateStr);
+ //			Date: 2024-08-23
+ 			
+ 			var selectDate = info.dateStr;
+ 			$("input[name='share_date']").val(selectDate);	
+ 			
             $('.fc-daygrid-day').removeClass('selected-date');
 
             // 선택된 날짜의 배경색을 회색으로 설정
-            $(info.dayEl).addClass('selected-date');
+            $(info.dayEl).addClass('selected-date'); 
+            // 선택한 날짜가 validRange 내에 있는지 확인
+/*             if (info.date >= startDate && info.date < endDate) {
+                $('.fc-daygrid-day').removeClass('selected-date');
+                // 선택된 날짜의 배경색을 회색으로 설정
+                $(info.dayEl).addClass('selected-date');
+            } else {
+                alert('선택할 수 없는 날짜입니다.');
+            }  */           
+        },
+        validRange: {
+            start: startDate, // 가져온 start_date
+            end: endDate // 가져온 last_date
         },
         height: 'auto', // 달력 높이를 자동으로 조절
         contentHeight: 'auto', // 달력 내용의 높이
         aspectRatio: 1.5 // 달력의 가로 세로 비율
+/*         viewDidMount: function(info) {
+            $(info.el).find('.fc-daygrid-day').each(function() {
+                var date = $(this).data('date');
+                var dateObj = new Date(date);
+                if (dateObj < startDate || dateObj >= endDate) {
+                    $(this).addClass('fc-day-disabled');
+                }
+            });
+        } */
     });
     calendar.render();
 	/* 달력 끝*/
+	
+	/* 모달 지도 시작 */
+	var modal = document.getElementById("mapModal");
+	var btn;
+    var span = document.getElementsByClassName("close")[0];
+    var searchButton = document.getElementById('searchButton');
+    var selectedPlace = null;
+
+    // 모달 display 속성 변경 추적
+    Object.defineProperty(modal.style, 'display', {
+        set: function(value) {
+            console.log('Modal display changed to:', value);
+            this.setProperty('display', value);
+        }
+    });
+    var index;
+    $("input.rname").click(function(){
+    	index = this.getAttribute("data-index");
+//    	console.log(index);
+    	// 모달 열기
+        modal.style.display = "block";
+        initializeMap();
+        
+	    if(index == 0){
+	       
+	        function showPlaceInfo(place) {
+	            console.log("place" + place);
+	            var place_name = place.place_name;
+	            var road_address_name = place.road_address_name;
+	    		var dp_lat = place.x;
+	    		var dp_lng = place.y;
+
+	            //document.getElementById("departure_name").value = place_name;
+	            //document.getElementById("departure_address").value = address_name;
+	            // alert(document.getElementById("departure_name").value); -- 문제: refresh가 되서 초기화됨.  clickEvent.preventDefault(); 이부분 추가.
+	            // 또는
+	            $("input[name='rdp_name']").val(place_name);		
+	            $("input[name='rdp_add']").val(road_address_name);
+	       		$("input[name='rdp_lat']").val(dp_lat);	
+	       		$("input[name='rdp_lng']").val(dp_lng);	
+	            
+	       		modal.style.display = "none";
+	
+	
+	        }
+	    }
+	    if(index == 1){
+	        // 모달 열기
+
+	        function showPlaceInfo(place) {
+	            console.log("place" + place);
+	            var place_name = place.place_name;
+	            var road_address_name = place.road_address_name;
+	    		var ds_lat = place.x;
+	    		var ds_lng = place.y;
+	            //document.getElementById("departure_name").value = place_name;
+	            //document.getElementById("departure_address").value = address_name;
+	            // alert(document.getElementById("departure_name").value); -- 문제: refresh가 되서 초기화됨.  clickEvent.preventDefault(); 이부분 추가.
+	            // 또는
+	            $("input[name='rds_name']").val(place_name);		
+	       		
+	            $("input[name='rds_add']").val(road_address_name);
+	       		$("input[name='rds_lat']").val(ds_lat);	
+	       		$("input[name='rds_lng']").val(ds_lng);	
+	            
+	       		modal.style.display = "none";
+	
+	
+	        }
+	    }
+    
+	
+	    // 모달 닫기
+	    span.onclick = function() {
+	        modal.style.display = "none";
+	    }
+	
+	    // 모달 외부 클릭 시 닫기
+	    window.onclick = function(event) {
+	        if (event.target == modal) {
+	            modal.style.display = "none";
+	        }
+	    }
+	
+	
+	    if (typeof kakao === 'undefined' || !kakao.maps) {
+	//      console.error('Failed to load Kakao Maps API');
+	        return;
+	    }
+	
+	
+	    var map;
+	    var ps;
+	    var markers = [];
+	    
+	    function initializeMap() {
+	        var mapContainer = document.getElementById('map'); 
+	        var mapOption = { 
+	            center: new kakao.maps.LatLng(37.566535, 126.97796919999996), 
+	            level: 3 
+	        }; 
+	
+	        map = new kakao.maps.Map(mapContainer, mapOption); 
+	
+	        if (!kakao.maps.services) {
+	            console.error('Kakao Maps services library not loaded');
+	            return;
+	        }
+	
+	        ps = new kakao.maps.services.Places(); 
+	        
+	    }
+	
+	    // 검색 버튼 클릭 이벤트 핸들러
+	    searchButton.onclick = function(clickEvent) {
+	        var buildingName = document.getElementById('buildingName').value;
+	//      console.log('Searching for:', buildingName);
+	        ps.keywordSearch(buildingName, placesSearchCB);
+	        clickEvent.preventDefault();      
+	        clickEvent.stopPropagation();
+	    };
+	
+	
+	    function placesSearchCB(data, status, pagination) {
+	        if (status === kakao.maps.services.Status.OK) {
+	            console.log('Search successful:', data);
+	            var resultsList = document.getElementById('results');
+	            resultsList.innerHTML = '';
+	            var bounds = new kakao.maps.LatLngBounds();
+	            
+	         // Clear existing markers
+	            clearMarkers();
+	         
+	            data.forEach(function(place) {
+	                var li = document.createElement('li');
+	//              console.log('li successful:', li);
+	                li.textContent = place.place_name;
+	                var selectButton = document.createElement('button');
+	                selectButton.textContent = '선택';
+	                selectButton.className = 'selectButton';
+	                selectButton.onclick = function(clickEvent) {
+	                	clickEvent.preventDefault(); // 기본 동작 막기
+	//                  alert('Selected: ' + place.place_name + place.road_address_name);
+	                    showPlaceInfo(place);
+		          	  	// 모달 초기화
+	                    const modal_frmArr = document.querySelectorAll("div.modal-content");
+						$('#buildingName').val("");
+						$('#results').empty();
+						
+	                };
+	
+	                li.appendChild(selectButton);
+	                li.onclick = function() {
+	                    map.setCenter(new kakao.maps.LatLng(place.y, place.x));
+	                    clearMarkers();
+	                    displayMarker(place);
+	                    document.querySelectorAll('.selectButton').forEach(function(button) {
+	                        button.style.display = 'none';
+	                    });
+	                    selectButton.style.display = 'inline';
+	                };
+	                resultsList.appendChild(li);
+	                
+	                // Display marker for each place
+	                var marker = displayMarker(place);
+	                markers.push(marker);
+	                bounds.extend(new kakao.maps.LatLng(place.y, place.x));
+	            });
+	            // Adjust map bounds to show all markers
+	            map.setBounds(bounds);
+	            
+	        } else {
+	            console.error('Failed to find the location:', status);
+	        }
+	    }
+	    function displayMarker(place) {
+	        var marker = new kakao.maps.Marker({
+	            map: map,
+	            position: new kakao.maps.LatLng(place.y, place.x)
+	        });
+	
+	        kakao.maps.event.addListener(marker, 'click', function() {
+	            var infowindow = new kakao.maps.InfoWindow({
+	                content: '<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>'
+	            });
+	            infowindow.open(map, marker);
+	        });
+	        return marker;
+	    }
+	    function clearMarkers() {
+	        markers.forEach(function(marker) {
+	            marker.setMap(null);
+	        });
+	        markers = [];
+	    }
+
+    })//end of $("button.icon").click(function(){}-----------------------------------------------------------------------------
+    		
+    /* 모달 지도 끝 */
+    
+    
     // 지도를 담을 영역의 DOM 레퍼런스
-   var mapContainer = document.getElementById("map");
+   var mapContainer = document.getElementById("dmap");
    
    // 지도를 생성할때 필요한 기본 옵션
    var options = {
@@ -396,7 +747,18 @@ $(document).ready(function(){
    });
     // ================== 지도에 클릭 이벤트를 등록하기 끝 ======================= //
    
-   $('#startTime').timepicker();
+    // === 시간 세팅  === //
+   var start_time = $("input:hidden[name='start_time']").val();
+   $('#startTime').timepicker({
+           minTime: start_time,
+           maxTime: '11:30pm',
+           defaultTime: start_time,
+           startTime: start_time,
+           dynamic: false,
+           dropdown: true,
+           scrollbar: true
+   });
+    
    // 해당 테그에 키보드로 입력 못하도록
    // 키보드로 값을 입력했을 때 즉시 지우는 이벤트 핸들러
    $('#startTime').on('input', function() {
@@ -420,40 +782,108 @@ $(document).ready(function(){
        };
        
    }// end of function makeOverListener(mapobj, marker, infowindow, infowindowArr)--------
-   
+  
+   function goRegister(){
+	   // 검사하기 날짜 선택했는지, 출발지 도착지 칸이 채워져 있는지, 출발시간 칸이 채워져 있는지
+	   let b_requiredInfo = true;
+	   
+	   // 출발시간
+	   var share_may_time = document.getElementById('startTime').value.trim();
+	   var rdp_name = document.getElementById('rdp_name').value.trim();
+	   var rds_name = document.getElementById('rds_name').value.trim();
+	   var share_date = document.getElementById('share_date').value.trim();
+	   if(share_may_time == "" || rdp_name == "" || rds_name == "" || share_date == ""){
+		   alert("모든 항목은 필수 항목입니다. \\n 전부 입력해주세요.");
+		   return;
+	   }
+	   else{
+		 const frm = document.day_shareInfoFrm;
+		 frm.action = "<%= ctxPath%>/carApply_detailEnd.kedai";
+		 frm.method = "post";
+		 frm.submit();
+	   }
+   }
+   function goTest() {
+	   location.href=`<%= ctxPath%>/test.kedai`;
+   }
+   function goBack() {
+	   location.href="javascript:history.back();"
+   }
     
 </script>
 
 <div id="container">
-    <div id="map" style="margin-left:25%; width:75%; height:900px;"></div>
-
+    <div id="dmap" style="margin-left:25%; width:75%; height:900px;"></div>
+		<form name="day_shareInfoFrm" enctype="multipart/form-data"> 
+			<input type="hidden" name="start_date" value="${requestScope.day_shareInfo.start_date}"/>
+			<input type="hidden" name="last_date" value="${requestScope.day_shareInfo.last_date}"/>
+			<input type="hidden" name="start_time" value="${requestScope.day_shareInfo.start_time}"/>
+			<!-- 지도에서 보여줄 출발지 도착지의 위치 표시 용도  -->
+			<input type="hidden" name="dp_lat" value="${requestScope.day_shareInfo.dp_lat}"/>
+			<input type="hidden" name="dp_lng" value="${requestScope.day_shareInfo.dp_lng}"/>
+			<input type="hidden" name="ds_lat" value="${requestScope.day_shareInfo.ds_lat}"/>
+			<input type="hidden" name="ds_lng" value="${requestScope.day_shareInfo.ds_lng}"/>
+			<!-- 작성한 정보를 넘겨줄 값 -->
+			<input type="hidden" name="share_date" id="share_date" value=""/>
+			<input type="hidden" name="rdp_add" value=""/>
+			<input type="hidden" name="rdp_lat" value=""/>
+			<input type="hidden" name="rdp_lng" value=""/>
+			<input type="hidden" name="rds_add" value=""/>
+			<input type="hidden" name="rds_lat" value=""/>
+			<input type="hidden" name="rds_lng" value=""/>
+			
     <div id="in-container">
         <div id="place" style="background-color:white; border: solid 0px red; margin: 3%;">
          <h2 style="font-weight: 300; text-align:center;">날짜 선택<br><span style="font-size:8pt; text-align: center;">차주가 지정한 기간중에 날짜를 선택해주세요.</span></h2>
          <div id="calendar"></div>	
-         
+         <br>
          <h3 style="font-weight: 300; text-align:center; margin-top:4%;">탑승 정보</h3>
   		 <div class="mt-3">
 			 <h6>출발지&nbsp;<span class="star">*</span></h6>
-			 <input type="text" name="carNum" id="departure" size="6" maxlength="20" class="requiredInfo" placeholder="경로에 많이 벗어날수록 거부 확률이 높아집니다." />	
+			 <input type="text" name="rdp_name" class="rname requiredInfo" id="rdp_name" size="6" maxlength="20" data-index="0" readonly placeholder="경로에 많이 벗어날수록 거부 확률이 높아집니다." />	
+	     	 <!-- 출발지 이름에서 주소를 가지고 온 값을 넣어주고 수정 불가능하다. -->
+                <!-- The Modal start -->
+                <div id="mapModal" class="modal">
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <input type="text" id="buildingName" placeholder="Enter building name">
+                        <button id="searchButton">Search</button>
+                        <div id="map"></div>
+                        <ul id="results"></ul>
+                    </div>
+                </div>
+                <!-- The Modal end -->
 	     </div>
          <div class="mt-3">
 			 <h6>도착지&nbsp;<span class="star">*</span></h6>
-			 <input type="text" name="carNum" id="arrive" size="6" maxlength="20" class="requiredInfo" placeholder="경로에 많이 벗어날수록 거부 확률이 높아집니다." />	
+			 <input type="text" name="rds_name" class="rname requiredInfo" id="rds_name" size="6" maxlength="20" data-index="1" readonly placeholder="경로에 많이 벗어날수록 거부 확률이 높아집니다." />	
+			 <!-- 도착지 이름에서 주소를 가지고 온 값을 넣어주고 수정 불가능하다. -->
+			    <!-- The Modal start -->
+                <div id="mapModal" class="modal">
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <input type="text" id="buildingName" placeholder="Enter building name">
+                        <button id="searchButton">Search</button>
+                        <div id="map"></div>
+                        <ul id="results"></ul>
+                    </div>
+                </div>
+                <!-- The Modal end -->
 	     </div>
 		 <div class="mt-3">
-			 <h6>출발시간&nbsp;<span class="star">* <span style="font-size:8pt;">수기로 값을 입력하지 마세요</span></span>
-			 </h6>
-			 <input type="text" name="carNum" id="startTime" size="6" maxlength="20" class="requiredInfo" placeholder="출발시간"/>	
+			 <h6>출발시간&nbsp;<span class="star">* <span style="font-size:8pt;">수기로 값을 입력하지 마세요</span></span></h6>
+			 <input type="text" name="share_may_time" id="startTime" size="6" maxlength="20" class="requiredInfo" placeholder="출발시간" value=""/>	
 	     </div>      
        </div>
        <div class="mt-3" style="position: relative; left: 90px">
 			<div class="btnRegister">
 		        <button type="button" onclick="goRegister()">신청하기</button>
-		        <button type="reset" onclick="goBack()">취소하기</button>
+		        <button type="reset" onclick="goBack()">뒤로가기</button>
+		        <button type="button" onclick="goTest()">테스트하기</button>
 	    	</div>
 	   </div>
     </div>
+    </form>
 </div>
-
-<!-- 날짜 선택안한 경우, 출발지, 도착지, 출발시간 선택안된경우 전부다 입력해 달라는 alert문 띄우기 -->
