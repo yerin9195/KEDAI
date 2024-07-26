@@ -36,8 +36,4 @@ public interface CarDAO {
 	List<String> searchShow(Map<String, String> paraMap);
 
 
-
-
-
-
 }

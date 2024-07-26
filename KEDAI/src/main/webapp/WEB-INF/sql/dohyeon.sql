@@ -657,15 +657,16 @@ select res_num, fk_car_seq, start_date,last_date,dp_name,dp_add,dp_lat, dp_lng, 
 from tbl_day_share
 order by res_num;
 
-select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname
+
+select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname, readCount
 from
 (
-select row_number() over(order by res_num desc) AS rno, res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname
+select row_number() over(order by res_num desc) AS rno, res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname, readCount
 from 
 (
-select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, fk_car_seq
+select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, fk_car_seq, readCount
 from tbl_day_share
-where end_status = 1 and cancel_status = 1 and lower(dp_name) like '%'|| lower(#{searchWord})||'%'
+where end_status = 1 and cancel_status = 1 and lower(dp_name) like '%'
 )a cross join
 (
     select car_seq, fk_empid, car_num, car_type, max_num, nickname
@@ -685,8 +686,14 @@ where fk_car_seq = b.car_seq
 where c.rno between 1 and 5
 
 
+ update tbl_day_share set readCount = 0
 
+commit;
 
+alter table tbl_day_share modify readCount default 0 not null;
+
+select *
+from tbl_day_share
 
 desc tbl_day_share
 
@@ -697,3 +704,24 @@ desc tbl_day_share
 select count(*)
 from tbl_day_share
 where cancel_status = 1
+
+select *
+from tbl_day_share
+select distinct nickname
+from a.tbl_day_share join b.tbl_employees
+ ON A.constraint_name = B.empid
+where cancel_status = 1
+
+select distinct nickname
+from
+(
+    select fk_car_seq, dp_name, ds_name, cancel_status, start_date, last_date
+    from tbl_day_share
+) v 
+cross join
+(
+select empid, car_seq, nickname
+from tbl_car a join tbl_employees b
+on a.fk_empid = b.empid
+)h
+where h.car_seq = v.fk_car_seq and cancel_status = 1 and lower(nickname) like '%' ||lower('dory')||'%'

@@ -3,6 +3,7 @@ package com.spring.app.reservation.service;
 import java.util.List;
 import java.util.Map;
 
+import com.spring.app.domain.BoardVO;
 import com.spring.app.domain.BusVO;
 import com.spring.app.domain.CarVO;
 import com.spring.app.domain.Day_shareVO;
@@ -34,8 +35,6 @@ public interface CarService {
 	List<Map<String, String>> carShareListSearch_withPaging(Map<String, String> paraMap);
 
 	List<String> searchShow(Map<String, String> paraMap);
-
-
 
 
 }

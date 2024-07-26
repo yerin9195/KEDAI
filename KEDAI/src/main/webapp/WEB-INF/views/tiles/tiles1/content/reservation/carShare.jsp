@@ -145,10 +145,10 @@
 
 	function goSearch(){
 		
-		const frm = document.searchFrm;
+		const frm = document.member_search_frm;
 		
 		frm.method = "get";
-		frm.action = "<%= ctxPath%>/board/list.kedai";
+		frm.action = "<%= ctxPath%>/carShare.kedai";
 		frm.submit();
 		
 	} // end of function goSearch(){} ----------
@@ -212,10 +212,10 @@
                 <c:if test="${not empty requestScope.carShareList}">
                     <c:forEach var="carShare" items="${requestScope.carShareList}" varStatus="status">
                         <tr>
+                        	<td align="center">${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
                             <form name="carShareFrm${status.index}">
                                 <input type="hidden" name="res_num" value="${carShare.res_num}"/>
                             </form> 
-                            <td align="center">${carShare.res_num}</td>
                             <td>${carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${carShare.ds_name}</td>
                             <td align="center">${carShare.nickname}</td>
                             <c:set var="startDate" value="${carShare.start_date}" />
@@ -248,12 +248,9 @@
             </tbody>
         </table>
 
-        <div id="pageBar">
-            <nav>
-                <ul class="pagination">${requestScope.pageBar}</ul>
-            </nav>
+        <div id="pageBar" align="center" style="border: solid 0px gray; width: 50%; margin: 3% auto;">
+                ${requestScope.pageBar}
         </div>
-
     </div>
 </div>
 

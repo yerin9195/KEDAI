@@ -25,6 +25,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.spring.app.common.FileManager;
 import com.spring.app.common.MyUtil;
+import com.spring.app.domain.BoardVO;
 import com.spring.app.domain.BusVO;
 import com.spring.app.domain.CarVO;
 import com.spring.app.domain.Day_shareVO;
@@ -204,7 +205,7 @@ public class CarController {
         // 세번째 블럭의 페이지번호 시작값(pageNo)은  11 => ((11-1)/5)*5+1 => 11
         
         String pageBar = "<ul style='list-style: none;'>";
-        String url = "board/list.kedai";
+        String url = "carShare.kedai";
         
         // [맨처음][이전] 만들기 
         if(pageNo != 1) { // 맨처음 페이지일 때는 보이지 않도록 한다.
@@ -215,10 +216,10 @@ public class CarController {
         while(!(loop > blockSize || pageNo > totalPage)) {
         	
         	if(pageNo == currentShowPageNo) {
-        		pageBar += "<li style='display: inline-block; width: 30px; height: 30px; align-content: center; font-size: 12pt; border-radius: 50%; background: #e68c0e'>"+pageNo+"</li>";
+        		pageBar += "<li style='display: inline-block; width: 30px; height: 30px; align-content: center; color: #fff; font-size: 12pt; border-radius: 50%; background: #e68c0e'>"+pageNo+"</li>";
         	}
         	else {
-        		pageBar += "<li style='display: inline-block; width: 30px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+        		pageBar += "<li style='display: inline-block; width: 30px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"' style='color: #2c4459;'>"+pageNo+"</a></li>";
         	}
         	
         	loop++;
@@ -227,8 +228,8 @@ public class CarController {
         
         // [다음][마지막] 만들기
         if(pageNo <= totalPage) { // 맨마지막 페이지일 때는 보이지 않도록 한다.
-        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
-        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
+        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"' style='color: #2c4459;'>[다음]</a></li>";
+        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"' style='color: #2c4459;'>[마지막]</a></li>";
         }
         
         pageBar += "</ul>";
@@ -630,6 +631,7 @@ public class CarController {
 	@PostMapping("/carApply_detail.kedai")
 	public ModelAndView requiredLogin_carApply_detail(HttpServletRequest request, HttpServletResponse response, Day_shareVO dsvo, ModelAndView mav) { 
 
+		
 		
 		String userid = request.getParameter("userid");
 		HttpSession session = request.getSession();

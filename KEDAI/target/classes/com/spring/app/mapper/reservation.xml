@@ -285,7 +285,7 @@
 		</when>
 		<otherwise>
 			<!--  셰어링 날짜  -->
-			select distinct 
+			select distinct nickname
 		</otherwise>
 		</choose>
 		from
@@ -348,5 +348,6 @@
 		
 	</select>
 	
+
 	
 </mapper>
