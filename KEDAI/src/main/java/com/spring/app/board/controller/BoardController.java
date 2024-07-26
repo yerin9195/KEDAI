@@ -1,10 +1,12 @@
 package com.spring.app.board.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.spring.app.board.service.BoardService;
@@ -42,20 +45,30 @@ public class BoardController {
 	@Autowired
 	private FileManager fileManager;
 	
-	// 게시판 글 등록하기 페이지 이동
-	@RequestMapping("/board/add.kedai")
+	// 게시판 글 등록하는 페이지 이동
+	@GetMapping("/board/add.kedai")
 	public ModelAndView add(ModelAndView mav, HttpServletRequest request) {
 		
-		HttpSession session = request.getSession();
-		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		// 답변 글쓰기가 추가된 경우
+		String subject = "[답변] " + request.getParameter("subject");
+		String groupno = request.getParameter("groupno");
+		String fk_seq = request.getParameter("fk_seq");
+		String depthno = request.getParameter("depthno");
 		
-		if(loginuser != null && "Admin".equals(loginuser.getNickname())) {
-			List<CategoryVO> categoryList = service.category_select();
-			
-			mav.addObject("categoryList", categoryList);
-			
-			mav.setViewName("tiles1/board/add.tiles");
+		if(fk_seq == null) { // 원글은 groupno, fk_seq, depthno 모두 null 이다.
+			fk_seq = "";
 		}
+		
+		mav.addObject("subject", subject);
+		mav.addObject("groupno", groupno);
+		mav.addObject("fk_seq", fk_seq);
+		mav.addObject("depthno", depthno);
+		
+		List<CategoryVO> categoryList = service.category_select();
+		
+		mav.addObject("categoryList", categoryList);
+		
+		mav.setViewName("tiles1/board/add.tiles");
 		
 		return mav;
 	}
@@ -67,7 +80,6 @@ public class BoardController {
 		MultipartFile attach = bvo.getAttach();
 		
 		if(attach != null) { // 첨부파일이 있는 경우
-			
 			// WAS 의 webapp 의 절대경로 알아오기
 			HttpSession session = mrequest.getSession();
 			String root = session.getServletContext().getRealPath("/"); 
@@ -127,13 +139,7 @@ public class BoardController {
 			mav.setViewName("redirect:/board/list.kedai");
 		}
 		else {
-			String message = "게시판 글 등록이 실패하였습니다.\\n다시 시도해주세요.";
-			String loc = "javascript:history.back()";
-           
-			mav.addObject("message", message);
-			mav.addObject("loc", loc);
-           
-			mav.setViewName("msg"); 
+			mav.setViewName("tiles1/error.tiles"); 
 		}
 		
 		paraMap.put("empid", bvo.getFk_empid());
@@ -237,7 +243,7 @@ public class BoardController {
 				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) { // "GET" 방식이므로 0 또는 음수나 실제 데이터베이스에 존재하는 페이지수 보다 더 큰값을 입력하여 장난친 경우
 					currentShowPageNo = 1;
 				}
-			} catch (Exception e) { // "GET" 방식이므로 숫자가 아닌 문자를 입력하여 장난친 경우
+			} catch (NumberFormatException e) { // "GET" 방식이므로 숫자가 아닌 문자를 입력하여 장난친 경우
 				currentShowPageNo = 1;
 			}
 		}
@@ -271,21 +277,21 @@ public class BoardController {
         // 세번째 블럭의 페이지번호 시작값(pageNo)은  11 => ((11-1)/5)*5+1 => 11
         
         String pageBar = "<ul style='list-style: none;'>";
-        String url = "board/list.kedai";
+        String url = "list.kedai";
         
         // [맨처음][이전] 만들기 
         if(pageNo != 1) { // 맨처음 페이지일 때는 보이지 않도록 한다.
-        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'>[처음]</a></li>";
-        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1' style='color: #2c4459;'>[처음]</a></li>";
+        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"' style='color: #2c4459;'>[이전]</a></li>";
         }
         
         while(!(loop > blockSize || pageNo > totalPage)) {
         	
         	if(pageNo == currentShowPageNo) {
-        		pageBar += "<li style='display: inline-block; width: 30px; height: 30px; align-content: center; font-size: 12pt; border-radius: 50%; background: #e68c0e'>"+pageNo+"</li>";
+        		pageBar += "<li style='display: inline-block; width: 30px; height: 30px; align-content: center; color: #fff; font-size: 12pt; border-radius: 50%; background: #e68c0e'>"+pageNo+"</li>";
         	}
         	else {
-        		pageBar += "<li style='display: inline-block; width: 30px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+        		pageBar += "<li style='display: inline-block; width: 30px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"' style='color: #2c4459;'>"+pageNo+"</a></li>";
         	}
         	
         	loop++;
@@ -294,8 +300,8 @@ public class BoardController {
         
         // [다음][마지막] 만들기
         if(pageNo <= totalPage) { // 맨마지막 페이지일 때는 보이지 않도록 한다.
-        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
-        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
+        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"' style='color: #2c4459;'>[다음]</a></li>";
+        	pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"' style='color: #2c4459;'>[마지막]</a></li>";
         }
         
         pageBar += "</ul>";
@@ -334,7 +340,7 @@ public class BoardController {
 		
 		if(wordList != null) {
 			for(String word : wordList) {
-				JSONObject jsonObj = new JSONObject();
+				JSONObject jsonObj = new JSONObject(); // {}
 				
 				jsonObj.put("word", word);
 				
@@ -366,7 +372,6 @@ public class BoardController {
 			
 			// 이전글제목, 다음글제목 보기
 			searchType = redirect_map.get("searchType");
-			
 			try { 
 				// sendredirect 되어서 넘어온 데이터를 한글로 복구한 후 mapper 로 넘겨줘야 한다.
 				searchWord = URLDecoder.decode(redirect_map.get("searchWord"), "UTF-8");
@@ -375,7 +380,6 @@ public class BoardController {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			
 		}
 		else { // redirect 되어서 넘어온 데이터가 아닌 경우 => sendRedirect 하지않고 직접 넘어온 경우
 			board_seq = request.getParameter("board_seq"); // 조회하고자 하는 글번호 받아오기
@@ -392,7 +396,6 @@ public class BoardController {
 			if(searchWord == null) { // 검색어가 없는 경우 원복한다.
 				searchWord = "";
 			}
-			
 		}
 		
 		mav.addObject("goBackURL", goBackURL);
@@ -425,7 +428,7 @@ public class BoardController {
 				session.removeAttribute("readCountPermission"); // session 에 저장된 readCountPermission 을 삭제
 			}
 			else { // 글목록에서 특정 글제목을 클릭하여 본 상태에서 웹브라우저에서 새로고침(F5)을 클릭한 경우
-			//	bvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
+				bvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
 			
 				if(bvo == null) {
 					mav.setViewName("redirect:/board/list.kedai");
@@ -445,10 +448,331 @@ public class BoardController {
 		return mav;
 	}
 	
+	// view.jsp 에서  "POST" 방식으로 보내준 것
+	@PostMapping("/board/view_2.kedai")
+	public ModelAndView view_2(ModelAndView mav, HttpServletRequest request, RedirectAttributes redirectAttr) {
 	
+		// 조회하고자하는 글번호
+		String board_seq = request.getParameter("board_seq"); 
+		
+		// 이전글제목, 다음글제목 보기
+		String goBackURL = request.getParameter("goBackURL");
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		
+		// 보내야할 데이터에 한글이 포함되는 경우
+		try {
+			searchWord = URLEncoder.encode(searchWord, "UTF-8");
+			goBackURL = URLEncoder.encode(goBackURL, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
+		
+		// redirect(GET 방식) 시
+		// 데이터를 넘길때 GET 방식이 아닌 POST 방식'처럼'(POST 방식이 아닌) 데이터를 넘기려면 RedirectAttributes 를 사용
+		Map<String, String> redirect_map = new HashMap<>();
+		redirect_map.put("board_seq", board_seq);
+		redirect_map.put("goBackURL", goBackURL);
+		redirect_map.put("searchType", searchType);
+		redirect_map.put("searchWord", searchWord);
+		
+		redirectAttr.addFlashAttribute("redirect_map", redirect_map);
+		// .addFlashAttribute() 는 오로지 1개의 데이터만 담을 수 있으므로 여러개의 데이터를 담으려면 Map 사용
+		// 키값을 "redirect_map" 으로 담아서 "redirect:/board/view.kedai" 으로 보내는 것
+		
+		mav.setViewName("redirect:/board/view.kedai");
+		
+		return mav;
+	}
 	
+	// 게시판 글 수정하는 페이지 이동
+	@GetMapping("/board/edit.kedai")
+	public ModelAndView requiredLogin_edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		// 수정하고자하는 글번호
+		String board_seq = request.getParameter("board_seq");
+		String message = "";
+		
+		try {
+			Integer.parseInt(board_seq);
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("board_seq", board_seq);
+			
+			BoardVO bvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
+			
+			if(bvo == null) {
+				message = "글 수정이 불가합니다.";
+			}
+			else {
+				HttpSession session = request.getSession();
+				MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+				
+				if(!loginuser.getEmpid().equals(bvo.getFk_empid())){ // 로그인한 사용자와 작성자가 다른 경우(다른 사람의 글을 수정하려고 하는 경우)
+					message = "다른 사용자의 글은 수정이 불가합니다.";
+				}
+				else { // 자신의 글을 수정하려고 하는 경우
+					List<CategoryVO> categoryList = service.category_select();
+					
+					mav.addObject("categoryList", categoryList);
+					mav.addObject("bvo", bvo);
+					
+					mav.setViewName("tiles1/board/edit.tiles"); 
+					
+					return mav;
+				}
+			}
+			
+		} catch (NumberFormatException e) { // "GET" 방식으로 문자를 입력한 경우
+			message = "글 수정이 불가합니다.";
+		}
+		
+		String loc = "javascript:history.back()"; // 이전 페이지로 이동
+		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		
+		mav.setViewName("msg"); 
+		
+		return mav;
+	}
 	
+	// 게시판 글 수정하기
+	@PostMapping("/board/editEnd.kedai")
+	public ModelAndView editEnd(ModelAndView mav, BoardVO bvo, MultipartHttpServletRequest mrequest) {
+		
+		MultipartFile attach = bvo.getAttach();
+		
+		if(attach != null) { // 첨부파일이 있는 경우
+			
+			// WAS 의 webapp 의 절대경로 알아오기
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/"); 
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
+			
+			String path = root+"resources"+File.separator+"files";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			
+			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
+			byte[] bytes = null;     // 첨부파일의 내용물을 담는 것
+			long fileSize = 0;       // 첨부파일의 크기
+			
+			try {
+				bytes = attach.getBytes(); 
+				
+				String originalFilename = attach.getOriginalFilename(); // 첨부파일명의 파일명
+				
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path); // 첨부되어진 파일을 업로드
+				
+				bvo.setFilename(newFileName);
+				bvo.setOrgfilename(originalFilename);
+				
+				fileSize = attach.getSize(); // 첨부파일의 크기(단위는 byte 이다.)
+
+				bvo.setFilesize(String.valueOf(fileSize));
+			} catch (Exception e) {
+				e.printStackTrace(); 
+			}
+		}
+		
+		String category_name = mrequest.getParameter("category_name");
+		String fk_category_code = "";
+		
+		if(category_name.equals("사내공지")) {
+			fk_category_code = "1";
+		}
+		else if(category_name.equals("팝업일정")) {
+			fk_category_code = "2";
+		}
+		else if(category_name.equals("식단표")) {
+			fk_category_code = "3";
+		}
+		
+		bvo.setFk_category_code(fk_category_code);
+		
+		int n = 0;
+		
+		if(attach.isEmpty()) { // 파일첨부가 없는 경우
+			n = service.edit(bvo);
+		}
+		else { // 파일첨부가 있는 경우
+			n = service.edit_withFile(bvo);
+		}
+		
+		if(n == 1) {
+			mav.addObject("message", "게시판 글 수정이 성공되었습니다.");
+			mav.addObject("loc", mrequest.getContextPath()+"/board/view.kedai?board_seq="+bvo.getBoard_seq()); // 수정되어진 글 1개를 보여주는 페이지로 이동
+		
+			mav.setViewName("msg");
+		}
 	
+		return mav;
+	}
 	
+	// 게시판 글 삭제하는 페이지 이동
+	@GetMapping("/board/del.kedai")
+	public ModelAndView requiredLogin_del(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		// 삭제하고자하는 글번호
+		String board_seq = request.getParameter("board_seq");
+		String message = "";
+		
+		try {
+			Integer.parseInt(board_seq);
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("board_seq", board_seq);
+			
+			BoardVO bvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
+			
+			if(bvo == null) {
+				message = "글 삭제가 불가합니다.";
+			}
+			else {
+				HttpSession session = request.getSession();
+				MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+				
+				if(!loginuser.getEmpid().equals(bvo.getFk_empid())){ // 로그인한 사용자와 작성자가 다른 경우(다른 사람의 글을 삭제하려고 하는 경우)
+					message = "다른 사용자의 글은 삭제가 불가합니다.";
+				}
+				else { // 자신의 글을 삭제하려고 하는 경우
+					mav.addObject("bvo", bvo);
+					
+					mav.setViewName("tiles1/board/del.tiles"); 
+					
+					return mav;
+				}
+			}
+			
+		} catch (NumberFormatException e) { // "GET" 방식으로 문자를 입력한 경우
+			message = "글 삭제가 불가합니다.";
+		}
+		
+		String loc = "javascript:history.back()"; // 이전 페이지로 이동
+		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		
+		mav.setViewName("msg"); 
+		
+		return mav;
+	}
 	
+	// 게시판 글 삭제하기
+	@PostMapping("/board/delEnd.kedai")
+	public ModelAndView delEnd(ModelAndView mav, HttpServletRequest request) {
+		
+		// 삭제하고자하는 글번호
+		String board_seq = request.getParameter("board_seq");
+		
+		// 파일첨부가 된 글이라면 글 삭제 시 먼저 첨부파일을 삭제해주어야 한다.
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("board_seq", board_seq);
+		paraMap.put("searchType", "");
+		paraMap.put("searchWord", "");
+		
+		BoardVO bvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
+		
+		String fileName = bvo.getFilename();
+		if(fileName != null && !"".equals(fileName)) { // 첨부파일이 있는 경우
+			// WAS 의 webapp 의 절대경로 알아오기
+			HttpSession session = request.getSession();
+			String root = session.getServletContext().getRealPath("/"); 
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
+			
+			String path = root+"resources"+File.separator+"files";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+		
+			paraMap.put("path", path);
+			paraMap.put("fileName", fileName);
+		}
+		
+		int n = service.del(paraMap);
+		
+		if(n == 1) {
+			mav.addObject("message", "게시판 글 삭제가 성공되었습니다.");
+			mav.addObject("loc", request.getContextPath()+"/board/list.kedai"); // 글목록을 보여주는 페이지로 이동
+		
+			mav.setViewName("msg");
+		}
+		
+		return mav;
+	}
+	
+	// 첨부파일 다운로드 받기
+	@GetMapping("/board/download.kedai")
+	public void requiredLogin_download(HttpServletRequest request, HttpServletResponse response) {
+	
+		// 첨부파일이 있는 글번호
+		String board_seq = request.getParameter("board_seq");
+	
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("board_seq", board_seq);
+		paraMap.put("searchType", "");
+		paraMap.put("searchWord", "");
+		
+		// html 이 출력될 때 한글이 깨지지 않고 제대로 나올 수 있도록 설정하기
+		response.setContentType("text/html; charset=UTF-8");
+		
+		PrintWriter out = null; // out 은 웹브라우저에 기술하는 대상체
+		
+		try {
+			Integer.parseInt(board_seq);
+			BoardVO bvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
+			
+			if(bvo == null || (bvo != null && bvo.getFilename() == null)) { // DB 에서 파일을 삭제한 경우
+				out = response.getWriter();
+				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호 이거나 첨부파일이 없으므로 파일다운로드가 불가합니다.'); history.back();</script>");
+				return;
+			}
+			else { // 정상적으로 파일을 다운로드를 할 경우 
+				String fileName = bvo.getFilename();
+				String orgFilename = bvo.getOrgfilename();
+				
+				// WAS 의 webapp 의 절대경로 알아오기
+				HttpSession session = request.getSession();
+				String root = session.getServletContext().getRealPath("/"); 
+				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
+				
+				String path = root+"resources"+File.separator+"files";
+				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			
+				boolean flag = false;
+				flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+				// file 다운로드 성공시 flag 는 true, 실패시 flag 는 false
+				
+				if(!flag) {
+					out = response.getWriter();
+					out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+				}
+			
+			}
+			
+		} catch (NumberFormatException | IOException e) { // 숫자가 아닌 경우 => "GET" 방식으로 조작한 경우
+			try {
+				out = response.getWriter();
+				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+			} catch (IOException e2) {
+				e.printStackTrace();
+			}
+		}
+	
+	}
+	
+	// 게시글수 조회하기
+	@ResponseBody
+	@GetMapping(value="/board/boardTotalCountJSON.kedai", produces="text/plain;charset=UTF-8")
+	public String boardTotalCountJSON(HttpServletRequest request) {
+		
+		int totalCount = service.boardTotalCountJSON();
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("totalCount", totalCount*10);
+		
+		return jsonObj.toString();
+	}
 }

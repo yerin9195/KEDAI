@@ -148,7 +148,12 @@ from tbl_business_part;
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 select *
+from tbl_business_part;
+
+select *
 from tbl_employees;
+
+
 
 
 select partner_name
@@ -164,3 +169,45 @@ select partner_no, partner_type, partner_name, partner_url, partner_postcode, pa
 		       originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank
 		from tbl_business_part
         where partner_name = '(주)에이티에스인코';
+        
+        
+delete from tbl_business_part
+where partner_no = '111-22-22222'      
+   
+SELECT partner_name
+FROM tbl_business_part;       
+
+commit;        
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+select *
+from tbl_dept;
+
+select * 
+from tbl_job;
+
+SELECT empid, name, nickname, jubun, gender, age, email, mobile
+		     , postcode, address, detailaddress, extraaddress
+		     , imgfilename, orgimgfilename, hire_date, salary, commission_pct, point
+		     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel, sign_img, annual_leave
+		FROM 
+		(
+		    select empid, name, nickname, jubun
+		         , func_gender(jubun) AS gender
+		         , func_age(jubun) AS age
+		         , email, mobile, postcode, address, detailaddress, extraaddress
+		         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
+		         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+		         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
+		         , dept_tel, sign_img, annual_leave
+		    from tbl_employees E1 
+      
+		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+		    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+                  order by dept_name asc, job_code asc
+		) E
+
+
+
+
+

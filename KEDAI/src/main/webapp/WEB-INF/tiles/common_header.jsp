@@ -1,9 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.net.InetAddress"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String ctxPath = request.getContextPath();
 	//	   /KEDAI
+	
+	// ==== #221. (웹채팅관련3) ==== 
+    // 서버 IP 주소 알아오기(사용중인 IP주소가 유동IP 이라면 IP주소를 알아와야 한다.) 
+	InetAddress inet = InetAddress.getLocalHost();
+ 	String serverIP = inet.getHostAddress();
+ 	
+ 	// 서버 포트번호 알아오기
+ 	int portnumber = request.getServerPort();
+ 	
+ 	String serverName = "http://"+serverIP+":"+portnumber;
 %>
 <style type="text/css">
 	.form-control:active, 
@@ -73,14 +84,14 @@
 
 <%-- header start --%>
 <div class="container-fluid">
-	<nav class="navbar navbar-expand-lg" style="padding: 0;">
+	<nav class="navbar navbar-expand-lg pl-3 pr-3 pt-0 pb-0">
 		<a class="navbar-brand" href="<%= ctxPath%>/index.kedai"><img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver2.png" width="30%" /></a>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<form class="form-inline ml-auto my-2 mr-3 my-lg-0" style="position: relative;">
 	      		<input class="mr-sm-2 mb-0 input_search" type="search" placeholder="Search">
 	      		<button class="btn my-2 my-sm-0" type="submit" style="position: absolute; right: 1%;"><img alt="btn_search" src="<%= ctxPath%>/resources/images/common/btn_search.png" width="80%" /></button>
 	    	</form>
-	    	&nbsp;&nbsp;
+	    	&nbsp;&nbsp;&nbsp;
 	    	<ul class="navbar-nav">
 		    	<li class="nav-item justify-content-end tooltipbottom">
 		        	<span class="tooltiptext">로그아웃</span>
@@ -89,6 +100,10 @@
 		      	<li class="nav-item justify-content-end tooltipbottom">
 		      		<span class="tooltiptext">알림</span>
 		        	<a class="nav-link" href="#" style="text-align: center;"><img alt="alarm" src="<%= ctxPath%>/resources/images/common/alarm.png" width="60%" /></a>
+		      	</li>
+		      	<li class="nav-item justify-content-end tooltipbottom">
+		      		<span class="tooltiptext">웹채팅</span>
+		        	<a class="nav-link" href="<%= serverName%><%= ctxPath%>/chatting/multichat.kedai" style="text-align: center;"><img alt="alarm" src="<%= ctxPath%>/resources/images/common/chat.png" width="60%" /></a>
 		      	</li>
 		    </ul>
 		</div>

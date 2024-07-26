@@ -1,10 +1,8 @@
 package com.spring.app.member.model;
 
-import java.util.List;
 import java.util.Map;
 
 import com.spring.app.domain.MemberVO;
-import com.spring.app.domain.SalaryVO;
 
 public interface MemberDAO {
 
@@ -25,10 +23,11 @@ public interface MemberDAO {
 
 	// 나의 정보 수정하기
 	int memberEditEnd(Map<String, String> paraMap);
+	
+	// 포인트 충전하기
+	int pointUpdate(Map<String, String> paraMap);
 
-	//	급여명세서 직원목록 불러오기
-	List<MemberVO> memberListView();
+	// 사원수 조회하기
+	int memberTotalCountJSON();
 
-	//	급여 전체 계산
-	int salaryCal(SalaryVO salaryvo);
 }

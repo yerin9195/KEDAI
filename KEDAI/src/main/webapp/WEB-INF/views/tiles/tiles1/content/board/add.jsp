@@ -10,17 +10,17 @@
 	input {
 		padding-left: 1%;
 	}
-	.btnAdd button {
-		color: #fff;
-		width: 100px;
+	.add_btn {
+		border: solid 1px #2c4459;
+		color: #2c4459;
+		font-size: 12pt;
+		width: 120px;
 		height: 40px;
 	}
-	.btnAdd button:nth-child(1) {
-		background: #2c4459;
-		margin-right: 10px;
-	}
-	.btnAdd button:nth-child(2) {
+	.add_btn:hover {
+		border: none;
 		background: #e68c0e;
+		color: #fff;
 	}
 </style>
 <script type="text/javascript">
@@ -49,7 +49,7 @@
      	$("button#btnWrite").click(function(){
      		
      		<%-- === 스마트 에디터 구현 시작 === --%>
-            // id 가  content 인 textarea 에 에디터에서 대입
+            // id 가  content 인 textarea 에 에디터 대입
             obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
            	<%-- === 스마트 에디터 구현 끝 === --%>
            	
@@ -101,7 +101,7 @@
 </script>
 
 <%-- content start --%>
-<div style="border: 0px solid red; padding: 1% 3% 1% 0;">
+<div style="border: 0px solid red; padding: 2% 3% 0 0;">
 	<div>
 		<%-- === 원글쓰기인 경우 === --%>
 	   	<c:if test='${requestScope.fk_seq eq ""}'>
@@ -118,11 +118,11 @@
    		<div class="col-4">
    			<div class="mb-3">
 	   			<label for="fk_empid" style="width: 30%;">사원아이디</label>
-	   			<input type="text" name="fk_empid" id="fk_empid" style="width: 180px; height: 30px;" value="${sessionScope.loginuser.empid}" />
+	   			<input type="text" name="fk_empid" id="fk_empid" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).empid}" readonly />
 	   		</div>
 	   		<div class="mb-3">
 	   			<label for="name" style="width: 30%;">작성자</label>
-	   			<input type="text" name="name" id="name" style="width: 180px; height: 30px;" value="${sessionScope.loginuser.name}" readonly />
+	   			<input type="text" name="name" id="name" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).name}" readonly />
 	   		</div>
 	   		<div class="mb-3" style="display: flex;">
 				<label for="fk_empid" style="width: 30%;">카테고리</label>
@@ -145,7 +145,7 @@
 	     	
 	     		<%-- === 답변글쓰기인 경우 === --%>
 				<c:if test='${requestScope.fk_seq ne ""}'>
-	     			<input type="text" name="subject" id="subject" size="100" style="width: 50%; height: 30px;" value="${requestScope.subject}"  /> 
+	     			<input type="text" name="subject" id="subject" size="100" style="width: 50%; height: 30px;" value="${requestScope.subject}" readonly /> 
 	     		</c:if>
 	   		</div>
 	   		<div class="mb-3">
@@ -163,18 +163,17 @@
 		   			</div>
    				</div>
    				
-   				<div class="btnAdd col-6 d-md-flex justify-content-md-end">
-			   		<button type="button" id="btnWrite">등록</button>
-			       	<button type="button" onclick="javascript:history.back()">취소</button>
+   				<div class="col-6 d-md-flex justify-content-md-end">
+			   		<button type="button" class="btn add_btn mr-3" id="btnWrite">등록</button>
+			       	<button type="button" class="btn add_btn" onclick="javascript:history.back()">취소</button>
 			   	</div>
    			</div>
    		</div>
    		
-   		<%-- ==== #163. 답변글쓰기가 추가된 경우 시작 ==== --%>
+   		<%-- 답변글쓰기가 추가된 경우 --%>
 		<input type="hidden" name="groupno" value="${requestScope.groupno}" />
-		<input type="hidden" name="fk_seq" value="${requestScope.fk_seq}" />
+		<input type="hidden" name="fk_seq"  value="${requestScope.fk_seq}" />
 		<input type="hidden" name="depthno" value="${requestScope.depthno}" />
-		<%-- ==== #163. 답변글쓰기가 추가된 경우 끝 ==== --%>
    	</form>
 </div>
 <%-- content end --%>
