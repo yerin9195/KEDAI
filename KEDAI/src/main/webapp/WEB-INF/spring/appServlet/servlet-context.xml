@@ -90,9 +90,6 @@
     	<aop:pointcut id="controllerOperation" expression="execution(public * com.spring.app..*Controller.*(..))" />
     </aop:config>
     
-
-</beans:beans>
-
     <!-- ======================== #인터셉터관련2. 시작  ======================== -->
     <beans:bean id="loginCheckInterceptor" class="com.spring.app.interceptor.controller.LoginCheckInterceptor" />
     <beans:bean id="adminLoginCheckInterceptor" class="com.spring.app.interceptor.controller.AdminLoginCheckInterceptor" />
@@ -125,4 +122,3 @@
           jsr250-annotations="enabled"
           pre-post-annotations="enabled" />
 </beans:beans>
-
