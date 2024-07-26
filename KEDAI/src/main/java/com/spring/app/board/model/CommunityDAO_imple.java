@@ -75,6 +75,18 @@ public class CommunityDAO_imple implements CommunityDAO {
 	}
 	
 	@Override
+	public int edit(CommunityVO cvo) {
+		int n = sqlsession.update("community.edit", cvo);
+		return n;
+	}
+	
+	@Override
+	public int community_attachfile_delete(String community_seq) {
+		int m = sqlsession.delete("community.community_attachfile_delete", community_seq);
+		return m;
+	}
+	
+	@Override
 	public List<String> getFilenameJSON(Map<String, String> paraMap) {
 		List<String> fileNameList = sqlsession.selectList("community.getFilenameJSON", paraMap);
 		return fileNameList;

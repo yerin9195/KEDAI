@@ -57,20 +57,6 @@
 			}
 		});
 		
-		$.ajax({
-			url: "<%= ctxPath%>/community/likeCount.kedai",
-			data: {"fk_community_seq":$("input:hidden[name='community_seq']")},
-			dataType: "json",
-			success: function(json){
-				console.log(JSON.stringify(json));
-			
-				$("span#like_cnt").html(json.count);
-			},
-            error: function(request, status, error){
-            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-            }
-		});
-		
 		// 검색 시 검색조건 및 검색어 값 유지시키기
 		if(${not empty requestScope.paraMap}){ // paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다.
 			$("select[name='searchType']").val("${requestScope.paraMap.searchType}");
@@ -135,6 +121,21 @@
 			$("input[name='searchWord']").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력
 			$("div#displayList").hide();
 			goSearch();
+		});
+		
+		// 좋아요 개수 조회하기
+		$.ajax({
+			url: "<%= ctxPath%>/community/likeCount.kedai",
+			data: {"fk_community_seq":$("input:hidden[name='community_seq']")},
+			dataType: "json",
+			success: function(json){
+				console.log(JSON.stringify(json));
+			
+				$("span#like_cnt").html(json.count);
+			},
+            error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
 		});
 		
 	}); // end of $(document).ready(function(){}) ----------

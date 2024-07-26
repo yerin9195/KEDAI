@@ -37,6 +37,12 @@ public interface CommunityDAO {
 	// 글조회수 1 증가하기
 	int increase_readCount(String community_seq);
 	
+	// 커뮤니티 글 수정하기
+	int edit(CommunityVO cvo);
+	
+	// 커뮤니티 첨부파일 삭제하기
+	int community_attachfile_delete(String community_seq);
+	
 	// 첨부파일명 조회하기
 	List<String> getFilenameJSON(Map<String, String> paraMap);
 	

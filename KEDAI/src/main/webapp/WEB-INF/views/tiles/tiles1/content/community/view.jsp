@@ -78,7 +78,7 @@
 	$(document).ready(function(){
 	
 		goViewComment(1); // 페이징처리를 한 댓글 읽어오기
-		goLikeDislikeCount() // 좋아요 개수 읽어오기
+		goLikeCount(); // 좋아요 개수 읽어오기
 		
 		$("span.move").hover(function(e){
 			$(e.target).addClass("moveColor");
@@ -416,7 +416,7 @@
             }
 		});
 		
-	} // end of function goLikeDislikeCount() ----------
+	} // end of function goLikeCount() ----------
 </script>
 
 <%-- content start --%>

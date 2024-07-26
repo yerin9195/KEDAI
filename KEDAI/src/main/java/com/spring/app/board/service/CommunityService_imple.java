@@ -96,6 +96,20 @@ public class CommunityService_imple implements CommunityService {
 		return cvo;
 	}
 	
+	// 커뮤니티 글 수정하기
+	@Override
+	public int edit(CommunityVO cvo) {
+		int n = dao.edit(cvo);
+		return n;
+	}
+	
+	// 커뮤니티 첨부파일 삭제하기
+	@Override
+	public int community_attachfile_delete(String community_seq) {
+		int m = dao.community_attachfile_delete(community_seq);
+		return m;
+	}
+	
 	// 첨부파일명 조회하기
 	@Override
 	public List<String> getFilenameJSON(Map<String, String> paraMap) {
@@ -186,5 +200,6 @@ public class CommunityService_imple implements CommunityService {
 		return count;
 	}
 
+	
 
 }

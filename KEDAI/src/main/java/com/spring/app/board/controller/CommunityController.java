@@ -504,40 +504,40 @@ public class CommunityController {
 		
 		return mav;
 	}
-/*	
+	
 	// 커뮤니티 글 수정하는 페이지 이동
 	@GetMapping("/community/edit.kedai")
 	public ModelAndView requiredLogin_edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		// 수정하고자하는 글번호
-		String board_seq = request.getParameter("community_seq");
+		String community_seq = request.getParameter("community_seq");
 		String message = "";
 		
 		try {
-			Integer.parseInt(board_seq);
+			Integer.parseInt(community_seq);
 			
 			Map<String, String> paraMap = new HashMap<>();
-			paraMap.put("board_seq", board_seq);
+			paraMap.put("community_seq", community_seq);
 			
-			BoardVO bvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
+			CommunityVO cvo = service.getView_noIncrease_readCount(paraMap); // 글 조회수 증가는 없고 단순히  글 1개만 조회해오는 것
 			
-			if(bvo == null) {
+			if(cvo == null) {
 				message = "글 수정이 불가합니다.";
 			}
 			else {
 				HttpSession session = request.getSession();
 				MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 				
-				if(!loginuser.getEmpid().equals(bvo.getFk_empid())){ // 로그인한 사용자와 작성자가 다른 경우(다른 사람의 글을 수정하려고 하는 경우)
+				if(!loginuser.getEmpid().equals(cvo.getFk_empid())){ // 로그인한 사용자와 작성자가 다른 경우(다른 사람의 글을 수정하려고 하는 경우)
 					message = "다른 사용자의 글은 수정이 불가합니다.";
 				}
 				else { // 자신의 글을 수정하려고 하는 경우
-					List<CategoryVO> categoryList = service.category_select();
+					List<CommunityCategoryVO> categoryList = service.category_select();
 					
 					mav.addObject("categoryList", categoryList);
-					mav.addObject("bvo", bvo);
+					mav.addObject("cvo", cvo);
 					
-					mav.setViewName("tiles1/board/edit.tiles"); 
+					mav.setViewName("tiles1/community/edit.tiles"); 
 					
 					return mav;
 				}
@@ -556,7 +556,150 @@ public class CommunityController {
 		
 		return mav;
 	}
-*/	
+	
+	// 커뮤니티 글 수정하기
+	@ResponseBody
+	@PostMapping(value="/community/editEnd.kedai", produces="text/plain;charset=UTF-8")
+	public String editEnd(MultipartHttpServletRequest mrequest, CommunityVO cvo) {
+		
+		List<MultipartFile> fileList = mrequest.getFiles("file_arr");
+		
+		// WAS 의 webapp 의 절대경로 알아오기
+		HttpSession session = mrequest.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root+"resources"+File.separator+"files"+File.separator+"community_attach_file";
+		
+		File dir = new File(path);
+		if(!dir.exists()) { // community_attach_file 이라는 폴더가 없다면 생성하기
+			dir.mkdirs();
+		}
+		
+		String[] arr_attachOrgFilename = null; // 기존 첨부파일명들을 기록하기 위한 용도
+		String[] arr_attachNewFilename = null; // 새로운 첨부파일명들을 기록하기 위한 용도
+		String[] arr_attachFilesize = null;    // 첨부파일명들의 크기를 기록하기 위한 용도
+		
+		if(fileList != null && fileList.size() > 0) {
+			arr_attachOrgFilename = new String[fileList.size()];
+			arr_attachNewFilename = new String[fileList.size()];
+			arr_attachFilesize = new String[fileList.size()];
+			
+			for(int i=0; i<fileList.size(); i++) {
+				MultipartFile mtfile = fileList.get(i);
+			//	System.out.println("파일명 : " + mtfile.getOriginalFilename() + " / 파일크기 : " + mtfile.getSize());
+				/*
+					파일명 : refrigerator_lg_normal_1.png / 파일크기 : 58141
+					파일명 : refrigerator_lg_normal_2.png / 파일크기 : 342639
+				*/
+				
+				String orgFilename = mtfile.getOriginalFilename();
+				
+				String newFilename = orgFilename.substring(0, orgFilename.lastIndexOf(".")); // 확장자를 뺀 파일명 알아오기
+				newFilename += "_" + String.format("%1$tY%1$tm%1$td%1$tH%1$tM%1$tS", Calendar.getInstance()); // 년월일시분초
+    			newFilename += System.nanoTime(); // 나노세컨즈(nanoseconds)
+    			newFilename += orgFilename.substring(orgFilename.lastIndexOf(".")); // 확장자 붙이기
+				
+    			try {
+    				File attachFile = new File(path+File.separator+newFilename);
+					mtfile.transferTo(attachFile); // 파일을 업로드해주는 것이다.
+					
+					arr_attachOrgFilename[i] = mtfile.getOriginalFilename(); // 배열 속에 첨부파일명들을 기록한다.
+					arr_attachNewFilename[i] = newFilename;
+					arr_attachFilesize[i] = Long.toString(mtfile.getSize());
+    				
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+			} // end of for ----------
+			
+		} // end of if ----------
+		
+		String category_name = mrequest.getParameter("category_name");
+		String fk_category_code = "";
+		
+		if(category_name.equals("동호회")) {
+			fk_category_code = "1";
+		}
+		else if(category_name.equals("건의함")) {
+			fk_category_code = "2";
+		}
+		else if(category_name.equals("사내소식")) {
+			fk_category_code = "3";
+		}
+		
+		cvo.setFk_category_code(fk_category_code);
+		
+		int result = 0, m = 0;
+		int n = service.edit(cvo);
+		
+		if(n == 1) {
+			result = 1;
+		}
+		
+		if(n == 1 && fileList != null && fileList.size() > 0) {
+			m = service.community_attachfile_delete(cvo.getCommunity_seq());
+		}
+
+		if(n == 1 && m == 1 && fileList != null && fileList.size() > 0) {
+			int cnt = 0;
+			
+			for(int i=0; i<fileList.size(); i++) {
+				Map<String, Object> paraMap = new HashMap<>();
+				
+				paraMap.put("fk_community_seq", cvo.getCommunity_seq()); 
+				paraMap.put("orgfilename", arr_attachOrgFilename[i]); 
+				paraMap.put("filename", arr_attachNewFilename[i]); 
+				paraMap.put("filesize", arr_attachFilesize[i]); 
+				
+				int attach_update_result = service.community_attachfile_insert(paraMap);
+				
+				if(attach_update_result == 1) {
+        			cnt++;
+        		}
+				
+			} // end of for ----------
+			
+			if(cnt == fileList.size()) { // insert 가 성공되어지면 cnt 와 추가 이미지 파일의 갯수가 같아진다.
+        		result = 1;
+        	}
+			
+		} // end of if ----------
+
+		JSONObject jsonObj = new JSONObject();
+	
+		try {
+			jsonObj.put("result", result); // 성공된 경우
+		} catch (Exception e) {
+			e.printStackTrace();
+			jsonObj.put("result", result); // 실패된 경우
+		}
+		
+		if(arr_attachOrgFilename != null) {
+			for(String attachFilename : arr_attachOrgFilename) {
+				try {
+					fileManager.doFileDelete(attachFilename, path);
+	            } catch (Exception e) {
+	            	e.printStackTrace();
+	            }
+			} // end of for ----------
+		}
+	
+		return jsonObj.toString();
+	}
+	
+	// 커뮤니티 글 삭제하기
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -804,7 +947,6 @@ public class CommunityController {
 	public String likeCount(HttpServletRequest request) {
 		
 		String fk_community_seq = request.getParameter("fk_community_seq");
-		System.out.println("~~~ ㅎㅎ fk_community_seq =>"+fk_community_seq);
 
 		int count = service.likeCount(fk_community_seq);
 		

@@ -156,6 +156,16 @@
 		where community_seq = #{community_seq}
 	</update>
 	
+	<update id="edit" parameterType="CommunityVO">
+		update tbl_community set fk_category_code = #{fk_category_code}, subject = #{subject}, content = #{content}, registerday = sysdate
+		where community_seq = #{community_seq}
+	</update>
+	
+	<delete id="community_attachfile_delete" parameterType="String">
+		delete from tbl_community_file
+		where fk_community_seq = #{community_seq}
+	</delete>
+
 	<select id="getFilenameJSON" parameterType="HashMap" resultType="String">
 		select orgfilename
 		from tbl_community_file

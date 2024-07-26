@@ -966,4 +966,20 @@ values(#{fk_empid}, #{fk_community_seq})
 select count(*)
 from tbl_community_like
 where fk_community_seq = 3
+
+update tbl_community set fk_category_code = #{fk_category_code}, subject = #{subject}, content = #{content}, registerday = sysdate
+where community_seq = #{community_seq}
+
+update tbl_community_file set orgfilename = #{orgfilename}, filename = #{filename}, filesize = #{filesize}
+where fk_community_seq = #{fk_community_seq}
+
+select *
+from tbl_community
+where community_seq = 28
+
+select *
+from tbl_community_file
+where fk_community_seq = 28
           
+delete from tbl_community_file
+where fk_community_seq = #{fk_community_seq}

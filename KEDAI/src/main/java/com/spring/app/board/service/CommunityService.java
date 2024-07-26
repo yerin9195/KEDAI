@@ -37,6 +37,12 @@ public interface CommunityService {
 	// 글 조회수 증가는 없고 단순히  글 1개만 조회하기
 	CommunityVO getView_noIncrease_readCount(Map<String, String> paraMap);
 	
+	// 커뮤니티 글 수정하기
+	int edit(CommunityVO cvo);
+	
+	// 커뮤니티 첨부파일 삭제하기
+	int community_attachfile_delete(String community_seq);
+	
 	// 첨부파일명 조회하기
 	List<String> getFilenameJSON(Map<String, String> paraMap);
 	
@@ -44,7 +50,7 @@ public interface CommunityService {
 	CommunityFileVO getFilename(Map<String, String> paraMap);
 
 	// 댓글쓰기(Transaction 처리)
-	int addComment(CommentVO commentvo) throws Throwable; // java.lang.Throwable => java.lang.Exception, java.lang.Error 의 부모이다. => 어떠한 오류가 발생하던지 처리하겠다는 의미이다. 
+	int addComment(CommentVO commentvo) throws Throwable; // java.lang.Throwable => java.lang.Exception, java.lang.Error 의 부모이다. => 어떠한 오류가 발생하던지 처리하겠다는 의미이다.
 
 	// 댓글 내용들을 페이징 처리하기
 	List<CommentVO> getCommentList_Paging(Map<String, String> paraMap);
@@ -63,5 +69,9 @@ public interface CommunityService {
 
 	// 좋아요 개수 조회하기
 	int likeCount(String fk_community_seq);
+
+	
+
+	
 
 }
