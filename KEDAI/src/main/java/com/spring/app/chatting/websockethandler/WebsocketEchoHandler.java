@@ -163,7 +163,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
               if(loginuser.getEmpid().equals(list.get(i).getEmpid())) { // 본인이 작성한 채팅메시지일 경우라면.. 작성자명 없이 노랑배경색에 오른쪽 정렬로 보이게 한다.
                  if("all".equals(list.get(i).getType())) { // 귀속말이 아닌 경우
                     wsession.sendMessage(
-                    	new TextMessage("<div style='background-color: #ffff80; display: inline-block; max-width: 60%; float: right; padding: 7px; border-radius: 15%; word-break: break-all;'>" + list.get(i).getMessage() + "</div> <div style='display: inline-block; float: right; padding: 20px 5px 0 0; font-size: 7pt;'>"+list.get(i).getCurrentTime()+"</div> <div style='clear: both;'>&nbsp;</div>")  
+                    	new TextMessage("<div style='background-color: #ffff80; display: inline-block; max-width: 60%; float: right; padding: 7px; border-radius: 15%; word-break: break-all;' id='speechbubble;'>" + list.get(i).getMessage() + "</div> <div style='display: inline-block; float: right; padding: 20px 5px 0 0; font-size: 7pt;'>"+list.get(i).getCurrentTime()+"</div> <div style='clear: both;'>&nbsp;</div>")  
                     ); 
                  }
                  else { // 귀속말인 경우. 글자색을 빨강색으로 함.

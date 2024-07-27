@@ -9,9 +9,103 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title></title>
+<!-- 유선우 제작페이지 -->
 <%-- Optional JavaScript --%>
 <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
+
+<style type = "text/css">
+body, html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+}
+#chatStatus {
+  background-color: #f1f1f1; /* 배경 색상 설정 */
+  padding: 3%; /* 패딩 설정 */
+  border: 1px solid #ccc; /* 테두리 설정 */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 설정 */
+  text-align: center; /* 텍스트 가운데 정렬 */
+}
+
+.form-control {
+	/* width: 30%; */
+	height: auto;
+	margin-bottom:10px;
+	width: 100%;
+	height:50px;
+}
+
+#btnExitMessage{
+	padding:5%;
+	background-color: #e68c0e;
+	color: #2c4459;
+	font-weight: bold;
+}
+#btnExitMessage:hover{
+	background-color: #2c4459;
+	color: #e68c0e;
+	
+}
+
+#btnSendMessage{
+	padding:5%;
+	background-color: #2c4459;
+	color: #e68c0e;
+	font-weight: bold;
+}
+
+#btnSendMessage:hover{
+	background-color: #e68c0e;
+	color: #2c4459;
+}
+
+
+.button_group{
+
+	display: flex;
+	gap: 10px;
+}
+
+
+
+
+.message_container{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 20px;
+}
+
+.message_body{
+	
+}
+#speechbubble{
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 106%;
+  margin-top:-7px;
+  margin-left:-7px;
+  border-width: 7px;
+  border-style: solid;
+  border-color:  transparent transparent transparent #555;
+}
+}
+
+
+
+
+</style> 
+
+
+
+
 <!-- ==== #223.(웹채팅관련5) -->
 
 <script type="text/javascript">
@@ -257,8 +351,14 @@
        });
        
        
-       
-       
+       // 메시지 나가기 
+       $(document).ready(function(){
+    	   $(document).keydown(function(event){
+    		   if(event.key == "Escape"){
+    			   window.history.back();
+    		   }
+    	   })
+       })
        
        
 	}); // end of $(document).ready(function(){}---------------------------------------
@@ -268,30 +368,36 @@
 </head>
 <body>
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-10 offset-md-1">
-		   <div id="chatStatus"></div>
-			   <div class="my-3">
-				   - 상대방의 대화내용이 검정색으로 보이면 채팅에 참여한 모두에게 보여지는 것입니다.<br>
-				   - 상대방의 대화내용이 <span style="color: red;">붉은색</span>으로 보이면 나에게만 보여지는 1:1 귓속말 입니다.<br>
-				   - 1:1 채팅(귓속말)을 하시려면 예를 들어, 채팅시 보이는 [이순신]대화내용 에서 이순신을 클릭하시면 됩니다.
-			   </div>
-			   <input type="hidden" id="to" placeholder="귓속말대상웹소켓.getEmpid()"/>
-			   <br/>
-				   ♡ 귓속말대상 : <span id="privateWho" style="font-weight: bold; color: red;"></span>
-			   <br>
-				   <button type="button" id="btnAllDialog" class="btn btn-secondary btn-sm">귀속말대화끊기</button>
-			   <br><br>
-				   현재접속자명단:<br/>
-			   <div id="connectingUserList" style=" max-height: 100px; overFlow: auto;"></div>
-			   
-			   <div id="chatMessage" style="max-height: 500px; overFlow: auto; margin: 20px 0;"></div>
-			
-			   <input type="text"   id="message" class="form-control" placeholder="메시지 내용"/>
-			   <input type="button" id="btnSendMessage" class="btn btn-success btn-sm my-3" value="메시지보내기" />
-			   <input type="button" class="btn btn-danger btn-sm my-3 mx-3" onclick="javascript:location.href='<%=request.getContextPath() %>/index.kedai'" value="채팅방나가기" />
+	<div class="message_body">
+		<div class="row">
+			<div class="col-md-10 offset-md-1">
+			   <div id="chatStatus"></div>
+				   <div class="my-3">
+					   - 상대방의 대화내용이 검정색으로 보이면 채팅에 참여한 모두에게 보여지는 것입니다.<br>
+					   - 상대방의 대화내용이 <span style="color: #e68c0e; font-weight: bold">주황색</span>으로 보이면 나에게만 보여지는 1:1 귓속말 입니다.<br>
+					   - 1:1 채팅(귓속말)을 하시려면 예를 들어, 채팅시 보이는 [이순신]대화내용 에서 이순신을 클릭하시면 됩니다.
+				   </div>
+				   <input type="hidden" id="to" placeholder="귓속말대상웹소켓.getEmpid()"/>
+				   <br/>
+					   ♡ 귓속말대상 : <span id="privateWho" style="font-weight: bold; color: red;"></span>
+				   <br>
+					   <button type="button" id="btnAllDialog" class="btn btn-secondary btn-sm">귀속말대화끊기</button>
+				   <br><br>
+					   현재접속자명단:<br/>
+				   <div id="connectingUserList" style="max-height: 100px; overFlow: auto; position:fixed;"></div>
+				   
+				   <div id="chatMessage" style="max-height: 500px; overFlow: auto; margin: 20px 0;"></div>
+				   <div class="message_container">
+					   <input type="text" id="message" class="form-control" placeholder="메시지 내용"/>
+					   
+						<div class = "button_group">
+						   <input type="button" id="btnSendMessage" class="btn btn-success btn-sm my-3" value="메시지보내기" />
+						   <input type="button" id="btnExitMessage" class="btn btn-danger btn-sm my-3 mx-3" onclick="javascript:location.href='<%=request.getContextPath() %>/index.kedai'" value="채팅방나가기" />
+						</div> 
+				   </div>
+			</div>
 		</div>
-	</div>
-</div>  
+	</div>	
+</div>	  
 </body>
 </html>
