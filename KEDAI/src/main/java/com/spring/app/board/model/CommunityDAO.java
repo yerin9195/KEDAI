@@ -37,17 +37,20 @@ public interface CommunityDAO {
 	// 글조회수 1 증가하기
 	int increase_readCount(String community_seq);
 	
-	// 커뮤니티 글 수정하기
-	int edit(CommunityVO cvo);
+	// 첨부파일 조회하기
+	List<CommunityFileVO> getAttachFileList(String fk_community_seq);
+	
+	// 첨부파일 다운로드 받기
+	CommunityFileVO getFilename(Map<String, String> paraMap);
 	
 	// 커뮤니티 첨부파일 삭제하기
 	int community_attachfile_delete(String community_seq);
 	
-	// 첨부파일명 조회하기
-	List<String> getFilenameJSON(Map<String, String> paraMap);
+	// 커뮤니티 글 수정하기
+	int edit(CommunityVO cvo);
 	
-	// 첨부파일 다운로드 받기
-	CommunityFileVO getFilename(Map<String, String> paraMap);
+	// 커뮤니티 글 삭제하기
+	int del(String fk_community_seq);
 
 	// 댓글쓰기(Transaction 처리)
 	int addComment(CommentVO commentvo); // 댓글쓰기(tbl_comment 테이블에 insert)
@@ -72,7 +75,7 @@ public interface CommunityDAO {
 	// 좋아요 누르기
 	int likeAdd(Map<String, String> paraMap);
 
-	// 좋아요 개수 조회하기
-	int likeCount(String fk_community_seq);
+	// 좋아요 취소하기
+	int likeMinus(Map<String, String> paraMap);
 
 }

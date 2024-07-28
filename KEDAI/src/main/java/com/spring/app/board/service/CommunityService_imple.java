@@ -96,25 +96,11 @@ public class CommunityService_imple implements CommunityService {
 		return cvo;
 	}
 	
-	// 커뮤니티 글 수정하기
+	// 첨부파일 조회하기
 	@Override
-	public int edit(CommunityVO cvo) {
-		int n = dao.edit(cvo);
-		return n;
-	}
-	
-	// 커뮤니티 첨부파일 삭제하기
-	@Override
-	public int community_attachfile_delete(String community_seq) {
-		int m = dao.community_attachfile_delete(community_seq);
-		return m;
-	}
-	
-	// 첨부파일명 조회하기
-	@Override
-	public List<String> getFilenameJSON(Map<String, String> paraMap) {
-		List<String> fileNameList = dao.getFilenameJSON(paraMap);
-		return fileNameList;
+	public List<CommunityFileVO> getAttachFileList(String fk_community_seq) {
+		List<CommunityFileVO> attachFileList = dao.getAttachFileList(fk_community_seq);
+		return attachFileList;
 	}
 	
 	// 첨부파일 다운로드 받기
@@ -122,6 +108,27 @@ public class CommunityService_imple implements CommunityService {
 	public CommunityFileVO getFilename(Map<String, String> paraMap) {
 		CommunityFileVO cfvo = dao.getFilename(paraMap);
 		return cfvo;
+	}
+	
+	// 커뮤니티 첨부파일 삭제하기
+	@Override
+	public int community_attachfile_delete(String community_seq) {
+		int attach_delete_result = dao.community_attachfile_delete(community_seq);
+		return attach_delete_result;
+	}	
+	
+	// 커뮤니티 글 수정하기
+	@Override
+	public int edit(CommunityVO cvo) {
+		int n = dao.edit(cvo);
+		return n;
+	}
+	
+	// 커뮤니티 글 삭제하기
+	@Override
+	public int del(String fk_community_seq) {
+		int n = dao.del(fk_community_seq);
+		return n;
 	}
 
 	// 댓글쓰기(Transaction 처리)
@@ -193,13 +200,11 @@ public class CommunityService_imple implements CommunityService {
 		return n;
 	}
 
-	// 좋아요 개수 조회하기
+	// 좋아요 취소하기
 	@Override
-	public int likeCount(String fk_community_seq) {
-		int count = dao.likeCount(fk_community_seq);
-		return count;
+	public int likeMinus(Map<String, String> paraMap) {
+		int n = dao.likeMinus(paraMap);
+		return n;
 	}
-
-	
 
 }

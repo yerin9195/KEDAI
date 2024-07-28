@@ -943,7 +943,7 @@ FROM
 ) T
 WHERE RNO between 1 and 10
 
-desc tbl_community_file
+desc tbl_community_file;
 
 select file_seq, fk_community_seq, orgfilename, filename, filesize
 from tbl_community_file
@@ -975,11 +975,48 @@ where fk_community_seq = #{fk_community_seq}
 
 select *
 from tbl_community
-where community_seq = 28
+where community_seq = 31
 
-select *
+select orgfilename, filename, filesize
 from tbl_community_file
-where fk_community_seq = 28
+where fk_community_seq = 30
           
 delete from tbl_community_file
 where fk_community_seq = #{fk_community_seq}
+
+select orgfilename, filename
+from tbl_community_file
+
+select count(*)
+from tbl_comment
+where fk_community_seq = 30
+
+select *
+from tbl_community_like
+where fk_empid = '2011300-001' and fk_community_seq = 20
+
+delete from tbl_community_like
+where fk_empid = '2010001-001' and fk_community_seq = 28
+
+-- 좋아요 개수가 추가된 경우
+SELECT community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count, fk_community_seq, like_count
+FROM
+(
+    SELECT rownum AS rno
+         , community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count, fk_community_seq, like_count
+    FROM 
+    (
+        select community_seq, fk_category_code, A.category_name, fk_empid, C.name, E.nickname, E.imgfilename, subject, content 
+             , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count, F.fk_community_seq, COALESCE(L.like_count, 0) AS like_count
+        from tbl_community C 
+        LEFT JOIN tbl_community_category A ON C.fk_category_code = A.category_code
+        LEFT JOIN (select fk_community_seq from tbl_community_file group by fk_community_seq) F ON C.community_seq = F.fk_community_seq
+        LEFT JOIN (SELECT fk_community_seq, COUNT(*) AS like_count FROM tbl_community_like GROUP BY fk_community_seq) L ON C.community_seq = L.fk_community_seq
+        LEFT JOIN tbl_employees E ON C.fk_empid = E.empid 
+        where C.status = 1
+        order by community_seq desc
+    ) V
+) T
+WHERE RNO between 1 and 10
+
+SELECT fk_community_seq, COUNT(*) AS like_count FROM tbl_community_like GROUP BY fk_community_seq;

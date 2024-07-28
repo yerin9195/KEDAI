@@ -123,21 +123,6 @@
 			goSearch();
 		});
 		
-		// 좋아요 개수 조회하기
-		$.ajax({
-			url: "<%= ctxPath%>/community/likeCount.kedai",
-			data: {"fk_community_seq":$("input:hidden[name='community_seq']")},
-			dataType: "json",
-			success: function(json){
-				console.log(JSON.stringify(json));
-			
-				$("span#like_cnt").html(json.count);
-			},
-            error: function(request, status, error){
-            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-            }
-		});
-		
 	}); // end of $(document).ready(function(){}) ----------
 	
 	function goSearch(){
@@ -177,7 +162,7 @@
 
 	<section>
 		<div class="d-md-flex justify-content-md-end">
-			<form name="searchFrm" style="width: 34%; position: relative;">
+			<form name="searchFrm" style="width: 34%; min-width: 576px; position: relative;">
 		   		<select name="searchType" style="height: 30px;">
 		      		<option value="subject">글제목</option>
 		      		<option value="content">글내용</option>
@@ -247,7 +232,7 @@
 		      						</c:if>
 		      					</c:if>
 		      				</td>
-		      				<td align="center" width="5%" style="vertical-align: middle;"><img alt="heart" src="<%= ctxPath%>/resources/images/common/heart.png" width="50%" class="heart" /><span id="like_cnt" style="display: block;"></span></td>
+		      				<td align="center" width="5%" style="vertical-align: middle;"><img alt="heart" src="<%= ctxPath%>/resources/images/common/heart.png" width="50%" class="heart" /><span id="like_cnt" style="display: block;">${cvo.like_count}</span></td>
 		      				<td align="center" style="vertical-align: middle;">${cvo.registerday}</td>
 		      				<td align="center" style="vertical-align: middle;">${cvo.read_count}</td>
 						</tr>

@@ -73,6 +73,24 @@ public class CommunityDAO_imple implements CommunityDAO {
 		int n = sqlsession.update("community.increase_readCount", community_seq);
 		return n;
 	}
+
+	@Override
+	public List<CommunityFileVO> getAttachFileList(String fk_community_seq) {
+		List<CommunityFileVO> attachFileList = sqlsession.selectList("community.getAttachFileList", fk_community_seq);
+		return attachFileList;
+	}
+	
+	@Override
+	public CommunityFileVO getFilename(Map<String, String> paraMap) {
+		CommunityFileVO cfvo = sqlsession.selectOne("community.getFilename", paraMap);
+		return cfvo;
+	}
+	
+	@Override
+	public int community_attachfile_delete(String community_seq) {
+		int attach_delete_result = sqlsession.delete("community.community_attachfile_delete", community_seq);
+		return attach_delete_result;
+	}
 	
 	@Override
 	public int edit(CommunityVO cvo) {
@@ -81,23 +99,11 @@ public class CommunityDAO_imple implements CommunityDAO {
 	}
 	
 	@Override
-	public int community_attachfile_delete(String community_seq) {
-		int m = sqlsession.delete("community.community_attachfile_delete", community_seq);
-		return m;
+	public int del(String fk_community_seq) {
+		int  n = sqlsession.delete("community.del", fk_community_seq);
+		return n;
 	}
 	
-	@Override
-	public List<String> getFilenameJSON(Map<String, String> paraMap) {
-		List<String> fileNameList = sqlsession.selectList("community.getFilenameJSON", paraMap);
-		return fileNameList;
-	}
-	
-	@Override
-	public CommunityFileVO getFilename(Map<String, String> paraMap) {
-		CommunityFileVO cfvo = sqlsession.selectOne("community.getFilename", paraMap);
-		return cfvo;
-	}
-
 	@Override
 	public int addComment(CommentVO commentvo) {
 		int n = sqlsession.insert("community.addComment", commentvo);
@@ -158,9 +164,9 @@ public class CommunityDAO_imple implements CommunityDAO {
 	}
 
 	@Override
-	public int likeCount(String fk_community_seq) {
-		int count = sqlsession.selectOne("community.likeCount", fk_community_seq);
-		return count;
+	public int likeMinus(Map<String, String> paraMap) {
+		int n = sqlsession.delete("community.likeMinus", paraMap);
+		return n;
 	}
 
 }

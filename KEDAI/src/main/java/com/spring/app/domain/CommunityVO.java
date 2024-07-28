@@ -21,11 +21,10 @@ public class CommunityVO {
 	private String nextsubject;     // 다음글제목
 	
 	private String category_name;
-	
 	private String nickname;
 	private String imgfilename;
-	
 	private String fk_community_seq;
+	private String like_count;
 	
 	///////////////////////////////////////////////////////////////	
 	
@@ -180,6 +179,14 @@ public class CommunityVO {
 
 	public void setFk_community_seq(String fk_community_seq) {
 		this.fk_community_seq = fk_community_seq;
+	}
+
+	public String getLike_count() {
+		return like_count;
+	}
+
+	public void setLike_count(String like_count) {
+		this.like_count = like_count;
 	}
 	
 }

@@ -213,7 +213,7 @@
             	contentType: false, // 파일 전송 시 설정 => 파일이 있다면 꼭 넣어주어야 한다. default 는 true 이다.
             	dataType: "json",
             	success: function(json){
-            		console.log("~~~ 확인용 : " + JSON.stringify(json));
+            	//	console.log("~~~ 확인용 : " + JSON.stringify(json));
                 	
                 	if(json.result == 1) { // update 가 성공되어진 경우
                 		alert("글 수정이 성공했습니다.");

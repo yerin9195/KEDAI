@@ -9,11 +9,11 @@
 %>
 
 <style type="text/css">
-	.fileName a {
+	.orgfileName a {
 		color: #363636;
 		text-decoration: none; 
 	}
-	.fileName a:hover {
+	.orgfileName a:hover {
 		color: #e68c0e;
 	}
 	input {
@@ -78,7 +78,6 @@
 	$(document).ready(function(){
 	
 		goViewComment(1); // 페이징처리를 한 댓글 읽어오기
-		goLikeCount(); // 좋아요 개수 읽어오기
 		
 		$("span.move").hover(function(e){
 			$(e.target).addClass("moveColor");
@@ -89,7 +88,7 @@
 		
 		// 첨부파일명 조회하기
 		$.ajax({
-			url: "<%= ctxPath%>/community/getFilenameJSON.kedai",
+			url: "<%= ctxPath%>/community/getOrgFilenameJSON.kedai",
 			data: {"fk_community_seq":"${requestScope.cvo.community_seq}"},
 			type: "get",
             dataType: "json",
@@ -100,12 +99,12 @@
 					let v_html = ``;
 					
 					$.each(json, function(index, item){
-						const fileName = item.fileName;
+						const orgfileName = item.orgfileName;
 						
-						v_html += `<a href="<%= ctxPath%>/community/download.kedai?fk_community_seq=${requestScope.cvo.community_seq}&orgfilename=\${fileName}"><span>\${fileName}</span></a>&nbsp;&nbsp;`;
+						v_html += `<a href="<%= ctxPath%>/community/download.kedai?fk_community_seq=${requestScope.cvo.community_seq}&orgfilename=\${orgfileName}"><span>\${orgfileName}</span></a>&nbsp;&nbsp;`;
 					}); // end of $.each(json, function(index, item) ----------
 							
-					$("div.fileName").html(v_html);
+					$("div.orgfileName").html(v_html);
             	}
             },
             error: function(request, status, error){
@@ -312,10 +311,12 @@
 				$("tbody#commentDisplay").html(v_html);
 				
 				// 페이지바 함수 호출
-				const totalPage = Math.ceil(json[0].totalCount/json[0].sizePerPage);
-				// 12 / 5 = 2.4 ==> Math.ceil(2.4) ==> 3
+				if(json.totalCount != undefined && json.sizePerPage != undefined){
+					const totalPage = Math.ceil(json[0].totalCount / json[0].sizePerPage);
+					// 12 / 5 = 2.4 ==> Math.ceil(2.4) ==> 3
 				
-				makeCommentPageBar(currentShowPageNo, totalPage);
+					makeCommentPageBar(currentShowPageNo, totalPage);
+				}
 			},
             error: function(request, status, error){
             	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -374,49 +375,61 @@
          	return; 
       	}
 		
-		$.ajax({
-			url: "<%= ctxPath%>/community/likeAdd.kedai",
-			data: {"fk_community_seq":community_seq,
-				   "fk_empid":"${sessionScope.loginuser.empid}"},
-		   	dataType: "json",
-			success: function(json){
-			//	console.log(JSON.stringify(json));
-				
-				alert(json.msg); 
-				
-            	if(json.n == 1){
-            		goLikeCount()+1; // 좋아요 개수를 보여주는 함수 호출하기
-            		$("span.like_btn").html(`<i class="fa-solid fa-heart fa-2x" style="color: #f43434;"></i>`);
-            	}
-            	else{
-            		goLikeCount(); // 좋아요 개수를 보여주는 함수 호출하기
-            	}
-			},
-            error: function(request, status, error){
-            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-            }
-				
-		});
-		
+		const likedIcon = document.querySelector('.icon-liked');
+        const notLikedIcon = document.querySelector('.icon-not-liked');
+        let isLikeAdd = false;
+
+        if (likedIcon.style.display == 'none') {
+            likedIcon.style.display = 'inline'; 
+            notLikedIcon.style.display = 'none';
+            isLikeAdd = true;
+        } else {
+            likedIcon.style.display = 'none'; 
+            notLikedIcon.style.display = 'inline';
+            isLikeAdd = false;
+        }
+        
+        if(isLikeAdd){
+        	$.ajax({
+    			url: "<%= ctxPath%>/community/likeAdd.kedai",
+    			data: {"fk_community_seq":community_seq,
+    				   "fk_empid":"${sessionScope.loginuser.empid}"},
+    		   	dataType: "json",
+    			success: function(json){
+    			//	console.log(JSON.stringify(json));
+    				
+    				alert(json.msg); 
+    				
+    				if(json.n == 0){
+    					likedIcon.style.display = 'none'; 
+    		            notLikedIcon.style.display = 'inline';
+    				}
+    			},
+                error: function(request, status, error){
+                	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+                }
+    				
+    		});
+        }
+        else{
+        	$.ajax({
+    			url: "<%= ctxPath%>/community/likeMinus.kedai",
+    			data: {"fk_community_seq":community_seq,
+    				   "fk_empid":"${sessionScope.loginuser.empid}"},
+    		   	dataType: "json",
+    			success: function(json){
+    				console.log(JSON.stringify(json));
+    				
+    				alert(json.msg);
+    			},
+                error: function(request, status, error){
+                	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+                }
+    				
+    		});
+        }
+      
 	} // end of function golikeAdd(community_seq) ----------
-	
-	function goLikeCount(){
-		
-		$.ajax({
-			url: "<%= ctxPath%>/community/likeCount.kedai",
-			data: {"fk_community_seq":"${requestScope.cvo.community_seq}"},
-			dataType: "json",
-			success: function(json){
-			//	console.log(JSON.stringify(json));
-			
-				$("span#like_cnt").html(json.count);
-			},
-            error: function(request, status, error){
-            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-            }
-		});
-		
-	} // end of function goLikeCount() ----------
 </script>
 
 <%-- content start --%>
@@ -433,10 +446,14 @@
 				<h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;[ 사내소식 ]&nbsp;&nbsp;${requestScope.cvo.subject}</h3>
 			</c:if>
 		</div>
-		<div class="col-6 d-md-flex justify-content-md-end" data-toggle="tooltip" data-placement="left" title="좋아요 누르기">
-			<span class="like_btn"><i class="fa-regular fa-heart fa-2x" style="cursor: pointer;" onclick="golikeAdd('${requestScope.cvo.community_seq}')"></i></span>&nbsp;&nbsp;
-			<span id="like_cnt" style="align-content: center;"></span>
-		</div>
+		<c:if test="${sessionScope.loginuser.empid != requestScope.cvo.fk_empid}">
+			<div class="col-6 d-md-flex justify-content-md-end" data-toggle="tooltip" data-placement="left" title="좋아요 누르기">
+				<span class="like_btn" onclick="golikeAdd('${requestScope.cvo.community_seq}')">
+					<i class="fa-regular fa-heart fa-2x icon-not-liked" style="cursor: pointer;"></i>
+					<i class="fa-solid fa-heart fa-2x icon-liked" style="color: #f43434; display: none; cursor: pointer;"></i>
+				</span>
+			</div>
+		</c:if>
 	</div>
 	
 	<c:if test="${not empty requestScope.cvo}">
@@ -458,10 +475,10 @@
 					<tr>
 						<th style="width: 20%;">첨부파일</th>
 						<c:if test="${empty requestScope.cvo.fk_community_seq}">
-							<td colspan="3"><div class="fileName"></div></td>
+							<td colspan="3"></td>
 						</c:if>
 						<c:if test="${not empty requestScope.cvo.fk_community_seq}">
-							<td colspan="3"><div style="height: 50px; overflow-y: scroll;" class="fileName"></div></td>
+							<td colspan="3"><div style="height: 50px; overflow-y: scroll;" class="orgfileName"></div></td>
 						</c:if>
 					</tr>
 				</table>
