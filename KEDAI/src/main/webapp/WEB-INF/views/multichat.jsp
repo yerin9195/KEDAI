@@ -85,7 +85,7 @@ body, html {
 }
 #speechbubble{
 
-.tooltip .tooltiptext::after {
+.tooltip::after {
   content: "";
   position: absolute;
   top: 50%;

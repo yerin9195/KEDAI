@@ -21,14 +21,15 @@ public class ChattingMongoOperations {
 	// System.out.println("~~~~~~~ 확인용 insertMessage 호출함.");
 		
 		try { // 다 찍힘
-			System.out.println("_id : " + dto.get_id() +  "\n"
+			/*
+			 System.out.println("_id : " + dto.get_id() +  "\n"
         		         + "message : " + dto.getMessage() + "\n"
         		         + "to : " + dto.getTo() + "\n"
         		         + "type : " + dto.getType() + "\n"
         		         + "Empid : " + dto.getEmpid() + "\n"
         		         + "currentTime : " + dto.getCurrentTime() ); 
         	
-			
+			*/
 		  // >>> 데이터 추가 <<< 
 		     mongo.save(dto, "team_chatting"); // 없으면 추가, 있으면 수정.  이것을 실행되면 mongodb 의 데이터베이스 mydb 에 chatting 라는 컬렉션이 없다라도 자동적으로 먼저  chatting 컬렉션을 생성해준 다음에 도큐먼트를 추가시켜준다. 
 		  // mongo.save(dto);             // 없으면 추가, 있으면 수정.  com.spring.app.chatting.websockethandler.Mongo_messageVO 클래스 생성시 @Document(collection = "chatting") 어노테이션을 설정했으므로 두번째 파라미터로 "chatting" 은 생략가능하다.  
@@ -50,7 +51,7 @@ public class ChattingMongoOperations {
 			Query query = new Query();
 			query.with(Sort.by(Sort.Direction.ASC, "_id"));
 			list = mongo.find(query, Mongo_messageVO.class);
-			System.out.println("list : " + list);
+			// System.out.println("list : " + list);
 			// >>> [참고] 전체조회 <<< 
 			// list = mongo.findAll(Mongo_messageVO.class);
 			
