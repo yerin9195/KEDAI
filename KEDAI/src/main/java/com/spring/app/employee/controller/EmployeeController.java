@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -153,8 +154,16 @@ public class EmployeeController {
 	
 	@ResponseBody
 	@GetMapping("/chatting/multichatLoginEmpList.kedai")
-	public ModelAndView multichatLogin_EmpList(ModelAndView mav) {
+	public ModelAndView multichatLogin_EmpList(ModelAndView mav, HttpServletRequest request) {
 		
+		String login_empid = request.getParameter("loginuser");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		//paraMap.put("");// 로그인되어있는 직원들의 사진, 이름 직위 부서 가져오면됨.
 		
 		
 		
