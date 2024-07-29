@@ -1,6 +1,7 @@
 package com.spring.app.company.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.PartnerVO;
@@ -29,6 +30,15 @@ public interface CompanyService {
 	int delPartnerNo(String partner_no, String rootPath);
 	
 	String getPartnerImagePath(String rootPath);
+
+	// 총 페이지 건수 (TotalCount) 구하기
+	int getTotalCount(Map<String, String> paraMap);
+	
+	// 글목록 가져오기(페이징처리를 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것)
+	List<PartnerVO> PartnerListSearch_withPaging(Map<String, String> paraMap);
+
+	// 검색어 입력 시 자동글 완성하기 
+	List<String> wordSearchShowJSON(Map<String, String> paraMap);
 	
 
 	

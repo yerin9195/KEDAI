@@ -412,9 +412,29 @@ bigName{
 	width:5%;
 }
 
+.pagenation {
+	display: flex;
+	margin-top: 20px;
+}
 
 
+.pagenation li.paging {
+  background-color: #f2f2f2;
+  border: none;
+  color: #333;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
 
+.paging:hover {
+  background-color: #ddd;
+  color: #2c4459;
+}
 </style>
 
 
@@ -443,7 +463,7 @@ bigName{
 			$('.popup-overlay-emp').css({
 				display : 'flex'
 			});
-			console.log('open popup')
+			// console.log('open popup')
 		})
 
 		// 닫기 버튼을 클릭하면 팝업 제거
@@ -453,21 +473,146 @@ bigName{
 			});
 		});
 	});
+
+	
+	$(document).ready(function(){
+		$("input:text[name='searchWord']").bind("keydown", function(e){
+			if(e.keyCode == 13){
+				goSearch();
+			}
+		});
+		
+		
+		$("div#displayList").hide();
+		
+		$("input[name='searchWord']").keydown(function(){
+			const wordLength = $(this).val().trim().length;
+			
+			if(wordLength == 0){
+				$("div#displayList").hide();
+			}
+			else{
+				if($("select[name='searchType']").val() == "dept_name" ||
+				   $("select[name='searchType']").val() == "job_name" ||
+				   $("select[name='searchType']").val() == "name" ||
+				   $("select[name='searchType']").val() == "mobile"){
+					
+					$.ajax({
+						url: "<%=ctxPath%>/employee/wordSearchShowJSON.kedai",
+						type: "get",
+						data:{"searchType":$("select[name='searchType']").val(),
+							  "searchWord":$("input[name='searchWord']").val()},
+					    dataType:"json",
+					    success: function(json){
+					    	console.log(JSON.stringify(json));
+					    	
+					    	if(json.length > 0){
+					    		let v_html = ``;
+					    		
+					    		$.each(json, function(index, item){
+					    			const word = item.word;
+					    			const idx = word. toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
+					    			const len = $("input[name='searchWord']").val().length;
+					   				const result = word.substring(0, idx)+"<span style='color: #2c4459; font-weight: bold;'>"+word.substring(idx, idx+len)+"</span>"+word.substring(idx+len);
+					    		
+					   				v_html += `<span style='cursor: pointer;' class='result'>\${result}</span><br>`;
+					    		}); // end of $.each(json, function(index, item){}-------------------------------------
+					    		
+					    		// 검색어 input 태그의 width 값 알아오기
+								const input_width = $("input[name='searchWord']").css("width");
+					    		
+								// 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
+								$("div#displayList").css({"width":input_width});
+								
+								$("div#displayList").html(v_html);
+								$("div#displayList").show();
+					    	}
+					    },
+					    error: function(request, status, error){
+					    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					    }
+					});
+				}
+			}
+		});	
+					
+		$(document).on("click", "span.result", function(e){
+			const word = $(e.target).text();
+			
+			$("input[name='searchWord']").val(word);// 텍스트박스에 검색된 결과의 문자열을 입력
+			$("div#displayList").hide();
+			goSearch();
+		})
+					
+	});
 	
 	
-	// function Declation
-	function formatPhoneNumber(phoneNumber){
-		
-		let digits = phoneNumber.replace(/\D/g, '');
-		
-		let part1 = digits.substring(0,3);
-		let part2 = digits.substring(3,7);
-		let part3 = digits.substring(7,11);
-		
-		//return `${part1}-${part2}-${part3}`;
-		return "하하하";
+	// 기본 월급에 세자리 마다 , 붙이기
+	function formatNumber(num) {
+	
+		return parseFloat(num).toLocaleString('ko-KR');
+	
 	}
 	
+	// 클릭한 직원 상세정보 불러오는 이벤트
+	$(document).on('click','#empInfo', function(e){
+		const empid = $(this).find('.empid').text();
+		// console.log('empid : ' + empid);	// 성공
+		//console.log('aaaaaempid : ' + empid);
+		$.ajax({
+	 	      url: "<%=ctxPath%>/employeeDetail.kedai?empid=" + empid,
+	 	      type:"get",
+	 	      async:true,
+	 	      dataType:"json",
+	 	      data: {
+	 	    	  "empid" :empid
+	 	      },
+	 	      success: function(json){
+	 	    	// console.log(JSON.stringify(json)); //성공 [{"dept_code":"200","empid":"2013200-001","detailaddress":"511동","fk_job_code":"3","address":"서울 강서구 강서로 489-4","imgfilename":"20240716235810265812732265200.jpg","mobile":"IkVj3zk7v9KiWyZD1sebOw==","postcode":"07523","dept_name":"영업지원부","orgimgfilename":"김재욱.jpg","fk_dept_code":"200","hire_date":"2013-02-08","salary":"48000000","point":"0","extraaddress":" (가양동)","job_name":"상무","name":"김재욱","nickname":"Daniel","dept_tel":"070-1234-200","job_code":"3","email":"xyQQoXYPG/DaercU8LIgYrS/w1X04jC3f2rkZ5QOuOY="}]
+	 	        if(json.length > 0){
+	 	      		json.forEach(function(item){
+	 	      			$('#empName').val(item.name);
+	 	      			$('#empNickName').val(item.nickname);
+	 	      			$('#empDepartment').val(item.dept_name);
+	 	      			$('#empRank').val(item.job_name);
+	 	      			$('#empEmail').val(item.email);
+	 	      			$('#empPersonal-Tel').val(item.mobile.substring(0,3) + "-" + item.mobile.substring(3,7) + "-" + item.mobile.substring(7,11));
+	 	      			$('#deptTel').val(item.dept_tel);
+	 	      			$('#hireDate').val(item.hire_date);
+	 	      			$('#salary').val(formatNumber(item.salary) + '원');
+	 	      			$('#point').val(item.point);
+	 	      			$('#empPostcode').val(item.postcode);
+	 	      			$('#empAddress').val(item.address);
+	 	      			$('#empDetailAddress').val(item.detailaddress);
+	 	      			$('#empExtraAddress').val(item.extraaddress);
+	 	      			$("#pop_partnerImg").attr("src", "<%= ctxPath%>/resources/files/employees/" + item.imgfilename);
+	 	      			// console.log("empName : " + item.name);
+	 	      		})
+	 	        }
+	 	        else{
+	 	          alert("직원 상세 정보를 불러오지 못했습니다.");
+	 	        }
+	 	      },
+	 	      error: function(request, status, error) {
+	 	    	  
+	 	      	// alert("11111code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+	 	      }
+	 	 });
+	});
+	
+	function goSearch(page) {
+		const frm = document.employee_search_frm;
+		frm.pageSize.value = $("#sizePerPage option:selected").val();
+		if (page >= 0) {
+			frm.pageNumber.value = page;
+		}
+		
+		frm.submit();
+	}
+
+	function goPage(page) {
+		goSearch(page);
+	}
 
 	
 	
@@ -482,15 +627,21 @@ bigName{
 		
 		<div class="search_bar">
 			<div class="sch_left">
-				<form name="employee_search_frm">
+				<form name="employee_search_frm" method="post">
 					<select name ="searchType">
 						<option value="">검색대상</option>
-						<option value="department">부서</option>
-						<option value="position">직위</option>
-						<option value="name">이름</option>
+						<option value="department" <c:if test="${'department' eq searchType}">selected</c:if>>부서</option>
+						<option value="position" <c:if test="${'position' eq searchType}">selected</c:if>>직위</option>
+						<option value="name" <c:if test="${'name' eq searchType}">selected</c:if>>이름</option>
+						<option value="personal-tel" <c:if test="${'personal-tel' eq searchType}">selected</c:if>>휴대폰번호</option>
 					</select>
-					<input type="search" name="searchWord;" />
-					<input type="button" name="searchWord;" onclick="goSearch()" value="검색"/>
+					<input type="text" name="searchWord" value="${searchWord}" />
+					<input type="hidden" name="pageNumber" value="${pagedResult.pageable.pageNumber}" />
+					<input type="hidden" name="pageSize" value="${pagedResult.pageable.pageSize}" />
+					<button type="button" onclick="goSearch()">검색</button>
+				
+					<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 10%; background: #fff; overflow: hidden; overflow-y: scroll;">
+					</div>
 				</form>
 			</div>	
 	     
@@ -518,17 +669,18 @@ bigName{
 				
 			<div class="sch_right">
 				<span style="font-size: 12pt; font-weight: bold;">페이지당 직원명수&nbsp;-&nbsp;</span>
-					<select name="sizePerPage">
-						<option value="3">3명</option>
-						<option value="5">5명</option>
-						<option value="10">10명</option>		
+					<select name="sizePerPage" id="sizePerPage" onchange="goSearch(1)">
+						<option value="3" <c:if test="${3 == pagedResult.pageable.pageSize}">selected</c:if>>3명</option>
+						<option value="5" <c:if test="${5 == pagedResult.pageable.pageSize}">selected</c:if>>5명</option>
+						<option value="10" <c:if test="${10 == pagedResult.pageable.pageSize}">selected</c:if>>10명</option>		
 					</select>
 			</div> 
 		</div>
 					
-			<table id="" class="emp_table">
+			<table class="emp_table" id="empTbl"><!-- id="empInfo" -->
 			   <thead>
 			       <tr>
+			         <!--  <th id ="empid">ID</th> -->
 			          <th id ="depart">부서</th>
 			          <th id ="position">직위</th>
 			          <th id="name">이름</th>
@@ -538,31 +690,32 @@ bigName{
 			       </tr>
 			   </thead>
 			   <tbody>
-			   	<c:forEach var="membervo" items="${requestScope.membervoList}" varStatus="status">
-			 	   <tr>
-		   			 <td class="emp-dept">${membervo.dvo.dept_name}</td>
-		   			 <td class="emp-rank">${membervo.jvo.job_name}</td>
-		   			 <td class="emp-name">${membervo.name}</td>
-		  			 <td class="dept-tel">${membervo.dept_tel}</td>
-		  			 <td class="personal-tel">${(membervo.mobile).substring(0,3)}-${(membervo.mobile).substring(3,7)}-${(membervo.mobile).substring(7,11)}</td>
-		  			 <td class="emp-email">${membervo.email}</td>
+			   <!-- ${requestScope.pagedResult.pageable.pageSize}  -->
+			   <c:forEach var="empList" items="${requestScope.employeeList}" varStatus="status">
+			 	   <tr id="empInfo">
+			 	     <td class="empid" hidden>${empList.empid}</td>
+			 	   	<%--  <td class="empid type=hidden">${empList.empid}</td> <!-- 이렇게 하면 값까지 아예 날려버림 (empid 이용해서 값가져올 수 없음) --> --%>
+			 	   	 <td class="emp-dept">${empList.dept_name}</td>
+		   			 <td class="emp-rank">${empList.job_name}</td>
+		   			 <td class="emp-name">${empList.name}</td>
+		  			 <td class="dept-tel">${empList.dept_tel}</td>
+		  			 <td class="personal-tel">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
+		  			 <td class="emp-email">${empList.email}</td>
 	  			   </tr>
 	  			</c:forEach>   
 		   		</tbody>
 			</table>
 		</div>	
 	</div>		
-				
+				            
 	<div class="pagenation">
-		<button>&lt;</button>
+		<button></button>
 		<ul>
-			<li>1</li>
-			<li>2</li>
-			<li>3</li>
-			<li>4</li>
-			<li>...</li>
+		<c:forEach var="p" begin="1" end="${pagedResult.totalPages}">
+			<li class="paging" onclick="goPage(${p-1})"> ${p} </li>&nbsp;
+		</c:forEach>
 		</ul>
-		<button>&gt;</button>
+		<button></button>
 	</div>
 
 
@@ -575,53 +728,53 @@ bigName{
 			</div>
 			<div class="section">
 				<div class="article left">
-					<div class="img-box">
-						<img src="<%= ctxPath%>/resources/images/common/picture.png">
+					<div class="popupImg" style="width:200px; border: 1px solid red; height:200px; overflow: hidden;">
+						<img id="pop_partnerImg" src="" alt="" style="object-fit:cover; width:100%; height:100%;">
 					</div>
 				</div>
 					<div class="article right">
 						<div class="input-forms">
 							<label> 
 								<span>이름</span> 
-								<input type="text" class="form-control" value="유선우" readonly>
+								<input type="text" class="form-control" id="empName" value="" readonly>
 							</label> 
 							<label> 
 								<span>닉네임</span>
-								<input type="text" class="form-control" value="qwldnjs" readonly>
+								<input type="text" class="form-control" id="empNickName" value="" readonly>
 							</label> 
 							<label> 
 								<span>부서</span>
-								<input type="text" class="form-control" value="디자인부" readonly>
+								<input type="text" class="form-control" id="empDepartment" value="" readonly>
 							</label> 
 							<label> 
 								<span>직위</span> 
-								<input type="text" class="form-control" value="부장" readonly>
+								<input type="text" class="form-control" id="empRank" value="" readonly>
 							</label> 
 							<label> 
 								<span>Email</span> 
-								<input type="text" class="form-control" value="qwldnjs@hanmail.net" readonly>
+								<input type="text" class="form-control" id="empEmail" value="" readonly>
 							</label> 
 							<label> 
 								<span>내선전화</span> 
-								<input type="text" class="form-control" value="000#" readonly>
+								<input type="text" class="form-control" id="deptTel" readonly>
 							</label>
 							<label>
 							 	<span>휴대폰번호</span>
-							 	<input type="text" class="form-control" value="000#" readonly>
+							 	<input type="text" class="form-control" id="empPersonal-Tel" value="000#" readonly>
 							</label>
 							
 						<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
 							<label> 
 								<span>입사일자</span> 
-								<input type="text" class="form-control" value="000#" readonly>
+								<input type="text" class="form-control" id="hireDate" readonly>
 							</label>
 							<label> 
 								<span>기본급여</span> 
-								<input type="text" class="form-control" value="000#" readonly>
+								<input type="text" class="form-control" id="salary" readonly>
 							</label>
 							<label> 
 								<span>포인트</span> 
-								<input type="text" class="form-control" value="000#" readonly>
+								<input type="text" class="form-control" id="point" readonly>
 							</label>
 					
 							</div>
@@ -629,13 +782,13 @@ bigName{
 									<label>
 										<span>주소</span>
 										<span>						
-											<input type="text" id="sample6_postcode" placeholder="우편번호" class="form-control" readonly>
+											<input type="text" id="empPostcode" placeholder="우편번호" class="form-control" readonly>
 											<!-- <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" readonly> -->
 										</span>					
 									</label>
-									<input type="text" id="sample6_address" placeholder="주소"class="form-control" readonly>
-									<input type="text" id="sample6_detailAddress" placeholder="상세주소"class="form-control" readonly>
-									<input type="text" id="sample6_extraAddress" placeholder="참고항목"class="form-control" readonly>
+									<input type="text" id="empAddress" class="form-control" readonly>
+									<input type="text" id="empDetailAddress" placeholder="상세주소"class="form-control" readonly>
+									<input type="text" id="empExtraAddress" placeholder="참고항목"class="form-control" readonly>
 								</div>
 						</c:if>
 					</div>

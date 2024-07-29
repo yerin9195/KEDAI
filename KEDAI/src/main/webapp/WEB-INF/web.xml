@@ -18,6 +18,30 @@
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
+	
+	<!-- 
+		===== #259. 스프링보안06 =====
+        spring security 세션 리스너 등록(하나의 사용자ID로 서로다른 브라우저를 사용하여 동시에 로그인을 못하도록 막아주는 리스너) 
+    
+    <listener>
+        <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+    -->
+    <!-- 
+    	===== #260. 스프링보안07 =====
+        spring security 필터만들기
+        (이것은 웹으로 들어오는 요청에 대해 spring security가 관여하도록 만들어주는 프록시 필터이다. 
+                    이필터를 통해 인증 및 권한(역할)을 체크해준다. Spring Security는 필터로 동작하는 것이다!!!) 
+   	
+   	<filter> 
+		<filter-name>springSecurityFilterChain</filter-name> 
+      	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> 
+   	</filter> 
+   	<filter-mapping> 
+      	<filter-name>springSecurityFilterChain</filter-name> 
+      	<url-pattern>/*</url-pattern> 
+   	</filter-mapping>
+	--> 
 	<!-- Processes application requests -->
 	<servlet>
 		<servlet-name>appServlet</servlet-name>

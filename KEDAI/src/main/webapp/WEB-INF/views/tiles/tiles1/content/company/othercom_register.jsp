@@ -788,15 +788,14 @@ div#register_com {
 	
 	
 	
-	
 </script>
 
 <div id="register_com" style="padding-right:10%;">
-	<form id="partRegisterForm" name="" action="" method="POST" enctype="multipart/form-data" class="clientWrap">
+	<form id="partRegisterForm" name="" action="" method="Post" enctype="multipart/form-data" class="clientWrap">
 		<input type="hidden" name="is_modify" id="is_modify" value="${isModify}">
 		<div class="clientHeader">
-			<button style="background-image: url(<%=ctxPath%>/resources/images/common/arrow-left-solid.svg)">
-			</button>
+			<%-- <button style="background-image: url(<%=ctxPath%>/resources/images/common/arrow-left-solid.svg)"  onclick="goToPrevPage()">
+			</button> --%>
 			<c:if test="${!isModify}"><h3>거래처등록하기</h3></c:if>
 			<c:if test="${isModify}"><h3>거래처수정하기</h3></c:if>
 		</div>
@@ -804,7 +803,7 @@ div#register_com {
 			<div class="rgs-profile">
 				<div class="imgbox" style="width: 230px; height: 200px;">
 					<c:if test="${!isModify}"><img id="previewImg" style="width: 100%; height: 100%;" /></c:if>
-					<c:if test="${isModify}"><img src="./resources/files/${partvo.imgfilename}" id="previewImg" style="width: 100%; height: 100%;" /></c:if>
+					<c:if test="${isModify}"><img src="<%= ctxPath%>/resources/files/company/${partvo.imgfilename}" id="previewImg" style="width: 100%; height: 100%;" /></c:if>
 				</div>
 				<br>
 				<input type="file" name="attach" id="fileInput" value="fileInput" accept="image/*" />

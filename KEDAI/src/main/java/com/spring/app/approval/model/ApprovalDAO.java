@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.spring.app.domain.DeptVO;
+import com.spring.app.domain.DocVO;
+import com.spring.app.domain.MinutesVO;
 
 public interface ApprovalDAO {
 
@@ -21,5 +23,32 @@ public interface ApprovalDAO {
 
 	// 해당 부서에 근무중인 사원 정보 가져오기
 	List<Map<String, String>> deptEmpList(Map<String, String> paraMap);
+
+	// doc_no의 시퀀스 채번해오기
+	String getDoc_noSeq();
+
+	// approval_noSeq 시퀀스 채번해오기
+	String getApproval_noSeq();
+	
+	// 첨부파일이 없는 서류 작성하기(tbl_doc)
+	int noFile_newdoc(Map<String, Object> paraMap);
+
+	// 첨부파일이 없는 서류 작성하기(tbl_minutes)
+	int noFile_minutes(Map<String, Object> paraMap);
+
+	// 첨부파일이 없는 서류 작성하기(tbl_approval)
+	int noFile_approval(Map<String, Object> paraMap);
+
+	// 첨부파일이 있을 때 첨부파일 insert하기
+	int withFile_doc(Map<String, String> docFileMap);
+
+	// 메인화면에 보여줄 내가 작성한 기안문서 목록 가져오기
+	List<Map<String, String>> myDocList(String loginEmpId);
+
+	// 메인화면에 보여줄 
+	List<Map<String, String>> myApprovalDoc(String loginEmpId);
+
+	// 결재 할 문서의 정보 가져오기
+	List<Map<String, String>> myapprovalinfo(String loginEmpId);
 
 }
