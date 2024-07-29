@@ -82,12 +82,5 @@ public class MemberService_imple implements MemberService {
 		int n = dao.pointUpdate(paraMap);
 		return n;
 	}
-
-	// 사원수 조회하기
-	@Override
-	public int memberTotalCountJSON() {
-		int totalCount = dao.memberTotalCountJSON();
-		return totalCount;
-	}
 	
 }

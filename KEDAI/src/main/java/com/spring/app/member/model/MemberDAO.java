@@ -27,7 +27,4 @@ public interface MemberDAO {
 	// 포인트 충전하기
 	int pointUpdate(Map<String, String> paraMap);
 
-	// 사원수 조회하기
-	int memberTotalCountJSON();
-
 }

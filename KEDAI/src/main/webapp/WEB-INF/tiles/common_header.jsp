@@ -138,7 +138,7 @@
 		}
 		
 		const frm = document.menuFindFrm;
-        frm.action = "<%= ctxPath%>/member/menuFind.kedai";
+        frm.action = "<%= ctxPath%>/index/menuFind.kedai";
         frm.method = "get";
    	  	frm.submit();
 		

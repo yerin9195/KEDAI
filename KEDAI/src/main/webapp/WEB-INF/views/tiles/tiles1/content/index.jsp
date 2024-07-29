@@ -7,6 +7,44 @@
 	//     /KEDAI
 %>
 <style type="text/css">
+	/* highchart */
+	.highcharts-figure,
+	.highcharts-data-table table {
+	    min-width: 320px;
+	    max-width: 800px;
+	    margin: 1em auto;
+	}
+	.highcharts-data-table table {
+	    font-family: Verdana, sans-serif;
+	    border-collapse: collapse;
+	    border: 1px solid #ebebeb;
+	    margin: 10px auto;
+	    text-align: center;
+	    width: 100%;
+	    max-width: 500px;
+	}
+	.highcharts-data-table caption {
+	    padding: 1em 0;
+	    font-size: 1.2em;
+	    color: #555;
+	}
+	.highcharts-data-table th {
+	    font-weight: 600;
+	    padding: 0.5em;
+	}
+	.highcharts-data-table td,
+	.highcharts-data-table th,
+	.highcharts-data-table caption {
+	    padding: 0.5em;
+	}
+	.highcharts-data-table thead tr,
+	.highcharts-data-table tr:nth-child(even) {
+	    background: #f8f8f8;
+	}
+	.highcharts-data-table tr:hover {
+	    background: #f1f7ff;
+	}
+	/* tab */
 	.nav-tabs {
 		padding-bottom: 1px;
 		border-bottom: 1px solid #e68c0e;
@@ -19,6 +57,7 @@
 		color: #fff;
 		background: #e68c0e;
 	}
+	/* myPage */
 	.myPageList button {
 	    background: none;
 		color: #fff;
@@ -40,15 +79,20 @@
 	}
 </style>
 
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/highcharts.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/exporting.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/export-data.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/accessibility.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		
 		loopshowNowTime();
-	//	showWeather();
+		showWeather();
 		
 		// 사원수 조회하기
 		$.ajax({
-			url: "${pageContext.request.contextPath}/member/memberTotalCountJSON.kedai",
+			url: "${pageContext.request.contextPath}/index/memberTotalCountJSON.kedai",
 			type: "get",
 			dataType: "json",	 
 		   	success: function(json){
@@ -65,7 +109,7 @@
 		
 		// 게시글수 조회하기
 		$.ajax({
-			url: "${pageContext.request.contextPath}/board/boardTotalCountJSON.kedai",
+			url: "${pageContext.request.contextPath}/index/boardTotalCountJSON.kedai",
 			type: "get",
 			dataType: "json",	 
 		   	success: function(json){
@@ -204,14 +248,141 @@
 		}, 1000); // 시간을 1초 마다 자동 갱신하는 것이다.
 		
 	} // end of function loopshowNowTime() ----------
+	
+	// 기상청 날씨정보 공공API XML 데이터 호출하기
+	function showWeather(){
+		
+		$.ajax({
+			url:"<%= ctxPath%>/weather/weatherXML.kedai",
+			type:"get",
+			dataType:"xml", 
+			success:function(xml){ 
+				const rootElement = $(xml).find(":root"); // current
+				const weather = rootElement.find("weather");
+				const updateTime = $(weather).attr("year")+"년 "+$(weather).attr("month")+"월 "+$(weather).attr("day")+"일 "+$(weather).attr("hour")+"시"; // 2024년 07월 29일 15시
+				const localArr = rootElement.find("local"); // 97
+				
+				let html = "<div class='row'><div class='col-9'><i class='fa-solid fa-temperature-high'></i>&nbsp;&nbsp;<span style='font-weight:bold;'>"+updateTime+"</span>&nbsp;";
+		            html += "<span style='color: #e68c0e; cursor: pointer; font-size: 9pt; text-decoration: underline;' onclick='javascript:showWeather();'>업데이트</span></div><div class='col-3 d-md-flex justify-content-md-end'><button type='button' data-toggle='modal' data-target='#myWeather' style='cursor: pointer; background: none;'>더보기&nbsp;<i class='fa-solid fa-angles-right'></i></button></div></div>";
+		            html += "<div style='max-height: 250px; overflow-y: scroll; margin-top: 3%;'><table class='table table-hover' align='center'>";
+			        html += "<tr>";
+			        html += "<th style='width: 30%;'>지역</th>";
+			        html += "<th style='width: 40%;'>날씨</th>";
+			        html += "<th style='width: 30%;'>기온</th>";
+			        html += "</tr>";
+			        
+			    // XML 을 JSON 으로 변경하기
+		        var jsonObjArr = [];     
+				
+		        for(let i=0; i<localArr.length; i++){ // 97
+		        	let local = $(localArr).eq(i); 
+		        
+		        	let icon = $(local).attr("icon");  
+			        if(icon == "") {
+			        	icon = "없음";
+			        }
+			        
+			        html += "<tr>";
+					html += "<td>"+$(local).text()+"</td><td><img src='<%= ctxPath%>/resources/images/weather/"+icon+".png' />&nbsp;&nbsp;"+$(local).attr("desc")+"</td><td>"+$(local).attr("ta")+"</td>";
+					html += "</tr>";
+					
+					var jsonObj = {"locationName":$(local).text(), "ta":$(local).attr("ta")}; // 지역명, 기온
+		        	
+					jsonObjArr.push(jsonObj);
+		        	
+		        } // end of for ----------
+		        
+		        html += "</table></div>";
+		        
+		        $("div#displayWeather").html(html);
+		        
+		        // XML 을 JSON 으로 변경된 데이터를 가지고 차트그리기
+		        var str_jsonObjArr = JSON.stringify(jsonObjArr);
+		        
+		        $.ajax({
+		        	url:"<%= ctxPath%>/weather/weatherXMLtoJSON.kedai",
+		        	type:"post",
+					data:{"str_jsonObjArr":str_jsonObjArr},
+					dataType:"JSON",
+					success:function(json){
+					// 	alert(json.length); // 11
+					
+						// chart 그리기
+						var dataArr = [];
+						$.each(json, function(index, item){
+							dataArr.push([item.locationName, Number(item.ta)]);
+						}); // end of $.each(json, function(index, item){}) ----------
+					
+						Highcharts.chart('weather_chart_container', {
+						    chart: {
+						        type: 'column'
+						    },
+						    title: {
+						        text: ''
+						    },
+						    subtitle: {
+						    //    text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+						    },
+						    xAxis: {
+						        type: 'category',
+						        labels: {
+						            rotation: -45,
+						            style: {
+						                fontSize: '12px',
+						                fontFamily: 'Verdana, sans-serif'
+						            }
+						        }
+						    },
+						    yAxis: {
+						        min: -10,
+						        title: {
+						            text: '온도 (℃)'
+						        }
+						    },
+						    legend: {
+						        enabled: false
+						    },
+						    tooltip: {
+						        pointFormat: '현재기온: <b>{point.y:.1f} ℃</b>'
+						    },
+						    series: [{
+						        name: '지역',
+						        data: dataArr, // 위에서 만든것을 대입시킨다.
+						        dataLabels: {
+						            enabled: true,
+						            rotation: -90,
+						            color: '#FFFFFF',
+						            align: 'right',
+						            format: '{point.y:.1f}', // one decimal
+						            y: 10, // 10 pixels down from the top
+						            style: {
+						                fontSize: '12px',
+						                fontFamily: 'Verdana, sans-serif'
+						            }
+						        }
+						    }]
+						});
+					
+					},
+					error: function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					}
+		        });
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
+		
+	} // end of function showWeather() ----------
 </script>
 
 <%-- content start --%>
 <div class="container-fluid">
 	<section class="row justify-content-between">
-		<div class="col-9" style="border: 1px solid red;">
+		<div class="col-9" style="border: 0px solid red;">
 			<div class="row justify-content-between mt-2">
-				<div class="col-4 pl-5 pr-2" style="height: 100px; display: flex; align-items: center;">
+				<div class="col-4 pr-2" style="height: 100px; display: flex; align-items: center;">
 					<div style="width: 20%">
 						<div style="width: 80px; height: 80px; border-radius: 50%; background: #e68c0e; text-align: center; align-content: center;">
 							<img alt="people" src="<%= ctxPath%>/resources/images/common/people.png" width="60%" />
@@ -222,7 +393,7 @@
 						<h6><span class="h2 memberTotalCount"></span>&nbsp;명</h6>
 					</div>
 				</div>
-				<div class="col-4 pl-5 pr-2" style="height: 100px; display: flex; align-items: center;">
+				<div class="col-4 pr-2" style="height: 100px; display: flex; align-items: center;">
 					<div style="width: 20%">
 						<div style="width: 80px; height: 80px; border-radius: 50%; background: #e68c0e; text-align: center; align-content: center;">
 							<img alt="note" src="<%= ctxPath%>/resources/images/common/note.png" width="60%" />
@@ -238,17 +409,31 @@
 				</div>
 			</div>
 			
-			<div class="row justify-content-between mt-2" style="border: 1px solid red; height: 300px;">
-				<div class="col-6" style="border: 1px solid red;">
-					날씨
+			<div class="row justify-content-between mt-2" style="border: 0px solid red; height: 300px;">
+				<div class="col-6 pl-0" style="border: 1px solid red;" id="displayWeather"></div>
+				<div class="modal" id="myWeather">
+					<div class="modal-dialog">
+				    	<div class="modal-content">
+					      	<div class="modal-header">
+					        	<h4 class="modal-title">오늘의 날씨(℃)</h4>
+					        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+					      	</div>
+					      	<div class="modal-body">
+					        	<figure class="highcharts-figure">
+								    <div id="weather_chart_container"></div>
+								</figure> 
+					      	</div>
+			    		</div>
+			  		</div>
 				</div>
-				<div class="col-6" style="border: 1px solid red;">
+				
+				<div class="col-6 pl-0" style="border: 1px solid red;">
 					달력
 				</div>
 			</div>
 		</div>
 		
-		<div class="col-3" style="border: 1px solid red; background: #2c4459; text-align: center; color: #fff;">
+		<div class="col-3" style="border: 0px solid red; background: #2c4459; text-align: center; color: #fff;">
 			<div class="mt-5" style="width: 180px; height: 180px; overflow: hidden; display: inline-block;">
 				<img alt="img" style="width: 100%; height: 100%; border-radius: 50%;" src="<%= ctxPath%>/resources/files/employees/${(sessionScope.loginuser).imgfilename}">
 			</div>
