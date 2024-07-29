@@ -202,9 +202,6 @@
 			<when test='searchType == "ds_name" and searchWord != ""'>
 				and lower(ds_name) like '%'|| lower(#{searchWord})||'%'
 			</when>		<!-- else if -->
-			<when test='searchType == "empid" and searchWord != ""'>
-				and (lower(empid) like '%'|| lower(#{searchWord})||'%' or lower(empid) like '%'|| lower(#{searchWord})||'%')
-			</when>		<!-- else if -->
 			<otherwise></otherwise>		<!-- else -->
 		</choose>
 	</select>

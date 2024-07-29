@@ -725,3 +725,32 @@ from tbl_car a join tbl_employees b
 on a.fk_empid = b.empid
 )h
 where h.car_seq = v.fk_car_seq and cancel_status = 1 and lower(nickname) like '%' ||lower('dory')||'%'
+
+select *
+from
+(
+select *
+from tbl_day_share
+where cancel_status = 1 and 
+)V 
+cross join
+(
+select *
+from tbl_employees
+where (lower(nickname) like '%'|| lower('Dory')||'%' or lower(nickname) like '%'|| lower('Dory')||'%')
+)C
+;
+
+select *
+from tbl_car_share
+
+desc tbl_car_share
+
+ALTER TABLE tbl_car_share MODIFY (SHARE_MAY_TIME VARCHAR2(10));
+commit;
+
+SELECT COLUMN_NAME, DATA_DEFAULT
+FROM USER_TAB_COLUMNS
+WHERE TABLE_NAME = 'tbl_car_share';
+
+ALTER TABLE tbl_car_share MODIFY (ACCEPT_YON number DEFAULT 0);

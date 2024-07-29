@@ -303,6 +303,7 @@ $(document).ready(function(){
 	
     var calendarEl = document.getElementById('calendar');
     var today = new Date();
+    today.setHours(0, 0, 0, 0); // 오늘 날짜의 시간 부분을 0으로 설정
     var year = today.getFullYear();
     var month = today.getMonth();
 //  console.log("~~~확인용 start: " + new Date(year, month, 1));
@@ -311,28 +312,26 @@ $(document).ready(function(){
     var endDate = convertedlast_date;
 //  console.log("~~~ 확인용  startDate ; " + startDate);
 //  console.log("~~~ 확인용  endDate ; " + endDate);
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    var calendarOptions = {
         initialView: 'dayGridMonth',  // 월간 달력으로 표시
         
         dateClick: function(info) {
  //         alert('Date: ' + info.dateStr);
  //			Date: 2024-08-23
  			
- 			var selectDate = info.dateStr;
- 			$("input[name='share_date']").val(selectDate);	
+ 			var selectDate = new Date(info.dateStr);
+ 			$("input[name='share_date']").val(info.dateStr);	
  			
             $('.fc-daygrid-day').removeClass('selected-date');
 
             // 선택된 날짜의 배경색을 회색으로 설정
             $(info.dayEl).addClass('selected-date'); 
-            // 선택한 날짜가 validRange 내에 있는지 확인
-/*             if (info.date >= startDate && info.date < endDate) {
-                $('.fc-daygrid-day').removeClass('selected-date');
-                // 선택된 날짜의 배경색을 회색으로 설정
-                $(info.dayEl).addClass('selected-date');
-            } else {
-                alert('선택할 수 없는 날짜입니다.');
-            }  */           
+
+            // 선택한 날짜가 블록된 날짜인지 확인
+            if (selectDate <= today && selectDate >= startDate) {
+                alert('이전 날짜에는 예약할 수 없습니다.');
+                $(info.dayEl).removeClass('selected-date');
+            }
         },
         validRange: {
             start: startDate, // 가져온 start_date
@@ -341,18 +340,37 @@ $(document).ready(function(){
         height: 'auto', // 달력 높이를 자동으로 조절
         contentHeight: 'auto', // 달력 내용의 높이
         aspectRatio: 1.5 // 달력의 가로 세로 비율
-/*         viewDidMount: function(info) {
-            $(info.el).find('.fc-daygrid-day').each(function() {
-                var date = $(this).data('date');
-                var dateObj = new Date(date);
-                if (dateObj < startDate || dateObj >= endDate) {
-                    $(this).addClass('fc-day-disabled');
-                }
-            });
-        } */
-    });
+
+    };
+	 // 오늘 날짜가 범위 내에 포함되어 있는지 확인
+	    if (today >= startDate && today <= endDate) {
+	        // datesSet 콜백을 사용하여 달력이 렌더링될 때 오늘 이전의 날짜를 블록 처리
+	        calendarOptions.datesSet = function(info) {
+	            $('.fc-daygrid-day').each(function() {
+	                var dateStr = $(this).data('date');
+	                var dateObj = new Date(dateStr);
+	                dateObj.setHours(0, 0, 0, 0); // 날짜의 시간 부분을 0으로 설정
+	
+	                // 오늘 이전의 날짜를 파란색으로 블록 처리
+	                if (dateObj < today) {
+	                    $(this).css('background-color', '#a6a6a6');
+	                }
+	            });
+	        };
+	    }
+	 
+	var calendar = new FullCalendar.Calendar(calendarEl, calendarOptions);
     calendar.render();
 	/* 달력 끝*/
+	
+	/* 스타일링 추가 */
+	document.head.insertAdjacentHTML('beforeend', `
+	<style>
+	    .fc-daygrid-day.selected-date {
+	        background-color: gray !important; /* 선택된 날짜의 배경색을 회색으로 설정 */
+	    }
+	</style>
+	`);
 	
 	/* 모달 지도 시작 */
 	var modal = document.getElementById("mapModal");
@@ -815,6 +833,7 @@ $(document).ready(function(){
 <div id="container">
     <div id="dmap" style="margin-left:25%; width:75%; height:900px;"></div>
 		<form name="day_shareInfoFrm" enctype="multipart/form-data"> 
+			<input type="hidden" name="pf_res_num" value="${requestScope.day_shareInfo.res_num}"/>
 			<input type="hidden" name="start_date" value="${requestScope.day_shareInfo.start_date}"/>
 			<input type="hidden" name="last_date" value="${requestScope.day_shareInfo.last_date}"/>
 			<input type="hidden" name="start_time" value="${requestScope.day_shareInfo.start_time}"/>
@@ -887,3 +906,4 @@ $(document).ready(function(){
     </div>
     </form>
 </div>
+<!--  오늘 이후 날짜도 block -->

@@ -456,8 +456,8 @@ public class CarController {
 			String root = session.getServletContext().getRealPath("/");
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 
-			String path = root + "resources" + File.separator + "files";
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			String path = root + "resources" + File.separator + "files"+ File.separator + "car";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\car
 
 			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
 			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
@@ -471,9 +471,9 @@ public class CarController {
 				newFileName = fileManager.doFileUpload(bytes, originalFilename, path); // 첨부되어진 파일을 업로드
 
 				paraMap.put("car_imgfilename", newFileName);
-				System.out.println("newFileName ~~~ 확인용 : " + newFileName);
+//				System.out.println("newFileName ~~~ 확인용 : " + newFileName);
 				paraMap.put("car_orgimgfilename", originalFilename);
-				System.out.println("originalFilename ~~~ 확인용 : " + originalFilename);
+//				System.out.println("originalFilename ~~~ 확인용 : " + originalFilename);
 				
 //				newFileName ~~~ 확인용 : 20240720130231737170051538500.jpg
 //				originalFilename ~~~ 확인용 : admin차.jpg
@@ -562,8 +562,8 @@ public class CarController {
 			String root = session.getServletContext().getRealPath("/");
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 
-			String path = root + "resources" + File.separator + "files";
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			String path = root + "resources" + File.separator + "files"+ File.separator + "car";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\car
 
 			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
 			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
@@ -650,7 +650,6 @@ public class CarController {
 //		String start_date = day_shareInfo.getStart_date();
 //		String last_date = day_shareInfo.getLast_date();
 		
-//		System.out.println("~~~ 확인용 dp_lat : " + dp_lat);
 		//res_num 을 가지고 해당 tbl_day_share 가져오기
 		
 		//출발지, 도착지, 출발시간, 지도에 표시해주어야하는 것, 출발지 위도,경도 & 도착지 위도 & 경도
@@ -672,7 +671,10 @@ public class CarController {
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		
 		String pf_empid = loginuser.getEmpid();
-		int pf_res_num = dsvo.getRes_num();
+		int pf_res_num = Integer.parseInt(request.getParameter("pf_res_num"));
+//		System.out.println("~~~확인용 pf_res_num : "+ pf_res_num);
+//		System.out.println("~~~확인용 pf_empid : "+ pf_empid);
+		
 		String share_date = request.getParameter("share_date");
 		System.out.println("~~~확인용 share_date : "+ share_date);
 //		~~~확인용 share_date : 2024-07-24
@@ -685,15 +687,15 @@ public class CarController {
 		String rds_add = request.getParameter("rds_add");
 		String rds_lat = request.getParameter("rds_lat");
 		String rds_lng = request.getParameter("rds_lng");
-		System.out.println("~~~확인용 share_may_time : "+ share_may_time);
-		System.out.println("~~~확인용 rdp_name : "+ rdp_name);
-		System.out.println("~~~확인용 rdp_add : "+ rdp_add);
-		System.out.println("~~~확인용 rdp_lat : "+ rdp_lat);
-		System.out.println("~~~확인용 rdp_lng : "+ rdp_lng);
-		System.out.println("~~~확인용 rds_name : "+ rds_name);
-		System.out.println("~~~확인용 rds_add : "+ rds_add);
-		System.out.println("~~~확인용 rds_lat : "+ rds_lat);
-		System.out.println("~~~확인용 rds_lng : "+ rds_lng);
+//		System.out.println("~~~확인용 share_may_time : "+ share_may_time);
+//		System.out.println("~~~확인용 rdp_name : "+ rdp_name);
+//		System.out.println("~~~확인용 rdp_add : "+ rdp_add);
+//		System.out.println("~~~확인용 rdp_lat : "+ rdp_lat);
+//		System.out.println("~~~확인용 rdp_lng : "+ rdp_lng);
+//		System.out.println("~~~확인용 rds_name : "+ rds_name);
+//		System.out.println("~~~확인용 rds_add : "+ rds_add);
+//		System.out.println("~~~확인용 rds_lat : "+ rds_lat);
+//		System.out.println("~~~확인용 rds_lng : "+ rds_lng);
 		
 		
 		
@@ -751,11 +753,11 @@ public class CarController {
 
 
 	// 마이페이지에서 나의 카셰어링 예약 및 결제내역 클릭시 들어가는 페이지 만들기
-	@GetMapping("/owner.kedai")
+	@GetMapping("/owner_Status.kedai")
 	public ModelAndView requiredLogin_owner(HttpServletRequest request, HttpServletResponse response,
 			ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
 
-		mav.setViewName("tiles1/reservation/owner.tiles");
+		mav.setViewName("tiles1/reservation/owner_Status.tiles");
 		return mav;
 
 	}

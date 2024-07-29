@@ -176,7 +176,6 @@
                <option value="">검색대상</option>
                <option value="dp_name">출발지</option>
                <option value="ds_name">도착지</option>
-               <option value="nickname">차주 닉네임</option>
                <option value="share_date">셰어링 날짜</option>
             </select>
             &nbsp;
@@ -260,3 +259,4 @@
 	<input type="hidden" name="searchType" />
 	<input type="hidden" name="searchWord" />
 </form> 
+<!--  검색대상이 셰어링 날짜일 경우 textform 이 아닌 datepicker 폼으로 변경하기 -->

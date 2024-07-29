@@ -32,7 +32,15 @@
 .btnRegister button:nth-child(2) {
 	background: #e68c0e;
 }
-
+.nav-tabs .nav-link.active {
+    background-color: #2c4459; /* 활성화된 탭의 배경색 변경 */
+    color: white; /* 활성화된 탭의 글자색 변경 */
+    border-bottom-color: transparent; /* 활성화된 탭의 하단 선 제거 */
+}
+.nav-tabs .nav-item {
+    flex: 1; /* 각 탭을 균등하게 분배 */
+    text-align: center;
+}
 </style>
 
 <script type="text/javascript">
@@ -51,28 +59,45 @@ function goBack(){
 	location.href="javascript:history.back();"
 } // end of function goReset() ----------
 
-function goOwner(){
-	location.href=`<%= ctxPath%>/owner.kedai`;
-}
-function goCustomer(){
-	location.href=`<%= ctxPath%>/customer.kedai`;
-}
 function goRegister(){
 	location.href=`<%= ctxPath%>/myCarRegister.kedai`;	
 }
 </script>
 
+
+
 <%-- content start --%>	
-<div style="border: 0px solid red; padding: 5% 0;">
+<div style="border: 0px solid red; padding: 2% 0; width: 90%;">
+<!-- Navigation Tabs -->
+<ul class="nav nav-tabs" style="margin-bottom:4%;">
+    <li class="nav-item">
+        <a class="nav-link active" style="color: white; font-size:12pt;" href="<%= ctxPath %>/myCarInfo.kedai">차량정보</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Status.kedai">카셰어링현황(차주)</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Settlement.kedai">카셰어링정산(차주)</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_apply.kedai">카셰어링신청(신청자)</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">카셰어링신청현황(신청자)</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_Settlement.kedai">카셰어링정산(신청자)</a>
+    </li>
+</ul>
 <h3><span class="icon"><i class="fa-solid fa-seedling"></i></span>&nbsp;&nbsp;나의 차량 정보</h3>
-<hr style="color: gray; width: 90%;">
-	<form name="editFrm" enctype="multipart/form-data" class="row mt-5" style="border: 0px solid green;">
-	<div style="border-top: 5px solid #2c4459; border-left: 1px solid lightgray; border-bottom: 1px solid lightgray; border-right: 1px solid lightgray; padding: 1% 0; width: 90%; display:flex;">
+<hr style="color: gray;">
+	<form name="editFrm" enctype="multipart/form-data" class="mt-5" style="border: 0px solid green;">
+	<div style="border-top: 5px solid #2c4459; border-left: 1px solid lightgray; border-bottom: 1px solid lightgray; border-right: 1px solid lightgray; padding: 1% 0; display:flex;">
 	        <c:if test="${not empty requestScope.myCar}">
 	            <c:forEach var="car" items="${requestScope.myCar}">
 	                <div class="col-4" style="border: 0px solid blue; text-align:center;">
 	                    <br><br>
-	                    <img src="<%= ctxPath %>/resources/images/car/${car.car_orgimgfilename}" style="width:90%;" />
+	                    <img src="<%= ctxPath %>/resources/files/car/${car.car_imgfilename}" style="width:90%; height: 300px;" />
 	                    <br><br><br>
 	                </div>
 	                <div class="col-8" style="border: 0px solid red; padding-top:3%; padding-left: 3%;">
@@ -116,7 +141,7 @@ function goRegister(){
 			등록되어있는 차량이 없습니다.
 		</c:if>
 	</div>
-	<div class="mt-3" style="position: relative; left: 500px; top: 85px;">
+	<div style="position: relative; left: 500px; top: 85px;">
 		<div class="btnRegister">
 		<c:if test="${empty requestScope.myCar}">
 	        <button type="button" onclick="goRegister()">등록하기</button>
@@ -125,12 +150,7 @@ function goRegister(){
 	        <button type="button" onclick="goEdit()">수정하기</button>
 	    </c:if>
 	        <button type="reset" onclick="goBack()">뒤로가기</button>
-	        <button type="reset" onclick="goOwner()">카셰어링현황(차주)</button>
-	        <button type="reset" onclick="goCustomer()">카셰어링신청현황(신청자)</button>
 	    </div>
 	</div>
 	</form>
 </div>
-
-<!-- 차량정보가 없을때는 등록된 차량정보가 없다고 띄우고 수정하기 버튼이 등록하기 버튼으로 표시되어야한다. -->
-<%-- content end --%>
