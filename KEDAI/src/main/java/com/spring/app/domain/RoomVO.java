@@ -11,6 +11,7 @@ public class RoomVO {
 	private String registerday;
 	private int reservation_status;
 	
+	
 	public int getReservation_seq() {
 		return reservation_seq;
 	}

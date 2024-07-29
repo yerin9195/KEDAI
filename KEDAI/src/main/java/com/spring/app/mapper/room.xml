@@ -59,5 +59,15 @@
     ) VALUES (
         reservation_seq.nextval, #{fk_empid}, #{fk_room_name}, #{content}, TO_DATE(#{start_time}, 'YYYY-MM-DD HH24:MI'), TO_DATE(#{end_time}, 'YYYY-MM-DD HH24:MI'), TO_DATE(#{registerday}, 'YYYY-MM-DD HH24:MI:SS'), #{reservation_status}
     )
-</insert>
+    </insert>
+    
+    <select id="getAllReservations" resultType="RoomVO">
+    	 SELECT reservation_seq, fk_empid, fk_room_name, content, start_time, end_time, registerday, reservation_status
+        FROM tbl_room
+	</select>
+	
+	<select id="getReservationById" parameterType="int" resultType="RoomVO">
+    	SELECT * FROM tbl_room WHERE id = #{reservationId}
+	</select>
+
 </mapper>

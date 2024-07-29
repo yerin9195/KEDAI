@@ -137,6 +137,123 @@
     // 시간과 분 선택 옵션을 초기화
     populateTimeSelect();
     
+    function fetchReservations() {
+        var selectedDate = $("#currentDate").text().split(' ')[0]; // 현재 날짜만 추출
+
+        // 예약 정보를 가져오는 API 호출
+        $.ajax({
+            url: "<%= request.getContextPath() %>/getReservations.kedai",
+            type: "GET",
+            data: { date: selectedDate },
+            dataType: "json",
+            success: function(reservations) {
+                // 모든 td 색상 초기화
+                $("td.time-slot").css("background-color", "");
+
+                // 예약된 방 이름과 서브룸 정보를 매핑하기 위한 객체
+                var roomNameMap = {};
+
+                // 예약 정보로부터 방 이름 매핑을 생성합니다.
+                reservations.forEach(function(reservation) {
+                    var startTime = parseTime(reservation.startTime);
+                    var endTime = parseTime(reservation.endTime);
+                    var reservationRoomName = reservation.roomName;
+
+                    // 현재 예약의 서브룸을 가져오기 위해 시간 슬롯을 확인합니다.
+                    $("td.time-slot").each(function() {
+                        var cellHour = $(this).data('hour');
+                        var cellMinute = $(this).data('minute');
+                        var cellRoomName = $(this).data('roomname');
+                        var row = $(this).closest("tr"); // 현재 셀이 포함된 행 찾기
+                        var leftCell = row.find("td:first-child"); // 첫 번째 셀 찾기
+                        var subroom = leftCell.text().trim(); // 첫 번째 셀의 텍스트를 서브룸으로 설정
+
+                            // 서브룸 정보를 서버에서 가져오는 AJAX 호출
+                            $.ajax({
+                                url: '<%= ctxPath %>/getRoomData.kedai',
+                                method: 'GET',
+                                data: { subroom: subroom },
+                                success: function(response) {
+                                    
+                                    if (Array.isArray(response) && response.length > 0) {
+                                        var data = response[0] || {};
+                                        var roomMainName = data.ROOMMAINNAME || ''; // "1층"
+                                        var roomSubName = data.ROOMSUBNAME || '';   // "102호"
+
+                                        // ROOMMAINNAME과 ROOMSUBNAME을 합쳐서 roomName을 생성합니다.
+                                        var fullRoomName = roomMainName + roomSubName; // "1층102호"
+                                        
+                                        roomNameMap[subroom] = fullRoomName;
+
+                                        var cellTime = formatTime(cellHour, cellMinute);
+                                        
+                                        // 현재 td의 방 이름이 일치하고 시간 범위에 해당하는 경우
+                                        
+                                        if (fullRoomName === reservationRoomName) {
+                                            // 시간 범위에 해당하는 td에 대해 파란색 적용
+                                            if (cellTime >= startTime && cellTime < endTime) {
+                                                $(this).css("background-color", "blue");
+                                                
+                                                // 버튼 클릭 시 예약 상세 페이지로 이동
+                                                $(this).find(".reserveBtn").data("reservation-id", reservation.id);
+                                            }
+                                        }
+                                    } else {
+                                        console.warn("No valid data found in response.");
+                                    }
+                                },
+                                error: function(error) {
+                                    console.error("Error fetching room names:", error);
+                                }
+                            });
+                        });
+                });
+                
+            },
+            error: function(request, status, error) {
+                console.error("Error fetching reservations:", error);
+            }
+        });
+    }
+
+
+
+    // 페이지 로드 시 예약 정보 가져오기
+    fetchReservations();
+
+ // 날짜 변경 시 예약 정보 가져오기
+    $(document).on("click", "[data-change-date]", function() {
+        changeDate(parseInt($(this).attr("data-change-date")));
+        fetchReservations();
+    });
+
+    // 모달 표시 시 날짜와 시간을 설정
+    $(document).on("click", ".reserveBtn", function() {
+    	  var btn = $(this);
+    	    var btnColor = btn.closest('td').css("background-color");
+    	    
+    	    // 파란색 버튼 클릭 시 예약 상세 페이지로 이동
+    	    if (btnColor === "rgb(0, 0, 255)") {
+    	        var reservationId = btn.data("reservation-id");
+    	        if (reservationId) {
+    	            window.location.href = "<%= ctxPath %>/reservation_detail.kedai?id=" + reservationId;
+    	        }
+    	    } else {
+    	        // 버튼 클릭 시 startTime 설정
+    	        var hour = btn.data('hour'); // 데이터에서 시간 정보를 가져옵니다
+    	        var minute = btn.data('minute'); // 데이터에서 분 정보를 가져옵니다
+    	        var startTime = formatTime(hour, minute); // startTime 포맷 설정 함수 호출
+    	        $("#startTime").val(startTime); // startTime을 설정합니다
+    	        
+    	        $("#endDate").val($("#currentDate").text());
+    	        updateEndTimeOptions();
+    	        $("#reservationModal").modal("show");
+    	    } 
+    });
+
+
+
+    
     // 시간과 분 옵션 생성 함수
      function populateTimeSelect() {
         var startTimeSelect = $("#startTime");
@@ -168,11 +285,18 @@
      // 시작 시간이 변경될 때 종료 시간 드롭다운을 업데이트하는 함수
       // 종료 시간 드롭다운을 업데이트하는 함수
     function updateEndTimeOptions() {
-        var startTime = $("#startTime").val();
-        var endTimeSelect = $("#endTime");
-        var timeOptions = [];
-        var startHour = parseInt(startTime.split(':')[0]);
-        var startMinute = parseInt(startTime.split(':')[1]);
+    	  var startTime = $("#startTime").val();
+    	    console.log("Start time value: ", startTime); // 디버깅을 위한 로그 추가
+
+    	    if (!startTime) {
+    	        console.error("Start time is not set. Ensure that start time is properly assigned.");
+    	        return; // startTime이 null일 경우 함수 종료
+    	    }
+
+    	    var endTimeSelect = $("#endTime");
+    	    var timeOptions = [];
+    	    var startHour = parseInt(startTime.split(':')[0]);
+    	    var startMinute = parseInt(startTime.split(':')[1]);
 
         // 30분 단위의 시간 옵션을 생성
         for (var hour = startHour; hour <= 22; hour++) {
@@ -318,31 +442,55 @@
          if(selectedRoomMainSeq == '전사 자산 목록'){
         	 selectedRoomMainSeq = '0';
         	showallsub();
+        	fetchReservations();
          }
          
          if (selectedRoomMainSeq > 1) {
+        	 var subroom = "";
+        	 $("td.time-slot").each(function() {
+	        	 var row = $(this).closest("tr"); // 현재 셀이 포함된 행 찾기
+	        	 var leftCell = row.find("td:first-child"); // 첫 번째 셀 찾기
+	        	 subroom = leftCell.text().trim();
+        	 });
+        	 
+        	 fetchReservations(subroom);
         	 $.ajax({
         	        url: "<%= request.getContextPath() %>/roommain.kedai?roomMainSeq=" + selectedRoomMainSeq,
         	        type: "GET",
         	        dataType: "json",
         	        success: function(json) {
-        	        	var tableBody = $("#assetTableBody");
-                        tableBody.empty(); // 기존 테이블 내용 초기화
-                        for (var i = 0; i < json.length; i++) {
-                            var roomSubSeq = json[i].roomSubSeq;
-                            var roomSubName = json[i].roomSubName;
-                            var row = $("<tr>");
-                            var leftCell = $("<td>");
-                            leftCell.text(roomSubName);
-                            row.append(leftCell);
-                            for (var hour = 9; hour <= 21; hour++) {
-                            	var cell1 = $("<td>").addClass("time-slot").append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='00'></button>");
-         	                    var cell2 = $("<td>").addClass("time-slot").append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='30'></button>");
-         	                    row.append(cell1);
-         	                    row.append(cell2);
-                            }
-                            tableBody.append(row);
-                        }
+        	        	 var tableBody = $("#assetTableBody");
+        	                tableBody.empty(); // 기존 테이블 내용 초기화
+
+        	                json.forEach(function(item) {
+        	                    var roomSubSeq = item.roomSubSeq;
+        	                    var roomSubName = item.roomSubName;
+
+        	                    // 방 이름과 관련된 데이터가 있는 경우, 각 방 이름별로 시간 슬롯을 생성
+        	                    var row = $("<tr></tr>");
+        	                    var roomCell = $("<td>").text(roomSubName).addClass("room-name-cell");
+        	                    row.append(roomCell);
+
+        	                    for (var hour = 9; hour <= 21; hour++) {
+        	                        var cell1 = $("<td>")
+        	                            .addClass("time-slot")
+        	                            .data("hour", hour)
+        	                            .data("minute", "00")
+        	                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='00'></button>");
+
+        	                        var cell2 = $("<td>")
+        	                            .addClass("time-slot")
+        	                            .data("hour", hour)
+        	                            .data("minute", "30")
+        	                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='30'></button>");
+
+        	                        row.append(cell1);
+        	                        row.append(cell2);
+        	                    }
+
+        	                    tableBody.append(row); // 시간 슬롯이 포함된 행을 추가
+        	                });
+                        
         	        },
         	        error: function(request, status, error) {
         	            alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
@@ -395,7 +543,6 @@
                      endDateTime: formattedEndDateTime
                  };
 
-                 console.log(reservationData);
                  $.ajax({
                      url: '<%= ctxPath%>/reserve.kedai',
                      type: 'POST',
@@ -433,7 +580,7 @@
 
 
 
-
+ 
  
  // Ajax로 자산 목록 가져오기
 	$.ajax({
@@ -483,9 +630,15 @@
 	
     // 시간을 HH:MM 형식으로 포맷팅하는 함수
     function formatTime(hour, minute) {
-        var formattedHour = ('0' + hour).slice(-2); // 두 자리로 맞추기
-        var formattedMinute = ('0' + minute).slice(-2); // 두 자리로 맞추기
+    	var formattedHour = ('0' + hour).slice(-2);
+        var formattedMinute = ('0' + minute).slice(-2);
         return formattedHour + ':' + formattedMinute;
+    }
+	    
+    function parseTime(timeString) {
+        // 시간 문자열 "YYYY-MM-DD HH:mm:ss"에서 "HH:mm" 포맷으로 변환
+        const timePart = timeString.split(' ')[1]; 
+        return timePart.substring(0, 5); 
     }
 	
 	 // 오늘 날짜 설정
@@ -518,40 +671,51 @@
 	        changeDate(days);
 	    });
 	  
- 	function showallsub(){
- 		$.ajax({
- 	        url: "<%= ctxPath %>/roomall.kedai",
- 	        type: "GET",
- 	        dataType: "json", // 반환되는 데이터 타입 (JSON 형식)
- 	        success: function(json) {
- 	            var tableBody = $("#assetTableBody");
- 	            tableBody.empty(); // 기존 테이블 내용 초기화
- 	            for (var i = 0; i < json.length; i++) {
- 	                var roomSubSeq = json[i].roomSubSeq;
- 	                var roomSubName = json[i].roomSubName;
- 	                var row = $("<tr>");
- 	                var leftCell = $("<td>");
- 	                leftCell.text(roomSubName);
- 	                row.append(leftCell);
- 	                for (var hour = 9; hour <= 21; hour++) {
- 	                    var cell1 = $("<td>").addClass("time-slot").append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='00'></button>");
- 	                    var cell2 = $("<td>").addClass("time-slot").append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='30'></button>");
- 	                    row.append(cell1);
- 	                    row.append(cell2);
- 	                }
- 	                tableBody.append(row);
- 	                
- 	            }
- 	        },
- 	        error: function(request, status, error) {
- 	            alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
- 	        }
- 	    
- 	    });
- 	
- 		
- 	}
- 	
+	    function showallsub() {
+	        $.ajax({
+	            url: "<%= ctxPath %>/roomall.kedai",
+	            type: "GET",
+	            dataType: "json", // 반환되는 데이터 타입 (JSON 형식)
+	            success: function(json) {
+	                var tableBody = $("#assetTableBody");
+	                tableBody.empty(); // 기존 테이블 내용 초기화
+
+	                json.forEach(function(item) {
+	                    var roomSubSeq = item.roomSubSeq;
+	                    var roomSubName = item.roomSubName;
+	                    var row = $("<tr>");
+
+	                    // 방 이름을 포함하는 셀을 생성하고 추가합니다
+	                    var leftCell = $("<td>").text(roomSubName).addClass("room-name-cell");
+	                    row.append(leftCell);
+
+	                    for (var hour = 9; hour <= 21; hour++) {
+	                        var cell1 = $("<td>")
+	                            .addClass("time-slot")
+	                            .data("hour", hour)
+	                            .data("minute", "00")
+	                            .data("roomname", roomSubName) // 방 이름을 설정
+	                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='00'></button>");
+
+	                        var cell2 = $("<td>")
+	                            .addClass("time-slot")
+	                            .data("hour", hour)
+	                            .data("minute", "30")
+	                            .data("roomname", roomSubName) // 방 이름을 설정
+	                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='30'></button>");
+
+	                        row.append(cell1);
+	                        row.append(cell2);
+	                    }
+
+	                    tableBody.append(row); // 각 행을 테이블에 추가
+	                });
+	            },
+	            error: function(request, status, error) {
+	                alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+	            }
+	        });
+	    }
 
 
  	
@@ -559,102 +723,98 @@
  </script>
 
  <div class="header">
-        <div class="title">
-            <h3 style="margin-top: 20%;">예약</h3>
-        </div>
+    <div class="title">
+        <h3 style="margin-top: 20%;">예약</h3>
     </div>
-    <div style="width: 85%; background-color:grey;">
-        <div class="assets">
-            <select id="assetSelect">
-                <option>전사 자산 목록</option>
-            </select>
-            <hr />
-        </div>
+</div>
+<div style="width: 85%; background-color:grey;">
+    <div class="assets">
+        <select id="assetSelect">
+            <option>전사 자산 목록</option>
+        </select>
+        <hr />
     </div>
-    <br>
-    <div class="header">
-        <div class="date-navigation">
-            <button onclick="changeDate(-1)">&lt;</button>
-            <button onclick="currentDate()" id="currentDate"></button>
-            <button onclick="changeDate(1)">&gt;</button>
-            <button onclick="setToday()" style="font-size: 10pt;">오늘</button>
-        </div>
+</div>
+<br>
+<div class="header">
+    <div class="date-navigation">
+        <button onclick="changeDate(-1)">&lt;</button>
+        <button id="currentDate"></button>
+        <button onclick="changeDate(1)">&gt;</button>
+        <button onclick="setToday()" style="font-size: 10pt;">오늘</button>
     </div>
-    <div id="datepicker" style="display:none;"></div>
-    <table>
-        <thead>
-             <tr>
-            <td>
-            <c:forEach var="hour" begin="9" end="21">
-                <th colspan="2">${hour}</th>
-            </c:forEach>
-			</td>
-        </tr>
+</div>
+<div id="datepicker" style="display:none;"></div>
+<table>
+    <thead>
         <tr>
-            <c:forEach var="hour" begin="9" end="21">
-            </c:forEach>
+            <td>
+                <c:forEach var="hour" begin="9" end="21">
+                    <th colspan="2">${hour}</th>
+                </c:forEach>
+            </td>
         </tr>
-        </thead>
-        <tbody id="assetTableBody">
-            <!-- 여기에 예약 가능한 자산 목록을 Ajax로 가져오기 -->
-        </tbody>
-    </table>
-    <hr style="margin-top: 1%; width: 85%;" />
-    
-  <!-- 모달 -->
-    <div class="modal" id="reservationModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- 모달 헤더 -->
-                <div class="modal-header">
-                    <h4 class="modal-title">예약</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
+    </thead>
+    <tbody id="assetTableBody">
+        <!-- 여기에 예약 가능한 자산 목록을 Ajax로 가져오기 -->
+    </tbody>
+</table>
+<hr style="margin-top: 1%; width: 85%;" />
 
-                <!-- 모달 바디 -->
-                <div class="modal-body">
-                    <form id="reservationForm">
-                        <div class="form-group">
-                            <label for="reservationDate">예약일</label>
-                            <div class="date-time-group">
-                                <input type="text" id="startDate" class="date-input" readonly>
-                                <div class="form-group">
-                                    <select id="startTime" class="form-control">
-								        <!-- 시간 옵션이 동적으로 추가될 것입니다 -->
-								    </select>
-								    </div> ~
-                                <input type="text" id="endDate" class="date-input" readonly>
-                                <div class="form-group">
-								    <select id="endTime" class="form-control">
-								        <!-- 시간 옵션이 동적으로 추가될 것입니다 -->
-								    </select>
-								</div>
-                            </div>
-                            <label for="allDay" class="checkbox-label">
-                                <input type="checkbox" id="allDay"> 종일
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label for="reserver">예약자</label>
-                            <input type="text" class="form-control" id="reserver" value="${sessionScope.loginuser.name} ${sessionScope.loginuser.job_name}" readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="purpose">목적</label>
-                            <input type="text" class="form-control" id="purpose">
-                        </div>
-                    </form>
-                </div>
-
-                <!-- 모달 푸터 -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="reserve_submit">확인</button>
-                    <button type="button" class="btn btn-secondary" id="reserveCancel" data-dismiss="modal">취소</button>
-                </div>
-                <input type="hidden" id="reserver_end" value="${sessionScope.loginuser.empid}" />
+<!-- 모달 -->
+<div class="modal fade" id="reservationModal" tabindex="-1" role="dialog" aria-labelledby="reservationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- 모달 헤더 -->
+            <div class="modal-header">
+                <h4 class="modal-title" id="reservationModalLabel">예약</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <!-- 모달 바디 -->
+            <div class="modal-body">
+                <form id="reservationForm">
+                    <div class="form-group">
+                        <label for="reservationDate">예약일</label>
+                        <div class="date-time-group">
+                            <input type="text" id="startDate" class="date-input" readonly>
+                            <div class="form-group">
+                                <select id="startTime" class="form-control">
+                                    <!-- 시간 옵션이 동적으로 추가될 것입니다 -->
+                                </select>
+                            </div>
+                            ~
+                            <input type="text" id="endDate" class="date-input" readonly>
+                            <div class="form-group">
+                                <select id="endTime" class="form-control">
+                                    <!-- 시간 옵션이 동적으로 추가될 것입니다 -->
+                                </select>
+                            </div>
+                        </div>
+                        <label for="allDay" class="checkbox-label">
+                            <input type="checkbox" id="allDay"> 종일
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="reserver">예약자</label>
+                        <input type="text" class="form-control" id="reserver" value="${sessionScope.loginuser.name} ${sessionScope.loginuser.job_name}" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label for="purpose">목적</label>
+                        <input type="text" class="form-control" id="purpose">
+                    </div>
+                </form>
+            </div>
+            <!-- 모달 푸터 -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="reserve_submit">확인</button>
+                <button type="button" class="btn btn-secondary" id="reserveCancel" data-dismiss="modal">취소</button>
+            </div>
+            <input type="hidden" id="reserver_end" value="${sessionScope.loginuser.empid}" />
         </div>
     </div>
-
+</div>
         
 </body>
 </html>
