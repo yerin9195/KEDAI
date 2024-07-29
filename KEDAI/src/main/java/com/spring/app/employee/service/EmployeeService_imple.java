@@ -102,6 +102,8 @@ public class EmployeeService_imple implements EmployeeService{
 		List<String> wordList = dao.wordSearchShowJSON(paraMap);
 		return wordList;
 	}
+
+	
 	
 }	
 	

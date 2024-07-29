@@ -45,7 +45,7 @@ public class EmployeeController {
 			@RequestParam(required = false) String searchType, 
 			@RequestParam(required = false) String searchWord, 
 			@RequestParam(required = false, defaultValue="0") Integer pageNumber, 
-			@RequestParam(required = false, defaultValue="3") Integer pageSize,
+			@RequestParam(required = false, defaultValue="10") Integer pageSize,
 			ModelAndView mav) {
 		Pageable pageable = PageRequest.of(pageNumber, pageSize); 
 		
@@ -151,5 +151,21 @@ public class EmployeeController {
 		return "multichat";
 	}
 	
+	@ResponseBody
+	@GetMapping("/chatting/multichatLoginEmpList.kedai")
+	public ModelAndView multichatLogin_EmpList(ModelAndView mav) {
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		return mav;
+		
+	}
 	
 }

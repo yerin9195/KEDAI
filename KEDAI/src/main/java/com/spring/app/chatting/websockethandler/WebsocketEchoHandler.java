@@ -126,6 +126,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
               
               String str_created = sdfrmt.format(list.get(i).getCreated());  // 대화내용을 나누었던 날짜를 읽어온다. 2024년 05월 09일 목요일
               
+             /* 
               System.out.println(list.get(i).getEmpid() + "\n"
                                    + list.get(i).getName() + "\n"
                                    + list.get(i).getCurrentTime() + "\n"
@@ -133,7 +134,8 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
                                    + list.get(i).getCreated() + "\n"
                                    + str_created + "\n"
                                    + list.get(i).getCurrentTime() + "\n" );
-	              
+	         
+	         */     
 	     // }// end of for-----------------------------------
 		
          //   System.out.println("=================================\n");

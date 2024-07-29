@@ -367,7 +367,26 @@ body, html {
 </script>    
 </head>
 <body>
-<div class="container-fluid">
+<div>
+	<table style="border:solid 1px black;">
+		<thead>
+			<tr>
+				<th style="width: 70px; text-align: center;">이름</th>		
+				<th style="width: 70px; text-align: center;">부서</th>	
+				<th style="width: 70px; text-align: center;">직급</th>			
+				<th style="width: 70px; text-align: center;">접속유무</th>	
+			</tr>
+		</thead>
+		<tbody>
+			<td>유선우</td>
+			<td>마케팅부</td>
+			<td>상무</td>
+			<td>접속중</td>
+		</tbody> 
+	</table>
+</div>
+
+<div class="container-fluid" style="border: 1px solid blue;">
 	<div class="message_body">
 		<div class="row">
 			<div class="col-md-10 offset-md-1">
