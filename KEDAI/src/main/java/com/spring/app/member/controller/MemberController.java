@@ -372,8 +372,8 @@ public class MemberController {
 			String root = session.getServletContext().getRealPath("/"); 
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 			
-			String path = root+"resources"+File.separator+"files"+File.separator+"employees";
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\employees
+			String path = root+"resources"+File.separator+"files";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
 			
 			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
 			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명

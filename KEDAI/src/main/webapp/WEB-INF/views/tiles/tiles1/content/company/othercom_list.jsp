@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 
@@ -37,13 +36,13 @@ div#othercom_list .artWrap {
   justify-content: space-around;
   flex-wrap: wrap;  
   gap: 20px;
-  border: solid 0px orange;
+  border: solid 1px orange;
 /*   margin: 2%; */
 }
 
 div#cover_all{
   width: 80%;
-  border: solid 0px purple;
+  border: solid 1px purple;
   margin-left : 5%;
 
 }
@@ -226,14 +225,12 @@ div#othercom_list .artWrap article .cardBody li .listTxt {
 	
 }
 
-.othercom-reg {
-background-color: #e68c0e;
-font-size: 17px;
-}
+.othercom-reg{
+	background-color:#e68c0e;
+	float:right;
+	font-size:17px;
 
-.othercom-reg a {
-color: inherit; /* 링크 텍스트 색상을 버튼 색상과 동일하게 /
-text-decoration: none; / 링크 밑줄 제거 */
+	
 }
 
 .othercom-reg:hover{
@@ -242,7 +239,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 }
  
 .reg{
-	border: 0px solid blue;
+	border: 1px solid blue;
 	width:20%;
 	border-radius:3px;
 	color:#2C4459;
@@ -253,7 +250,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 }
 
 .reg-search{
-	border:0px solid red;
+	border:1px solid red;
 	margin : 20px 10px;
 }
 
@@ -280,117 +277,21 @@ text-decoration: none; / 링크 밑줄 제거 */
 
 .othercom_title{
 	font-size: 20px;
-	border: 0px solid blue;
+	border: 1px solid blue;
 	font-weight: 700;
 	line-height: 40px;
 	margin-top: 3%;
 }
 
 </style>
-<!-- 유선우 제작 페이지 페이징 처리와 검색 기능 Board(list.jsp) 참고함  -->
-<script type="text/javascript">
-	
-	$(document).ready(function(){
-		
 
-		$("input:text[name='searchWord']").bind("keydown", function(e){
-			if(e.keyCode == 13){
-				goSearch();
-			}
-		});
-		
-		// 검색시 검색조건 및 검색어 값 유지시키기
-		if(${not empty requestScope.paraMap}){// paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다.
-			$("select[name='searchType']").val("${requestScope.paraMap.searchType}");		
-			$("input[name='searchWord']").val("${requestScope.paraMap.searchWord}");
-		}
-		
-		// 검색어 입력 시 자동글 완성하기 
-		$("div#displayList").hide();
-		
-		$("input[name='searchWord']").keydown(function(){
-			const wordLength = $(this).val().trim().length;
-			
-			if(wordLength == 0){
-				$("div#displayList").hide();
-			}
-			else{
-				if($("select[name='searchType']").val() == "partner_name" ||
-				   $("select[name='searchType']").val() == "partner_type" ||
-				   $("select[name='searchType']").val() == "part_emp_name"){
-					
-					$.ajax({
-						url: "<%=ctxPath%>/company/wordSearchShowJSON.kedai",
-						type: "get",
-						data:{"searchType":$("select[name='searchType']").val(),
-							  "searchWord":$("input[name='searchWord']").val()},
-					    dataType:"json",
-					    success: function(json){
-					    	console.log(JSON.stringify(json));
-					    	
-					    	if(json.length > 0){
-					    		let v_html = ``;
-					    		
-					    		$.each(json, function(index, item){
-					    			const word = item.word;
-					    			const idx = word. toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
-					    			const len = $("input[name='searchWord']").val().length;
-					   				const result = word.substring(0, idx)+"<span style='color: #2c4459; font-weight: bold;'>"+word.substring(idx, idx+len)+"</span>"+word.substring(idx+len);
-					    		
-					   				v_html += `<span style='cursor: pointer;' class='result'>\${result}</span><br>`;
-					    		}); // end of $.each(json, function(index, item){}-------------------------------------
-					    		
-					    		// 검색어 input 태그의 width 값 알아오기
-								const input_width = $("input[name='searchWord']").css("width");
-					    		
-								// 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
-								$("div#displayList").css({"width":input_width});
-								
-								$("div#displayList").html(v_html);
-								$("div#displayList").show();
-					    	}
-					    },
-					    error: function(request, status, error){
-					    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-					    }
-					});
-				}
-			}
-		}); // $("input[name='searchWord']").keydown(function(){}
-	
-		$(document).on("click", "span.result", function(e){
-			const word = $(e.target).text();
-			
-			$("input[name='searchWord']").val(word);// 텍스트박스에 검색된 결과의 문자열을 입력
-			$("div#displayList").hide();
-			goSearch();
-		})
-		
-	}); // end of $(document).ready(function(){}-----------------------------\
-	
-			
-	function goSearch(){
-		
-		const frm = document.employee_search_frm;
-		// console.log(frm);
-		frm.method = "get";
-		frm.action = "<%= ctxPath%>/othercom_list.kedai";
-		frm.submit();
-	}// end of function goSearch(){}---------------------
-	
-	/* 여기 까지 검색기능  */
-/////////////////////////////////////////////////////////////////////////////	
-	
-	
-	
-	
+<script type="text/javascript">
+
 	$(function(){
-	  $('.cardHead button').click(function(e){
-		 //  var partner_no = $(this).('article').attr('partner_no');
-		 var partner_no = $(e.target).closest('.cardHead').find('input[name="partner_no"]').val();
-		 // console.log(partner_no)
+	  $('.cardHead button').click(function(){
+		  var partner_no = $(this).closest('article').attr('partner_no');
 		  
-		  
+		  /* console.log(partner_no) */
 	    // 클릭한 거래처 정보 상세보기
 	    $.ajax({
 	      url: "<%= ctxPath%>/partnerPopupClick.kedai?partner_no=" + partner_no,
@@ -401,12 +302,11 @@ text-decoration: none; / 링크 밑줄 제거 */
 	      },
  */	      dataType: "json",
 	      success: function(json){
-	    	// console.log(JSON.stringify(json));
-	        // 서버에서 거래처이름으로 정보 얻어오기\images\partne
-	        if(json.partner_no != null){
+	        // 서버에서 거래처이름으로 정보 얻어오기
+	        if(json.partner_name != null){
 	          $("#pop_partnerName").html(json.partner_name);
 	          $("#pop_partnerNo").html(json.partner_no);
-	          $("#pop_partnerImg").attr("src", "<%= ctxPath%>/resources/files/company/" + json.imgfilename);
+	          $("#pop_partnerImg").attr("src", "./resources/files/" + json.imgfilename);// http://localhost:9099/KEDAI/resources/images/partner/%EB%84%A4%EB%AA%A8%EB%84%A4%EB%AA%A8.png
 	          $("#pop_partnerAddress").html(json.partner_address + " " + json.partner_detailaddress + " " + json.partner_extraaddress);
 	          $("#pop_partnerUrl").html(json.partner_url);
 	          $("#pop_partEmpTel").html(json.part_emp_tel);
@@ -414,7 +314,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 	          $("#pop_partEmpName").html(json.part_emp_name);
 	          $("#pop_partEmpRank").html(json.part_emp_rank);
 	      
-	         
+	          
 	          /*
 				private String partner_type;
 				private String partner_url; 
@@ -444,9 +344,9 @@ text-decoration: none; / 링크 밑줄 제거 */
 	 
 	  
 	  
-	  	$('.popupHead button').click(function(){
-	    	$('.popupWrap').css({display: 'none'});
-	  	});
+	  $('.popupHead button').click(function(){
+	    $('.popupWrap').css({display: 'none'});
+	  });
 	});
 	/* 카드 팝업 열고 닫기 끝 */
 
@@ -491,10 +391,9 @@ text-decoration: none; / 링크 밑줄 제거 */
 		}
 	
 	}; // end of function delPopup(){}------------------------------------------------------
-	
 
-	
-	
+
+
 	
 	
 </script>
@@ -504,82 +403,60 @@ text-decoration: none; / 링크 밑줄 제거 */
 <div class="othercom_title">
 		거래처 목록
 </div>
-<div class="reg-search row">
+<div class="reg-search">
 	
-    <form name="employee_search_frm" style="position:relative;" class="col-10">
+    <c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
+        <div class="reg"><a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처등록하기</a></div>
+    </c:if> 
+	
+    <form name="employee_search_frm" style="display:flex;">
 		<select name ="searchType" style="margin-right:10px;">
 			<option value="">검색대상</option>
-			<option value="partner_name">거래처명</option>
-			<option value="partner_type">업종</option>
-			<option value="part_emp_name">담당자명</option>
+			<option value="department">부서</option>
+			<option value="position">직위</option>
+			<option value="name">이름</option>
 		</select>
-		<input type="text" name="searchWord" style="margin-right:10px"/>
-		<input type="text" style="display: none;"/> 
-		<button type="button" onclick="goSearch()" style="border:1px solid #2C4459;">검색</button>
-	
-		<div id="displayList" style="position: absolute; left: 0; border: solid 0px gray; border-top: 0px; height: 100px; margin-left: 8.1%; background: #fff; overflow: hidden; overflow-y: scroll;">
-		
-		</div>
+		<input type="search" name="searchWord;" style="margin-right:10px"/>
+		<input type="button" name="searchWord;" onclick="goSearch()" value="검색"/>
 	</form>
-	
-	<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-    	<div class="col-2 d-md-flex justify-content-md-end pl-0 pr-0">
-    		<a href="<%= ctxPath%>/othercom_register.kedai" class="othercom-reg">거래처  등록하기</a>
-    	</div>
-    	
-     	<!-- <button type="button" class="othercom-reg" onclick="goToRegisterPage()">거래처 등록하기</button> -->
-    </c:if>
 </div>  
    
 <div id="othercom_list" class="othercom_list">
   <div class="artWrap">
-  	<c:if test="${not empty requestScope.partnerList}">
-	    <c:forEach var="partvo" items="${requestScope.partnerList}">
-	      	<article>
-	      	<fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" />
-	        <fmt:parseNumber var="sizePerPage" value="${requestScope.sizePerPage}" /> 
-	        <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%>
-	      	
-	        <div class="cardHead">
-	          <div class="h5"><span id="asdasd">${partvo.partner_name}</span>&nbsp;&nbsp;&nbsp;<span class="h6">업종:${partvo.partner_type}</span></div>
-	          <button class="detailbtn"><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt="" id="detailbtn"></button>
-	          <input type="hidden" name="partner_no" value="${partvo.partner_no}" />
-	        </div>
-	        <ul class="cardBody">
-	          <li>
-	            <div class="listImg">
-	              <img src="<%= ctxPath%>/resources/images/common/team.svg" alt="">
-	            </div>
-	            <div class="listTxt">${partvo.part_emp_dept}</div>
-	          </li>
-	          <li>
-	            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
-	            <div class="listTxt">
-	              <span>${partvo.part_emp_name}</span>
-	              <span>${partvo.part_emp_rank}</span>
-	            </div>
-	          </li>
-	          <li>
-	            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
-	            <div class="listTxt">${partvo.part_emp_tel}</div>
-	          </li>
-	          <li>
-	            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
-	            <div class="listTxt">${partvo.partner_url}</div>
-	          </li>
-	        </ul>
-	      </article>
-	    </c:forEach>
-    </c:if>
-    <c:if test="${empty requestScope.partnerList}">
-    	<div>거래처가 존재하지 않습니다.</div>
-    </c:if>
+    <c:forEach var="partvo" items="${requestScope.partnervoList}">
+      <article partner_no="${partvo.partner_no}">
+        <div class="cardHead">
+          <div class="h5"><span id="asdasd">${partvo.partner_name}</span>&nbsp;&nbsp;&nbsp;<span class="h6">업종:${partvo.partner_type}</span></div>
+          <button class="detailbtn"><img src="<%= ctxPath%>/resources/images/common/chevron-right.svg" alt="" id="detailbtn"></button>
+        </div>
+        <ul class="cardBody">
+          <li>
+            <div class="listImg">
+              <img src="<%= ctxPath%>/resources/images/common/team.svg" alt="">
+            </div>
+            <div class="listTxt">${partvo.part_emp_dept}</div>
+          </li>
+          <li>
+            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/user.svg" alt=""></div>
+            <div class="listTxt">
+              <span>${partvo.part_emp_name}</span>
+              <span>${partvo.part_emp_rank}</span>
+            </div>
+          </li>
+          <li>
+            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/phone.svg" alt=""></div>
+            <div class="listTxt">${partvo.part_emp_tel}</div>
+          </li>
+          <li>
+            <div class="listImg"><img src="<%= ctxPath%>/resources/images/common/email.svg" alt=""></div>
+            <div class="listTxt">${partvo.partner_url}</div>
+          </li>
+        </ul>
+      </article>
+    </c:forEach>
   </div>
- 
 </div>
- 	<div align="center" style="border: solid 0px gray; width: 50%; margin: 2% auto;  height: 100px;">
-		${requestScope.pageBar}
-	</div>
+
 
 <!-- popup area -->
 <div class="popupWrap">
@@ -590,8 +467,8 @@ text-decoration: none; / 링크 밑줄 제거 */
     </div>
     <div class="popupBody">
       <div class="forAlign">
-        <div class="popupImg" style="width:200px; border: 0px solid red; height:200px; overflow: hidden;">
-          <img id="pop_partnerImg" src="" alt="" style="object-fit: cover; width:100%; height:100%;">
+        <div class="popupImg" style="width:200px; border: 1px solid red; height:200px; overflow: hidden;">
+          <img id="pop_partnerImg" src="" alt="" style="object-fit: cover;">
 			<!-- 사진들어오는곳  -->
         </div>
         <ul class="popupList">
@@ -599,13 +476,13 @@ text-decoration: none; / 링크 밑줄 제거 */
             <div class="listImg">
               <img src="<%= ctxPath%>/resources/images/common/business_num.svg" alt="">
             </div>
-            <div id="pop_partnerNo" class="listTxt"></div>
+            <div id="pop_partnerNo" class="listTxt">거래처 사업자 등록번호</div>
           </li>
           <li>
             <div class="listImg">
               <img src="<%= ctxPath%>/resources/images/common/comp.svg" alt="">
             </div>
-            <div id="pop_partnerAddress" class="listTxt"><a href="https://www.eland.co.kr/"></a></div>
+            <div id="pop_partnerAddress" class="listTxt"></div>
           </li>
           <li>
             <div class="listImg">
@@ -642,12 +519,3 @@ text-decoration: none; / 링크 밑줄 제거 */
   </div>
 </div>
 </div>
-
-<%-- 사용자가 "검색된결과목록보기" 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다. --%>
-<form name="goViewFrm">
-	<input type="hidden" name="board_seq" />
-	<input type="hidden" name="goBackURL" />
-	<input type="hidden" name="searchType" />
-	<input type="hidden" name="searchWord" />
-</form> 
-<%-- content end --%>

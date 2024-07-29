@@ -16,7 +16,7 @@
 		select partner_no, partner_type, partner_name, partner_url, partner_postcode, partner_address, partner_detailaddress, partner_extraaddress,
 		       originalfilename, part_emp_name, part_emp_tel, part_emp_email, part_emp_dept, part_emp_rank
 		from tbl_business_part
-        where partner_no = #{partner_no}
+        where partner_name = #{partner_name}
 	</select>
 	
 	
@@ -95,97 +95,6 @@
 		where partner_no = #{partner_no}
 	</delete>
 
-	<!-- 총 페이지 건수 (TotalCount) 구하기 -->
-	<select id="getTotalCount" parameterType="HashMap" resultType="int">
-		select count(*)
-		from tbl_business_part
-		<choose>
-			<when test='searchType == "partner_name" and searchWord != ""'>
-			where lower(partner_name) like '%' ||lower(#{searchWord})|| '%'
-			</when>
-			<when test='searchType == "partner_type" and searchWord != ""'>
-			where lower(partner_type) like '%' ||lower(#{searchWord})|| '%'
-			</when>
-			<when test='searchType == "part_emp_name" and searchWord != ""'>
-			where lower(part_emp_name) like '%' ||lower(#{searchWord})|| '%'
-			</when>
-			<otherwise></otherwise>
-		</choose>
-	</select>
-	
-	
-	
-	<!-- // 글목록 가져오기(페이징처리를 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것) -->
-	<select id="PartnerListSearch_withPaging" parameterType="HashMap" resultType="PartnerVO">
-		SELECT partner_no, partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
-		FROM
-		(
-		  SELECT rownum AS rno ,partner_no
-		       , partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
-		  FROM 
-		  (
-		      select partner_no, partner_name, partner_type, partner_url, part_emp_name, part_emp_dept, part_emp_rank, part_emp_tel
-		      from tbl_business_part 
-		      
-		      <choose>
-				    <!-- 검색조건과 검색어가 존재하는 경우 -->
-				    <when test='searchType == "partner_name" and searchWord != ""'>
-				        where lower(partner_name) like '%'||lower(#{searchWord})||'%'
-				    </when>
-				    <when test='searchType == "partner_type" and searchWord != ""'>
-				        where lower(partner_type) like '%'||lower(#{searchWord})||'%'
-				    </when>
-				    <when test='searchType == "part_emp_name" and searchWord != ""'>
-				       where lower(part_emp_name) like '%'||lower(#{searchWord})||'%'
-				    </when>
-				    <otherwise></otherwise>
-				</choose>
-		      order by partner_name asc
-		  ) V
-		) T
-		WHERE RNO between #{startRno} and #{endRno}
-	</select>
-	<!-- 
-		order siblings by 각 계층별로 정렬을 하는 것이다. 
-		계층구조는 그대로 유지하면서 동일 부모를 가진 자식행들 끼리의 정렬 기준을 주는 것이 order siblings by 이다.
-	-->
-	
-	<!-- // 검색어 입력 시 자동글 완성하기  -->
-	<select id="wordSearchShowJSON" parameterType="HashMap" resultType="String">
-		<choose>
-			<when test='searchType == "partner_name"'>
-				select partner_name
-			</when>
-			<when test='searchType == "partner_type"'>
-				select partner_type
-			</when>
-			<when test='searchType == "part_emp_name"'>
-				select part_emp_name
-			</when>
-		</choose>
-		from tbl_business_part
-		where 1 = 1
-		<choose>
-			<when test='searchType == "partner_name" and searchWord != ""'>
-				and lower(partner_name) like '%' ||lower(#{searchWord})|| '%'
-			</when>
-			<when test='searchType == "partner_type" and searchWord != ""'>
-				and lower(partner_type) like '%' ||lower(#{searchWord})|| '%'
-			</when>
-			<when test='searchType == "part_emp_name" and searchWord != ""'>
-				and lower(part_emp_name) like '%' ||lower(#{searchWord})|| '%'
-			</when>
-		</choose>
-	</select>
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

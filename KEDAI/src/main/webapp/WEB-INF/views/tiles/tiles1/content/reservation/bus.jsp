@@ -571,7 +571,7 @@ $(document).ready(function(){
             $.each(json,function(index,item){
             	
                html += `<tr>`;
-               html += `<td rowspan='2' width="10%;"><img src='<%=ctxPath%>/resources/images/bus/bus\${no}.png' style="width:100%;"/></td>`;
+               html += `<td rowspan='2' width="10%;"><img src='<%=ctxPath%>/resources/images/common/bus/bus\${no}.png' style="width:100%;"/></td>`;
                html += `<td width="90%;" id="showMap"  onclick="showStation(event, '\${item.pf_station_id}', '\${bus_no}')">\${item.station_name}<span style="font-size: 10pt;">(</span><span style="font-size: 10pt;">\${item.pf_station_id}</span><span style="font-size: 10pt;">)</span></td>`;
 //               html += `<td width="90%;" id="showMap" onclick="showStation(\${item.pf_station_id})">\${item.station_name}<span style="font-size: 10pt;">(</span><span style="font-size: 10pt;">\${item.pf_station_id}</span><span style="font-size: 10pt;">)</span></td>`;
                html += `</tr>`;

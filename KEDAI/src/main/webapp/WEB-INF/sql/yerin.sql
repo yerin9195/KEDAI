@@ -576,29 +576,3 @@ select count(*)
 from tbl_board;
 
 
-desc tbl_community;
-desc tbl_comment;
-
-insert into tbl_comment(comment_seq, fk_community_seq, fk_empid, name, content, registerday, status)
-values(comment_seq.nextval, fk_community_seq, fk_empid, name, content, default, default)
-
-update tbl_community set comment_count = comment_count + 1
-where community_seq = #{fk_community_seq}
-
-desc tbl_employees;
-
-update tbl_employees set point = point + to_number(#{point}) 
-where empid = #{empid}
-
-select *
-from tbl_employees
-where nickname = 'Liam';
-
-select comment_seq, fk_empid, C.name, nickname, content, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday
-from tbl_comment C
-LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
-where C.status = 1 and fk_community_seq = 17
-order by comment_seq desc;
-
-
-

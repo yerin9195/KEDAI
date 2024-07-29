@@ -176,7 +176,7 @@
 		   		<input type="text" style="display: none;"/> 
 		   		<button type="button" class="search_btn" onclick="goSearch()">검색</button>
 		   		
-		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 25.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
+		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 22.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
 				</div>
 			</form>
 			

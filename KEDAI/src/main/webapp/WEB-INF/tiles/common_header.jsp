@@ -11,17 +11,10 @@
 	InetAddress inet = InetAddress.getLocalHost();
  	String serverIP = inet.getHostAddress();
  	
- 	// System.out.println("serverIP : " + serverIP);
- 	// serverIP : 192.168.0.210
- 	
  	// 서버 포트번호 알아오기
  	int portnumber = request.getServerPort();
-	// System.out.println("portnumber : " + portnumber);
- 	// portnumber : 9099
  	
  	String serverName = "http://"+serverIP+":"+portnumber;
- 	// System.out.println("serverName : " + serverName);
- 	// serverName : http://192.168.0.210:9099
 %>
 <style type="text/css">
 	.form-control:active, 
