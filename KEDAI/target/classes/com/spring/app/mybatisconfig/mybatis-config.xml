@@ -18,6 +18,8 @@
 		<typeAlias type="com.spring.app.domain.CommunityVO" alias="CommunityVO" />
 		<typeAlias type="com.spring.app.domain.CommentVO" alias="CommentVO" />
 		<typeAlias type="com.spring.app.domain.DocVO" alias="DocVO" />
+		<typeAlias type="com.spring.app.domain.MinutesVO" alias="MinutesVO" />
+		<typeAlias type="com.spring.app.domain.ApprovalVO" alias="ApprovalVO" /> 
 	</typeAliases>	
 	
 </configuration>

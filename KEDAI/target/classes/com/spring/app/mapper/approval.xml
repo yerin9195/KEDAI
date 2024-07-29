@@ -312,7 +312,7 @@
 	</select>
 
 	<select id="getOneDocCommon" parameterType="HashMap" resultType="DocVO">
-		SELECT doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, to_char(created_date, 'yyyy-mm-dd'), doc_comment, doc_status, doctype_name, name, dept_name
+		SELECT doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, to_char(created_date, 'yyyy-mm-dd') as created_date, doc_comment, doc_status, doctype_name, name, dept_name
     			, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
 		FROM tbl_doc D
 		JOIN tbl_doctype T
@@ -333,11 +333,28 @@
 		WHERE D.doc_no = #{doc_no}
 	</select>
  	
- 	
- 	<!-- 하나의 회의록 불러오기  -->
  	<select id="getOneMinutes" parameterType="HashMap" resultType="MinutesVO">
- 		select minutes_no, fk_doc_no, to_char(meeting_date, 'yyyy-mm-dd'), attendees, host_dept
+ 		select *
 		from tbl_minutes
 		where fk_doc_no = #{doc_no}
  	</select>
+ 	
+ 	<select id="getApprovalList" parameterType="HashMap" resultType="ApprovalVO">
+ 		select *
+		from tbl_approval
+		where fk_doc_no = #{doc_no}
+ 	</select>
+ 	
+ 	<select id="getDocfiletList" parameterType="HashMap" resultType="DocfileVO">
+ 		select *
+		from tbl_doc_file
+		where fk_doc_no = #{doc_no}
+ 	</select>
+ 	
+ 	<select id="getDocfileOne" parameterType="String" resultType="DocfileVO">
+ 		select *
+		from tbl_doc_file
+		where doc_file_no = #{fileNo}
+ 	</select>
+ 	
 </mapper>

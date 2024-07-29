@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
+import com.spring.app.domain.DocfileVO;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.MinutesVO;
 
@@ -15,8 +16,6 @@ public interface ApprovalService {
 /*
 	// 결재 라인에서 찾을 모든 사원 목록 보기
 	List<Map<String, String>> allEmployeeList(String login_empid);
-	/*
-	 * // 각 부서별 당 인원수 가져오기 List<Map<String, String>> numByDept();
 	 */
 
 	// 현재 근무중인 사원이 있는 모든 부서 가져오기
@@ -49,11 +48,14 @@ public interface ApprovalService {
 	// 나의 기안 문서에서 총 페이지 수 가져오기
 	int getTotalMyDocCount(Map<String, String> paraMap);
 
-	// 나의 기안 문서에서 문서 한 개 보기(공통 부분 가져오기)
-	DocVO getOneDocCommon(Map<String, String> paraMap);
+	// 가져오기?
+	DocVO getOneDoc(Map<String, String> paraMap);
 
-	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
-	MinutesVO getOneMinutes(Map<String, String> paraMap);
+	// 파일 목록 가져오기
+	List<DocfileVO> getDocfiletList(String doc_no);
+
+	// 파일 다운로드
+	DocfileVO getDocfileOne(String fileNo);
 
 
 

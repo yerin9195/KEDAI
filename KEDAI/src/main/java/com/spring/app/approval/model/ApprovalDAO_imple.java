@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.spring.app.domain.ApprovalVO;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
+import com.spring.app.domain.DocfileVO;
 import com.spring.app.domain.MinutesVO;
 
 @Repository 
@@ -137,21 +139,48 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return getOneDocCommon;
 	}
 
-	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
 	@Override
 	public MinutesVO getOneMinutes(Map<String, String> paraMap) {
 		MinutesVO getOneMinutes = sqlsession.selectOne("approval.getOneMinutes", paraMap);
 		return getOneMinutes;
 	}
 
+	// 결재라인 정보 가져오기
+	@Override
+	public List<ApprovalVO> getApprovalList(Map<String, String> paraMap) {
+		List<ApprovalVO> getApprovalList = sqlsession.selectList("approval.getApprovalList", paraMap);
+		return getApprovalList;
+	}
+
+	// 파일 목록 가져오기
+	@Override
+	public List<DocfileVO> getDocfiletList(String doc_no) {
+		List<DocfileVO> getDocfiletList = sqlsession.selectList("approval.getDocfiletList", doc_no);
+		return getDocfiletList;
+	}
+
+	// 파일 다운로드
+	@Override
+	public DocfileVO getDocfileOne(String fileNo) {
+		DocfileVO getDocfileOne = sqlsession.selectOne("approval.getDocfileOne", fileNo);
+		return getDocfileOne;
+	}
 
 
+	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
+/*	@Override
+	public MinutesVO getOneMinutes(Map<String, String> paraMap) {
+		MinutesVO getOneMinutes = sqlsession.selectOne("approval.getOneMinutes", paraMap);
+		return getOneMinutes;
+	}*/
 
-	// 각 부서별 당 인원수 가져오기
-	/*
-	 * @Override public List<Map<String, String>> numByDept() { List<Map<String,
-	 * String>> numByDept = sqlsession.selectList("approval.numByDept"); return
-	 * null; }
-	 */
+	// 파일 종류 받아오기
+/*	@Override
+	public List<DocfileVO> getDocfile(Map<String, String> paraMap) {
+		List<DocfileVO> docfileVoList = sqlsession.selectOne("approval.getDocfile", paraMap);
+		return docfileVoList;
+	}
+*/
+
 
 }

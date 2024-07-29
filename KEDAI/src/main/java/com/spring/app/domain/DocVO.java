@@ -1,5 +1,6 @@
 package com.spring.app.domain;
 
+import java.util.List;
 
 public class DocVO {
 	private String doc_no;   			// 기안문서번호(EX. KD-100-2407)
@@ -21,8 +22,13 @@ public class DocVO {
 	///////////////////////////////////////////tbl_member////////////////////////////////
 	private String name; // 기안자 이름
 	
-	private String dept_name; //부서이름
+	private String dept_name; //부서이름	
 	
+	
+	private MinutesVO minutesvo;
+	private List<ApprovalVO> approvalvoList;
+	private List<DocfileVO> docfilevoList;
+
 	
 	////////////////////////////////// 
 	///////////////////////////////////////////tbl_doc_file////////////////////////////////
@@ -143,7 +149,31 @@ public class DocVO {
 	public void setDept_name(String dept_name) {
 		this.dept_name = dept_name;
 	}
-	
+
+	public MinutesVO getMinutesvo() {
+		return minutesvo;
+	}
+
+	public void setMinutesvo(MinutesVO minutesvo) {
+		this.minutesvo = minutesvo;
+	}
+
+	public List<DocfileVO> getDocfilevoList() {
+		return docfilevoList;
+	}
+
+	public void setDocfilevoList(List<DocfileVO> docfilevoList) {
+		this.docfilevoList = docfilevoList;
+	}
+
+	public List<ApprovalVO> getApprovalvoList() {
+		return approvalvoList;
+	}
+
+	public void setApprovalvoList(List<ApprovalVO> approvalvoList) {
+		this.approvalvoList = approvalvoList;
+	}
+
 	
 	
 	

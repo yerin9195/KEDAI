@@ -1,6 +1,8 @@
 package com.spring.app.approval.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -32,8 +35,8 @@ import com.spring.app.common.FileManager;
 import com.spring.app.common.MyUtil;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
+import com.spring.app.domain.DocfileVO;
 import com.spring.app.domain.MemberVO;
-import com.spring.app.domain.MinutesVO;
 
 
 @Controller 
@@ -55,7 +58,7 @@ public class ApprovalController {
 		String loginEmpId = loginuser.getEmpid();
 		
 		List<Map<String, String>> myapprovalinfo = service.myapprovalinfo(loginEmpId);
-		System.out.println("확인용 myapprovalinfo" + myapprovalinfo);
+	//	System.out.println("확인용 myapprovalinfo" + myapprovalinfo);
 		
 		List<Map<String, String>> nowApproval = new ArrayList<>(); // 내가 지금 승인할 문서
 		List<Map<String, String>> laterApproval = new ArrayList<>(); // 내가 나중에 승인할 문서
@@ -72,14 +75,14 @@ public class ApprovalController {
 			}
 	    }
 		
-		System.out.println("확인용 nowApproval" + nowApproval);
+	//	System.out.println("확인용 nowApproval" + nowApproval);
 		
 		List<DocVO> myDocList = null;
 		
 		myDocList = service.docListNoSearch(loginEmpId);
 		System.out.println("확인용 myDocList" + myDocList);
 
-		System.out.println("확인용 laterApproval" + laterApproval);
+//		System.out.println("확인용 laterApproval" + laterApproval);
 		
 		
 		mav.addObject("nowApproval", nowApproval);
@@ -749,6 +752,7 @@ public class ApprovalController {
 			}
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("doc_no", doc_no);
+			paraMap.put("fk_doctype_code", fk_doctype_code);
 			
 			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.  시작  // 
 			//paraMap.put("searchType", searchType);
@@ -766,23 +770,11 @@ public class ApprovalController {
           //     실행하지 않도록 해주어야 한다. !!! === //
 			
 			// 위의 글목록보기 #69. 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
-			DocVO getOneDocCommon = null;	
-			getOneDocCommon = service.getOneDocCommon(paraMap);
-			// 글 1개를 조회를 해 오는 것			
-			mav.addObject("getOneDocCommon", getOneDocCommon);
 			
-			// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
-			if("100".equals(fk_doctype_code)) {
-				
-			}
-			else if("101".equals(fk_doctype_code)) {
-				MinutesVO minutesvo = service.getOneMinutes(paraMap);
-				mav.addObject("minutesvo", minutesvo);
-			}
-			else if("102".equals(fk_doctype_code)) {
-				
-			}
+			DocVO docvo = new DocVO();
+			docvo = service.getOneDoc(paraMap);
 			
+			mav.addObject("docvo",docvo);
 			mav.setViewName("tiles1/approval/viewMyOneDoc.tiles");
 			
 			
@@ -790,6 +782,120 @@ public class ApprovalController {
 			mav.setViewName("redirect:/myDocList.kedai");
 		}
 		return mav;
+	}
+	
+	// 하나의 게시글에 있는 첨부파일 목록 불러오기
+	@ResponseBody
+	@GetMapping(value="/approval/docfileListShow.kedai" , produces="text/plain;charset=UTF-8")
+	public String docfileListShow(HttpServletRequest request) {
+		
+		String doc_no = request.getParameter("doc_no");
+		
+		List<DocfileVO> docfileList = service.getDocfiletList(doc_no);
+		
+		JSONArray jsonArr = new JSONArray(); // []
+		
+		for(DocfileVO dfvo : docfileList) {
+			JSONObject jsonObj = new JSONObject(); // {}
+			jsonObj.put("file_no", dfvo.getDoc_file_no()); //{"seq":1}
+			jsonObj.put("filename", dfvo.getDoc_filename());	// {"seq":1, "fk_userid":"hkim"}
+			
+			jsonObj.put("filesize", dfvo.getDoc_filesize());// {"seq":1, "fk_userid":"hkim", "name":"ㅎㅎ"}
+			jsonObj.put("org_filename", dfvo.getDoc_org_filename());// {"seq":1, "fk_userid":"hkim", "name":"ㅎㅎ", "content":"첫번째 댓글입니다. ㅎㅎㅎ"}
+			jsonObj.put("doc_no", dfvo.getFk_doc_no());// {"seq":1, "fk_userid":"hkim", "name":"ㅎㅎ", "content":"첫번째 댓글입니다. ㅎㅎㅎ", "regdate":"2024-06-18 15:36:37"}
+			
+			jsonArr.put(jsonObj);//[{"seq":1, "fk_userid":"hkim", "name":"ㅎㅎ", "content":"첫번째 댓글입니다. ㅎㅎㅎ", "regdate":"2024-06-18 15:36:37"}]
+		}// end of for----------------
+	
+		
+	
+		return jsonArr.toString();//[{"seq":1, "fk_userid":"hkim", "name":"ㅎㅎ", "content":"첫번째 댓글입니다. ㅎㅎㅎ", "regdate":"2024-06-18 15:36:37"}],
+		  //						{"seq":2, "fk_userid":"hkim", "name":"ㅎㅎ", "content":"두번째로 쓰는 댓글입니다", "regdate":"2024-06-18 16:05:50"}]
+								// 또는
+								// "[]" 왜? new 해 왔기 때문에
+	}
+	
+	
+	@GetMapping("/approval/downloadDocfile.kedai")
+	public void requestLogin_download(HttpServletRequest request, HttpServletResponse response) {
+		
+		 String fileNo = request.getParameter("seq");
+		 
+		 Map<String, String> paraMap = new HashMap<>();
+		 paraMap.put("fileNo", fileNo);
+		
+		//JSPServletBegin/src/main/java/chap02_package/GetMethod_01.java 참고
+	    // *** 웹 브라우저에 출력하기 시작 ***//
+	    response.setContentType("text/html; charset=UTF-8");
+	    
+	    PrintWriter out = null;	// out은 웹 브라우저에 기술하는 대상체라고 생각하자.
+	    
+	 // HttpServletResponse response 객체는 전송되어져온 데이터를 조작해서 결과물을 나타내고자 할때 쓰인다
+	    try {
+	    	
+	    	Integer.parseInt(fileNo);
+	    	DocfileVO docfilevo = service.getDocfileOne(fileNo);
+	    	
+	    	if(docfilevo == null) {
+	    		out = response.getWriter(); // out은 웹 브라우저에 기술하는 대상체라고 생각하자.
+	    		
+	    		out.println("<script type='text/javascript'>alert('존재하지 않는 글번호 이거나 첨부파일이 없으므로 파일다운로드가 불가합니다.'); history.back();</script>");
+	            return;
+	    	}
+	    	else {
+	    		// 정상적으로 다운로드를 할 경우 
+	    		String fileName = docfilevo.getDoc_filename();
+	    		//202406280946562702764281800.jpg 이것이 바로 WAS(톰캣) 디스크에 저장된 파일명이다.
+	    		
+	    		String orgFilename = docfilevo.getDoc_org_filename();
+	    		//쉐보레전면.jpg 다운로드시 보여줄 파일명
+	    		
+	
+	    		// 첨부파일이 저장되어 있는 WAS(톰캣) 디스크 경로명을 알아와야만 다운로드를 해줄 수 있다.
+	             // 이 경로는 우리가 파일첨부를 위해서 /addEnd.action 에서 설정해두었던 경로와 똑같아야 한다. 
+	    		
+				// WAS 의 webapp 의 절대경로를 알아와야 한다. 
+		         HttpSession session = request.getSession(); 
+		         String root = session.getServletContext().getRealPath("/"); 
+		         
+		         //System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root); 
+		         //C:\NCS\workspce_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
+				
+		         String path = root + "resources"+File.separator + "files";
+		         /* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+			             운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+			             운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+			     */
+		         
+		      // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+		         System.out.println("~~~ 확인용 path 첨부파일 => " + path);
+		         //  ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+		         //  C:\NCS\workspce_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+		           
+		           
+		      // ***** file 다운로드 하기 ***** //
+		         boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도 
+		         flag = fileManager.doFileDownload(fileName, orgFilename, path, response); 
+		            // file 다운로드 성공시 flag 는 true,
+		            // file 다운로드 실패시 flag 는 false 를 가진다.
+		            
+		         if(!flag) {
+		               // 다운로드가 실패한 경우 메시지를 띄워준다. 
+		        	 out = response.getWriter();
+		                // out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+		                
+		             out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+		         }
+	    	}
+		} catch (NumberFormatException | IOException e) {
+			try {
+				out = response.getWriter();// out은 웹 브라우저에 기술하는 대상체라고 생각하자.
+				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+			
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			} 
+		}
 	}
 	
 	

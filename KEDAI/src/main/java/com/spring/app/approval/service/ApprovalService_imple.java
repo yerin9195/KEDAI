@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.app.approval.model.ApprovalDAO;
+import com.spring.app.domain.ApprovalVO;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
+import com.spring.app.domain.DocfileVO;
 import com.spring.app.domain.MinutesVO;
 
 @Service
@@ -142,33 +144,52 @@ public class ApprovalService_imple implements ApprovalService {
 		int n = dao.getTotalMyDocCount(paraMap);
 		return n;
 	}
-	
-	// 나의 기안 문서에서 문서 한 개 보기
+
+	// 가져오기?
 	@Override
-	public DocVO getOneDocCommon(Map<String, String> paraMap) {
-		DocVO getViewOneMyDoc = dao.getOneDocCommon(paraMap);
-		return getViewOneMyDoc;
-	}
-
-	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
-	@Override
-	public MinutesVO getOneMinutes(Map<String, String> paraMap) {
-		MinutesVO getOneMinutes = dao.getOneMinutes(paraMap);
-		return getOneMinutes;
-	}
-
-
-
-
-
+	public DocVO getOneDoc(Map<String, String> paraMap) {
+		DocVO docvo = dao.getOneDocCommon(paraMap);
 		
+		if(docvo != null) {
+			List<ApprovalVO> approvalvoList = dao.getApprovalList(paraMap);	
+			if(approvalvoList != null) {
+				docvo.setApprovalvoList(approvalvoList);
+			}
+			
+			if(("fk_doctype_code") != null) {
+				// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
+				if("100".equals(paraMap.get("fk_doctype_code"))) {
+					
+				}
+				else if("101".equals(paraMap.get("fk_doctype_code"))) {
+					MinutesVO minutesvo = dao.getOneMinutes(paraMap);
+					if(minutesvo != null) {
+						docvo.setMinutesvo(minutesvo);
+					}
+					
+				}
+				else if("102".equals(paraMap.get("fk_doctype_code"))) {
+					
+				}
+			}
 
-	
-	/*
-	 * // 각 부서별 당 인원수 가져오기
-	 * 
-	 * @Override public List<Map<String, String>> numByDept() { List<Map<String,
-	 * String>> numByDept = dao.numByDept(); return numByDept; }
-	 */
+		}
+		return docvo;	
+	}
+
+	// 파일 목록 가져오기
+	@Override
+	public List<DocfileVO> getDocfiletList(String doc_no) {
+		List<DocfileVO> getDocfiletList = dao.getDocfiletList(doc_no);
+		return getDocfiletList;
+	}
+
+	// 파일 다운로드
+	@Override
+	public DocfileVO getDocfileOne(String fileNo) {
+		DocfileVO getDocfileOne = dao.getDocfileOne(fileNo);
+		return getDocfileOne;
+	}
+
 
 }

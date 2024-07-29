@@ -33,7 +33,7 @@ table#title_table td {
 	padding: 0 0 0 3%;
 }
 
-table#title_table th, table#meeting th, table#meeting td {
+table#title_table th, table#docInfo th, table#docInfo td {
 	padding: 0 0 0 3%;
 }
 
@@ -60,16 +60,79 @@ table.approvalList, .approvalList th, .approvalList td {
     text-align: center; /* 셀 안의 텍스트를 가운데 정렬할 수 있습니다. */
 }
 
+div#fileList a {
+    text-decoration: none; /* 상속된 링크 스타일 */
+    color: black; 
+}
+
 
 </style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	if (${requestScope.docvo.isAttachment} == 1) {
+	    alert("ㅎㅎ"); 
+		goViewApprovalInfo();
+	}
+	
+}); // end of $(document).ready(function())-----------------------------------
+
+
+function goViewApprovalInfo(){
+	
+	$.ajax({
+		url:"<%= ctxPath%>/approval/docfileListShow.kedai",
+		type:"get",
+		data:{"doc_no": "${requestScope.docvo.doc_no}"}, 
+		dataType:"json",
+		success :function(json){
+			//console.log(JSON.stringify(json));
+			/*
+			[{"filename":"Electrolux냉장고_사용설명서_2024071918094832625998492500.pdf","org_filename":"Electrolux냉장고_사용설명서","doc_no":"KD24-101-5","filesize":"791567","file_no":"4"},{"filename":"쉐보레전면_2024071918094832625999624800.jpg","org_filename":"쉐보레전면","doc_no":"KD24-101-5","filesize":"131110","file_no":"5"}]
+			또는
+			[]
+			*/
+			
+			$("#fileList").text();
+			let v_html = ``;
+			$.each(json, function(index, item){	
+				v_html += "<a href='<%= ctxPath %>/approval/downloadDocfile.kedai?seq=" + item.file_no + "'>"
+               			 + item.org_filename + "(" + item.filesize + ")</a>&nbsp;";
+			});
+			
+		//	const input_width = $("input[name='searchWord']").css("width");// 검색어 input태그 width값 알아오기			
+		//	$("div#displayList").css({"width":input_width});// 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
+			$("#fileList").html(v_html);
+		},
+		error: function(request, status, error){
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        }
+	});// end of $.ajax---------------------
+}
+/*
+function formatFileSize(size) {
+    if (size < 1024){
+    	return size + ' bytes';
+    } 
+    else if (size < 1048576){
+    	return (size / 1024).toFixed(1) + ' KB';
+    }
+    else 
+    	return (size / 1048576).toFixed(1) + ' MB';
+}
+
+*/
+</script>
 
 
 
 <div id="total_contatiner">
 	<div style="display: flex;">
 		<div id="leftside" class="col-md-4" style="width: 90%; padding: 0;">
-		<c:set var="docvo" value="${requestScope.getOneDocCommon}" />
-		<c:set var="mvo" value="${requestScope.minutesvo}" />
+		<c:set var="mvo" value="${requestScope.docvo.minutesvo}" />
+		<c:set var="avo" value="${requestScope.docvo.approvalvoList}" />
+		<c:set var="dvo" value="${requestScope.docvo}" />
 			<div id="title">${docvo.doctype_name}</div>
 			<table class="table left_table" id="title_table">
 				<tr>
@@ -85,8 +148,7 @@ table.approvalList, .approvalList th, .approvalList td {
 					<td>${docvo.dept_name}</td>
 				</tr>
 			</table>
-			<table class="table left_table" id="meeting">
-			
+			<table class="table left_table" id="docInfo">
 				<tr>
 					<th>회의일자</th>
 					<td>${mvo.meeting_date}</td>
@@ -105,6 +167,7 @@ table.approvalList, .approvalList th, .approvalList td {
 			</div>
 			<div class="htmlAdd">
 				<table class="approvalList">
+					
 			        <tr>
 			            <th rowspan="3">승인</th>
 			            <th>대표이사</th>
@@ -127,18 +190,18 @@ table.approvalList, .approvalList th, .approvalList td {
 		</div>
 		<div class="col-md-6" style="margin: 0; width: 100%">
 	
-			<table style="margin-left: 5%;" class="table" id="newDoc">
+			<table style="margin-left: 5%;" class="table" >
 				<tr>
 					<th style="width: 12%;">제목</th>
 					<td style="height:23pt;">${docvo.doc_subject}</td>
 				</tr>
-
+	
 				<tr>
 					<td colspan='2'>${docvo.doc_content}</td>
 				</tr>
 	    		<tr>
-	       			<td width="12%" class="prodInputName">파일첨부</td>
-	       			<td>이곳에 파일을 올려주세요.</td>
+	       			<td width="12%" class="prodInputName">첨부파일</td>
+	       			<td><div id="fileList">첨부된 파일이 없습니다.</div></td>
 	    		</tr>
 			</table>
 			   		
