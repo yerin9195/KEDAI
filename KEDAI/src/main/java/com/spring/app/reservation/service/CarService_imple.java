@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.AES256;
+import com.spring.app.domain.BoardVO;
 import com.spring.app.domain.BusVO;
+import com.spring.app.domain.CarVO;
+import com.spring.app.domain.Day_shareVO;
 import com.spring.app.reservation.model.CarDAO;
 
 @Service
@@ -32,6 +35,74 @@ public class CarService_imple implements CarService {
 	public List<BusVO> getStationTimeList(String pf_station_id, String bus_no) {
 		List<BusVO> stationTimeList = dao.getStationTimeList(bus_no,pf_station_id);
 		return stationTimeList;
+	}
+
+	@Override
+	public List<Map<String, String>> myCar(String fk_empid) {
+		List<Map<String, String>> myCar = dao.getmyCar(fk_empid);
+		return myCar;
+	}
+
+	@Override
+	public CarVO myCar2(String fk_empid) {
+		CarVO myCar = dao.getmyCar2(fk_empid);
+		return myCar;
+	}
+
+	// 파일첨부가 없는 차량등록
+	@Override
+	public int addMycar(CarVO cvo) {
+		int n = dao.addMycar(cvo);
+		return n;
+	}
+
+	@Override
+	public int editMycar(Map<String, Object> paraMap) {
+		int n = dao.editMycar(paraMap);
+		return n;
+	}
+
+	@Override
+	public int addcarRegister(Map<String, Object> paraMap) {
+		int n = dao.addcarRegister(paraMap);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> carShareList() {
+		List<Map<String, String>> carShareList = dao.getcarShareList();
+		return carShareList;
+	}
+
+	@Override
+	public Day_shareVO day_shareInfo(int res_num) {
+		Day_shareVO day_shareInfo = dao.getday_shareInfo(res_num);
+		return day_shareInfo;
+	}
+
+	@Override
+	public int addcarApply_detail(Map<String, Object> paraMap) {
+		int n = dao.addcarApply_detail(paraMap);
+		return n;
+	}
+
+	// 총 게시물 건수(totalCount) 구하기
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int totalCount = dao.getTotalCount(paraMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<Map<String, String>> carShareListSearch_withPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> carShareList = dao.carShareListSearch_withPaging(paraMap);
+		return carShareList;
+	}
+
+	@Override
+	public List<String> searchShow(Map<String, String> paraMap) {
+		List<String> wordList = dao.searchShow(paraMap);
+		return wordList;
 	}
 
 

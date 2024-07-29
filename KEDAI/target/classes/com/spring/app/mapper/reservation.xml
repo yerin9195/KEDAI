@@ -81,4 +81,273 @@
           current_times
    </select>
 	
+	<select id="getmyCar" resultType="CarVO" parameterType="String">
+		select car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year, license, car_imgfilename, car_orgimgfilename
+		from tbl_car
+		where fk_empid = #{fk_empid}
+	</select>	
+	
+	<select id="getmyCar2" resultType="CarVO" parameterType="String">
+		select car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year, license, car_imgfilename, car_orgimgfilename
+		from tbl_car
+		where fk_empid = #{fk_empid}
+	</select>	
+
+	<insert id="addMyCar" parameterType="HashMap">
+		insert into tbl_car(car_seq, fk_empid, car_num, car_type, max_num, insurance, drive_year, license, car_imgfilename, car_orgimgfilename)
+		values(car_seq.nextval, #{fk_empid}, #{car_num}, #{car_type}, #{max_num}, #{insurance}, #{drive_year}, #{license}, #{car_imgfilename}, #{car_orgimgfilename})
+	</insert>
+	
+	<update id="editMycar" parameterType="HashMap">
+		update tbl_car set car_num = #{car_num}
+		<choose>
+						 <when test='car_orgimgfilename != ""'>
+						 , car_orgimgfilename = #{car_orgimgfilename}
+						 </when>
+						 <when test='car_orgimgfilename == ""'></when>
+						 <when test="'car_imgfilenname == null"></when>
+						 <when test="car_imgfilename != null">
+		                 , car_imgfilename = #{car_imgfilename}
+		                 </when>
+	    </choose>
+		                 , car_type = #{car_type}
+		                 , max_num = #{max_num}
+		                 , drive_year = #{drive_year}
+		where fk_empid = #{fk_empid}
+	</update>
+	
+	<insert id="addcarRegister" parameterType="HashMap">
+		insert into tbl_day_share(res_num, fk_car_seq, start_date, last_date, dp_name, dp_add, dp_lat, dp_lng, start_time, ds_name, ds_add, ds_lat, ds_lng, want_max, end_status, cancel_status)
+		values(res_num.nextval, #{car_seq}, #{start}, #{last}, #{departure_name}, #{departure_address}, #{dp_lat}, #{dp_lng}, #{startTime}, #{arrive_name}, #{arrive_address}, #{ds_lat}, #{ds_lng}, #{fk_cnum}, default, default)
+	
+	</insert>
+	
+	<resultMap id="carShareList" type="HashMap">
+		<result property="res_num" column="res_num" javaType="int"/>
+	    <result property="start_date" column="start_date" javaType="String"/>
+	    <result property="last_date" column="last_date"	javaType="String"/>
+	    <result property="dp_name" column="dp_name"	javaType="String"/>
+	    <result property="ds_name" column="ds_name"	javaType="String"/>
+	    <result property="want_max" column="want_max"	javaType="int"/>
+	    <result property="end_status" column="end_status"	javaType="int"/>
+	    <result property="cancel_status" column="cancel_status"	javaType="int"/>
+	    <result property="start_time" column="start_time"	javaType="String"/>
+	    <result property="nickname" column="nickname"	javaType="String"/>
+	</resultMap>
+	<select id="getcarShareList" resultMap="carShareList">
+		select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname
+		from 
+		(
+		select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, fk_car_seq
+		from tbl_day_share
+		where end_status = 1 and cancel_status = 1
+		)a cross join
+		(
+		    select car_seq, fk_empid, car_num, car_type, max_num, nickname
+		    from 
+		    (
+		        select *
+		        from tbl_car
+		    ) v cross join
+		    (
+		        select *
+		        from tbl_employees
+		    ) h
+		    where fk_empid = h.empid
+		)b
+		where fk_car_seq = b.car_seq
+	</select>
+	
+	<resultMap id="dayShareDetail" type="Day_shareVO">
+		<result property="res_num" column="res_num" javaType="int"/>
+	    <result property="fk_car_seq" column="fk_car_seq"	javaType="int"/>
+	    <result property="start_date" column="start_date" javaType="String"/>
+	    <result property="last_date" column="last_date"	javaType="String"/>
+	    <result property="dp_name" column="dp_name"	javaType="String"/>
+	    <result property="dp_add" column="dp_add"	javaType="String"/>
+	    <result property="dp_lat" column="dp_lat"	javaType="double"/>
+	    <result property="dp_lng" column="dp_lng"	javaType="double"/>
+	    <result property="ds_name" column="ds_name"	javaType="String"/>
+	    <result property="ds_add" column="ds_add"	javaType="String"/>
+	    <result property="ds_lat" column="ds_lat"	javaType="double"/>
+	    <result property="ds_lng" column="ds_lng"	javaType="double"/>
+	    <result property="want_max" column="want_max"	javaType="int"/>
+	    <result property="end_status" column="end_status"	javaType="int"/>
+	    <result property="cancel_status" column="cancel_status"	javaType="int"/>
+	    <result property="start_time" column="start_time"	javaType="String"/>
+	</resultMap>
+	<select id="getday_shareInfo" resultMap="dayShareDetail">
+		select res_num, fk_car_seq, start_date,last_date,dp_name,dp_add,dp_lat, dp_lng, ds_name, ds_add, ds_lat, ds_lng, want_max, end_status, cancel_status, start_time
+		from tbl_day_share
+		where res_num = #{res_num}
+	</select>
+	
+	
+	<insert id="addcarApply_detail" parameterType="HashMap">
+		insert into tbl_car_share(pf_res_num, pf_empid, share_date, share_may_time, accept_yon, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng)
+		values(#{pf_res_num}, #{pf_empid}, #{share_date}, #{share_may_time}, default, #{rdp_name}, #{rdp_add}, #{rdp_lat}, #{rdp_lng}, #{rds_name}, #{rds_add}, #{rds_lat}, #{rds_lng})
+	
+	</insert>
+	
+	<!-- // === #125.총게시물 건수(totalCount) 구하기 (경우의 수 2가지 1.검색어가 있을때 2.검색어가 없을때) ==// -->
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+	<!-- resultType="int" Integer를 써야하지만 int 도 다 된다. -->
+		select count(*)
+		from tbl_day_share
+		where cancel_status = 1
+		<choose>
+			<when test='searchType == "dp_name" and searchWord != ""'>
+				and lower(dp_name) like '%'|| lower(#{searchWord})||'%'
+			</when>		<!-- if -->
+			<when test='searchType == "ds_name" and searchWord != ""'>
+				and lower(ds_name) like '%'|| lower(#{searchWord})||'%'
+			</when>		<!-- else if -->
+			<when test='searchType == "empid" and searchWord != ""'>
+				and (lower(empid) like '%'|| lower(#{searchWord})||'%' or lower(empid) like '%'|| lower(#{searchWord})||'%')
+			</when>		<!-- else if -->
+			<otherwise></otherwise>		<!-- else -->
+		</choose>
+	</select>
+	
+	<resultMap id="carShareListPaging" type="Day_shareVO">
+		<result property="res_num" column="res_num" javaType="int"/>
+	    <result property="start_date" column="start_date"	javaType="String"/>
+	    <result property="last_date" column="last_date" javaType="String"/>
+	    <result property="dp_name" column="dp_name"	javaType="String"/>
+	    <result property="ds_name" column="ds_name"	javaType="String"/>
+	    <result property="want_max" column="want_max"	javaType="int"/>
+	    <result property="end_status" column="end_status"	javaType="int"/>
+	    <result property="cancel_status" column="cancel_status"	javaType="int"/>
+	    <result property="start_time" column="start_time"	javaType="String"/>
+	    <result property="nickname" column="nickname"	javaType="String"/>
+	    <result property="readCount" column="readCount"	javaType="int"/>
+	</resultMap>
+	
+	<select id="carShareListSearch_withPaging" parameterType="HashMap" resultMap="carShareListPaging">
+		select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname, readCount
+		from
+		(
+		select row_number() over(order by res_num desc) AS rno, res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname, readCount
+		from 
+		(
+		select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, fk_car_seq, readCount
+		from tbl_day_share
+		where end_status = 1 and cancel_status = 1
+				<choose>
+					<when test='searchType == "dp_name" and searchWord != ""'>
+						and lower(dp_name) like '%'|| lower(#{searchWord})||'%'
+					</when>		<!-- if -->
+					<when test='searchType == "ds_name" and searchWord != ""'>
+						and lower(ds_name) like '%'|| lower(#{searchWord})||'%'
+					</when>		<!-- else if -->
+					<when test='searchType == "empid" and searchWord != ""'>
+						and (lower(nickname) like '%'|| lower(#{searchWord})||'%' or lower(nickname) like '%'|| lower(#{searchWord})||'%')
+					</when>		<!-- else if -->
+				    <when test='searchType == "share_date" and searchWord != ""'>
+				    <!-- 출발 날짜와 도착 날짜가 해당 날짜 사이에 포함되어 있는 경우로 로직 짜기 -->
+				        AND TO_DATE(#{searchWord}, 'YYYY-MM-DD') BETWEEN start_date AND last_date
+				    </when>
+					<otherwise></otherwise>		<!-- else -->
+				</choose>
+		)a cross join
+		(
+		    select car_seq, fk_empid, car_num, car_type, max_num, nickname
+		    from 
+		    (
+		        select *
+		        from tbl_car
+		    ) v cross join
+		    (
+		        select *
+		        from tbl_employees
+		    ) h
+		    where fk_empid = h.empid
+		)b
+		where fk_car_seq = b.car_seq
+		)C
+	WHERE c.rno between #{startRno} and #{endRno}
+	</select>
+	
+	<!-- // === # 119. 검색어 입력시 자동글 완성하기6 === // -->
+	<select id="searchShow" parameterType="HashMap" resultType="String">
+		<choose>
+		<when test='searchType == "dp_name"'>
+			<!-- searchType은 subject인 경우  글제목을 select해준다.-->
+			select distinct dp_name
+		</when>
+		<when test='searchType == "ds_name"'>
+			<!-- searchType은 subject인 경우  글제목을 select해준다.-->
+			select distinct ds_name
+		</when>
+		<when test='searchType == "nickname"'>
+			<!-- searchType은 subject인 경우  글제목을 select해준다.-->
+			select distinct nickname
+		</when>
+		<otherwise>
+			<!--  셰어링 날짜  -->
+			select distinct nickname
+		</otherwise>
+		</choose>
+		from
+		(
+		    select fk_car_seq, dp_name, ds_name, cancel_status
+		    from tbl_day_share
+		) v 
+		cross join
+		(
+		select empid, car_seq, nickname
+		from tbl_car a join tbl_employees b
+		on a.fk_empid = b.empid
+		)h
+		where h.car_seq = v.fk_car_seq and cancel_status = 1
+		<choose>
+			<when test='searchType == "dp_name" and searchWord != ""'>
+				<!-- searchWord가 공백이면 안되고 searchType은 dp_name(출발지인 경우 -->
+				and lower(dp_name) like '%'||lower(#{searchWord})||'%'
+				<!-- 대소문자 구분치 않게 한다. -->
+			</when>
+			<when test='searchType == "ds_name" and searchWord != ""'>
+				<!-- searchWord가 공백이면 안되고 searchType은 dp_name(출발지인 경우 -->
+				and lower(ds_name) like '%'||lower(#{searchWord})||'%'
+				<!-- 대소문자 구분치 않게 한다. -->
+			</when>
+			<when test='searchType == "nickname" and searchWord != ""'>
+				<!-- searchWord가 공백이면 안되고 searchType은 dp_name(출발지인 경우 -->
+				and lower(nickname) like '%'||lower(#{searchWord})||'%'
+				<!-- 대소문자 구분치 않게 한다. -->
+			</when>
+			<otherwise>
+				<!-- searchWord가 공백이면 안되고 searchType은 ds_name(글쓴이)인 경우 -->
+				and lower(dp_name) like '%'||lower(#{searchWord})||'%'
+				<!-- 대소문자 구분치 않게 한다. -->
+			</otherwise>
+		</choose>
+		<!-- 
+           select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
+           order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
+                           또는 order by 절을 사용하지 않아야 한다.
+                           
+                           ==> order by 절에는 해당 테이블에 있는 컬럼만 처리해주는데 이때 select 문에 distinct가 있는 경우 only 해당 컬럼 (즉, 여기서는 name)만 쓸 수 있다.
+        -->
+		<choose>
+			<!-- 글제목의 경우 sort 해준다  (가장 최근 글부터 보여주도록 해당 구별 컬럼은 seq)==> order by  -->
+			<when test='searchType == "dp_name"'>
+				order by dp_name desc
+			</when>
+			<when test='searchType == "ds_name"'>
+				order by ds_name desc
+			</when>
+			<when test='searchType == "nickname"'>
+				order by nickname desc
+			</when>
+			<!-- 글쓴이의 경우 sort 해준다  가나다라 순==> order by  -->
+			<otherwise>
+				order by dp_name desc
+			</otherwise>
+		</choose>
+		
+	</select>
+	
+
+	
 </mapper>
