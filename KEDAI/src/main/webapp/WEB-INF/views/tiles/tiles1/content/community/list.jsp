@@ -44,19 +44,12 @@
 	.search_btn:hover {
 		background: #e68c0e;
 	}
-	.subjectStyle {
-		color: #e68c0e;
+	.subject:hover {
 		cursor: pointer;
 	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
-		
-		$("span.subject").hover(function(e){ // mouseover
-			$(e.target).addClass("subjectStyle");
-		}, function(e){ // mouseout
-			$(e.target).removeClass("subjectStyle");
-		});
 		
 		$("input:text[name='searchWord']").bind("keydown", function(e){
 			if(e.keyCode == 13){
@@ -90,7 +83,7 @@
 							   "searchWord":$("input[name='searchWord']").val()},
 						dataType: "json",
 						success: function(json){
-							console.log(JSON.stringify(json));
+						//	console.log(JSON.stringify(json));
 							
 							if(json.length > 0){
 								let v_html = ``;
@@ -169,7 +162,7 @@
 
 	<section>
 		<div class="d-md-flex justify-content-md-end">
-			<form name="searchFrm" style="width: 34%; position: relative;">
+			<form name="searchFrm" style="width: 34%; min-width: 576px; position: relative;">
 		   		<select name="searchType" style="height: 30px;">
 		      		<option value="subject">글제목</option>
 		      		<option value="content">글내용</option>
@@ -190,8 +183,9 @@
 		<table class="table table-bordered mt-3" id="communityTbl">
 			<thead>
 	       		<tr>
+	       			<th style="width: 5%; text-align: center;">순번</th>
 	          		<th style="width: 5%; text-align: center;">글번호</th>
-	         		<th style="width: 55%; text-align: center;" colspan="3">글제목</th>
+	         		<th style="width: 60%; text-align: center;" colspan="3">글제목</th>
 	         		<th style="width: 20%; text-align: center;">작성일자</th>
 	         		<th style="width: 10%; text-align: center;">조회수</th>
 	       		</tr>
@@ -206,34 +200,39 @@
 		      					>>> 페이징 처리시 보여주는 순번 공식 <<<
 		      					데이터개수-(페이지번호-1)*1페이지당보여줄개수-인덱스번호 => 순번
 		      				--%>
-		      				<td align="center" width="8%" style="vertical-align: middle; align-items: center;"><span style="display: inline-block; width: 50px; height: 50px; border-radius: 50%; overflow: hidden;"><img style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/files/${cvo.imgfilename}" /></span><span style="display: block;">${cvo.nickname}</span></td>
+		      				<td align="center" style="vertical-align: middle;">${cvo.community_seq}</td>
+		      				<td align="center" width="10%" style="vertical-align: middle; align-items: center;"><span style="display: inline-block; width: 50px; height: 50px; border-radius: 50%; overflow: hidden;"><img style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/files/employees/${cvo.imgfilename}" /></span><span style="display: block;">${cvo.nickname}</span></td>
 		      				<td style="vertical-align: middle;">
 		      					<%-- === 댓글쓰기 및 파일첨부가 있는 게시판 시작 === --%>
 		      					<%-- 첨부파일이 없는 경우 --%>
-		      					<c:if test="${empty cvo.orgfilename}">
+		      					<c:if test="${empty cvo.fk_community_seq}">
 		      						<c:if test="${cvo.comment_count > 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}<span style="vertical-align: super;">&nbsp;<span style="color: #e68c0e; font-size: 9pt; font-weight: bold;">[&nbsp;{$cvo.comment_count}&nbsp;]</span></span>
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<span style="color: #e68c0e; font-size: 12pt; font-weight: bold;"><i class="fa-regular fa-comment-dots fa-flip-horizontal" style="color: #e68c0e;"></i>&nbsp;${cvo.comment_count}</span>
 		      								<br><span class="content">${cvo.content}</span> 
 		      							</span>
 		      						</c:if>
 		      						<c:if test="${cvo.comment_count == 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}<br><span class="content">${cvo.content}</span></span>
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}
+		      								<br><span class="content">${cvo.content}</span>
+		      							</span>
 		      						</c:if>
 		      					</c:if>
 		      					
 		      					<%-- 첨부파일이 있는 경우 --%>
-		      					<c:if test="${not empty cvo.orgfilename}">
+		      					<c:if test="${not empty cvo.fk_community_seq}">
 		      						<c:if test="${cvo.comment_count > 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}<span style="vertical-align: super;">&nbsp;<span style="color: #e68c0e; font-size: 9pt; font-weight: bold;">[&nbsp;{$cvo.comment_count}&nbsp;]</span></span>&nbsp;<i class="fa-solid fa-paperclip"></i>
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<i class="fa-solid fa-paperclip"></i>&nbsp;&nbsp;<span style="color: #e68c0e; font-size: 12pt; font-weight: bold;"><i class="fa-regular fa-comment-dots fa-flip-horizontal" style="color: #e68c0e;"></i>&nbsp;${cvo.comment_count}</span>
 		      								<br><span class="content">${cvo.content}</span>
 		      							</span>
 		      						</c:if>
 		      						<c:if test="${cvo.comment_count == 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;<i class="fa-solid fa-paperclip"></i><br><span class="content">${cvo.content}</span></span>
+		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<i class="fa-solid fa-paperclip"></i>
+	      									<br><span class="content">${cvo.content}</span>
+		      							</span>
 		      						</c:if>
 		      					</c:if>
 		      				</td>
-		      				<td align="center" width="5%" style="vertical-align: middle;"><img alt="heart" src="<%= ctxPath%>/resources/images/common/heart.png" width="50%" class="heart" /><span style="display: block;">0</span></td>
+		      				<td align="center" width="5%" style="vertical-align: middle;"><img alt="heart" src="<%= ctxPath%>/resources/images/common/heart.png" width="50%" class="heart" /><span id="like_cnt" style="display: block;">${cvo.like_count}</span></td>
 		      				<td align="center" style="vertical-align: middle;">${cvo.registerday}</td>
 		      				<td align="center" style="vertical-align: middle;">${cvo.read_count}</td>
 						</tr>

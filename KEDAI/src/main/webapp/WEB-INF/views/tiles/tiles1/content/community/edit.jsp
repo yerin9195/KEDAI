@@ -137,8 +137,8 @@
      	});
      	<%-- === jQuery 를 사용하여 드래그앤드롭(DragAndDrop)을 통한 파일 업로드 끝 === --%>
      	
-     	// 등록 버튼을 클릭한 경우
-     	$("button#btnWrite").click(function(){
+     	// 수정 버튼을 클릭한 경우
+     	$("button#btnUpdate").click(function(){
      		
      		<%-- === 스마트 에디터 구현 시작 === --%>
             // id 가  content 인 textarea 에 에디터 대입
@@ -206,7 +206,7 @@
      		}
      		
      		$.ajax({ 
-            	url: "<%= ctxPath%>/community/add.kedai",
+            	url: "<%= ctxPath%>/community/editEnd.kedai",
             	type: "post",
             	data: formData,     // 이것은 객체이다. 객체 속에 보내야 할 데이터가 포함되어 있다.
             	processData: false, // 파일 전송 시 설정 => 파일이 있다면 꼭 넣어주어야 한다. default 는 true 이다. 
@@ -215,12 +215,13 @@
             	success: function(json){
             	//	console.log("~~~ 확인용 : " + JSON.stringify(json));
                 	
-                	if(json.result == 1) { // insert 가 성공되어진 경우
-                		alert("글 등록이 성공했습니다.");
-                		location.href="<%= ctxPath%>/community/addEnd.kedai?fk_empid="+json.fk_empid;
+                	if(json.result == 1) { // update 가 성공되어진 경우
+                		alert("글 수정이 성공했습니다.");
+                		location.href="<%= ctxPath%>/community/list.kedai";
                 	}
                 	else{
-                		alert("글 등록이 실패했습니다.");
+                		alert("글 수정이 실패했습니다.");
+                		location.href="javascript:history.back();"; // 이전 페이지로 이동
                 	}
             	},
             	error: function(request, status, error){
@@ -253,6 +254,9 @@
 	   		<div class="mb-3">
 	   			<label for="nickname" style="width: 30%;">닉네임</label>
 	   			<input type="text" name="nickname" id="nickname" style="width: 180px; height: 30px;" value="${(sessionScope.loginuser).nickname}" readonly />
+	   		
+	   			<!-- 동일한 작성가가 글을 여러개 작성할 수도 있기 때문에 글번호를 넘겨줘야 한다. -->
+	   			<input type="hidden" name="community_seq" value="${requestScope.cvo.community_seq}" />
 	   		</div>
 	   		<div class="mb-3" style="display: flex;">
 				<label for="fk_empid" style="width: 30%;">카테고리</label>
@@ -273,10 +277,10 @@
 		<div class="col-8">
 			<div class="mb-3">
 				<label for="subject" style="width: 10%;">제목</label>
-				<input type="text" name="subject" id="subject" size="100" maxlength="200" style="width: 50%; height: 30px;" /> 
+				<input type="text" name="subject" id="subject" size="100" maxlength="200" style="width: 50%; height: 30px;" value="${requestScope.cvo.subject}" /> 
 			</div>
 			<div class="mb-3">
-   				<textarea style="width: 100%; height: 530px;" name="content" id="content"></textarea>
+   				<textarea style="width: 100%; height: 530px;" name="content" id="content">${requestScope.cvo.content}</textarea>
    			</div>
    			<div class="row">
    				<div class="col-6">
@@ -287,7 +291,7 @@
    				</div>
    				
    				<div class="col-6 d-md-flex justify-content-md-end">
-			   		<button type="button" class="btn add_btn mr-3" id="btnWrite">등록</button>
+			   		<button type="button" class="btn add_btn mr-3" id="btnUpdate">수정</button>
 			       	<button type="button" class="btn add_btn" onclick="javascript:history.back()">취소</button>
 			   	</div>
    			</div>
