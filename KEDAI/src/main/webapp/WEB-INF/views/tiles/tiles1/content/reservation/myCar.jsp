@@ -71,7 +71,7 @@ function goRegister(){
 <!-- Navigation Tabs -->
 <ul class="nav nav-tabs" style="margin-bottom:4%;">
     <li class="nav-item">
-        <a class="nav-link active" style="color: white; font-size:12pt;" href="<%= ctxPath %>/myCarInfo.kedai">차량정보</a>
+        <a class="nav-link active" style="color: white; font-size:12pt;" href="<%= ctxPath %>/myCar.kedai">차량정보</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Status.kedai">카셰어링현황(차주)</a>

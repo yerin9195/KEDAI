@@ -11,6 +11,8 @@
     th {background-color: #e68c0e;}
     .subjectStyle {font-weight: bold; color: navy; cursor: pointer; }
     a {text-decoration: none !important;} /* 페이지바의 a 태그에 밑줄 없애기 */
+
+
 </style>
 
 <script type="text/javascript">
@@ -45,7 +47,7 @@
 			else {
 				if($("select[name='searchType']").val() == "dp_name" ||
 				   $("select[name='searchType']").val() == "ds_name" ||
-				   $("select[name='searchType']").val() == "nickname" ){
+				   $("select[name='searchType']").val() == "share_date" ){
 					
 					$.ajax({
 						url: "<%= ctxPath%>/carShare/searchShow.kedai",
@@ -86,6 +88,20 @@
 			}
 		}); // end of $("input[name='searchWord']").keyup(function(){}) ----------
 		
+		$('select[name="searchType"]').change(function() {
+            var selected = $(this).val();
+            if (selected === 'dp_name' || selected === 'ds_name' || selected === '' ) {
+                $('input[name="searchWord"]').show();
+                $('input[name="start"]').hide();
+            } else if (selected === 'share_date') {
+                $('input[name="searchWord"]').hide();
+                $('input[name="start"]').show();
+            } else {
+                $('input[name="searchWord"]').hide();
+                $('input[name="start"]').hide();
+            }
+        }).trigger('change'); // 페이지 로드 시 초기 상태 설정
+        
 		$(document).on("click", "span.result", function(e){
 			const word = $(e.target).text();
 			

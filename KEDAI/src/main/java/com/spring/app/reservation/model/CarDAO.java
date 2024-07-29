@@ -35,5 +35,11 @@ public interface CarDAO {
 
 	List<String> searchShow(Map<String, String> paraMap);
 
+	List<Map<String, String>> getowner_carShareList(String empid);
+
+	List<Map<String, String>> owner_carShareListSearch_withPaging(Map<String, String> paraMap);
+
+	int owner_getTotalCount(Map<String, String> paraMap);
+
 
 }

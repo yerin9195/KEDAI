@@ -1,112 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <%
-    String ctxPath = request.getContextPath();
-    //    /MyMVC
-%>
-
-<!-- Font Awesome 6 Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-<!-- Kakao Maps -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f8cd36a9ca80015c17a395ab719b2d8d"></script>
-<!-- FullCalendar CSS -->
+   String ctxPath = request.getContextPath();
+%>   
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
-<!-- FullCalendar JS -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-
-<link href="<%= ctxPath %>/resources/css/jquery.timepicker.min.css" rel="stylesheet" />
-<script src="<%= ctxPath %>/resources/js/jquery.timepicker.min.js"></script>
-
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <style type="text/css">
-   
-@charset "UTF-8";
-/* /* 360px 이하 */  /* 일반적으로 휴대폰 세로 */
-@media screen and (max-width: 360px){
-   div#search {
-      padding-left: 0 !important;
-   }
-   
-   div#nav button {
-      width: 100%;
-   }   
-}
-
-/* 361px ~ 767px 이하 */  /* 일반적으로 휴대폰 가로 */
-@media screen and (min-width: 361px) and (max-width: 767px){
-   div#search {
-      padding-left: 0 !important;
-   }
-   
-   div#nav button {
-      width: 100%;
-   }
-} */
-
-#container{
-    background-color: white;
-    color: #2c4459;
-    font-size: 15pt;
-    font-weight: 300;
-    position: relative;
-}
-#in-container {
-    background-color: white;
-    color: black;
-    width: 25%;
-    height: 830px;
-    position: absolute; /* 절대 위치 지정 */
-    top: 0; /* 부모 요소의 위쪽에 위치 */
-    left: 0; /* 부모 요소의 왼쪽에 위치 */
-    z-index: 10; /* 다른 요소들보다 앞에 오도록 z-index 설정 */
-    overflow: hidden;
-}
-
-	
-/* 지도 시작 */
-   
-div#title {
-    font-size: 20pt;
- /* border: solid 1px red; */
-    padding: 12px 0;
-}
-
-div.mycontent {
-      width: 300px;
-      padding: 5px 3px;
-  }
-  
-  div.mycontent>.title {
-      font-size: 12pt;
-      font-weight: bold;
-      background-color: #d95050;
-      color: #fff;
-  }
-  
-  div.mycontent>.title>a {
-      text-decoration: none;
-      color: #fff;
-  }
-        
-  div.mycontent>.desc {
-   /* border: solid 1px red; */
-      padding: 10px 0 0 0;
-      color: #000;
-      font-weight: normal;
-      font-size: 9pt;
-  }
-  
-  div.mycontent>.desc>img {
-      width: 50px;
-      height: 50px;
-  }
-  
-
-  /* 지도 끝 */
-	
+    th {background-color: #e68c0e;}
+    .subjectStyle {font-weight: bold; color: navy; cursor: pointer; }
+    a {text-decoration: none !important;} /* 페이지바의 a 태그에 밑줄 없애기 */
 .nav-tabs .nav-link.active {
     background-color: #2c4459; /* 활성화된 탭의 배경색 변경 */
     color: white; /* 활성화된 탭의 글자색 변경 */
@@ -116,264 +24,421 @@ div.mycontent {
     flex: 1; /* 각 탭을 균등하게 분배 */
     text-align: center;
 }
+
+/* 모달 시작 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    height: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#calendar {
+    height: 100%;
+    width: 100%;
+}
+
+.fc-daygrid-day-clicked {
+    position: relative;
+    background-color: #f0f0f0;
+}
+
+.select-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+a {
+   color:#2c4459;
+}
+/* 모달 끝 */    
+
+
 </style>
+
 <script type="text/javascript">
+    $(document).ready(function(){
+       
+       /* 모달 시작 */
+       // Initialize the calendar
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: '100%',
+                dateClick: function(info) {
+                    // Remove existing select buttons
+                    $('.select-button').remove();
+                    // Remove background color from previously clicked cells
+                    $('.fc-daygrid-day').removeClass('fc-daygrid-day-clicked');
+                    // Add background color to clicked cell
+                    $(info.dayEl).addClass('fc-daygrid-day-clicked');
 
-$(document).ready(function(){ 
-	
-    // 지도를 담을 영역의 DOM 레퍼런스
-   var mapContainer = document.getElementById("map");
-   
-   // 지도를 생성할때 필요한 기본 옵션
-   var options = {
-           center: new kakao.maps.LatLng(37.556513150417395, 126.91951995383943), // 지도의 중심좌표. 반드시 존재해야함.
-           <%--
-               center 에 할당할 값은 kakao.maps.LatLng 클래스를 사용하여 생성한다.
-               kakao.maps.LatLng 클래스의 2개 인자값은 첫번째 파라미터는 위도(latitude)이고, 두번째 파라미터는 경도(longitude)이다.
-           --%>
-           level: 4  // 지도의 레벨(확대, 축소 정도). 숫자가 클수록 축소된다. 4가 적당함.
-     };
-   
-   // 지도 생성 및 생성된 지도객체 리턴
-   var mapobj = new kakao.maps.Map(mapContainer, options);
-   
-   // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성함.    
-   var mapTypeControl = new kakao.maps.MapTypeControl();
-   
-   // 지도 타입 컨트롤을 지도에 표시함.
-   // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미함.   
-   mapobj.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT); 
-   
-   // 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성함.   
-   var zoomControl = new kakao.maps.ZoomControl();
-   
-   // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 지도에 표시함.
-   // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 RIGHT는 오른쪽을 의미함.    
-   mapobj.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-   
-   if(navigator.geolocation) {
-      // HTML5의 geolocation으로 사용할 수 있는지 확인한다 
-      
-      // GeoLocation을 이용해서 웹페이지에 접속한 사용자의 현재 위치를 확인하여 그 위치(위도,경도)를 지도의 중앙에 오도록 한다.
-      navigator.geolocation.getCurrentPosition(function(position) {
-         var latitude = position.coords.latitude;   // 현위치의 위도
-         var longitude = position.coords.longitude; // 현위치의 경도
-      //   console.log("현위치의 위도: "+latitude+", 현위치의 경도: "+longitude);
-         // 현위치의 위도: 37.5499076, 현위치의 경도: 126.9218479
-         
-         // 마커가 표시될 위치를 geolocation으로 얻어온 현위치의 위.경도 좌표로 한다   
-         var locPosition = new kakao.maps.LatLng(latitude, longitude);
-           
-          // 마커이미지의 옵션. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정한다. 
-          var imageOption = {offset: new kakao.maps.Point(15, 39)};
+                    // Create a new select button
+                    var button = $('<button class="select-button">Select</button>');
+                    // Append the button to the clicked cell
+                    $(info.dayEl).append(button);
 
-          // 마커의 이미지정보를 가지고 있는 마커이미지를 생성한다. 
-          var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+                    // Add click event to the button
+                    button.click(function() {
+                        alert('Date selected: ' + info.dateStr);
+                        $('#myModal').hide(); // Close the modal
+                        resetModal(); // Reset modal content
+                    });
+                }
+            });
 
-          // == 마커 생성하기 == //
-         var marker = new kakao.maps.Marker({ 
-            map: mapobj, 
-              position: locPosition // locPosition 좌표에 마커를 생성 
-         }); 
-          
-         marker.setMap(mapobj); // 지도에 마커를 표시한다
+            // Get the modal
+            var modal = $('#myModal');
+
+            // Get the button that opens the modal
+            var btn = $('#openModalBtn');
+
+            // Get the <span> element that closes the modal
+            var span = $('.close');
+
+            // Function to reset the modal content
+            function resetModal() {
+                // Remove existing select buttons
+                $('.select-button').remove();
+                // Remove background color from previously clicked cells
+                $('.fc-daygrid-day').removeClass('fc-daygrid-day-clicked');
+            }
+
+            // When the user clicks the button, open the modal and render the calendar
+            btn.click(function() {
+                resetModal(); // Ensure the modal is reset before showing
+                modal.show();
+                calendar.render();
+            });
+
+            // When the user clicks on <span> (x), close the modal and reset content
+            span.click(function() {
+                modal.hide();
+                resetModal();
+            });
+
+            // When the user clicks anywhere outside of the modal, close it and reset content
+            $(window).click(function(event) {
+                if ($(event.target).is(modal)) {
+                    modal.hide();
+                    resetModal();
+                }
+            });
+
+            // Ensure reset when the modal is hidden
+            modal.on('hide', function() {
+                resetModal();
+            });
+       /* 모달 끝  */
+       
+       
+        $("span.subject").hover(function(e){
+            $(e.target).addClass("subjectStyle");
+        }, function(e){
+            $(e.target).removeClass("subjectStyle");
+        });       
         
-         
-         // === 인포윈도우(텍스트를 올릴 수 있는 말풍선 모양의 이미지) 생성하기 === //
-         
-         // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능함.
-         var iwContent = "<div style='padding:5px; font-size:13pt; color:black;'>현재 위치</div>";
-         
-         // 인포윈도우 표시 위치
-          var iwPosition = locPosition;
-         
-       // removeable 속성을 true 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됨
-          var iwRemoveable = true; 
-
-          // == 인포윈도우를 생성하기 == 
-         var infowindow = new kakao.maps.InfoWindow({
-             position : iwPosition, 
-             content : iwContent,
-             removable : iwRemoveable
-         });
-
-         // == 마커 위에 인포윈도우를 표시하기 == //
-         infowindow.open(mapobj, marker);
-
-         // == 지도의 센터위치를 locPosition로 변경한다.(사이트에 접속한 클라이언트 컴퓨터의 현재의 위.경도로 변경한다.)
-          mapobj.setCenter(locPosition);
-         
-       });
-   }
-   else {
-      // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정한다.
-      var locPosition = new kakao.maps.LatLng(37.556513150417395, 126.91951995383943);     
-        
-      // 위의 
-      // 마커이미지를 기본이미지를 사용하지 않고 다른 이미지로 사용할 경우의 이미지 주소 
-      // 부터
-      // 마커 위에 인포윈도우를 표시하기 
-      // 까지 동일함.
-      
-     // 지도의 센터위치를 위에서 정적으로 입력한 위.경도로 변경한다.
-       mapobj.setCenter(locPosition);
-      
-   }// end of if~else------------------------------------------
-   
-   
-   // ============ 지도에 매장위치 마커 보여주기 시작 ============ //
-   // 매장 마커를 표시할 위치와 내용을 가지고 있는 객체 배열
-   var positionArr = [];
-   
-   
-   
-   // infowindowArr 은 인포윈도우를 가지고 있는 객체 배열의 용도이다. 
-   var infowindowArr = new Array();
-   
-   // === 객체 배열 만큼 마커 및 인포윈도우를 생성하여 지도위에 표시한다. === //
-   for(var i=0; i<positionArr.length; i++){
-      
-      // == 마커 생성하기 == //
-      var marker = new kakao.maps.Marker({ 
-         map: mapobj, 
-           position: positionArr[i].latlng   
-      }); 
-      
-      // 지도에 마커를 표시한다.
-      marker.setMap(mapobj);
-      
-      // == 인포윈도우를 생성하기 == 
-      var infowindow = new kakao.maps.InfoWindow({
-         content: positionArr[i].content,
-         removable: true,
-         zIndex : i+1
+      $("input:text[name='searchWord']").bind("keydown", function(e){
+         if(e.keyCode == 13){
+            goSearch();
+         }
       });
       
-      // 인포윈도우를 가지고 있는 객체배열에 넣기 
-      infowindowArr.push(infowindow);
+      // 검색 시 검색조건 및 검색어 값 유지시키기
+      if(${not empty requestScope.paraMap}){ // paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다.
+         $("select[name='searchType']").val("${requestScope.paraMap.searchType}");
+         $("input[name='searchWord']").val("${requestScope.paraMap.searchWord}");
+      }
       
-      // == 마커 위에 인포윈도우를 표시하기 == //
-      // infowindow.open(mapobj, marker);
+      // 검색어 입력 시 자동글 완성하기 
+      $("div#displayList").hide();
       
-      // == 마커 위에 인포윈도우를 표시하기 == //
-      // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-       // 이벤트 리스너로는 클로저(closure => 함수 내에서 함수를 정의하고 사용하도록 만든것)를 만들어 등록합니다 
-       // for문에서 클로저(closure => 함수 내에서 함수를 정의하고 사용하도록 만든것)를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-       kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(mapobj, marker, infowindow, infowindowArr)); 
-      
-   }// end of for----------------
-   // ============ 지도에 매장위치 마커 보여주기 끝 ============ //
-   
-   
-   // ================== 지도에 클릭 이벤트를 등록하기 시작 ======================= //
-   // 지도를 클릭하면 클릭한 위치에 마커를 표시하면서 위,경도를 보여주도록 한다.
-   
-   // == 마커 생성하기 == //
-   // 1. 마커이미지 변경
-   var imageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png';       
-        
-   // 2. 마커이미지의 크기 
-    var imageSize = new kakao.maps.Size(34, 39);   
-            
-    // 3. 마커이미지의 옵션. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정한다. 
-    var imageOption = {offset: new kakao.maps.Point(15, 39)};   
-      
-    // 4. 이미지정보를 가지고 있는 마커이미지를 생성한다. 
-    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
-          
-    var movingMarker = new kakao.maps.Marker({ 
-      map: mapobj
-   });
-    
-    // === 인포윈도우(텍스트를 올릴 수 있는 말풍선 모양의 이미지) 생성하기 === //
-   var movingInfowindow = new kakao.maps.InfoWindow({
-       removable : false
-     //removable : true   // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됨
-   });
-   
-    
-   kakao.maps.event.addListener(mapobj, 'click', function(mouseEvent) {         
-          
-       // 클릭한 위도, 경도 정보를 가져옵니다 
-       var latlng = mouseEvent.latLng;
-       
-       // 마커 위치를 클릭한 위치로 옮긴다.
-       movingMarker.setPosition(latlng);
-       
-       // 인포윈도우의 내용물 변경하기 
-       movingInfowindow.setContent("<div style='padding:5px; font-size:9pt;'>여기가 어디에요?<br/><a href='https://map.kakao.com/link/map/여기,"+latlng.getLat()+","+latlng.getLng()+"' style='color:blue;' target='_blank'>큰지도</a> <a href='https://map.kakao.com/link/to/여기,"+latlng.getLat()+","+latlng.getLng()+"' style='color:blue' target='_blank'>길찾기</a></div>");  
-       
-       // == 마커 위에 인포윈도우를 표시하기 == //
-       movingInfowindow.open(mapobj, movingMarker);
-       
-       var htmlMessage = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, '; 
-           htmlMessage += '경도는 ' + latlng.getLng() + ' 입니다';
-          
-       var resultDiv = document.getElementById("latlngResult"); 
-       resultDiv.innerHTML = htmlMessage;
-   });
-    // ================== 지도에 클릭 이벤트를 등록하기 끝 ======================= //
-   
-   $('#startTime').timepicker();
-}); // end of $(document).ready(function(){})----------------------------------------------------
+      $("input[name='searchWord']").keydown(function(){
+         const wordLength = $(this).val().trim().length;
+         
+         if(wordLength == 0){
+            $("div#displayList").hide();
+         }
+         else {
+            if($("select[name='searchType']").val() == "dp_name" ||
+               $("select[name='searchType']").val() == "ds_name" ||
+               $("select[name='searchType']").val() == "nickname" ){
+               
+               $.ajax({
+                  url: "<%= ctxPath%>/carShare/searchShow.kedai",
+                  type: "get",
+                  data: {"searchType":$("select[name='searchType']").val(),
+                        "searchWord":$("input[name='searchWord']").val()},
+                     dataType: "json",    
+                     success: function(json){
+                        console.log(JSON.stringify(json));
+                     
+                        if(json.length > 0){ // 검색된 데이터가 있는 경우
+                           let v_html = ``;
+                           
+                           $.each(json, function(index, item){
+                              const word = item.word;
+                              const idx = word.toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
+                              const len = $("input[name='searchWord']").val().length;
+                              const result = word.substring(0, idx)+"<span style='color: #2c4459; font-weight: bold;'>"+word.substring(idx, idx+len)+"</span>"+word.substring(idx+len);
+                              
+                              v_html += `<span style='cursor: pointer;' class='result'>\${result}</span><br>`;
+                           }); // end of $.each(json, function(index, item) ----------
 
-//!! 인포윈도우를 표시하는 클로저(closure => 함수 내에서 함수를 정의하고 사용하도록 만든것)를 만드는 함수(카카오에서 제공해준것임)입니다 !! // 
-   function makeOverListener(mapobj, marker, infowindow, infowindowArr) {
-       return function() {
-          // alert("infowindow.getZIndex()-1:"+ (infowindow.getZIndex()-1));
-             
-          for(var i=0; i<infowindowArr.length; i++) {
-             if(i == infowindow.getZIndex()-1) {
-                   infowindowArr[i].open(mapobj, marker);
-             }
-             else{
-                infowindowArr[i].close();
-             }
-          }
-       };
-       
-   }// end of function makeOverListener(mapobj, marker, infowindow, infowindowArr)--------
+                        // 검색어 input 태그의 width 값 알아오기
+                        const input_width = $("input[name='searchWord']").css("width");
+                           
+                        // 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
+                        $("div#displayList").css({"width":input_width});
+                        
+                        $("div#displayList").html(v_html);
+                        $("div#displayList").show();
+                        }
+                     },
+                  error: function(request, status, error){
+                        alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+                     }
+               });      
+            }
+         }
+      }); // end of $("input[name='searchWord']").keyup(function(){}) ----------
+      
+      $('select[name="searchType"]').change(function() {
+            var selected = $(this).val();
+            if (selected === 'dp_name' || selected === 'ds_name' || selected === '' ) {
+                $('input[name="searchWord"]').show();
+                $('input[name="start"]').hide();
+            } else if (selected === 'share_date') {
+                $('input[name="searchWord"]').hide();
+                $('input[name="start"]').show();
+            } else {
+                $('input[name="searchWord"]').hide();
+                $('input[name="start"]').hide();
+            }
+        }).trigger('change'); // 페이지 로드 시 초기 상태 설정
+        
+      $(document).on("click", "span.result", function(e){
+         const word = $(e.target).text();
+         
+         $("input[name='searchWord']").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력
+         $("div#displayList").hide();
+         goSearch(); 
+      });
+      
+         // === 전체 datepicker 옵션 일괄 설정하기 ===  
+         //     한번의 설정으로 $("input#fromDate"), $('input#toDate')의 옵션을 모두 설정할 수 있다.
+         $(function() {
+             //모든 datepicker에 대한 공통 옵션 설정
+             $.datepicker.setDefaults({
+                  dateFormat: 'yy-mm-dd' //Input Display Format 변경
+                 ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
+                 ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
+                 ,changeYear: true //콤보박스에서 년 선택 가능
+                 ,changeMonth: true //콤보박스에서 월 선택 가능                
+              // ,showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
+              // ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
+              // ,buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
+              // ,buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
+                 ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
+                 ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
+                 ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
+                 ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
+                 ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
+              // ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+              // ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
+             });
+         
+          });
+         
+         ///////////////////////////////////////////////////////////////////////
+         //=== jQuery UI 의 datepicker === //
+         $('input#datepicker_start').datepicker({
+              dateFormat: 'yy-mm-dd'  //Input Display Format 변경
+             ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
+             ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
+             ,changeYear: true        //콤보박스에서 년 선택 가능
+             ,changeMonth: true       //콤보박스에서 월 선택 가능                
+         //  ,showOn: "both"          //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
+         //  ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
+         //  ,buttonImageOnly: true   //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
+         //  ,buttonText: "선택"       //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
+             ,yearSuffix: "년"         //달력의 년도 부분 뒤에 붙는 텍스트
+             ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
+             ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
+             ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
+             ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
+         //  ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+         //  ,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
+         });
+         
+         
+    }); // end of $(document).ready(function(){}) ----------
+
+   function goSearch(){
+      
+      const frm = document.member_search_frm;
+      
+      frm.method = "get";
+      frm.action = "<%= ctxPath%>/owner_Status.kedai";
+      frm.submit();
+      
+   } // end of function goSearch(){} ----------
    
-    
+    function goApply(formName){
+        const frm = document.forms[formName];
+        frm.action = "<%= ctxPath%>/carApply_detail.kedai"; 
+        frm.method = "post";
+        frm.submit();
+    }
 </script>
 
-<div id="container">
-	<div style="border: 0px solid red; padding: 2% 0; width: 90%;">
-	<!-- Navigation Tabs -->
-	<ul class="nav nav-tabs" style="margin-bottom:4%;">
-	    <li class="nav-item">
-	        <a class="nav-link active" style="color: white; font-size:12pt;" href="<%= ctxPath %>/myCarInfo.kedai">차량정보</a>
-	    </li>
-	    <li class="nav-item">
-	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Status.kedai">카셰어링현황(차주)</a>
-	    </li>
-	    <li class="nav-item">
-	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Settlement.kedai">카셰어링정산(차주)</a>
-	    </li>
-	    <li class="nav-item">
-	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_apply.kedai">카셰어링신청(신청자)</a>
-	    </li>
-	    <li class="nav-item">
-	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">카셰어링신청현황(신청자)</a>
-	    </li>
-	    <li class="nav-item">
-	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_Settlement.kedai">카셰어링정산(신청자)</a>
-	    </li>
-	</ul>
-	</div>
-    <div id="map" style="margin-left:25%; width:75%; height:900px;"></div>
+<div style="border: 0px solid red; padding: 2% 0; width: 90%;">
+<!-- Navigation Tabs -->
+<ul class="nav nav-tabs" style="margin-bottom:4%;">
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/myCar.kedai">차량정보</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" style="color: white; font-size:12pt;" href="<%= ctxPath %>/owner_Status.kedai">카셰어링현황(차주)</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Settlement.kedai">카셰어링정산(차주)</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_apply.kedai">카셰어링신청(신청자)</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">카셰어링신청현황(신청자)</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_Settlement.kedai">카셰어링정산(신청자)</a>
+    </li>
+</ul>
+ 
+<div style="display: flex;  border: solid 0px red; width: 100%;">
 
-    <div id="in-container">
-		<div class="mt-3" style="display: flex;">
-			<div>
-				<select name="searchType" style="width: 170px;">
-				   <option value="total">전체</option>
-				   <option value="going">진행중</option>
-				   <option value="end">마감</option>
-				</select> 
-				<span></span>  
-			</div>
-		</div>
+    <div style="margin: auto; width: 100%">
+
+         <div class="row">
+        <form name="member_search_frm" class="col-10">
+            <select name="searchType">
+               <option value="">검색대상</option>
+               <option value="dp_name">출발지</option>
+               <option value="ds_name">도착지</option>
+               <option value="share_date">셰어링 날짜</option>
+            </select>
+            &nbsp;
+            <c:if test=""></c:if>
+            <input type="text" name="searchWord" placeholder = "검색어 입력"/>
+            <input type="text" style="display: none;" /> <%-- 조심할 것은 type="hidden" 이 아니다. --%> 
+            <!--  날짜 선택   -->
+            <input type="text" name="start" id="datepicker_start" maxlength="10" value="" style="padding: 5px; height: 22pt;" placeholder = "날짜선택" readonly/>
+            &nbsp;
+            <button type="button" class="btn btn-secondary" onclick="goSearch()">검색</button>
+            
+        </form>
+        </div>
+        <div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 7.8%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
+        </div>
+        
+        <table style="width: 100%; margin-top: 1%;" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 70px; text-align: center;">no</th>
+                    <th style="width: 240px; text-align: center;">출발지 -> 도착지</th>
+                    <th style="width: 200px; text-align: center;">셰어링 날짜</th>
+                    <th style="width: 70px; text-align: center;">출발시간</th>
+                    <th style="width: 70px; text-align: center;">조회</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:if test="${not empty requestScope.owner_carShareList}">
+                    <c:forEach var="owner_carShare" items="${requestScope.owner_carShareList}" varStatus="status">
+                        <tr>
+                           <td align="center">${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
+                            <form name="carShareFrm${status.index}">
+                                <input type="hidden" name="res_num" value="${owner_carShare.res_num}"/>
+                            </form> 
+                            <td>${owner_carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${owner_carShare.ds_name}</td>
+                            <c:set var="startDate" value="${owner_carShare.start_date}" />
+                            <c:set var="lastDate" value="${owner_carShare.last_date}" />
+                            <td align="center">
+                                <fmt:parseDate value="${startDate}" var="parsedStartDate" pattern="yyyy-MM-dd HH:mm:ss" />
+                                <fmt:formatDate value="${parsedStartDate}" pattern="yyyy-MM-dd" />
+                                ~
+                                <fmt:parseDate value="${lastDate}" var="parsedLastDate" pattern="yyyy-MM-dd HH:mm:ss" />
+                                <fmt:formatDate value="${parsedLastDate}" pattern="yyyy-MM-dd" />
+                            </td>
+                            <td align="center">${owner_carShare.start_time}</td>
+                            <td align="center">
+                                <input type="button" value="날짜선택" class="subject" id="openModalBtn" />
+                            </td>
+                         <!-- The Modal -->
+                         <div id="myModal" class="modal">
+                             <!-- Modal content -->
+                             <div class="modal-content">
+                                 <span class="close">&times;</span>
+                                 <span style="text-align:center; font-size: 20pt; font-weight:300;">조회하고 싶은 날짜를 선택하세요</span>
+                                 <div id="calendar"></div>
+                             </div>
+                         </div>
+                        </tr>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty requestScope.owner_carShareList}">
+                    <tr>
+                        <td colspan="7">데이터가 존재하지 않습니다.</td>
+                    </tr>
+                </c:if>
+            </tbody>
+        </table>
+
+        <div id="pageBar" align="center" style="border: solid 0px gray; width: 50%; margin: 3% auto;">
+                ${requestScope.pageBar}
+        </div>
     </div>
 </div>
-<!-- 해당 페이지에서는 들어오자마자 전체 카셰어링을 다 보여주고  -->
+</div>
+<form name="goViewFrm">
+   <input type="hidden" name="board_seq" />
+   <input type="hidden" name="goBackURL" />
+   <input type="hidden" name="searchType" />
+   <input type="hidden" name="searchWord" />
+</form> 
+<!--  검색대상이 셰어링 날짜일 경우 textform 이 아닌 datepicker 폼으로 변경하기 -->

@@ -726,20 +726,6 @@ on a.fk_empid = b.empid
 )h
 where h.car_seq = v.fk_car_seq and cancel_status = 1 and lower(nickname) like '%' ||lower('dory')||'%'
 
-select *
-from
-(
-select *
-from tbl_day_share
-where cancel_status = 1 and 
-)V 
-cross join
-(
-select *
-from tbl_employees
-where (lower(nickname) like '%'|| lower('Dory')||'%' or lower(nickname) like '%'|| lower('Dory')||'%')
-)C
-;
 
 select *
 from tbl_car_share
@@ -754,3 +740,31 @@ FROM USER_TAB_COLUMNS
 WHERE TABLE_NAME = 'tbl_car_share';
 
 ALTER TABLE tbl_car_share MODIFY (ACCEPT_YON number DEFAULT 0);
+
+    select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname, readCount
+    from
+    (
+    select row_number() over(order by res_num desc) AS rno, res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname, readCount
+    from 
+    (
+    select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, fk_car_seq, readCount
+    from tbl_day_share
+    where end_status = 1 and cancel_status = 1
+                    AND TO_DATE(to_char('2024-07-29', 'YYYY-MM-DD'), 'YYYY-MM-DD') BETWEEN start_date AND last_date
+    )a cross join
+    (
+        select car_seq, fk_empid, car_num, car_type, max_num, nickname
+        from 
+        (
+            select *
+            from tbl_car
+        ) v cross join
+        (
+            select *
+            from tbl_employees
+        ) h
+        where fk_empid = h.empid
+    )b
+    where fk_car_seq = b.car_seq
+    )C
+WHERE c.rno between 1 and 10

@@ -105,6 +105,24 @@ public class CarService_imple implements CarService {
 		return wordList;
 	}
 
+	@Override
+	public List<Map<String, String>> owner_carShareList(String empid) {
+		List<Map<String, String>> owner_carShareList = dao.getowner_carShareList(empid);
+		return owner_carShareList;
+	}
+
+	@Override
+	public List<Map<String, String>> owner_carShareListSearch_withPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> owner_carShareList = dao.owner_carShareListSearch_withPaging(paraMap);
+		return owner_carShareList;
+	}
+
+	@Override
+	public int owner_getTotalCount(Map<String, String> paraMap) {
+		int owner_totalCount = dao.owner_getTotalCount(paraMap);
+		return owner_totalCount;
+	}
+
 
 
 }

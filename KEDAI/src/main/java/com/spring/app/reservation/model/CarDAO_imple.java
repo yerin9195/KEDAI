@@ -106,6 +106,25 @@ public class CarDAO_imple implements CarDAO {
 		return wordList;
 	}
 
+	@Override
+	public List<Map<String, String>> getowner_carShareList(String empid) {
+		List<Map<String, String>> owner_carShareList = sqlsession.selectList("reservation.getowner_carShareList", empid);
+		return owner_carShareList;
+	}
+
+	@Override
+	public List<Map<String, String>> owner_carShareListSearch_withPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> owner_carShareList = sqlsession.selectList("reservation.owner_carShareListSearch_withPaging", paraMap);
+		return owner_carShareList;
+	}
+
+	@Override
+	public int owner_getTotalCount(Map<String, String> paraMap) {
+		int owner_totalCount = sqlsession.selectOne("reservation.owner_getTotalCount", paraMap);
+		return owner_totalCount;
+	}
+
+
 
 
 
