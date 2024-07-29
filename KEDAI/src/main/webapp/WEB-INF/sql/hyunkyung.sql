@@ -141,11 +141,12 @@ create table tbl_doctype
 ,constraint PK_tbl_doctype_doctype_code primary key(doctype_code)
 );
 -- 기안종류 코멘트
-COMMENT ON COLUMN tbl_doctype.doctype_code IS '기안 종류 코드(primary key) 100:연차신청서 101:회의록 102:야간근무신청'; --Comment이(가) 생성되었습니다.
+COMMENT ON COLUMN tbl_doctype.doctype_code IS '기안 종류 코드(primary key) 100:연차신청서 101:회의록 102:추가근무비용신청'; --Comment이(가) 생성되었습니다.
 
-insert into tbl_doctype(doctype_code, doctype_name)
-        values(boardSeq.nextval, 'hkim', '차은우', '차은우 입니다'||i, '안녕하세요? 차은우'|| i ||' 입니다.', '1234', default, default, default, i);
-
+insert into tbl_doctype(doctype_code, doctype_name) values(100, '연차신청서');
+insert into tbl_doctype(doctype_code, doctype_name) values(101, '회의록');
+insert into tbl_doctype(doctype_code, doctype_name) values(102, '추가근무비용신청');
+      
 commit;
 
 --기안문서(24.07.03 생성완료)
@@ -153,19 +154,41 @@ create table tbl_doc
 (doc_no             VARCHAR2(30)         not null    -- 기안문서번호(EX. KD-100-2407)
 ,fk_doctype_code    NUMBER               not null    -- 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
 ,fk_empid           VARCHAR2(30)         not null    -- 기안자사원아이디
-,subject            NVARCHAR2(50)        not null    -- 기안문서제목
-,content            NVARCHAR2(2000)      not null    -- 기안문서내용
+,doc_subject        NVARCHAR2(50)        not null    -- 기안문서제목
+,doc_content        NVARCHAR2(2000)      not null    -- 기안문서내용
 ,created_date       date default sysdate not null    -- 서류작성일자
 ,doc_comment            NVARCHAR2(100)                   -- 기안의견
-,doc_status         NUMBER  default 0    not null    -- 기안상태  0:기안 1:반려
-,doc_org_filename   VARCHAR2(200)                     -- 원래 파일명
-,doc_filename       VARCHAR2(200)                     -- 첨부 파일명
-,doc_filesize       NUMBER                           --파일크기
+-- ,doc_status         NUMBER  default 0    not null    -- 기안상태  0:기안 1:반려                
 ,constraint PK_tbl_doc_doc_no primary key(doc_no)
 ,constraint FK_tbl_doc_fk_doctype_code foreign key(fk_doctype_code) references tbl_doctype(doctype_code)
 ,constraint FK_tbl_doc_fk_empid foreign key(fk_empid) references tbl_employees(EMPID)
-,constraint ck_tbl_doc_doc_status CHECK (doc_status IN(0, 1))
+-- ,constraint ck_tbl_doc_doc_status CHECK (doc_status IN(0, 1))
 );
+
+ALTER TABLE tbl_doc
+DROP COLUMN doc_status;
+
+
+ALTER TABLE tbl_doc RENAME COLUMN content TO doc_content;
+
+ALTER TABLE tbl_doc DROP COLUMN doc_org_filename;
+ALTER TABLE tbl_doc DROP COLUMN doc_filename; -- 첨부 파일명
+ALTER TABLE tbl_doc DROP COLUMN doc_filesize;--파일크기
+commit;
+
+create sequence doc_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+SELECT column_name, comments
+FROM user_col_comments
+WHERE table_name = 'TBL_DOC' ;
+
+commit;
 
 -- 기안종류 코멘트
 COMMENT ON COLUMN tbl_doc.doc_no IS '기안 문서 번호(primary key)'; --Comment이(가) 생성되었습니다.
@@ -203,20 +226,36 @@ COMMENT ON COLUMN tbl_doc.reason IS '연차사유 ';
 
 --회의록(24.07.03 생성완료)
 create table tbl_minutes
-(minutes_code    NUMBER             not null    -- 회의록시퀀스
+(minutes_no    NUMBER             not null    -- 회의록시퀀스
 ,fk_doc_no       VARCHAR2(30)       not null    -- 기안문서번호
 ,meeting_date    DATE               not null    -- 회의일자 
-,content         NVARCHAR2(2000)    not null    -- 회의록내용
 ,attendees       NVARCHAR2(50)      not null    -- 회의 참석자
 ,host_dept       NVARCHAR2(50)      not null    -- 회의 주관부서
 ,constraint PK_tbl_minutes_minutes_code primary key(minutes_code)
 ,constraint FK_tbl_minutes_fk_doc_no foreign key(fk_doc_no) references tbl_doc(doc_no)
 );             
-
+ALTER TABLE tbl_minutes RENAME COLUMN minutes_code TO minutes_no;
 ALTER TABLE tbl_minutes ADD host_dept NVARCHAR2(50) not null;
+ALTER TABLE tbl_minutes DROP COLUMN content; -- content테이블 삭제
 
-DROP TABLE tbl_minutes;
+select *
+from tbl_minutes;
+
+create sequence minutes_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+--Sequence MINUTES_NOSEQ이(가) 생성되었습니다.
+
+DROP SEQUENCE minutes_noSeq;
+
 commit;
+
+select *
+from  tbl_minutes;
 
 SELECT *
 FROM USER_CONSTRAINTS
@@ -239,19 +278,37 @@ create table tbl_approval
 ,status             NUMBER           not null    -- 결재상태
 ,approval_comment   NVARCHAR2(100)               -- 결재의견
 ,approval_date      DATE                         -- 결재일자
-
+,level_no           NUMBER           not null    -- 결재단계
 ,constraint PK_tbl_approval_approval_no primary key(approval_no)
 ,constraint FK_tbl_approval_fk_doc_no foreign key(fk_doc_no) references tbl_doc(doc_no)
 ,constraint FK_tbl_approval_fk_empid foreign key(fk_empid) references tbl_employees(empid)
 );
 
-CREATE TABLE tbl_doc_test (
-    id NUMBER
-);
+ALTER TABLE tbl_approval DROP CONSTRAINT PK_tbl_approval_new;
 
-ALTER TABLE tbl_doc_test ADD approval_no NUMBER NOT NULL;
+ALTER TABLE tbl_approval 
+ADD CONSTRAINT PK_tbl_approval_no_empid PRIMARY KEY (approval_no, fk_empid);
 
-drop table tbl_doc_test
+SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE, TABLE_NAME
+FROM USER_CONSTRAINTS
+WHERE TABLE_NAME = 'TBL_APPROVAL';
+
+ALTER TABLE tbl_approval
+MODIFY level_no DEFAULT NULL;
+
+create sequence approval_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+DROP SEQUENCE approval_noSeq;
+
+SELECT sequence_name
+FROM user_sequences
+WHERE sequence_name = 'APPROVAL_NOSEQ';
 
 commit;
 
@@ -264,6 +321,38 @@ COMMENT ON COLUMN tbl_approval.status IS '결재상태 0:미결재 1:결재 3:�
 COMMENT ON COLUMN tbl_approval.approval_comment IS '결재의견 '; 
 COMMENT ON COLUMN tbl_approval.approval_date IS '결재일자 '; 
 
+
+-- 첨부파일 테이블
+create table tbl_doc_file
+(doc_file_no        NUMBER           not null    -- 결재번호
+,fk_doc_no          VARCHAR2(30)     not null    -- 기안문서번호
+,doc_org_filename   VARCHAR2(100)    not null    -- 원래파일명 
+,doc_filename       varchar2(100)    not null    -- 첨부파일명 
+,doc_filesize       NUMBER           not null    -- 파일크기
+,constraint PK_tbl_doc_file_doc_file_no primary key(doc_file_no)
+,constraint FK_tbl_doc_file_fk_doc_no foreign key(fk_doc_no) references tbl_doc(doc_no)
+);
+
+alter table tbl_doc_file MODIFY (doc_filename VARCHAR2(100)); 
+
+create sequence doc_file_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+DROP SEQUENCE doc_file_noSeq;
+
+commit;
+
+COMMENT ON COLUMN tbl_doc_file.doc_file_no IS '결재번호(primary key) '; 
+COMMENT ON COLUMN tbl_doc_file.fk_doc_no IS '기안 문서 번호'; 
+COMMENT ON COLUMN tbl_doc_file.doc_org_filename IS '원래 파일명'; 
+COMMENT ON COLUMN tbl_doc_file.doc_file_no IS '결재번호(primary key) '; 
+COMMENT ON COLUMN tbl_doc_file.doc_filename IS '첨부 파일명 '; 
+COMMENT ON COLUMN tbl_doc_file.doc_filesize IS '파일크기'; 
 
 
 --- 문서번호 추가하기
@@ -334,4 +423,380 @@ GROUP BY D.dept_code, D.dept_name
 ORDER BY D.dept_code desc;
 
 select *
-from tbl_employees
+from tbl_minutes;
+
+select *
+from tbl_approval;
+
+select *
+from tbl_doc;
+
+select *
+from tbl_doc_file;
+
+
+select minutes_no.nextval
+from dual;
+
+
+insert insert into tbl_doc(doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date)
+values(103, '변우석', default);
+
+select *
+from tbl_doc;
+
+desc tbl_doc;
+
+DELETE FROM tbl_doc;
+
+commit;
+
+
+
+
+----------- 연습용 데이터 모두 삭제하기
+--1. tbl_doc_file 삭제 
+DELETE FROM tbl_doc_file;
+
+select *
+from tbl_doc_file;
+
+--2. tbl_minutes 삭제
+DELETE FROM tbl_minutes;
+
+select *
+from tbl_minutes;
+
+--3. tbl_approval 삭제
+DELETE FROM tbl_approval;
+
+select *
+from tbl_approval;
+
+--4. tbl_doc 삭제
+DELETE FROM tbl_doc;
+
+select *
+from tbl_doc;
+
+
+
+-- seq 삭제 및 재생성
+--1. doc_noSeq
+
+DROP SEQUENCE doc_noSeq;
+
+create sequence doc_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+SELECT *
+FROM all_sequences
+WHERE sequence_name = 'doc_noSeq';
+
+--SELECT doc_noSeq.NEXTVAL, doc_noSeq.CURRVAL
+--FROM dual;
+
+--2.doc_file_noSeq
+
+DROP SEQUENCE doc_file_noSeq;
+
+create sequence doc_file_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+SELECT sequence_name
+FROM all_sequences
+WHERE sequence_name = 'doc_file_noSeq';
+
+--3. minutes_noSeq
+
+DROP SEQUENCE minutes_noSeq;
+
+create sequence minutes_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+SELECT sequence_name
+FROM all_sequences
+WHERE sequence_name = 'minutes_noSeq';
+
+--4. approval_noSeq
+
+DROP SEQUENCE approval_noSeq;
+
+create sequence approval_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+SELECT sequence_name
+FROM all_sequences
+WHERE sequence_name = 'approval_noSeq';
+
+commit;
+
+select *
+from tbl_approval
+order by approval_no, level_no;
+
+select *
+from tbl_doc_file;
+
+select *
+FROM tbl_doc;
+
+select *
+from tbl_approval
+
+/*
+select D.doc_no, D.fk_empid, D.doc_subject, D.created_date
+    , T.doctype_name, A.approval_no, A.status, A.level_no, A.fk_empid AS APPROVAL_EMPID
+    , F.doc_file_no
+from tbl_doc D
+JOIN tbl_doctype T
+ON T.doctype_code = D.fk_doctype_code
+JOIN tbl_approval A
+ON A.fk_doc_no = D.doc_no
+LEFT JOIN tbl_doc_file F
+ON F.fk_doc_no = D.doc_no
+where D.fk_empid = '2020200-006' */
+
+SELECT fk_doc_no, MAX(level_no) AS max_level_no
+FROM tbl_approval
+GROUP BY fk_doc_no
+
+-- 내가 작성한 서류 찾는 sql
+SELECT  D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
+    , T.doctype_name, AP.status, AP.level_no, AP.APPROVAL_EMPID
+    , CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+FROM tbl_doc D
+JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
+JOIN ( 
+    SELECT A1.fk_doc_no, A2.status, A1.level_no, A2.fk_empid AS APPROVAL_EMPID
+    FROM (
+        SELECT fk_doc_no, MIN(level_no) AS level_no
+        FROM tbl_approval 
+        GROUP BY fk_doc_no
+    ) A1
+    JOIN tbl_approval A2 
+    ON A1.fk_doc_no = A2.fk_doc_no AND A1.level_no = A2.level_no
+) AP
+ON AP.fk_doc_no = D.doc_no
+LEFT JOIN ( 
+    SELECT fk_doc_no
+    FROM tbl_doc_file
+    GROUP BY fk_doc_no
+) F ON F.fk_doc_no = D.doc_no
+WHERE D.fk_empid = '2020200-006'
+ORDER BY D.created_date DESC, D.DOC_NO DESC;
+
+SELECT *
+FROM tbl_approval
+
+SELECT D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
+    		, T.doctype_name, A.status, A.level_no, A.fk_empid AS APPROVAL_EMPID
+    		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+		from tbl_doc D
+		JOIN tbl_doctype T
+		ON T.doctype_code = D.fk_doctype_code
+		JOIN tbl_approval A
+		ON A.fk_doc_no = D.doc_no
+		LEFT JOIN (
+		        SELECT fk_doc_no
+		        FROM tbl_doc_file
+		        GROUP BY fk_doc_no
+		) F ON F.fk_doc_no = D.doc_no
+		where A.fk_empid = #{loginEmpId}
+        
+        
+
+from tbl_doc D
+JOIN tbl_doctype T
+
+
+
+SELECT A.fk_doc_no, A.status, A.level_no
+FROM (
+    SELECT fk_doc_no, status, level_no
+    FROM tbl_approval
+    WHERE fk_empid = '2011300-001'
+) A
+CROSS JOIN tbl_approval B 
+ON A.fk_doc_no = B.fk_doc_no
+
+SELECT A.fk_doc_no, A.status, A.level_no
+FROM tbl_approval A
+WHERE A.fk_doc_no IN (
+    SELECT B.fk_doc_no
+    FROM tbl_approval B
+    WHERE B.fk_empid = '2013100-002' AND STATUS = 0 
+);
+
+update tbl_approval set STATUS = 1 WHERE FK_DOC_NO ='KD24-101-1' AND fk_empid = '2013100-002'
+
+update tbl_approval set STATUS = 0 WHERE FK_DOC_NO ='KD24-101-1' AND fk_empid = '2012100-001'
+COMMIT;
+
+SELECT *
+FROM tbl_approval
+WHERE fK_DOC_NO IN  ('KD24-101-4', 'KD24-101-6') 
+ORDER BY APPROVAL_NO, LEVEL_NO
+
+DESC tbl_approval
+
+select *
+FROM tbl_doc
+
+SELECT *
+FROM tbl_employees
+WHERE EMPID='2011300-001'
+
+SELECT *
+FROM TBL_APPROVAL 
+
+COMMIT;
+
+SELECT *
+FROM TBL_DOC
+
+insert into tbl_doc(doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date)
+values(doc_noSeq.nextval, '101', '2020200-006', 'test5 - 첨부파일 무', 'test5 - 첨부파일 무', sysdate);
+
+insert into tbl_doc(doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date)
+values(doc_noSeq.nextval, '101', '2020200-006', 'test6 - 첨부파일 무', 'test6 - 첨부파일 무', sysdate);
+
+insert into tbl_doc(doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date)
+values(doc_noSeq.nextval, '101', '2020200-006', 'test7 - 첨부파일 무', 'test7 - 첨부파일 무', sysdate);
+
+commit;
+
+
+select *
+from tbl_approval
+ORDER BY APPROVAL_NO
+
+update tbl_doc set doc_no = 'KD24-101-8' WHERE doc_no = '8'
+update tbl_doc set doc_no = 'KD24-101-7' WHERE doc_no = '7'
+update tbl_doc set doc_no = 'KD24-101-9' WHERE doc_no = '9'
+
+INSERT
+
+SELECT *
+FROM tbl_minutes
+
+insert into tbl_minutes(minutes_no, fk_doc_no, meeting_date, attendees, host_dept)
+values( minutes_noSeq.nextval, 'KD24-101-7', '24/07/22','이주빈, 서강준' , '상품개발부')
+
+insert into tbl_minutes(minutes_no, fk_doc_no, meeting_date, attendees, host_dept)
+values( minutes_noSeq.nextval, 'KD24-101-8', '24/07/22','이주빈, 서강준' , '상품개발부')
+
+insert into tbl_minutes(minutes_no, fk_doc_no, meeting_date, attendees, host_dept)
+values( minutes_noSeq.nextval, 'KD24-101-9', '24/07/22','이주빈, 서강준' , '상품개발부')
+
+
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(approval_noSeq.nextval , 'KD24-101-7', '2012100-001', 0, 1)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(7 , 'KD24-101-7', '2013100-002', 0, 2)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(7 , 'KD24-101-7', '2014100-003', 0, 3)	
+
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(approval_noSeq.nextval , 'KD24-101-8', '2012100-001', 0, 1)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(8 , 'KD24-101-7', '2013100-002', 0, 2)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(8 , 'KD24-101-7', '2014100-003', 0, 3)
+
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(approval_noSeq.nextval , 'KD24-101-9', '2012100-001', 0, 1)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(9 , 'KD24-101-7', '2013100-002', 0, 2)	
+insert into tbl_approval(approval_no, fk_doc_no, fk_empid, status, level_no)
+values(9 , 'KD24-101-7', '2014100-003', 0, 3)
+
+
+select *
+from tbl_approval
+order by approval_no;
+
+update tbl_approval set fk_doc_no = 'KD24-101-9' WHERE approval_no=9
+
+
+SELECT A.fk_doc_no, A.status, A.level_no, fk_empid
+FROM tbl_approval A
+WHERE A.fk_doc_no IN (
+    SELECT B.fk_doc_no
+    FROM tbl_approval B
+    WHERE B.fk_empid = '2013200-001' AND STATUS = 0
+) 
+JOIN TBL_DOC D ON D.doc_no = A.fk_doc_no
+
+SELECT A.fk_doc_no, A.fk_empid, A.status, A.level_no, D.doc_subject, D.doc_content, D.created_date,
+        CASE WHEN F.doc_org_filename IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, T.doctype_name
+FROM tbl_approval A
+JOIN tbl_doc D ON D.doc_no = A.fk_doc_no
+LEFT JOIN tbl_doc_file F ON F.fk_doc_no = A.fk_doc_no
+JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
+WHERE A.fk_doc_no IN (
+    SELECT B.fk_doc_no
+    FROM tbl_approval B
+    WHERE B.fk_empid = '2013200-001' AND B.STATUS = 0
+) and 
+
+
+(select fk_doc_no, fk_empid, status, level_no 
+from tbl_approval a
+where A.fk_empid = '2013200-001' AND A.STATUS = 0)
+
+SELECT A.fk_doc_no, A.fk_empid, A.status, A.level_no
+FROM tbl_approval A
+WHERE A.fk_empid = '2013200-001' 
+  AND A.STATUS = 0
+  AND EXISTS (
+    SELECT 1
+    FROM tbl_approval B
+    WHERE B.fk_doc_no = A.fk_doc_no
+      AND B.level_no = A.level_no + 1
+)
+
+select *
+FROM tbl_approval A
+
+DESC tbl_approval A
+ 
+WITH 
+V AS
+(SELECT A.fk_doc_no, 
+FROM tbl_approval A
+WHERE A.fk_empid = '2013200-001' AND STATUS = 0
+)
+
+SELECT t1.APPROVAL_NO, t1.FK_DOC_NO, t1.FK_EMPID, t1.STATUS, t1.LEVEL_NO, t2.LEVEL_NO AS NEXT_LEVEL_NO
+FROM tbl_approval t1
+JOIN tbl_approval t2 ON t1.FK_DOC_NO = t2.FK_DOC_NO
+WHERE t1.FK_EMPID = '2012100-001'
+  AND t2.LEVEL_NO = t1.LEVEL_NO + 1;
+  
+  SELECT t1.APPROVAL_NO, t1.FK_DOC_NO, t1.FK_EMPID, t1.STATUS, t1.LEVEL_NO,
+       t2.APPROVAL_NO AS NEXT_APPROVAL_NO, t2.STATUS AS NEXT_STATUS, t2.LEVEL_NO AS NEXT_LEVEL_NO, T2.FK_EMPID
+FROM tbl_approval t1
+JOIN tbl_approval t2 ON t1.FK_DOC_NO = t2.FK_DOC_NO
+WHERE t1.FK_EMPID = '2012100-001'
+  AND t2.LEVEL_NO = t1.LEVEL_NO + 1;

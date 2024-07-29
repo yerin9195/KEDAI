@@ -10,6 +10,15 @@
 <%-- Bootstrap CSS --%>
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/bootstrap-4.6.2-dist/css/bootstrap.min.css" > 
 
+<style type="text/css">
+div.col-md-6 {
+	padding-left:0;
+	padding-right:40px;
+}
+
+</style>
+
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		
@@ -19,7 +28,7 @@
 		
 		const frm = document.docTypeFrm;
 		
-		let docRadio = document.querySelectorAll(`input[name='doc_type']`); 
+		let docRadio = document.querySelectorAll(`input[name='doctype_code']`); 
 		let isCheck = false; // 라디오의 선택 유무 검사용 
 /* 		?docType=dayoffDoc */
 	<%--	location.href=`<%= ctxPath%>/approval/newdoc.kedai?docType=\${docType}`; --%>
@@ -44,8 +53,7 @@
 </script>
 
 
-<body>
-	<button type="button" data-toggle="modal" style="width: 150px; height:5%; margin-top:1%; background-color:white; border : solid 1px black;" data-target="#newDocModal" >결재 작성하기</button>
+<button type="button" data-toggle="modal" style="width: 150px; height:5%; margin-top:1%; background-color:white; border : solid 1px black;" data-target="#newDocModal" >결재 작성하기</button>
 	
 	<!-- Modal -->
 	<!-- Modal 구성 요소는 현재 페이지 상단에 표시되는 대화 상자/팝업 창입니다. -->
@@ -64,10 +72,10 @@
 	      		<form name="docTypeFrm">
 		      		<div class="modal-body">
 		      		<!--  라디오 버튼과 연결된 라벨(label)을 클릭했을 때 라디오 버튼이 체크되도록 하려면, 라벨의 for 속성과 라디오 버튼의 id 속성을 일치하게 해야 한다. -->
-		      			<input type="radio" name="doc_type" value="newdayoff" id="newdayoff" />
+		      			<input type="radio" name="doctype_code" value="100" id="newdayoff" />
 		      			<label for="newdayoff" style="margin-left: 1.5%;">휴가신청서</label> 
 		      			<br>
-		      			<input type="radio" name="doc_type" value="newmeeting" id="newmeeting"/>
+		      			<input type="radio" name="doctype_code" value="101" id="newmeeting"/>
 		      			<label for="newmeeting" style="margin-left: 1.5%;">회의록</label>
 		      		</div>
 		      
@@ -81,80 +89,80 @@
 	    	
 	  	</div>
 	</div>
-	
+
+<div class="container-fluid mt-4" style="width:95%;  margin-right: auto; margin-left:0;">
+	<div class="row">
+<%-- <div id="11" class="col-md-4">	
  <h5 style="margin: 1.5% 1%; border : solid 0px red;">전자결재 홈</h5>
  <hr>
- <div style="height:100px;"><p style="padding:auto;">결재할 문서가 없습니다.<p></div>
+ <div style="height:100px;"><p style="padding:auto;">결재할 문서가 없습니다.<p>
  <hr>
-
-  <div class="document_inProgress">
-      <h5 style="margin: 1.5% 1%;"> 기안 진행 문서 </h5>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col" style="width:10%">기안일</th>
-            <th scope="col" style="width:15%">결재양식</th>
-            <th scope="col" style="width:10%">긴급</th>
-            <th scope="col" style="width:50%">제목</th>
-            <th scope="col" style="width:5%">첨부</th>
-            <th scope="col" style="width:10%">결재상태</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-               <td>2024-01-01</td>
-               <td>증명서신청(회사)</td>
-               <td>!!</td>
-               <td>김땡땡 사장님</td>
-               <td>유/무</td>
-               <td><span style="border : solid 0px green; background-color:green; color:white; margin-top:10%;">결재중</span></td>
-          </tr>
-          <tr>
-            <td>2024-01-01</td>
-               <td>증명서신청(회사)</td>
-               <td>!!</td>
-               <td>김땡땡 사장님</td>
-               <td>유/무</td>
-               <td><span style="border : solid 0px green; background-color:green; color:white; margin-top:10%;">결재중</span></td>
-          </tr>
-         
-        </tbody>
-      </table>
-    </div>
-    
-     <div class="document_approved">
-      <h5 style="margin: 1.5% 1%;"> 기안 진행 문서 </h5>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col" style="width:10%">기안일</th>
-            <th scope="col" style="width:15%">결재양식</th>
-            <th scope="col" style="width:10%">긴급</th>
-            <th scope="col" style="width:50%">제목</th>
-            <th scope="col" style="width:5%">첨부</th>
-            <th scope="col" style="width:10%">결재상태</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-               <td>2024-01-01</td>
-               <td>증명서신청(회사)</td>
-               <td>!!</td>
-               <td>김땡땡 사장님</td>
-               <td>유/무</td>
-               <td><span style="border : solid 0px green; background-color:gray; color:white; margin-top:10%;">결재완료</span></td>
-          </tr>
-          <tr>
-            <td>2024-01-01</td>
-               <td>증명서신청(회사)</td>
-               <td>!!</td>
-               <td>김땡땡 사장님</td>
-               <td>유/무</td>
-               <td><span style="border : solid 0px green; background-color:gray; color:white; margin-top:10%;">결재완료</span></td>
-          </tr>
-        
-        </tbody>
-      </table>
-    </div>
+ </div> --%>
+		<div id="22" class="col-md-6">	
+			<div class="document_inProgress">
+      			<h5 style="margin: 1.5% 1%;"> 결재할 문서 </h5>
+      			<table class="table table-hover">
+      				<thead>
+        				<tr>
+				            <th scope="col" style="width:17%">기안일</th>
+				            <th scope="col" style="width:20%">결재양식</th>
+				            <th scope="col" style="width:50%">제목</th>
+				            <th scope="col" style="width:13%">결재상태</th>
+        				</tr>
+      				</thead>
+      				<tbody>
+      					<c:if test="${not empty requestScope.docList}">
+      						<c:forEach var="appList" items="${requestScope.docList}" varStatus="status">
+      							<tr>
+      								<td></td>
+      						</c:forEach>
+      					</c:if>
+			        	
+			               <td>2024-01-01</td>
+			               <td>증명서신청(회사)</td>
+			               <td>김땡땡 사장님</td>
+			               <td><span style="border : solid 0px green; background-color:green; color:white; margin-top:10%;">결재중</span></td>
+			        	</tr>
+			          	<tr>
+			            	<td>2024-01-01</td>
+			               	<td>증명서신청(회사)</td>
+			               	<td>김땡땡 사장님</td>
+			               	<td><span style="border : solid 0px green; background-color:green; color:white; margin-top:10%;">결재중</span></td>
+			          	</tr>		
+      				</tbody>
+      			</table>
+    		</div>
+  		</div>
+   		<div id="33" class="col-md-6">	
+     		<div class="document_approved">
+      			<h5 style="margin: 1.5% 1%;"> 기안 진행 문서 </h5>
+      			<table class="table table-hover">
+        			<thead>
+          				<tr>
+				            <th scope="col" style="width:20%">기안일</th>
+				            <th scope="col" style="width:20%">결재양식</th>
+				            <th scope="col" style="width:45%">제목</th>
+				            <th scope="col" style="width:15%">결재상태</th>
+						</tr>
+        			</thead>
+        			<tbody>
+          				<tr>
+			               <td>2024-01-01</td>
+			               <td>증명서신청(회사)</td>
+			               <td>김땡땡 사장님</td>
+			               <td><span style="border : solid 0px green; background-color:gray; color:white; margin-top:10%;">결재완료</span></td>
+          				</tr>
+          				<tr>
+				            <td>2024-01-01</td>
+				            <td>증명서신청(회사)</td>
+				            <td>김땡땡 사장님</td>
+				            <td><span style="border : solid 0px green; background-color:gray; color:white; margin-top:10%;">결재완료</span></td>
+          				</tr>
+        			</tbody>
+      			</table>
+    		</div>
+    	</div>
+	</div>
+</div>
 </body>
 </html>
