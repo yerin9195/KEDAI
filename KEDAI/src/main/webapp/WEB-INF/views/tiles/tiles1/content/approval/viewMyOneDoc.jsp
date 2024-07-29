@@ -52,6 +52,7 @@ table.left_table input {
 table.approvalList {
     width: 100%; /* 테이블 전체 너비를 설정할 수 있습니다. */
     border-collapse: collapse; /* 테이블 셀의 경계를 병합합니다. */
+    height: 190px;
 }
 
 table.approvalList, .approvalList th, .approvalList td {
@@ -66,13 +67,14 @@ div#fileList a {
 }
 
 
+
+
 </style>
 
 <script type="text/javascript">
 $(document).ready(function(){
 	
 	if (${requestScope.docvo.isAttachment} == 1) {
-	    alert("ㅎㅎ"); 
 		goViewApprovalInfo();
 	}
 	
@@ -110,6 +112,7 @@ function goViewApprovalInfo(){
         }
 	});// end of $.ajax---------------------
 }
+
 /*
 function formatFileSize(size) {
     if (size < 1024){
@@ -128,11 +131,11 @@ function formatFileSize(size) {
 
 
 <div id="total_contatiner">
+	<c:set var="mvo" value="${requestScope.docvo.minutesvo}" />
+	<c:set var="avo" value="${requestScope.docvo.approvalvoList}" />
+	<c:set var="dvo" value="${requestScope.docvo}" />
 	<div style="display: flex;">
 		<div id="leftside" class="col-md-4" style="width: 90%; padding: 0;">
-		<c:set var="mvo" value="${requestScope.docvo.minutesvo}" />
-		<c:set var="avo" value="${requestScope.docvo.approvalvoList}" />
-		<c:set var="dvo" value="${requestScope.docvo}" />
 			<div id="title">${docvo.doctype_name}</div>
 			<table class="table left_table" id="title_table">
 				<tr>
@@ -165,27 +168,31 @@ function formatFileSize(size) {
 			<div id="title2">
 				결제라인
 			</div>
-			<div class="htmlAdd">
+			
+			<c:if test="${not empty avo}">
 				<table class="approvalList">
-					
 			        <tr>
-			            <th rowspan="3">승인</th>
-			            <th>대표이사</th>
-			            <th>이사</th>
-			            <th>부장</th>
+			            <th rowspan="3" style="width:10%">승인</th>
+			            <c:forEach var="item" items="${avo}">
+			            	<th style="height:30px;">${item.job_name}</th>
+			            </c:forEach>
 			        </tr>
 			      	<tr>
-			            <td>24.01.01</td>
-			            <td>24.01.02</td>
-			            <td>24.01.02</td>
+			      		<c:forEach var="item" items="${avo}">
+			      			<td>
+			      				<div style="height:100px;">${item.sign_img}</div>
+			            		<div style="height:30px;" >${item.name}</div>
+			            	</td>
+			            </c:forEach>
 			        </tr>
 			        <tr>
-			            <td>김땡땡</td>
-			            <td>박땡땡</td>
-			            <td>이땡땡</td>
+			         	<c:forEach var="item" items="${avo}">
+			      			<td style="height:30px;">${item.approval_date}</td>
+			            </c:forEach>
 			        </tr>
 				</table>
-			</div>
+				</c:if>
+		
 	
 		</div>
 		<div class="col-md-6" style="margin: 0; width: 100%">
@@ -204,6 +211,15 @@ function formatFileSize(size) {
 	       			<td><div id="fileList">첨부된 파일이 없습니다.</div></td>
 	    		</tr>
 			</table>
+			
+			<div style="text-align: right; margin: 18px 0 18px 0;">
+				<c:if test="${requestScope.nowApproval eq 1}">
+					<button type="button" class="btn btn-dark btn-sm mr-4"
+						id="btnOk('${avo.fk_doc_no}')">결재하기</button>
+					<button type="button" class="btn btn-primary btn-sm"
+						onclick="btnReject('${avo.fk_doc_no}')">반려하기</button>
+				</c:if>
+			</div>
 			   		
 		</div>
 	</div>

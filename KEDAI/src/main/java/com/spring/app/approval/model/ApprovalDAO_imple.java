@@ -23,8 +23,6 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	// /board/src/main/webapp/WEB-INF/spring/root-context.xml 의  bean에서 id가 sqlsession 인 bean을 주입하라는 뜻이다. 
     // 그러므로 sqlsession 는 null 이 아니다.
 
-
-
 	// 새로운 기안 서류 작성 시 작성자의 부서 이름 가져오기
 	@Override
 	public String getDeptNumber(Map<String, String> paraMap) {
@@ -39,14 +37,14 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		List<Map<String, String>> allEmployeeList = sqlsession.selectList("approval.allEmployeeList", login_empid);
 		return allEmployeeList;
 	}
-
+	
 	// 현재 근무중인 사원이 있는 모든 부서 가져오기
 	@Override
 	public List<DeptVO> allDeptList() {
 		List<DeptVO> allDeptList = sqlsession.selectList("approval.allDeptList");
 		return allDeptList;
 	}
-
+	
 	// 해당 부서에 근무중인 사원 정보 가져오기
 	@Override
 	public List<Map<String, String>> deptEmpList(Map<String, String> paraMap) {
@@ -118,13 +116,6 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return myapprovalinfo;
 	}
 
-	// 나의 모든 기안문서 가져오기
-	@Override
-	public List<Map<String, String>> myDocListSearch(Map<String, String> paraMap) {
-		List<Map<String, String>> myDocListSearch = sqlsession.selectList("approval.myDocListSearch", paraMap);
-		return myDocListSearch;
-	}
-
 	// 나의 기안 문서에서 총 페이지 수 가져오기
 	@Override
 	public int getTotalMyDocCount(Map<String, String> paraMap) {
@@ -132,13 +123,35 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return n;
 	}
 
+	// 나의 결재 문서에서 총 페이지수 가져오기
+	@Override
+	public int getTotalMyApprovalCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("approval.getTotalMyApprovalCount", paraMap);
+		return n;
+	}
+
+	// 나의 모든 기안문서 가져오기
+	@Override
+	public List<Map<String, String>> myDocListSearch(Map<String, String> paraMap) {
+		List<Map<String, String>> myDocListSearch = sqlsession.selectList("approval.myDocListSearch", paraMap);
+		return myDocListSearch;
+	}
+	
+	// 나의 모든 결재문서 가져오기
+	@Override
+	public List<Map<String, String>> myApprovalListSearch(Map<String, String> paraMap) {
+		List<Map<String, String>> myApprovalListSearch = sqlsession.selectList("approval.myApprovalListSearch", paraMap);
+		return myApprovalListSearch;
+	}
+
+
 	// 나의 기안 문서에서 문서 한 개 보기
 	@Override
 	public DocVO getOneDocCommon(Map<String, String> paraMap) {
 		DocVO getOneDocCommon = sqlsession.selectOne("approval.getOneDocCommon", paraMap);
 		return getOneDocCommon;
 	}
-
+	// 회의록 서류 정보 가져오기
 	@Override
 	public MinutesVO getOneMinutes(Map<String, String> paraMap) {
 		MinutesVO getOneMinutes = sqlsession.selectOne("approval.getOneMinutes", paraMap);
@@ -152,19 +165,20 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return getApprovalList;
 	}
 
-	// 파일 목록 가져오기
+	// 첨부 파일 목록 가져오기
 	@Override
 	public List<DocfileVO> getDocfiletList(String doc_no) {
 		List<DocfileVO> getDocfiletList = sqlsession.selectList("approval.getDocfiletList", doc_no);
 		return getDocfiletList;
 	}
 
-	// 파일 다운로드
+	// 첨부 파일 다운로드
 	@Override
 	public DocfileVO getDocfileOne(String fileNo) {
 		DocfileVO getDocfileOne = sqlsession.selectOne("approval.getDocfileOne", fileNo);
 		return getDocfileOne;
 	}
+
 
 
 	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청

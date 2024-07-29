@@ -10,6 +10,15 @@ public class ApprovalVO {
 	private String approval_date;           //결재일자
 	private String level_no;                //결재단계
 	
+	///////////////////////////////////////////tbl_employees////////////////////////////////
+	private String name;	// 결재자 이름
+	private String sign_img; // 결재자 사인
+		
+	///////////////////////////////////////////tbl_job////////////////////////////////
+	private String job_name;	// 결재자 직급
+	
+
+	
 	public String getApproval_no() {
 		return approval_no;
 	}
@@ -58,5 +67,29 @@ public class ApprovalVO {
 	public void setLevel_no(String level_no) {
 		this.level_no = level_no;
 	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getJob_name() {
+		return job_name;
+	}
+	public void setJob_name(String job_name) {
+		this.job_name = job_name;
+	}
+	
+	public String getSign_img() {
+		return sign_img;
+	}
+	
+	public void setSign_img(String sign_img) {
+		this.sign_img = sign_img;
+	}
+	
+	
 
 }

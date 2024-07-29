@@ -13,12 +13,12 @@ public interface ApprovalDAO {
 
 	// 새로운 기안 서류 작성 시 작성자의 부서 이름 가져오기
 	String getDeptNumber(Map<String, String> paraMap);
+	
+	// 현재 근무중인 사원이 있는 모든 부서 가져오기
+	List<DeptVO> allDeptList();
 
 	// 결재 라인에서 찾을 모든 사원 목록 보기
 	List<Map<String, String>> allEmployeeList(String login_empid);
-
-	// 현재 근무중인 사원이 있는 모든 부서 가져오기
-	List<DeptVO> allDeptList();
 
 	// 해당 부서에 근무중인 사원 정보 가져오기
 	List<Map<String, String>> deptEmpList(Map<String, String> paraMap);
@@ -50,26 +50,34 @@ public interface ApprovalDAO {
 	// 결재 할 문서의 정보 가져오기
 	List<Map<String, String>> myapprovalinfo(String loginEmpId);
 
-	// 나의 모든 기안문서 가져오기
-	List<Map<String, String>> myDocListSearch(Map<String, String> paraMap);
-
 	// 나의 기안 문서에서 총 페이지 수 가져오기
 	int getTotalMyDocCount(Map<String, String> paraMap);
+	
+	// 나의 결재 문서에서 총 페이지수 가져오기
+	int getTotalMyApprovalCount(Map<String, String> paraMap);
+	
+	// 나의 모든 기안문서 가져오기
+	List<Map<String, String>> myDocListSearch(Map<String, String> paraMap);
+	
+	// 나의 모든 결재문서 가져오기
+	List<Map<String, String>> myApprovalListSearch(Map<String, String> paraMap);
 
 	// 나의 기안 문서에서 문서 한 개 보기
 	DocVO getOneDocCommon(Map<String, String> paraMap);
 
 	// 회의록 문서 한 개 보기
 	MinutesVO getOneMinutes(Map<String, String> paraMap);
-
+	
 	// 결재라인 정보 가져오기
 	List<ApprovalVO> getApprovalList(Map<String, String> paraMap);
 
-	// 파일 목록 가져오기
+	// 첨부 파일 목록 가져오기
 	List<DocfileVO> getDocfiletList(String doc_no);
 
-	// 파일 다운로드
+	// 첨부 파일 다운로드
 	DocfileVO getDocfileOne(String fileNo);
+
+
 
 
 
