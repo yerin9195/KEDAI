@@ -447,6 +447,15 @@ from tbl_employees E1
 select *
 from tbl_employees;
 
+update tbl_employees
+set empid = '2022500-007'
+where name = '신현빈';
+
+commit;
+
+
+
+
 
 
 
