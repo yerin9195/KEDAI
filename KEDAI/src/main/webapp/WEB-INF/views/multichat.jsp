@@ -371,17 +371,19 @@ body, html {
 	<table style="border:solid 1px black;">
 		<thead>
 			<tr>
+				<th style="width: 70px; text-align: center;">사진</th>
 				<th style="width: 70px; text-align: center;">이름</th>		
 				<th style="width: 70px; text-align: center;">부서</th>	
 				<th style="width: 70px; text-align: center;">직급</th>			
-				<th style="width: 70px; text-align: center;">접속유무</th>	
 			</tr>
 		</thead>
 		<tbody>
-			<td>유선우</td>
-			<td>마케팅부</td>
-			<td>상무</td>
-			<td>접속중</td>
+			<tr>
+				<td style="width: 70px; text-align: center;"><img src="<%= ctxPath%>/resources/files/employees/${requestScope.imgfilename}" width=50px; height=50px;></td>
+				<td style="width: 70px; text-align: center;">${requestScope.name}</td>
+				<td style="width: 70px; text-align: center;">${requestScope.dept_name}</td>
+				<td style="width: 70px; text-align: center;">${requestScope.job_name}</td>
+			</tr>
 		</tbody> 
 	</table>
 </div>

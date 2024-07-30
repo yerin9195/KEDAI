@@ -146,32 +146,30 @@ public class EmployeeController {
 	}
 	
 	// ==== #222. (웹채팅관련4) ==== //
-	@GetMapping("/chatting/multichat.kedai")
+	/*
+ 	@GetMapping("/chatting/multichat.kedai") 
 	public String requiredLogin_multichat(HttpServletRequest request, HttpServletResponse response) {
-		
-		return "multichat";
-	}
 	
-	@ResponseBody
-	@GetMapping("/chatting/multichatLoginEmpList.kedai")
+	return "multichat"; 
+	 
+	}
+	 */
+	
+	// 접속중인 직원 정보 채팅방에 보여주기 
+	@GetMapping("/chatting/multichat.kedai")
 	public ModelAndView multichatLogin_EmpList(ModelAndView mav, HttpServletRequest request) {
-		
-		String login_empid = request.getParameter("loginuser");
-		
-		Map<String, String> paraMap = new HashMap<>();
 		
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 		
-		//paraMap.put("");// 로그인되어있는 직원들의 사진, 이름 직위 부서 가져오면됨.
+		mav.addObject("name", loginuser.getName());
+		mav.addObject("imgfilename", loginuser.getImgfilename());
+		// System.out.println("");
+		mav.addObject("dept_name", loginuser.getDept_name());
+		mav.addObject("job_name", loginuser.getJob_name());
 		
 		
-		
-		
-		
-		
-		
-		
+		mav.setViewName("multichat");
 		
 		return mav;
 		
