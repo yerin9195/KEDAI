@@ -1216,6 +1216,14 @@ WHERE doc_no ='KD24-101-3'
 commit;
 
 select *
-from tbl_doc
+from tbl_employees
 
+
+SELECT *
+		FROM tbl_approval A1
+
+
+UPDATE tbl_approval
+SET approval_date = TO_DATE('2024-07-23', 'YYYY-MM-DD')
+WHERE approval_no = 1 AND level_no = 2;
 

@@ -427,7 +427,7 @@
  	
  	<select id="getApprovalList" parameterType="HashMap" resultType="ApprovalVO">
  		select A.approval_no, A.fk_doc_no, A.fk_empid, A.status, A.approval_comment, 
- 				A.approval_date, A.level_no, E.name, E.sign_img, J.job_name, D.doc_status
+ 				to_char(A.approval_date,'yyyy-mm-dd') as approval_date, A.level_no, E.name, E.sign_img, J.job_name, D.doc_status
 		from tbl_approval A
 		join tbl_employees E
 		on E.empid = A.FK_EMPID

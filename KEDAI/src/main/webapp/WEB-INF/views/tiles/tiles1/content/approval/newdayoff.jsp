@@ -43,7 +43,7 @@ table#title_table td {
 	padding: 0 0 0 3%;
 }
 
-table#title_table th, table#meeting th, table#meeting td {
+table#title_table th, table#newday th, table#newday td {
 	padding: 0 0 0 3%;
 }
 
@@ -271,7 +271,9 @@ span.clear{clear: both;}
 	              	});
 	          	}
   	      	}
-  	      	$.ajax({
+  	      
+  	    	
+  	    	$.ajax({
             	url : "<%= ctxPath%>/approval/newdoc.kedai",
               	type : "post",
               	data : formData,
@@ -312,31 +314,44 @@ span.clear{clear: both;}
     */
   	  
     
-	    // === 전체 datepicker 옵션 일괄 설정하기 ===  
-	    //     한번의 설정으로 $("input#fromDate"), $('input#toDate')의 옵션을 모두 설정할 수 있다.
-	     // === jQuery UI 의 datepicker === //
-	    $(function() {
-	        //모든 datepicker에 대한 공통 옵션 설정
-	        $.datepicker.setDefaults({
-	             dateFormat: 'yy-mm-dd' //Input Display Format 변경
-	            ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
+     // === jQuery UI 의 datepicker === //
+	    $("input#startdate").datepicker({
+	             dateFormat: 'yy-mm-dd'  //Input Display Format 변경
+	            ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
 	            ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-	            ,changeYear: true //콤보박스에서 년 선택 가능
-	            ,changeMonth: true //콤보박스에서 월 선택 가능                
-	         // ,showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
-	         // ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-	         // ,buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-	         // ,buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
-	            ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
+	            ,changeYear: true        //콤보박스에서 년 선택 가능
+	            ,changeMonth: true       //콤보박스에서 월 선택 가능                
+	        //   ,showOn: "both"          //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
+	        //   ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
+	        //   ,buttonImageOnly: true   //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
+	        //   ,buttonText: "선택"       //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
+	            ,yearSuffix: "년"         //달력의 년도 부분 뒤에 붙는 텍스트
 	            ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
 	            ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
 	            ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
 	            ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-	         // ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-	         // ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
-	        });
-	     
+	        //  ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+	        //  ,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
 	    });
+	     
+	    $("input#findate").datepicker({
+            dateFormat: 'yy-mm-dd'  //Input Display Format 변경
+           ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
+           ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
+           ,changeYear: true        //콤보박스에서 년 선택 가능
+           ,changeMonth: true       //콤보박스에서 월 선택 가능                
+       //   ,showOn: "both"          //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
+       //   ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
+       //   ,buttonImageOnly: true   //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
+       //   ,buttonText: "선택"       //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
+           ,yearSuffix: "년"         //달력의 년도 부분 뒤에 붙는 텍스트
+           ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
+           ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
+           ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
+           ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
+       //  ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+       //  ,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
+   });
         
 	  	
         // input을 datepicker로 선언
@@ -346,7 +361,7 @@ span.clear{clear: both;}
 		$("input#startdate, input#findate").keyup(function(e) {
 	  		$(e.target).val("");
 	  		$(e.target).datepicker('setDate', 'today');
-	  		alert("기안일자는 마우스로만 클릭하세요.");
+	  		alert("기안일자는 마우스로만 클릭하세요.g");
 	  		
 	  	}); //  end of $('input#datepicker').keyup((e) => {})--------------------------------------
 	  	
@@ -371,10 +386,11 @@ span.clear{clear: both;}
 
         
 	     // 초기값을 오늘 날짜로 설정
-	     $("input#startdate").datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-	     $("input#findate").datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
+	  //   $("input#startdate").datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
+	 //    $("input#findate").datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
 	
-	
+	     $("#startdate").datepicker('setDate', new Date());
+         $("#findate").datepicker('setDate', new Date());
 	
 	   
 	     
@@ -802,28 +818,21 @@ span.clear{clear: both;}
 				<td>${requestScope.dept_name}</td>
 			</tr>
 		</table>
-		<table class="table left_table" id="meeting">
+		<table class="table left_table" id="newday">
 			<tr>
 				<th>날짜</th>
 				<td>
-					<input type="text" name="startdate" maxlength="8" size="8" /> ~ <input type="text" name="findate" maxlength="8" size="8" />
+					<input type="text" name="startdate" id="startdate" maxlength="8" size="8" /> ~ <input type="text" name="findate" id="findate" maxlength="8" size="8" />
 				</td>
 			</tr>
 			<tr>
-				<th>회의 주관 부서</th>
-				<td><input type="text" name="host_dept" size="30"
-					maxlength="60" style="width: 100%;" /></td>
+				<th>사용 가능 연차</th>
+				<td><span>잔여 연차 : <span style="border: solid 1px black; width:30px;"></span></span>&nbsp; <span>신청 연차 : </span></td>
 			</tr>
 		
-		<!--<tr>
-				<th>회의장소</th>
-				<td><input type="text" name="meeting_room" size="30"
-					maxlength="60" style="width: 100%;" /></td>
-			</tr> -->
 			<tr>
-				<th>회의 참석자</th>
-				<td><input type="text" name="attendees" size="30"
-					maxlength="60" style="width: 100%;" /></td>
+				<th>반차여부</th>
+				<td></td>
 			</tr>
 		</table>
 

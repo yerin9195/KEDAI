@@ -375,7 +375,7 @@ public class ApprovalController {
 	}
 	
 	
-	@RequestMapping("approval/nowApprovalList.kedai")
+	@RequestMapping("/approval/nowApprovalList.kedai")
 	public ModelAndView nowApprovalList(ModelAndView mav, HttpServletRequest request) {
 	
 		System.out.println("확인용 searchWord" + request.getParameter("searchWord"));
@@ -617,7 +617,7 @@ public class ApprovalController {
 		return mav;
 	}
 	
-	@RequestMapping("approval/showMyDocList.kedai")
+	@RequestMapping("/approval/showMyDocList.kedai")
 	public ModelAndView showMyDocList(ModelAndView mav, HttpServletRequest request) {
 		
 		

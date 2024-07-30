@@ -113,6 +113,10 @@ function goViewApprovalInfo(){
 	});// end of $.ajax---------------------
 }
 
+function btnOk(doc_no){
+	
+}
+
 /*
 function formatFileSize(size) {
     if (size < 1024){
@@ -172,14 +176,14 @@ function formatFileSize(size) {
 			<c:if test="${not empty avo}">
 				<table class="approvalList">
 			        <tr>
-			            <th rowspan="3" style="width:10%">승인</th>
+			            <th rowspan="3" style="width:10%;">승인</th>
 			            <c:forEach var="item" items="${avo}">
 			            	<th style="height:30px;">${item.job_name}</th>
 			            </c:forEach>
 			        </tr>
 			      	<tr>
 			      		<c:forEach var="item" items="${avo}">
-			      			<td>
+			      			<td style="width:30%;">
 			      				<div style="height:100px;">${item.sign_img}</div>
 			            		<div style="height:30px;" >${item.name}</div>
 			            	</td>
@@ -187,7 +191,7 @@ function formatFileSize(size) {
 			        </tr>
 			        <tr>
 			         	<c:forEach var="item" items="${avo}">
-			      			<td style="height:30px;">${item.approval_date}</td>
+			      			<td style="height:30px; width:30%;">${item.approval_date}</td>
 			            </c:forEach>
 			        </tr>
 				</table>
@@ -220,6 +224,55 @@ function formatFileSize(size) {
 						onclick="btnReject('${docvo.doc_no}')">반려하기</button>
 				</c:if>
 			</div>
+			
+			<!-- Modal -->
+			<!-- Modal 구성 요소는 현재 페이지 상단에 표시되는 대화 상자/팝업 창입니다. -->
+			<div class="modal" id="commentModal">
+				<div class="modal-dialog modal-dialog-centered modal-lg h-75" >
+				<!-- .modal-dialog-centered 클래스를 사용하여 페이지 내에서 모달을 세로 및 가로 중앙에 배치합니다. .modal-dialog 클래스를 사용하여 <div> 요소에 크기 클래스를 추가합니다.-->
+					<div class="modal-content">
+						<!-- Modal header -->
+						<div class="modal-header">
+							<h5 class="modal-title">결재의견</h5>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<!-- Modal body -->
+						<div class="modal-body row">
+							<div class="modal_left col-md-4">
+								<ul>
+									<li class="dept">
+										<c:forEach var="deptList" items="${requestScope.allDeptList}">
+											<c:choose>
+												<c:when test="${deptList.dept_name == ' '}">
+													<div class="openList">
+														<img src="<%=ctxPath%>/resources/images/common/Approval/plus.png" class="plus" />대표이사 
+														<input type="hidden" value="${deptList.dept_code}" id="deptCode" />
+													</div>
+												</c:when>
+												<c:otherwise>
+													<div class="openList">
+														<img src="<%=ctxPath%>/resources/images/common/Approval/plus.png" class="plus" />${deptList.dept_name} 
+														<input type="hidden" value="${deptList.dept_code}" id="deptCode" />
+													</div>
+												</c:otherwise>
+											</c:choose>
+										</c:forEach>
+									</li>
+								</ul>
+							</div>
+						</div>
+					<!-- Modal footer -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger my_close"
+								data-dismiss="modal">취소</button>
+							<button type="button" class="btn btn-primary btnSubmit"
+								onclick="modalSubmit()" >확인</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
 			   		
 		</div>
 	</div>
