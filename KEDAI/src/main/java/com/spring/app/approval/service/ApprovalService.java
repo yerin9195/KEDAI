@@ -48,8 +48,8 @@ public interface ApprovalService {
 	// 나의 모든 기안문서 가져오기
 	List<Map<String, String>> myDocListSearch(Map<String, String> paraMap);
 	
-	// 나의 모든 결재문서 가져오기
-	List<Map<String, String>> myApprovalListSearch(Map<String, String> paraMap);
+	// 나의 모든 결재 대기 문서 가져오기
+	List<Map<String, String>> myNowApprovalListSearch(Map<String, String> paraMap);
 
 	// 나의 기안 문서에서 문서 한 개 보기
 	DocVO getOneDoc(Map<String, String> paraMap);

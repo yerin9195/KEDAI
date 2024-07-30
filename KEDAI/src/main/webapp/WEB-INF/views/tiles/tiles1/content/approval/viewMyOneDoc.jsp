@@ -213,11 +213,11 @@ function formatFileSize(size) {
 			</table>
 			
 			<div style="text-align: right; margin: 18px 0 18px 0;">
-				<c:if test="${requestScope.nowApproval eq 1}">
+				<c:if test="${isNowApproval == true}">
 					<button type="button" class="btn btn-dark btn-sm mr-4"
-						id="btnOk('${avo.fk_doc_no}')">결재하기</button>
+						id="btnOk('${docvo.doc_no}')">결재하기</button>
 					<button type="button" class="btn btn-primary btn-sm"
-						onclick="btnReject('${avo.fk_doc_no}')">반려하기</button>
+						onclick="btnReject('${docvo.doc_no}')">반려하기</button>
 				</c:if>
 			</div>
 			   		

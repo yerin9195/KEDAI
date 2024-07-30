@@ -17,7 +17,17 @@ public class ApprovalVO {
 	///////////////////////////////////////////tbl_job////////////////////////////////
 	private String job_name;	// 결재자 직급
 	
+	
+	///////////////////////////////////////////tbl_doc////////////////////////////////
+	private String doc_status;
 
+	
+	public String getDoc_status() {
+		return doc_status;
+	}
+	public void setDoc_status(String doc_status) {
+		this.doc_status = doc_status;
+	}
 	
 	public String getApproval_no() {
 		return approval_no;
@@ -89,7 +99,24 @@ public class ApprovalVO {
 	public void setSign_img(String sign_img) {
 		this.sign_img = sign_img;
 	}
-	
+	/*
+	 @Override
+	public String toString() {
+	return "ApprovalVO{" +
+	                "approval_no=" + approval_no +
+	                ", fk_doc_no=" + fk_doc_no +
+	                ", fk_empid=" + fk_empid +
+	                ", status=" + status +
+	                ", approval_comment=" + approval_comment +
+	                ", approval_date=" + approval_date +
+	                ", level_no=" + level_no +
+	                ", name=" + name +
+	                ", sign_img=" + sign_img +
+	                ", job_name=" + job_name +
+	                ", doc_status=" + doc_status +
+	                '}';
+	    }
+	*/
 	
 
 }

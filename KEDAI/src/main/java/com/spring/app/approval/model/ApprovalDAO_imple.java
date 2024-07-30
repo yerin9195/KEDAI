@@ -137,10 +137,10 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return myDocListSearch;
 	}
 	
-	// 나의 모든 결재문서 가져오기
+	// 나의 모든 결재 대기 문서 가져오기
 	@Override
-	public List<Map<String, String>> myApprovalListSearch(Map<String, String> paraMap) {
-		List<Map<String, String>> myApprovalListSearch = sqlsession.selectList("approval.myApprovalListSearch", paraMap);
+	public List<Map<String, String>> myNowApprovalListSearch(Map<String, String> paraMap) {
+		List<Map<String, String>> myApprovalListSearch = sqlsession.selectList("approval.myNowApprovalListSearch", paraMap);
 		return myApprovalListSearch;
 	}
 

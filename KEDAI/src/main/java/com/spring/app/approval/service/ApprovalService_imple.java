@@ -147,9 +147,9 @@ public class ApprovalService_imple implements ApprovalService {
 	
 	// 나의 모든 결재문서 가져오기
 	@Override
-	public List<Map<String, String>> myApprovalListSearch(Map<String, String> paraMap) {
-		List<Map<String, String>> myApprovalListSearch = dao.myApprovalListSearch(paraMap);
-		return myApprovalListSearch;
+	public List<Map<String, String>> myNowApprovalListSearch(Map<String, String> paraMap) {
+		List<Map<String, String>> myNowApprovalListSearch = dao.myNowApprovalListSearch(paraMap);
+		return myNowApprovalListSearch;
 	}
 
 	// 나의 기안 문서에서 문서 한 개 보기(공통부분 + 결재라인 + 문서종류별 내용)

@@ -64,14 +64,14 @@ public class ApprovalController {
 		List<Map<String, String>> nowApproval = new ArrayList<>(); // 내가 지금 승인할 문서
 		List<Map<String, String>> laterApproval = new ArrayList<>(); // 내가 나중에 승인할 문서
 		for(Map<String, String> map : myapprovalinfo){
-			if("1".equals(map.get("pre_status")) && "0".equals(map.get("doc_status"))) { //이전 레벨의 담당자가 승인하고, 반려되지 않은 기안서만  map에 담기
+			if("1".equals(map.get("pre_status")) && "1".equals(map.get("doc_status"))) { //이전 레벨의 담당자가 승인하고, 진행중인 기안서만  map에 담기
 				nowApproval.add(map);
 	        }
 			else if((map.get("pre_status") == null) && "1".equals(map.get("level_no"))) { // 이전 레벨의 승인 담당자가 없고, 본인이 1순위인 경우(본인만 결재자인 경우)
 				nowApproval.add(map);
 			}
 			
-			else if("0".equals(map.get("pre_status")) && "0".equals(map.get("doc_status")) ) {//이전 레벨의 담당자가 승인하지 않고,반려되지 않은 기안서만  map에 담기(나중에 결재할문서)
+			else if("0".equals(map.get("pre_status")) && !"3".equals(map.get("doc_status")) ) {//이전 레벨의 담당자가 승인하지 않고,반려되지 않은 기안서만  map에 담기(나중에 결재할문서)
 				laterApproval.add(map);
 			}
 	    }
@@ -493,7 +493,7 @@ public class ApprovalController {
         paraMap.put("startRno", String.valueOf(startRno));
         paraMap.put("endRno", String.valueOf(endRno));
 				
-        allMyApprovalList = service.myApprovalListSearch(paraMap);
+        allMyApprovalList = service.myNowApprovalListSearch(paraMap);
      // 글 목록 가져오기(페이징 처리 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것이다.
         
 		mav.addObject("loginuser", loginuser); // 모델에 loginuser 객체 추가
@@ -987,40 +987,39 @@ public class ApprovalController {
 			List<ApprovalVO> approvalvoList = docvo.getApprovalvoList();
 			
 			String level_no_str = null;
+			boolean isExist = false;
 			boolean isNowApproval = false; 
-			for (ApprovalVO avo : approvalvoList) {
-			    if(avo.getFk_empid().equals(login_userid)) {
+			for(ApprovalVO avo : approvalvoList) {
+				System.out.println("확인용 avo doc_no" + avo.getFk_doc_no());
+			    if(avo.getFk_empid().equals(login_userid) && "0".equals(avo.getStatus())) { 
+			    	// 로그인한 사용자가 결재자로 있고, 결재하지 않은 상태일 때  ==> level_no를 level_no_str 변수에 담기
 			    	level_no_str = avo.getLevel_no();
+			    	System.out.println("확인용 level_no_str : " + level_no_str);
 			    }
 			}
 			if(level_no_str != null) {
-				int level_no = Integer.parseInt(level_no_str) + 1;
+				String pre_level_no = String.valueOf(Integer.parseInt(level_no_str) + 1); 
+				System.out.println("확인용  pre_level_no: " + pre_level_no);
 				for (ApprovalVO avo : approvalvoList) {
-					if( Integer.parseInt(avo.getLevel_no()) == level_no && "1".equals(avo.getStatus())) {
-						// doc_status추가해야 됨!!
-						
-						/*
-						 * 
-						 * 			if("1".equals(map.get("pre_status")) && "0".equals(map.get("doc_status"))) { //이전 레벨의 담당자가 승인하고, 반려되지 않은 기안서만  map에 담기
-				nowApproval.add(map);
-		    }
-			else if((map.get("pre_status") == null)) {
-				nowApproval.add(map);
-			}
-				
-			else if("0".equals(map.get("pre_status")) && "0".equals(map.get("doc_status")) ) {//이전 레벨의 담당자가 승인하지 않고,반려되지 않은 기안서만  map에 담기(나중에 결재할문서)
-				laterApproval.add(map);
-			}
-		    
-		    참고하자!!
-						 */
+					if(avo.getLevel_no().equals(pre_level_no)) { // 본인 이전 결재 담당자 정보 보기
+						isExist = true;// 본인 이전의 담당자가 있는지 없는지 확인용
+						System.out.println("확인용 : isExist" + isExist);
+						if("1".equals(avo.getStatus()) && "1".equals(avo.getDoc_status())) { //이전 레벨의 담당자가 승인하고, 진행중인 기안서
+							isNowApproval = true;
+							System.out.println("확인용 111: isNowApproval" + isNowApproval);
+						}
 					}
-						
-				}
+				}// end of for-------------
 				
+				if(isExist == false && "1".equals(level_no_str)) {
+					// 본인 이전의 담당자가 없고, 본인이 1순위 결재자일때
+					isNowApproval = true;
+					System.out.println("확인용2222: isNowApproval" + isNowApproval);
+				}
 			}
 			
-			
+			System.out.println("확인용 isNowApproval " + isNowApproval );
+			mav.addObject("isNowApproval",isNowApproval);
 			mav.addObject("docvo",docvo);
 			mav.setViewName("tiles1/approval/viewMyOneDoc.tiles");
 			

@@ -1191,11 +1191,31 @@ where A1.fk_doc_no = 'KD24-101-3'
 order by A1.level_no 
 
 
-select A.fk_doc_no, A.status, A.approval_comment, A.approval_date, A.level_no, E.name, J.job_name, E.sign_img
+select A.approval_no, A.fk_doc_no, A.fk_empid, A.status, A.approval_comment, 
+ 				A.approval_date, A.level_no, E.name, E.sign_img, J.job_name, D.doc_status
 from tbl_approval A
 join tbl_employees E
 on E.empid = A.FK_EMPID
 join tbl_job J
 ON J.job_code = E.fk_job_code
+JOIN tbl_doc D
+ON D.doc_no = A.fk_doc_no
 where fk_doc_no = 'KD24-101-3'
 order by level_no 
+
+select *
+from tbl_approval
+order by approval_no, level_no
+
+UPDATE tbl_doc
+SET doc_status = 1
+WHERE doc_no ='KD24-101-3'
+
+
+
+commit;
+
+select *
+from tbl_doc
+
+
