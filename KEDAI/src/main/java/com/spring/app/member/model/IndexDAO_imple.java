@@ -35,4 +35,10 @@ public class IndexDAO_imple implements IndexDAO {
 		return boardList;
 	}
 
+	@Override
+	public BoardVO boardMenuJSON() {
+		BoardVO bvo = sqlsession.selectOne("index.boardMenuJSON");
+		return bvo;
+	}
+
 }

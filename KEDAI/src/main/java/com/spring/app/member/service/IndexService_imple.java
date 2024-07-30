@@ -36,4 +36,11 @@ public class IndexService_imple implements IndexService {
 		return boardList;
 	}
 	
+	// 식단표 조회하기
+	@Override
+	public BoardVO boardMenuJSON() {
+		BoardVO bvo = dao.boardMenuJSON();
+		return bvo;
+	}
+	
 }

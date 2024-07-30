@@ -39,5 +39,17 @@
 		) T
 		WHERE RNO between 1 and 5
 	</select>
+	
+	<select id="boardMenuJSON" resultType="BoardVO">
+		SELECT content, filename
+		FROM 
+		(
+		    SELECT content, filename
+		    FROM tbl_board
+		    WHERE fk_category_code = 3
+		    ORDER BY board_seq DESC
+		)
+		WHERE ROWNUM = 1
+	</select>
 
 </mapper>

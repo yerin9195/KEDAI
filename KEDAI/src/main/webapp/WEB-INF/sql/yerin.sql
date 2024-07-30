@@ -1036,3 +1036,20 @@ FROM
     ) V
 ) T
 WHERE RNO between 1 and 5;
+
+desc tbl_board;
+
+select content, filename
+from tbl_board
+where fk_category_code = 3
+order by board_seq desc;
+
+SELECT content, filename
+FROM 
+(
+    SELECT content, filename
+    FROM tbl_board
+    WHERE fk_category_code = 3
+    ORDER BY board_seq DESC
+)
+WHERE ROWNUM = 1;

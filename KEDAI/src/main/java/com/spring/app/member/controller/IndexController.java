@@ -1,8 +1,6 @@
 package com.spring.app.member.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -165,11 +163,16 @@ public class IndexController {
 	
 	// 식단표 조회하기
 	@ResponseBody
-	@GetMapping(value="/index/boardMenuJSON", produces="text/plain;charset=UTF-8")
+	@GetMapping(value="/index/boardMenuJSON.kedai", produces="text/plain;charset=UTF-8")
 	public String boardMenuJSON() {
 		
+		BoardVO bvo = service.boardMenuJSON();
 		
+		JSONObject jsonObj = new JSONObject(); // {}
 		
-		return "";
+		jsonObj.put("content", bvo.getContent());
+		jsonObj.put("filename", bvo.getFilename());
+		
+		return jsonObj.toString();
 	}
 }

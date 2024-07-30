@@ -183,7 +183,9 @@
 			type: "get",
 			dataType: "json",	 
 		   	success: function(json){
-		   		console.log(JSON.stringify(json));
+		   	//	console.log(JSON.stringify(json));
+		
+		   		$("div.content").html(json.filename);
 		   	},
 			error: function(request, status, error){
             	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -548,7 +550,8 @@
 		</div>
 			
 		<div class="col-3 px-0" style="border: 1px solid red; text-align: center;">
-			<h4>식단표</h4>
+			<h2>MENU</h2>
+			<div class="content"></div>
 		</div>
 		
 		<div class="col-4 px-0" style="border: 1px solid red; text-align: center;">

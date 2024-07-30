@@ -14,5 +14,8 @@ public interface IndexService {
 
 	// 게시판 글 조회하기
 	List<BoardVO> boardListJSON(String category_code);
+
+	// 식단표 조회하기
+	BoardVO boardMenuJSON();
 	
 }

@@ -21,8 +21,7 @@
 		text-overflow: ellipsis;
 	}
 	.moveColor {
-		color: #2c4459;
-		font-weight: bold;
+		color: #e68c0e;
 		cursor: pointer;
 	}
 	.list_btn:hover {
