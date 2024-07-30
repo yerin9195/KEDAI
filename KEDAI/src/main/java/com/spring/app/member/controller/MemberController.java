@@ -372,8 +372,8 @@ public class MemberController {
 			String root = session.getServletContext().getRealPath("/"); 
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 			
-			String path = root+"resources"+File.separator+"files";
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			String path = root+"resources"+File.separator+"files"+File.separator+"employees";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\employees
 			
 			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
 			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
@@ -570,9 +570,49 @@ public class MemberController {
 		int totalCount = service.memberTotalCountJSON();
 		
 		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("totalCount", totalCount*1000);
+		jsonObj.put("totalCount", totalCount*100);
 		
 		return jsonObj.toString();
+	}
+	
+	// 메뉴 검색하기
+	@GetMapping("/member/menuFind.kedai")
+	public ModelAndView menuFind(HttpServletRequest request, ModelAndView mav) {
+		
+		String searchWord = request.getParameter("searchWord");
+		
+		if(searchWord.equals("전자결재")) {
+			mav.setViewName("redirect:/approval/main.kedai");
+		}
+		else if(searchWord.equals("급여명세서")) {
+			mav.setViewName("redirect:/pay_stub.kedai");
+		}
+		else if(searchWord.equals("회의실예약")) {
+			mav.setViewName("redirect:/roomResercation.kedai");
+		}
+		else if(searchWord.equals("게시판")) {
+			mav.setViewName("redirect:/board/list.kedai");
+		}
+		else if(searchWord.equals("커뮤니티")) {
+			mav.setViewName("redirect:/community/list.kedai");
+		}
+		else if(searchWord.equals("카쉐어")) {
+			mav.setViewName("redirect:/carShare.kedai");
+		}
+		else if(searchWord.equals("통근버스")) {
+			mav.setViewName("redirect:/bus.kedai");
+		}
+		else if(searchWord.equals("사내연락망")) {
+			mav.setViewName("redirect:/employee.kedai");
+		}
+		else if(searchWord.equals("거래처정보")) {
+			mav.setViewName("redirect:/othercom_list.kedai");
+		}
+		else if(searchWord.equals("일정관리")) {
+			mav.setViewName("redirect:");
+		}
+	
+		return mav;
 	}
 	
 }

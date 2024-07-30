@@ -219,7 +219,7 @@
 					</div>
 					<div style="width: 60%; margin-left: 20%;">
 						<h6>사원 수</h6>
-						<h3><span class="memberTotalCount"></span></h3>
+						<h6><span class="h2 memberTotalCount"></span>&nbsp;명</h6>
 					</div>
 				</div>
 				<div class="col-4 pl-5 pr-2" style="height: 100px; display: flex; align-items: center;">
@@ -230,7 +230,7 @@
 					</div>
 					<div style="width: 60%; margin-left: 20%;">
 						<h6>게시글 수</h6>
-						<h3><span class="boardTotalCount"></span></h3>
+						<h6><span class="h2 boardTotalCount"></span>&nbsp;개</h6>
 					</div>
 				</div>
 				<div class="col-3 pr-5" style="align-content: center; text-align: right;">
@@ -250,7 +250,7 @@
 		
 		<div class="col-3" style="border: 1px solid red; background: #2c4459; text-align: center; color: #fff;">
 			<div class="mt-5" style="width: 180px; height: 180px; overflow: hidden; display: inline-block;">
-				<img alt="img" style="width: 100%; height: 100%; border-radius: 50%;" src="<%= ctxPath%>/resources/files/${(sessionScope.loginuser).imgfilename}">
+				<img alt="img" style="width: 100%; height: 100%; border-radius: 50%;" src="<%= ctxPath%>/resources/files/employees/${(sessionScope.loginuser).imgfilename}">
 			</div>
 			<div class="mt-3">
 				<h4>${(sessionScope.loginuser).name}&nbsp;[ ${(sessionScope.loginuser).nickname} ]</h4>

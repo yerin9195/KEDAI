@@ -217,7 +217,7 @@
                 	
                 	if(json.result == 1) { // insert 가 성공되어진 경우
                 		alert("글 등록이 성공했습니다.");
-                		location.href="<%= ctxPath%>/community/addEnd.kedai"; 
+                		location.href="<%= ctxPath%>/community/addEnd.kedai?fk_empid="+json.fk_empid;
                 	}
                 	else{
                 		alert("글 등록이 실패했습니다.");
@@ -258,8 +258,8 @@
 				<label for="fk_empid" style="width: 30%;">카테고리</label>
 				<select name="category_name" class="infoData" style="width: 180px; height: 30px; margin-left: 0.9%;">
 					<option value="">카테고리</option>
-					<c:forEach var="Communitycvo" items="${requestScope.categoryList}">
-                  		<option value="${Communitycvo.category_name}">${Communitycvo.category_name}</option>
+					<c:forEach var="communitycvo" items="${requestScope.categoryList}">
+                  		<option value="${communitycvo.category_name}">${communitycvo.category_name}</option>
            			</c:forEach>
 				</select>
 			</div>

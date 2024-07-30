@@ -164,7 +164,7 @@
 
 	<section>
 		<div class="d-md-flex justify-content-md-end">
-			<form name="searchFrm" style="width: 34%; position: relative;">
+			<form name="searchFrm" style="width: 34%;  min-width: 576px; position: relative;">
 		   		<select name="searchType" style="height: 30px;">
 		      		<option value="subject">글제목</option>
 		      		<option value="content">글내용</option>
