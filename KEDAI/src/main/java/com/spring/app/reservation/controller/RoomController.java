@@ -158,10 +158,8 @@ public class RoomController {
 
 	  @GetMapping("/getRoomData.kedai")
 	    public ResponseEntity<?> getRoomData(@RequestParam String subroom) {
-		  System.out.println("Received subroom: " + subroom);
-	        try {
+		    try {
 	            List<RoomSubVO> roomData = service.getRoomData(subroom);
-	            System.out.println("Fetched roomData: " + roomData);
 	            return ResponseEntity.ok(roomData);
 	        } catch (Exception e) {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching room data");
@@ -172,7 +170,6 @@ public class RoomController {
 	    @ResponseBody
 	    public ResponseEntity<String> getReservations() {
 	        if (service == null) {
-	            System.out.println("Service is null");
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Service is not available");
 	        }
 

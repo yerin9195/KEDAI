@@ -133,7 +133,8 @@
  $(document).ready(function(){
 	showallsub();
 	setToday();
-	
+	fetchReservations();
+	 
     // 시간과 분 선택 옵션을 초기화
     populateTimeSelect();
     
@@ -150,71 +151,74 @@
                 // 모든 td 색상 초기화
                 $("td.time-slot").css("background-color", "");
 
-                // 예약된 방 이름과 서브룸 정보를 매핑하기 위한 객체
-                var roomNameMap = {};
-
-                // 예약 정보로부터 방 이름 매핑을 생성합니다.
+                // 예약 정보로부터 각 시간 슬롯을 업데이트합니다.
                 reservations.forEach(function(reservation) {
                     var startTime = parseTime(reservation.startTime);
                     var endTime = parseTime(reservation.endTime);
                     var reservationRoomName = reservation.roomName;
+                    var reservationId = reservation.id; // 예약 ID
 
-                    // 현재 예약의 서브룸을 가져오기 위해 시간 슬롯을 확인합니다.
+                    // 모든 시간 슬롯을 확인합니다.
                     $("td.time-slot").each(function() {
                         var cellHour = $(this).data('hour');
                         var cellMinute = $(this).data('minute');
                         var cellRoomName = $(this).data('roomname');
-                        var row = $(this).closest("tr"); // 현재 셀이 포함된 행 찾기
-                        var leftCell = row.find("td:first-child"); // 첫 번째 셀 찾기
-                        var subroom = leftCell.text().trim(); // 첫 번째 셀의 텍스트를 서브룸으로 설정
+                        var cellTime = formatTime(cellHour, cellMinute);
 
-                            // 서브룸 정보를 서버에서 가져오는 AJAX 호출
-                            $.ajax({
-                                url: '<%= ctxPath %>/getRoomData.kedai',
-                                method: 'GET',
-                                data: { subroom: subroom },
-                                success: function(response) {
-                                    
-                                    if (Array.isArray(response) && response.length > 0) {
-                                        var data = response[0] || {};
-                                        var roomMainName = data.ROOMMAINNAME || ''; // "1층"
-                                        var roomSubName = data.ROOMSUBNAME || '';   // "102호"
+                        // 서브룸 정보를 서버에서 가져오는 AJAX 호출
+                        $.ajax({
+                            url: '<%= ctxPath %>/getRoomData.kedai',
+                            method: 'GET',
+                            data: { subroom: cellRoomName },
+                            success: function(response) {
+                            	if (Array.isArray(response) && response.length > 0) {
+                                    var data = response[0] || {};
+                                    var roomMainName = data.ROOMMAINNAME || ''; // "1층"
+                                    var roomSubName = data.ROOMSUBNAME || '';   // "102호"
 
-                                        // ROOMMAINNAME과 ROOMSUBNAME을 합쳐서 roomName을 생성합니다.
-                                        var fullRoomName = roomMainName + roomSubName; // "1층102호"
-                                        
-                                        roomNameMap[subroom] = fullRoomName;
-
-                                        var cellTime = formatTime(cellHour, cellMinute);
-                                        
-                                        // 현재 td의 방 이름이 일치하고 시간 범위에 해당하는 경우
-                                        
-                                        if (fullRoomName === reservationRoomName) {
-                                            // 시간 범위에 해당하는 td에 대해 파란색 적용
-                                            if (cellTime >= startTime && cellTime < endTime) {
-                                                $(this).css("background-color", "blue");
-                                                
-                                                // 버튼 클릭 시 예약 상세 페이지로 이동
-                                                $(this).find(".reserveBtn").data("reservation-id", reservation.id);
-                                            }
-                                        }
-                                    } else {
-                                        console.warn("No valid data found in response.");
+                                    // ROOMMAINNAME과 ROOMSUBNAME을 합쳐서 roomName을 생성합니다.
+                                    var cellRoomFullName = roomMainName + roomSubName; // "1층102호"
+									
+                                    // 현재 td의 방 이름이 일치하고 시간 범위에 해당하는 경우
+                                    if (cellRoomName === reservationRoomName && cellTime >= startTime && cellTime < endTime) {
+				                        console.log("Matched cell: ", $cell);
+				
+				                        $cell.css("background-color", "blue !important");
+				                        console.log("Cell background color: ", $cell.css("background-color"));
+				
+				                        $cell.off('click').on('click', function() {
+				                            window.location.href = "<%= request.getContextPath() %>/reservation_detail.kedail?id=" + reservationId;
+				                        });
                                     }
-                                },
-                                error: function(error) {
-                                    console.error("Error fetching room names:", error);
+                                } else {
+                                    console.warn("No valid data found in response.");
                                 }
-                            });
+                            },
+                            error: function(request, status, error) {
+                                console.error("Error fetching reservations:", {
+                                    readyState: request.readyState,
+                                    status: request.status,
+                                    statusText: request.statusText,
+                                    responseText: request.responseText
+                                });
+                            }
                         });
+                        
+                      
+                    });
                 });
-                
             },
             error: function(request, status, error) {
-                console.error("Error fetching reservations:", error);
+                console.error("Error fetching reservations:", {
+                    readyState: request.readyState,
+                    status: request.status,
+                    statusText: request.statusText,
+                    responseText: request.responseText
+                });
             }
         });
     }
+
 
 
 
@@ -718,6 +722,33 @@
 	    }
 
 
+	 // 예약된 시간 슬롯에 배경색을 적용하는 함수
+	    function highlightReservedSlots(reservations) {
+	        reservations.forEach(reservation => {
+	            let startHour = new Date(reservation.startTime).getHours();
+	            let startMinute = new Date(reservation.startTime).getMinutes();
+	            let endHour = new Date(reservation.endTime).getHours();
+	            let endMinute = new Date(reservation.endTime).getMinutes();
+	            let roomName = reservation.roomName;
+
+	            // 모든 td 요소를 검사
+	            document.querySelectorAll('.time-slot').forEach(td => {
+	                let hour = parseInt(td.getAttribute('data-hour'), 10);
+	                let minute = parseInt(td.getAttribute('data-minute'), 10);
+	                let room = td.getAttribute('data-roomname');
+
+	                // 예약 시간 내의 셀을 찾기
+	                if (
+	                    hour >= startHour && minute >= startMinute &&
+	                    room === roomName &&
+	                    (hour < endHour || (hour === endHour && minute < endMinute))
+	                ) {
+	                    td.style.backgroundColor = 'blue';
+	                    td.setAttribute('data-reservation-id', reservation.id); // 예약 ID 설정
+	                }
+	            });
+	        });
+	    }
  	
  
  </script>

@@ -27,6 +27,7 @@ public class SalaryController {
 	private SalaryService service;
 	
 	@GetMapping(value = "/pay_stub.kedai")
+	@ResponseBody
 	public String pay_stub(HttpServletRequest request) {
 		
 		return "tiles1/pay_stub/pay_stub.tiles";
