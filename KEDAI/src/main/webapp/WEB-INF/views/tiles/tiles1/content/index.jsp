@@ -87,6 +87,8 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		
+		$("li.nav-item > a.active").trigger('click');
+		
 		loopshowNowTime();
 		showWeather();
 		
@@ -118,6 +120,70 @@
 		   		
 		   		let v_html = json.totalCount.toLocaleString('en');
 		   		$("span.boardTotalCount").html(v_html);
+		   	},
+			error: function(request, status, error){
+            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+		});
+		
+		// 게시판 글 조회하기
+		$("li.nav-item").click(function(e){
+			$.ajax({
+				url: "${pageContext.request.contextPath}/index/boardListJSON.kedai",
+				type: "get",
+				data: {"category_code" : $(e.target).find('input').val()},
+				dataType: "json",	 
+			   	success: function(json){
+			   	//	console.log(JSON.stringify(json));
+			   		
+			   		let v_html = `<table class='table table-bordered table-hover' style='table-layout: fixed'>`;
+			   		v_html += `<thead><tr>`;
+			   		v_html += `<td style='width: 50%;' align='center'>글제목</td>`;
+	   				v_html += `<td style='width: 20%;' align='center'>작성자</td>`;
+	   				v_html += `<td style='width: 30%;' align='center'>작성일자</td>`;
+	   				v_html += `</tr></thead><tbody>`;
+			   		
+			   		if(json.length > 0){ // 검색된 데이터가 있는 경우
+			   			
+			   			$.each(json, function(index, item){
+			   				const subject = item.subject;
+			   				const name = item.name;
+			   				const registerday = item.registerday;
+			   				
+			   				v_html += `<tr style='cursor: pointer;' class='boardList'>`
+			   				v_html += `<td style='text-overflow:ellipsis; overflow:hidden; white-space:nowrap;'>\${subject}</td>`;
+			   				v_html += `<td align='center'>\${name}</td>`;
+			   				v_html += `<td align='center'>\${registerday}</td></tr>`;
+			   				
+			   			}); // end of $.each(json, function(index, item) ----------
+			   			
+			   		}
+			   		else{
+			   			v_html += `<tr><td colspan='3'>데이터가 존재하지 않습니다.</td></tr>`
+			   		}
+			   		
+			   		v_html += `</tbody></table>`;
+			   		
+			   		$("div.tab-pane").html(v_html);
+			   	},
+				error: function(request, status, error){
+	            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	            }
+			});
+		   			
+		});
+			
+		$(document).on("click", "tbody > tr.boardList", function(e){
+			location.href="<%= ctxPath%>/board/list.kedai"; 
+		});
+		
+		// 식단표 조회하기
+		$.ajax({
+			url: "${pageContext.request.contextPath}/index/boardMenuJSON.kedai",
+			type: "get",
+			dataType: "json",	 
+		   	success: function(json){
+		   		console.log(JSON.stringify(json));
 		   	},
 			error: function(request, status, error){
             	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -461,33 +527,31 @@
 	</section>
 	
 	<section class="row justify-content-between mt-2" style="height: 350px;">
-		<div class="col-8 pl-0" style="border: 1px solid red;">
+		<div class="col-5 px-0" style="border: 1px solid red;">
 			<ul class="nav nav-tabs">
 				<li class="nav-item">
-					<a class="nav-link active" data-toggle="tab" href="#home">사내공지</a>
+					<a class="nav-link active" data-toggle="tab" href="#menu1">사내공지 <input type="hidden" name="category_code" value="1" /></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#menu1">팝업일정</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#menu2">식단표</a>
+					<a class="nav-link" data-toggle="tab" href="#menu2">팝업일정<input type="hidden" name="category_code" value="2" /></a>
 				</li>
 			</ul>
 		
-			<div class="tab-content py-3">
-				<div class="tab-pane container active" id="home">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-				</div>
-				<div class="tab-pane container" id="menu1">
+			<div class="tab-content">
+				<div class="tab-pane container px-0 active" id="menu1">
 					Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 				</div>
-				<div class="tab-pane container" id="menu2">
+				<div class="tab-pane container px-0" id="menu2">
 					Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
 				</div>
 			</div>	
 		</div>
 			
-		<div class="col-4 pl-0 pr-0" style="border: 1px solid red; text-align: center;">
+		<div class="col-3 px-0" style="border: 1px solid red; text-align: center;">
+			<h4>식단표</h4>
+		</div>
+		
+		<div class="col-4 px-0" style="border: 1px solid red; text-align: center;">
 			<h4>chart</h4>
 		</div>
 	</section>

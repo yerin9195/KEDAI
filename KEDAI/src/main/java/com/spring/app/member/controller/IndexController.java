@@ -1,7 +1,12 @@
 package com.spring.app.member.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.app.domain.BoardVO;
 import com.spring.app.member.service.IndexService;
 
 @Controller 
@@ -127,5 +133,43 @@ public class IndexController {
 		
 		return result;
 	}
+	
+	// 게시판 글 조회하기
+	@ResponseBody
+	@GetMapping(value="/index/boardListJSON.kedai", produces="text/plain;charset=UTF-8")
+	public String boardListJSON(HttpServletRequest request) {
 		
+		String category_code = request.getParameter("category_code");
+		
+		List<BoardVO> boardList = null;
+		boardList = service.boardListJSON(category_code);
+		
+		JSONArray jsonArr = new JSONArray(); // []
+		
+		if(boardList != null) {
+			for(BoardVO board : boardList) {
+				JSONObject jsonObj = new JSONObject(); // {}
+				
+				jsonObj.put("category_name", board.getCategory_name());
+				jsonObj.put("name", board.getName());
+				jsonObj.put("subject", board.getSubject());
+				jsonObj.put("registerday", board.getRegisterday());
+				
+				jsonArr.put(jsonObj); // [{}, {}, {}]
+			} // end of for ----------
+			
+		} // end of if ----------
+		
+		return jsonArr.toString();
+	}
+	
+	// 식단표 조회하기
+	@ResponseBody
+	@GetMapping(value="/index/boardMenuJSON", produces="text/plain;charset=UTF-8")
+	public String boardMenuJSON() {
+		
+		
+		
+		return "";
+	}
 }

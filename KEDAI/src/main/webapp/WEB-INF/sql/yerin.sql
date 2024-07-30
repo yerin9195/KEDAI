@@ -1020,3 +1020,19 @@ FROM
 WHERE RNO between 1 and 10
 
 SELECT fk_community_seq, COUNT(*) AS like_count FROM tbl_community_like GROUP BY fk_community_seq;
+
+SELECT category_name, name, subject, registerday
+FROM
+(
+    SELECT rownum AS rno, category_name, name, subject, registerday
+    FROM
+    (
+        select C.category_name, name, subject, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday
+        from tbl_board B
+        LEFT JOIN tbl_category C ON B.fk_category_code = C.category_code
+        where status = 1
+        and B.fk_category_code = 3
+        order by board_seq desc
+    ) V
+) T
+WHERE RNO between 1 and 5;
