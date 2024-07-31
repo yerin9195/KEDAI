@@ -1,5 +1,6 @@
 package com.spring.app.employee.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.socket.WebSocketSession;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -153,26 +155,35 @@ public class EmployeeController {
 	return "multichat"; 
 	 
 	}
-	 */
+ 	*/
 	
+
 	// 접속중인 직원 정보 채팅방에 보여주기 
-	@GetMapping("/chatting/multichat.kedai")
-	public ModelAndView multichatLogin_EmpList(ModelAndView mav, HttpServletRequest request) {
-		
-		HttpSession session = request.getSession();
-		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
-		
-		mav.addObject("name", loginuser.getName());
-		mav.addObject("imgfilename", loginuser.getImgfilename());
-		// System.out.println("");
-		mav.addObject("dept_name", loginuser.getDept_name());
-		mav.addObject("job_name", loginuser.getJob_name());
-		
-		
-		mav.setViewName("multichat");
-		
+    @GetMapping("/chatting/multichat.kedai")
+    public ModelAndView multichatLogin_EmpList(ModelAndView mav, HttpServletRequest request) {
+    	
+    	HttpSession session = request.getSession();
+    	MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+    	
+    	List<Map<String,String>> loginEmpInfoList = new ArrayList<>();
+    	
+    	if(loginuser != null) {
+    		Map<String, String> empInfo = new HashMap<>();
+        	empInfo.put("name", loginuser.getName());
+        	empInfo.put("imgfilename", loginuser.getImgfilename());
+        	empInfo.put("dept_name", loginuser.getDept_name());
+        	empInfo.put("job_name", loginuser.getJob_name());
+        	
+        	loginEmpInfoList.add(empInfo);
+    	}
+    	
+    	mav.addObject("loginEmpInfoList" , loginEmpInfoList);
+    	// System.out.println("loginEmpInfoList : " + loginEmpInfoList);
+    	 
+    	mav.setViewName("multichat");
+    	
 		return mav;
-		
-	}
+      
+   }
 	
 }

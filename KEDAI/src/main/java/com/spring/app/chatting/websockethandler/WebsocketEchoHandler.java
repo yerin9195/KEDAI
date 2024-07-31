@@ -94,7 +94,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 		  MemberVO loginuser = (MemberVO)map.get("loginuser");	
 		  // "loginuser" 은 HttpSession에 저장된 키 값으로 로그인 되어진 사용자이다.
 			
-		  connectingUserName += loginuser.getName()+" ";
+		  connectingUserName += loginuser.getName()+" "+loginuser.getDept_name()+" ";
 		  
 			
 			
@@ -348,7 +348,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
             MemberVO loginuser2 = (MemberVO)map2.get("loginuser");  
           // "loginuser" 은 HttpSession에 저장된 키 값으로 로그인 되어진 사용자이다.
   
-           connectingUserName += loginuser2.getName()+" "; 
+            connectingUserName += loginuser2.getName()+" "; 
        }// end of for------------------------------------------
         
         connectingUserName += "」";
