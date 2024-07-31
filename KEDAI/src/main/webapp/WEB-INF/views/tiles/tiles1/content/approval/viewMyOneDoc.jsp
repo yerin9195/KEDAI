@@ -69,8 +69,39 @@ div#fileList a {
     color: black; 
 }
 
+#commentModal{
 
+}
 
+.modal-body{
+	height:300px;
+}
+
+.bodyInModal{
+	display: flex;
+	padding: 10px 20px;
+}
+
+.imgInfo {
+    height: 100px;
+    width: 100px;
+    padding: 0;
+}
+.imgInfo > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    margin-right: 5%;
+}
+.strInfo {
+    flex: 1;
+    padding : 0 3%;
+}
+.strInfo textarea {
+    width: 100%;
+    height: 100px;
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+}
 
 </style>
 
@@ -117,6 +148,27 @@ function goViewApprovalInfo(){
 }
 
 function btnOk(doc_no){
+	
+	<%--location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;--%>
+	<%-- 또는 location.href=`<%= ctxPath%>/view.action?seq=+seq`; --%>
+	
+	const goBackURL = "${requestScope.goBackURL}" <%-- 문자열 : 쌍따옴표--%>
+	// goBackURL = "/list.action?searchType=subject&searchWord=정화&currentShowPageNo=3"
+	// &은 종결자. 그래서 			/list.action?searchType=subject 까지밖에 못 받아온다.
+	
+<%--	
+	아래처럼 get 방식으로 보내면 안된다. 왜냐하면 get방식에서 &는 전송될 데이터의 구분자로 사용되기 때문이다.
+	location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;
+	--%>
+	
+<%-- 그러므로 &를 글자 그대로 인식하는 post 방식으로 보내야 한다. 
+	아래에 #132에 표기된 form태그를 먼저 만든다.	--%>
+	const frm = document.appfrm;
+	// hidden 필드에 doc_no 값을 설정
+    frm.doc_no.value = doc_no;
+	frm.method = "post";
+	frm.action = "<%= ctxPath%>/approval/appOk.kedai";
+	frm.submit();
 	
 }
 
@@ -210,9 +262,9 @@ function formatFileSize(size) {
 			        </tr>
 				</table>
 			</c:if>
-		
-	
 		</div>
+		
+		
 		<div class="col-md-6 right_content" style="margin: 0; width: 100%; height:100vh; overflow-y:auto; overflow-x:hidden;">
 			<table style="margin-left: 5%;" class="table" >
 				<tr>
@@ -234,78 +286,77 @@ function formatFileSize(size) {
 					<button type="button" class="btn btn-dark btn-sm mr-4" data-toggle="modal" data-target="#commentModal">
 						결재하기
 					</button>
-					<button type="button" class="btn btn-primary btn-sm"
-						onclick="btnReject('${docvo.doc_no}')">반려하기</button>
+					<button type="button" class="btn btn-primary btn-sm" onclick="btnReject('${docvo.doc_no}')">반려하기</button>
 				</c:if>
 			</div>
 			
 			<div style="padding-left:5%;">
 				<div id="title2">결재의견</div>
-					<table class="table appCommentList" style="margin: 0; width: 100%;">
-				    	<c:forEach var="item" items="${avo}">
-				    		<c:if test="${not empty item.approval_comment}">
-				    			 <% hasComment = true; %>
-				    			<tr>
-				            		<td rowspan="2" style="height: 90px; width:90px; padding:0;">
-				            			<img style="width: 100%; height: 100%; border-radius: 50%; margin-top:5%;" src="<%= ctxPath%>/resources/files/employees/${item.imgfilename}">
-				            		</td>
-				            		<td style="height: 20px; text-align:left;">${item.name} ${item.job_name}</td>
-				            		<td style="text-align:right; padding-right:3%;">${item.approval_date}</td>
-				        		</tr>
-				        		<tr>
-				        			<td style="width: 60%;">${item.approval_comment}</td>
-				        			<td></td>
-				        		</tr>
-				    		</c:if>
-				        </c:forEach>
-				        <c:if test="${!hasComment}">
-							<tr>
-            					<td colspan="3">결재 의견이 없습니다.</td>
-        					</tr>
-						</c:if>
-					</table>
+				<table class="table appCommentList" style="margin: 0; width: 100%;">
+				    <c:forEach var="item" items="${avo}">
+				    	<c:if test="${not empty item.approval_comment}">
+				    		<% hasComment = true; %>
+				    		<tr>
+				            	<td rowspan="2" style="height: 90px; width:90px; padding:0;">
+			            			<img style="width: 100%; height: 100%; border-radius: 50%; margin-top:5%;" src="<%= ctxPath%>/resources/files/employees/${item.imgfilename}" />
+			            		</td>
+			            		<td style="height: 20px; text-align:left;">${item.name} ${item.job_name}</td>
+			            		<td style="text-align:right; padding-right:3%;">${item.approval_date}</td>
+			        		</tr>
+			        		<tr>
+			        			<td style="width: 60%;">${item.approval_comment}</td>
+			        			<td></td>
+			        		</tr>
+			    		</c:if>
+			        </c:forEach>
+			        <c:if test="${hasComment == false}">
+						<tr>
+           					<td colspan="3">결재 의견이 없습니다.</td>
+       					</tr>
+					</c:if>
+				</table>
 					
 			</div>				
 		</div>
+		<!--  오른쪽 div -->
 		
-		
+		<form name ="appfrm">
 			
-			<!-- Modal -->
-			<!-- Modal 구성 요소는 현재 페이지 상단에 표시되는 대화 상자/팝업 창입니다. -->
-			<div class="modal" id="commentModal">
-				<div class="modal-dialog modal-dialog-centered modal-lg h-75" >
-				<!-- .modal-dialog-centered 클래스를 사용하여 페이지 내에서 모달을 세로 및 가로 중앙에 배치합니다. .modal-dialog 클래스를 사용하여 <div> 요소에 크기 클래스를 추가합니다.-->
-					<div class="modal-content">
-						<!-- Modal header -->
-						<div class="modal-header">
-							<h5 class="modal-title">결재의견</h5>
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<!-- Modal -->
+		<!-- Modal 구성 요소는 현재 페이지 상단에 표시되는 대화 상자/팝업 창입니다. -->
+		<div class="modal" id="commentModal">
+			<div class="modal-dialog modal-dialog-centered modal-lg h-75" >
+			<!-- .modal-dialog-centered 클래스를 사용하여 페이지 내에서 모달을 세로 및 가로 중앙에 배치합니다. .modal-dialog 클래스를 사용하여 <div> 요소에 크기 클래스를 추가합니다.-->
+				<div class="modal-content">
+					<!-- Modal header -->
+					<div class="modal-header">
+						<h5 class="modal-title">결재의견</h5>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<!-- Modal body -->
+					<div class="modal-body">
+						<div class="bodyInModal">
+							<div class="imgInfo">
+								<img src="<%= ctxPath%>/resources/files/employees/${(sessionScope.loginuser).imgfilename}" />
+							</div>
+							<div class="strInfo">
+								<div style="margin-bottom: 10px;">${(sessionScope.loginuser).name} ${(sessionScope.loginuser).job_name}</div>
+								<div><textarea name="approval_comment" placeholder="기안의견을 입력하세요(선택)" rows="3"></textarea></div>
+							</div>	
 						</div>
-						<!-- Modal body -->
-						<div class="modal-body row">
-							<table class="table">
-								<tr>
-									<td rowspan="2" style="height: 90px; width:90px; padding:0;">
-										<img alt="img" style="width: 100%; height: 100%; border-radius: 50%;" src="<%= ctxPath%>/resources/files/employees/${(sessionScope.loginuser).imgfilename}"></td>
-									<td>${(sessionScope.loginuser).name} ${(sessionScope.loginuser).job_name}</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td><input type="text" name="approval_comment" placeholder="기안의견을 입력하세요(선택)"/></td>
-									<td></td>
-								</tr>
-							</table>
-						</div>
-					<!-- Modal footer -->
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger my_close"
-								data-dismiss="modal">취소</button>
-							<button type="button" class="btn btn-primary btnSubmit"
-								onclick="btnOk('${docvo.doc_no}'))" >확인</button>
-						</div>
+					</div>
+					
+				<!-- Modal footer -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger my_close" data-dismiss="modal">취소</button>
+						<button type="button" class="btn btn-primary" onclick="btnOk('${docvo.doc_no}')">결재하기</button>
 					</div>
 				</div>
 			</div>
+		</div>
+		 <input type="hidden" name="doc_no" id="doc_no_field" />
+		</form>
+		
 	</div>
 </div>
 </body>
