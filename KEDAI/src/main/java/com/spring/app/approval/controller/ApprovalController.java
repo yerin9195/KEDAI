@@ -63,11 +63,12 @@ public class ApprovalController {
 		
 		List<Map<String, String>> nowApproval = new ArrayList<>(); // 내가 지금 승인할 문서
 		List<Map<String, String>> laterApproval = new ArrayList<>(); // 내가 나중에 승인할 문서
+		
 		for(Map<String, String> map : myapprovalinfo){
 			if("1".equals(map.get("pre_status")) && "1".equals(map.get("doc_status"))) { //이전 레벨의 담당자가 승인하고, 진행중인 기안서만  map에 담기
 				nowApproval.add(map);
 	        }
-			else if((map.get("pre_status") == null) && "1".equals(map.get("level_no"))) { // 이전 레벨의 승인 담당자가 없고, 본인이 1순위인 경우(본인만 결재자인 경우)
+			else if((map.get("pre_status") == null) && "0".equals(map.get("doc_status"))) { // 이전 레벨의 승인 담당자가 없고, 서류가 결재중이 아닐때(본인이 첫 결재자일 때)
 				nowApproval.add(map);
 			}
 			
@@ -385,7 +386,7 @@ public class ApprovalController {
 		
 		String loginEmpId = loginuser.getEmpid();
 		
-		List<Map<String, String>> allMyApprovalList = null;
+		List<Map<String, String>> allNowApprovalList = null;
 		
 		//=== #122.페이징 처리를 한 검색어가 있는 전체 글목록 보여주기 == //
 		
@@ -493,11 +494,16 @@ public class ApprovalController {
         paraMap.put("startRno", String.valueOf(startRno));
         paraMap.put("endRno", String.valueOf(endRno));
 				
-        allMyApprovalList = service.myNowApprovalListSearch(paraMap);
+        allNowApprovalList = service.myNowApprovalListSearch(paraMap);
      // 글 목록 가져오기(페이징 처리 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것이다.
         
 		mav.addObject("loginuser", loginuser); // 모델에 loginuser 객체 추가
-		mav.addObject("allMyApprovalList", allMyApprovalList); 
+		mav.addObject("allNowApprovalList", allNowApprovalList); 
+		
+		System.out.println("!!!확인확인 확인용!!!!");
+		for(Map<String, String> map : allNowApprovalList) {
+			System.out.println(map);
+		}
 		
 		// 검색시 검색조건 및 검색어 값 유지시키기
 		if("subject".equals(searchType) || "content".equals(searchType) 
@@ -999,23 +1005,23 @@ public class ApprovalController {
 			}
 			if(level_no_str != null) {
 				String pre_level_no = String.valueOf(Integer.parseInt(level_no_str) + 1); 
-				System.out.println("확인용  pre_level_no: " + pre_level_no);
 				for (ApprovalVO avo : approvalvoList) {
 					if(avo.getLevel_no().equals(pre_level_no)) { // 본인 이전 결재 담당자 정보 보기
 						isExist = true;// 본인 이전의 담당자가 있는지 없는지 확인용
-						System.out.println("확인용 : isExist" + isExist);
 						if("1".equals(avo.getStatus()) && "1".equals(avo.getDoc_status())) { //이전 레벨의 담당자가 승인하고, 진행중인 기안서
 							isNowApproval = true;
-							System.out.println("확인용 111: isNowApproval" + isNowApproval);
 						}
 					}
 				}// end of for-------------
 				
-				if(isExist == false && "1".equals(level_no_str)) {
-					// 본인 이전의 담당자가 없고, 본인이 1순위 결재자일때
-					isNowApproval = true;
-					System.out.println("확인용2222: isNowApproval" + isNowApproval);
-				}
+				if(isExist == false) {// 본인 이전의 담당자가 없고, 본인이 1순위 결재자일때
+					for (ApprovalVO avo : approvalvoList) {
+						if("0".equals(avo.getDoc_status())) {
+							isNowApproval = true;
+							break;
+						}
+					}
+				}	
 			}
 			
 			System.out.println("확인용 isNowApproval " + isNowApproval );

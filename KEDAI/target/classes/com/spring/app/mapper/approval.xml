@@ -121,7 +121,7 @@
 
 	<select id="docListNoSearch" parameterType="String" resultType="DocVO">
 		SELECT  D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
-    		, T.doctype_name
+    		, T.doctype_name, T.doctype_code as fk_doctype_code
     		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
 		FROM tbl_doc D
 		JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
@@ -131,7 +131,7 @@
 		    GROUP BY fk_doc_no
 		) F 
 		ON F.fk_doc_no = D.doc_no
-		WHERE D.fk_empid = #{loginEmpId} and doc_status =0
+		WHERE D.fk_empid = #{loginEmpId} and doc_status =1
 		ORDER BY D.created_date DESC, D.DOC_NO DESC
 	</select>
  
@@ -157,13 +157,14 @@
  	
  	<resultMap type="HashMap" id="docInfo_Map">
  		<result property="approval_no" 		column="approval_no" 		javaType="String" ></result>
-		<result property="fk_doc_no" 		column="fk_doc_no" 			javaType="String" ></result>
+		<result property="doc_no" 			column="doc_no" 			javaType="String" ></result>
 		<result property="fk_empid" 		column="fk_empid" 			javaType="String" ></result>
 		<result property="status" 			column="status" 			javaType="String" ></result>
 		<result property="level_no" 		column="level_no"			javaType="String" ></result>
 		<result property="doc_subject" 		column="doc_subject" 		javaType="String" ></result>
 		<result property="created_date"		column="created_date" 		javaType="String" ></result>
 		<result property="doctype_name" 	column="doctype_name" 		javaType="String" ></result>
+		<result property="doctype_code" 	column="doctype_code" 		javaType="String" ></result>
 		<result property="pre_status" 		column="pre_status" 		javaType="String" ></result>
 		<result property="pre_level_no" 	column="pre_level_no" 		javaType="String" ></result>
 		<result property="pre_empid" 		column="pre_empid" 			javaType="String" ></result>
@@ -172,8 +173,8 @@
  	</resultMap>
  	
  	<select id="myapprovalinfo" resultMap="docInfo_Map">
- 		SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
-		        D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+ 		SELECT A1.approval_no, A1.fk_doc_no as doc_no, A1.fk_empid, A1.status, A1.level_no, 
+		        D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name, T.doctype_code,
 		        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
 		        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
 		FROM tbl_approval A1
@@ -188,7 +189,7 @@
 		    FROM tbl_doc_file
 		    GROUP BY fk_doc_no
 		) F ON F.fk_doc_no = D.doc_no
-		WHERE A1.FK_EMPID = #{loginEmpId} AND A1.STATUS = 0 
+		WHERE A1.FK_EMPID = #{loginEmpId}
 		ORDER BY D.created_date DESC, D.DOC_NO DESC
  	</select>
  	
@@ -366,7 +367,7 @@
         		ON E.empid = D.fk_empid
         		JOIN tbl_dept DP
         		ON E.fk_dept_code = DP.dept_code
-        		WHERE ((D.doc_status = 1 AND A2.status = 1) OR (A2.status IS NULL AND A1.level_no = 1))
+        		WHERE ((D.doc_status = 1 AND A2.status = 1) OR (A2.status IS NULL AND D.doc_status = 0))
           			AND A1.FK_EMPID = #{loginEmpId}
           		<choose>
             		<when test='searchType == "doctype_name" and searchWord != "" '>
@@ -427,7 +428,7 @@
  	
  	<select id="getApprovalList" parameterType="HashMap" resultType="ApprovalVO">
  		select A.approval_no, A.fk_doc_no, A.fk_empid, A.status, A.approval_comment, 
- 				to_char(A.approval_date,'yyyy-mm-dd') as approval_date, A.level_no, E.name, E.sign_img, J.job_name, D.doc_status
+ 				to_char(A.approval_date,'yyyy-mm-dd') as approval_date, A.level_no, E.name, E.sign_img, E.imgfilename ,J.job_name, D.doc_status
 		from tbl_approval A
 		join tbl_employees E
 		on E.empid = A.FK_EMPID

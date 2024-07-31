@@ -103,8 +103,8 @@ function goSearch(){
 			</tr>
 		</thead>
 		<tbody>
-  			<c:if test="${not empty requestScope.allMyApprovalList}">
-  				<c:forEach var="allAList" items="${requestScope.allMyApprovalList}" varStatus="status">
+  			<c:if test="${not empty requestScope.allNowApprovalList}">
+  				<c:forEach var="allAList" items="${requestScope.allNowApprovalList}" varStatus="status">
   					<c:if test="${status.index <= 9}"> <!-- 10개까지만 보이도록 설정 -->
    						<tr>
    							<td align="center">
@@ -160,7 +160,7 @@ function goSearch(){
    					</c:if>
   				</c:forEach>
   			</c:if>
-  			<c:if test="${empty requestScope.allMyApprovalList}">
+  			<c:if test="${empty requestScope.allNowApprovalList}">
   				<tr>
   					<td colspan="7" align="center"> 결재 대기 문서가 없습니다. </td>
   				</tr>

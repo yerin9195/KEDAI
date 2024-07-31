@@ -4,7 +4,9 @@
 	String ctxPath = request.getContextPath();
 %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<% boolean hasComment = false; %>
 <style type="text/css">
 div#title {
 	font-size: 27px;
@@ -12,7 +14,8 @@ div#title {
 }
 
 div#title2 {
-	font-size: 25px;
+	font-size: 20px;
+	 font-weight: bold; 
 	margin: 0 0 1% 0;
 }
 
@@ -50,12 +53,12 @@ table.left_table input {
 }
 
 table.approvalList {
-    width: 100%; /* 테이블 전체 너비를 설정할 수 있습니다. */
+    max-width: 100%; /* 테이블 전체 너비를 설정할 수 있습니다. */
     border-collapse: collapse; /* 테이블 셀의 경계를 병합합니다. */
-    height: 190px;
+    max-height: 190px;
 }
 
-table.approvalList, .approvalList th, .approvalList td {
+table.approvalList, .approvalList th, .approvalList td{
     border: 1px solid black; /* 테이블, th, td에 1px 두께의 검은 선을 설정합니다. */
     padding: 8px; /* 셀 안의 여백을 설정할 수 있습니다. */
     text-align: center; /* 셀 안의 텍스트를 가운데 정렬할 수 있습니다. */
@@ -100,7 +103,7 @@ function goViewApprovalInfo(){
 			let v_html = ``;
 			$.each(json, function(index, item){	
 				v_html += "<a href='<%= ctxPath %>/approval/downloadDocfile.kedai?seq=" + item.file_no + "'>"
-               			 + item.org_filename + "(" + item.filesize + ")</a>&nbsp;";
+               			 + item.org_filename + "(" + formatNumber(item.filesize)  + "bytes)</a>&nbsp;";
 			});
 			
 		//	const input_width = $("input[name='searchWord']").css("width");// 검색어 input태그 width값 알아오기			
@@ -116,6 +119,17 @@ function goViewApprovalInfo(){
 function btnOk(doc_no){
 	
 }
+
+function btnReject(doc_no){
+	
+}
+
+function formatNumber(number) {
+    // Convert to a number if it's a string
+    var num = typeof number === 'string' ? parseFloat(number) : number;
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 
 /*
 function formatFileSize(size) {
@@ -170,37 +184,36 @@ function formatFileSize(size) {
 				</tr>
 			</table>
 			<div id="title2">
-				결제라인
+				결재라인
 			</div>
 			
 			<c:if test="${not empty avo}">
 				<table class="approvalList">
 			        <tr>
-			            <th rowspan="3" style="width:10%;">승인</th>
+			            <th rowspan="3" style="width:20px;">승인</th>
 			            <c:forEach var="item" items="${avo}">
-			            	<th style="height:30px;">${item.job_name}</th>
+			            	<th style="height:25px; width:150px;">${item.job_name}</th>
 			            </c:forEach>
 			        </tr>
 			      	<tr>
 			      		<c:forEach var="item" items="${avo}">
-			      			<td style="width:30%;">
+			      			<td>
 			      				<div style="height:100px;">${item.sign_img}</div>
-			            		<div style="height:30px;" >${item.name}</div>
+			            		<div style="height:25px;" >${item.name}</div>
 			            	</td>
 			            </c:forEach>
 			        </tr>
 			        <tr>
 			         	<c:forEach var="item" items="${avo}">
-			      			<td style="height:30px; width:30%;">${item.approval_date}</td>
+			      			<td style="height:25px;">${item.approval_date}</td>
 			            </c:forEach>
 			        </tr>
 				</table>
-				</c:if>
+			</c:if>
 		
 	
 		</div>
-		<div class="col-md-6" style="margin: 0; width: 100%">
-	
+		<div class="col-md-6 right_content" style="margin: 0; width: 100%; height:100vh; overflow-y:auto; overflow-x:hidden;">
 			<table style="margin-left: 5%;" class="table" >
 				<tr>
 					<th style="width: 12%;">제목</th>
@@ -218,12 +231,44 @@ function formatFileSize(size) {
 			
 			<div style="text-align: right; margin: 18px 0 18px 0;">
 				<c:if test="${isNowApproval == true}">
-					<button type="button" class="btn btn-dark btn-sm mr-4"
-						id="btnOk('${docvo.doc_no}')">결재하기</button>
+					<button type="button" class="btn btn-dark btn-sm mr-4" data-toggle="modal" data-target="#commentModal">
+						결재하기
+					</button>
 					<button type="button" class="btn btn-primary btn-sm"
 						onclick="btnReject('${docvo.doc_no}')">반려하기</button>
 				</c:if>
 			</div>
+			
+			<div style="padding-left:5%;">
+				<div id="title2">결재의견</div>
+					<table class="table appCommentList" style="margin: 0; width: 100%;">
+				    	<c:forEach var="item" items="${avo}">
+				    		<c:if test="${not empty item.approval_comment}">
+				    			 <% hasComment = true; %>
+				    			<tr>
+				            		<td rowspan="2" style="height: 90px; width:90px; padding:0;">
+				            			<img style="width: 100%; height: 100%; border-radius: 50%; margin-top:5%;" src="<%= ctxPath%>/resources/files/employees/${item.imgfilename}">
+				            		</td>
+				            		<td style="height: 20px; text-align:left;">${item.name} ${item.job_name}</td>
+				            		<td style="text-align:right; padding-right:3%;">${item.approval_date}</td>
+				        		</tr>
+				        		<tr>
+				        			<td style="width: 60%;">${item.approval_comment}</td>
+				        			<td></td>
+				        		</tr>
+				    		</c:if>
+				        </c:forEach>
+				        <c:if test="${!hasComment}">
+							<tr>
+            					<td colspan="3">결재 의견이 없습니다.</td>
+        					</tr>
+						</c:if>
+					</table>
+					
+			</div>				
+		</div>
+		
+		
 			
 			<!-- Modal -->
 			<!-- Modal 구성 요소는 현재 페이지 상단에 표시되는 대화 상자/팝업 창입니다. -->
@@ -238,43 +283,29 @@ function formatFileSize(size) {
 						</div>
 						<!-- Modal body -->
 						<div class="modal-body row">
-							<div class="modal_left col-md-4">
-								<ul>
-									<li class="dept">
-										<c:forEach var="deptList" items="${requestScope.allDeptList}">
-											<c:choose>
-												<c:when test="${deptList.dept_name == ' '}">
-													<div class="openList">
-														<img src="<%=ctxPath%>/resources/images/common/Approval/plus.png" class="plus" />대표이사 
-														<input type="hidden" value="${deptList.dept_code}" id="deptCode" />
-													</div>
-												</c:when>
-												<c:otherwise>
-													<div class="openList">
-														<img src="<%=ctxPath%>/resources/images/common/Approval/plus.png" class="plus" />${deptList.dept_name} 
-														<input type="hidden" value="${deptList.dept_code}" id="deptCode" />
-													</div>
-												</c:otherwise>
-											</c:choose>
-										</c:forEach>
-									</li>
-								</ul>
-							</div>
+							<table class="table">
+								<tr>
+									<td rowspan="2" style="height: 90px; width:90px; padding:0;">
+										<img alt="img" style="width: 100%; height: 100%; border-radius: 50%;" src="<%= ctxPath%>/resources/files/employees/${(sessionScope.loginuser).imgfilename}"></td>
+									<td>${(sessionScope.loginuser).name} ${(sessionScope.loginuser).job_name}</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td><input type="text" name="approval_comment" placeholder="기안의견을 입력하세요(선택)"/></td>
+									<td></td>
+								</tr>
+							</table>
 						</div>
 					<!-- Modal footer -->
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger my_close"
 								data-dismiss="modal">취소</button>
 							<button type="button" class="btn btn-primary btnSubmit"
-								onclick="modalSubmit()" >확인</button>
+								onclick="btnOk('${docvo.doc_no}'))" >확인</button>
 						</div>
 					</div>
 				</div>
 			</div>
-			
-			
-			   		
-		</div>
 	</div>
 </div>
 </body>

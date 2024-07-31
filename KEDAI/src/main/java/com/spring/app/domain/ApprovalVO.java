@@ -13,6 +13,7 @@ public class ApprovalVO {
 	///////////////////////////////////////////tbl_employees////////////////////////////////
 	private String name;	// 결재자 이름
 	private String sign_img; // 결재자 사인
+	private String imgfilename; // 결재자 사인
 		
 	///////////////////////////////////////////tbl_job////////////////////////////////
 	private String job_name;	// 결재자 직급
@@ -99,6 +100,15 @@ public class ApprovalVO {
 	public void setSign_img(String sign_img) {
 		this.sign_img = sign_img;
 	}
+	
+	public String getImgfilename() {
+		return imgfilename;
+	}
+	public void setImgfilename(String imgfilename) {
+		this.imgfilename = imgfilename;
+	}
+	
+	
 	/*
 	 @Override
 	public String toString() {

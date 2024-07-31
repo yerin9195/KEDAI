@@ -1220,10 +1220,15 @@ from tbl_employees
 
 
 SELECT *
-		FROM tbl_approval A1
+FROM tbl_approval
+order by approval_no, level_no
 
+
+desc tbl_approval
 
 UPDATE tbl_approval
 SET approval_date = TO_DATE('2024-07-23', 'YYYY-MM-DD')
 WHERE approval_no = 1 AND level_no = 2;
+
+
 

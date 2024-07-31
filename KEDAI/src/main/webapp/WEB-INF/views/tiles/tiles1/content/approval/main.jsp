@@ -57,7 +57,31 @@ div.col-md-6 {
 	}
 	
 	
-	
+
+	function goView(doc_no, fk_doctype_code){
+		<%--location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;--%>
+		<%-- 또는 location.href=`<%= ctxPath%>/view.action?seq=+seq`; --%>
+
+		const goBackURL = "${requestScope.goBackURL}"; <%-- 문자열 : 쌍따옴표--%>
+		// goBackURL = "/list.action?searchType=subject&searchWord=정화&currentShowPageNo=3"
+		// &은 종결자. 그래서 			/list.action?searchType=subject 까지밖에 못 받아온다.
+
+		<%--	
+		아래처럼 get 방식으로 보내면 안된다. 왜냐하면 get방식에서 &는 전송될 데이터의 구분자로 사용되기 때문이다.
+		location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;
+		--%>
+
+		<%-- 그러므로 &를 글자 그대로 인식하는 post 방식으로 보내야 한다.	아래에 #132에 표기된 form태그를 먼저 만든다.	--%>
+
+		const frm = document.forms["goViewFrm"];
+		frm.doc_no.value = doc_no;
+		frm.fk_doctype_code.value = fk_doctype_code;
+
+		frm.method = "post";
+		frm.action = "<%= ctxPath%>/approval/viewOneMyDoc.kedai";
+		frm.submit();
+
+	}//end of goView(doc_no, fk_doctype_code)---------------------------
 
 	
 </script>
@@ -122,8 +146,8 @@ div.col-md-6 {
         				<tr>
 				            <th scope="col" style="width:15%">기안일</th>
 				            <th scope="col" style="width:15%">유형</th>
-				            <th scope="col" style="width:15%">서류번호</th>
-				            <th scope="col" style="width:55%">제목</th>
+				            <th scope="col" style="width:20%">서류번호</th>
+				            <th scope="col" style="width:50%">제목</th>
 				            
         				</tr>
       				</thead>
@@ -135,7 +159,7 @@ div.col-md-6 {
 	      								<td>${nowApproval.created_date}</td>
 	      								<td>${nowApproval.doctype_name}</td>
 	      								<td>${nowApproval.doc_no}</td>
-	      								<td><span class="subject" onclick="goView('${nowApproval.doc_no}')">${nowApproval.doc_subject}</span>
+	      								<td><span class="subject" onclick="goView('${nowApproval.doc_no}', '${nowApproval.doctype_code}')">${nowApproval.doc_subject}</span>
 	      									<c:if test="${nowApproval.isAttachment eq 1}">
 	      										&nbsp;<i class="fa-solid fa-paperclip"></i>
 	      									</c:if>  								
@@ -195,7 +219,7 @@ div.col-md-6 {
 	      								<td>${myDocList.created_date}</td>
 	      								<td>${myDocList.doctype_name}</td>
 	      								<td>${myDocList.doc_no}</td>
-	      								<td><span class="subject" onclick="goView('${myDocList.doc_no}')">${myDocList.doc_subject}</span>
+	      								<td><span class="subject" onclick="goView('${myDocList.doc_no}', '${myDocList.doctype_code}')">${myDocList.doc_subject}</span>
 	      									<c:if test="${myDocList.isAttachment eq 1}">
 	      										&nbsp;<i class="fa-solid fa-paperclip"></i>
 	      									</c:if>  								
