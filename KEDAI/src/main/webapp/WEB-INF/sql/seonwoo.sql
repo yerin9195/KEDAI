@@ -454,10 +454,12 @@ where name = '신현빈';
 commit;
 
 
+select imgfilename
+from tbl_employees;
 
 
-
-
+select *
+from tbl_dept;
 
 
 
