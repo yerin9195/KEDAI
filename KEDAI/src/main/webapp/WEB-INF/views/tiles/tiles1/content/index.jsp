@@ -49,9 +49,11 @@
 		padding-bottom: 1px;
 		border-bottom: 1px solid #e68c0e;
 	}
-	.nav-tabs .nav-link {
+	.nav-tabs .nav-link,
+	.nav-tabs .nav-link:hover {
 		color: #e68c0e;
 		background: #fff;
+		border-color: #e68c0e #e68c0e #fff;
 	}
 	.nav-tabs .nav-link.active {
 		color: #fff;
@@ -76,6 +78,23 @@
 	}
 	.dropdown-menu li a:hover {
 		color: #e68c0e;
+	}
+	/* menu */
+    .pointMinus_btn {
+		text-align: center;
+		align-content: center;
+		border: solid 1px #2c4459;
+		background: none;
+		color: #2c4459;
+		font-size: 12pt;
+		width: 120px;
+		height: 40px;
+	}
+	.pointMinus_btn:hover {
+		text-decoration: none;
+		border: none;
+		background: #e68c0e;
+		color: #fff;
 	}
 </style>
 
@@ -184,12 +203,40 @@
 			dataType: "json",	 
 		   	success: function(json){
 		   	//	console.log(JSON.stringify(json));
-		
-		   		$("div.content").html(json.filename);
+		   	
+		   		const subject = json.subject;
+		   		const filename = json.filename;
+		   		
+		   		const v_html_1 = `<span>\${subject}</span>`;
+		   		const v_html_2 = `<img src='<%= ctxPath%>/resources/files/board_attach_file/\${filename}' alt='img' style='width: 100%; height: 100%;' />`;
+		   		
+				$("div.subject").html(v_html_1);
+				$("span.filename").html(v_html_2);
 		   	},
 			error: function(request, status, error){
             	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
             }
+		});
+		
+		$("button.pointMinus_btn").click(function(){
+			
+			const now = new Date();
+			
+			let month = now.getMonth() + 1;
+			if(month < 10){
+				month = "0"+month;
+			}
+			
+			let date = now.getDate();
+			if(date < 10){
+				date = "0"+date;
+			}
+			
+			let strNow = now.getFullYear()+"년 "+month+"월 "+date+"일";
+			
+			if(confirm("*** 식권 결제하기 ***\n\n"+strNow+"\n100point 를 결제하시겠습니까?")){
+				location.href="<%= ctxPath%>/index/payment.kedai"; 
+			}
 		});
 		
 	}); // end of $(document).ready(function(){}) ----------
@@ -528,8 +575,8 @@
 		</div>
 	</section>
 	
-	<section class="row justify-content-between mt-2" style="height: 350px;">
-		<div class="col-5 px-0" style="border: 1px solid red;">
+	<section class="row justify-content-between mt-2">
+		<div class="col-5 pl-0" style="border: 1px solid red; height: 350px;">
 			<ul class="nav nav-tabs">
 				<li class="nav-item">
 					<a class="nav-link active" data-toggle="tab" href="#menu1">사내공지 <input type="hidden" name="category_code" value="1" /></a>
@@ -540,18 +587,29 @@
 			</ul>
 		
 			<div class="tab-content">
-				<div class="tab-pane container px-0 active" id="menu1">
-					Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-				</div>
-				<div class="tab-pane container px-0" id="menu2">
-					Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
-				</div>
+				<div class="tab-pane container px-0 active" id="menu1"></div>
+				<div class="tab-pane container px-0" id="menu2"></div>
 			</div>	
 		</div>
 			
-		<div class="col-3 px-0" style="border: 1px solid red; text-align: center;">
-			<h2>MENU</h2>
-			<div class="content"></div>
+		<div class="col-3 pl-0" style="border: 1px solid red; text-align: center;">
+			<div class="h2" style="width: 120px; height: 40px; background: #e68c0e; color: #fff; margin: 0 auto;">MENU</div>
+			<div data-toggle='modal' data-target='#myMenu' style="margin-top: 8%;"><span class="filename" style="cursor: pointer;"></span></div>
+			<div class="modal" id="myMenu">
+				<div class="modal-dialog" style="max-width: 900px;">
+			    	<div class="modal-content" style="width: 900px; height: 800px;">
+				      	<div class="modal-header">
+				        	<div class="modal-title h3 subject"></div>
+				        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+				      	</div>
+				      	<div class="modal-body">
+				        	<div><span class="filename"></span></div>
+				        	<br>
+				        	<div><button class="btn pointMinus_btn">결제하기</button></div>
+				      	</div>
+		    		</div>
+		  		</div>
+			</div>
 		</div>
 		
 		<div class="col-4 px-0" style="border: 1px solid red; text-align: center;">

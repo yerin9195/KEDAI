@@ -1,8 +1,10 @@
 package com.spring.app.member.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.domain.BoardVO;
+import com.spring.app.domain.MemberVO;
 import com.spring.app.member.service.IndexService;
 
 @Controller 
@@ -170,9 +173,23 @@ public class IndexController {
 		
 		JSONObject jsonObj = new JSONObject(); // {}
 		
-		jsonObj.put("content", bvo.getContent());
+		jsonObj.put("subject", bvo.getSubject());
 		jsonObj.put("filename", bvo.getFilename());
 		
 		return jsonObj.toString();
 	}
+	
+	// 특정 사원에게 특정 점수만큼 포인트를 감소하기 
+	@GetMapping("/index/payment.kedai")
+	public String pointMinus_payment(Map<String, String> paraMap, HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		paraMap.put("empid", loginuser.getEmpid());
+		paraMap.put("point", "100");
+		
+		return "tiles1/index.tiles";
+	}
+	
 }

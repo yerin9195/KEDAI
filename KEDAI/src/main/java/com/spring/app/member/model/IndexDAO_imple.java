@@ -41,4 +41,10 @@ public class IndexDAO_imple implements IndexDAO {
 		return bvo;
 	}
 
+	@Override
+	public int pointMinus(Map<String, String> paraMap) {
+		int n = sqlsession.update("index.pointMinus", paraMap);
+		return n;
+	}
+
 }

@@ -1044,12 +1044,16 @@ from tbl_board
 where fk_category_code = 3
 order by board_seq desc;
 
-SELECT content, filename
+SELECT subject, content, filename
 FROM 
 (
-    SELECT content, filename
+    SELECT subject, content, filename
     FROM tbl_board
     WHERE fk_category_code = 3
     ORDER BY board_seq DESC
 )
 WHERE ROWNUM = 1;
+
+select 
+from tbl_employees
+where empid = '2010001-001'

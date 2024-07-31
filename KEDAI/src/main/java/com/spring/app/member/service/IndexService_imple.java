@@ -42,5 +42,12 @@ public class IndexService_imple implements IndexService {
 		BoardVO bvo = dao.boardMenuJSON();
 		return bvo;
 	}
+
+	// 특정 사원에게 특정 점수만큼 포인트를 감소하기 
+	@Override
+	public int pointMinus(Map<String, String> paraMap) {
+		int n = dao.pointMinus(paraMap);
+		return n;
+	}
 	
 }
