@@ -217,15 +217,28 @@ body, html {
 	    
 	    // ==== 메시지 수신시 콜백함수 정의하기 ==== // 
 	    websocket.onmessage = function(event){
-    	// event.data 는 수신되어진 메시지이다. 즉 지금은 「유선우 」이다. 
-    	if(event.data.substr(0,1)=="「" && event.data.substr(event.data.length-1)=="」") {
-            $("div#connectingUserList").html(event.data);
-         	}
+    	
+	      // alert(event.data); 
+	    	
+	    // event.data 는 수신되어진 메시지이다. 즉 지금은 「유선우 」이다. 
+    	// if(event.data.substr(0,1)=="「" && event.data.substr(event.data.length-1)=="」") {
+    	   if(event.data.substr(0,1)=="「") {
+    		 //  alert(event.data); 
+    		  $("div#connectingUserList").html(event.data);
+          }
+    	  // ======= 서영학  시작 ======= //
+    	// else if(event.data.substr(0,7)=="<tr id=" && event.data.substr(event.data.length-1)==">") {
+    	   else if(event.data.substr(0,7)=="<tr id=") {
+    	//	  alert(event.data);
+    		  $("#tbody").append(event.data);
+    	//	  $("#tbody").html(event.data);
+    	  }
+    	  // ======= 서영학  끝 ======= //
           else {
              // event.data 는 수신받은 채팅 문자이다.
-             $("div#chatMessage").append(event.data);
-             $("div#chatMessage").append("<br>");
-             $("div#chatMessage").scrollTop(99999999);
+          //   $("div#chatMessage").append(event.data);
+          //   $("div#chatMessage").append("<br>");
+          //   $("div#chatMessage").scrollTop(99999999);
           }
 	    };
 	    
@@ -390,17 +403,17 @@ body, html {
 				<th style="width: 70px; text-align: center;">직급</th>			
 			</tr>
 		</thead>
-		<tbody>
-			<c:forEach items="${requestScope.loginEmpInfoList}" var="logEmp"> 
+		<tbody id="tbody">
+			<%-- <c:forEach var="logEmp" items="${requestScope.loginEmpInfoList}"> 
 				<tr>
 					<td style="width: 70px; text-align: center;">
-						<img src="<%= ctxPath%>/resources/files/employees/${requestScope.logEmp.imgfilename}" width=50px; height=50px;>
+						<img src="<%= ctxPath%>/resources/files/employees/${logEmp.imgfilename}" width=50px; height=50px;>
 					</td>
-					<td style="width: 70px; text-align: center;">${requestScope.logEmp.name}</td>
-					<td style="width: 70px; text-align: center;">${requestScope.logEmp.dept_name}</td>
-					<td style="width: 70px; text-align: center;">${requestScope.logEmp.job_name}</td>
+					<td style="width: 70px; text-align: center;">${logEmp.name}</td>
+					<td style="width: 70px; text-align: center;">${logEmp.dept_name}</td>
+					<td style="width: 70px; text-align: center;">${logEmp.job_name}</td>
 				</tr>
-			</c:forEach>
+			</c:forEach> --%>
 		</tbody> 
 	</table>
 </div>

@@ -162,7 +162,10 @@ public class EmployeeController {
     @GetMapping("/chatting/multichat.kedai")
     public ModelAndView multichatLogin_EmpList(ModelAndView mav, HttpServletRequest request) {
     	
+    	
+    /*	
     	HttpSession session = request.getSession();
+    	
     	MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
     	
     	List<Map<String,String>> loginEmpInfoList = new ArrayList<>();
@@ -180,6 +183,7 @@ public class EmployeeController {
     	mav.addObject("loginEmpInfoList" , loginEmpInfoList);
     	System.out.println("loginEmpInfoList : " + loginEmpInfoList);
     	// loginEmpInfoList : [{job_name=전무, imgfilename=20240716235337265539922875800.jpg, name=이주빈, dept_name=회계부}]
+    */	
     	mav.setViewName("multichat");
     	
 		return mav;

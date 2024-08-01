@@ -32,9 +32,10 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 	
 	@Autowired
 	private Mongo_messageVO dto;
-	
-	
 	// ========== 몽고 DB 끝 ============================//
+	
+	private String html = "";
+	
 	public void init() throws Exception {}
 	
 	// === 클라이언트가 웹소켓서버에 연결했을때의 작업 처리하기 ===
@@ -43,7 +44,6 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
               클라이언트가 웹소켓서버에 연결이 되어지면 자동으로 실행되는 메소드로서
        WebSocket 연결이 열리고 사용이 준비될 때 호출되어지는(실행되어지는) 메소드이다.
     */
-	
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession wsession) throws Exception { 
@@ -91,24 +91,57 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
                           리턴값은  "키",오브젝트로 이루어진 Map<String, Object> 으로 받아온다.
          */
 			
-		  MemberVO loginuser = (MemberVO)map.get("loginuser");	
+		    MemberVO loginuser = (MemberVO)map.get("loginuser");	
 		  // "loginuser" 은 HttpSession에 저장된 키 값으로 로그인 되어진 사용자이다.
-			
-		  connectingUserName += loginuser.getName()+" "+loginuser.getDept_name()+" ";
 		  
-			
-			
+		    connectingUserName += loginuser.getName()+" "+loginuser.getDept_name()+" ";
 		}// end of for()----------------------------------------------------
 		
 		connectingUserName += "」 ";
 		// System.out.println("확인용 connectingUserName : " + connectingUserName);
 		// 확인용 connectingUserName : 「관리자 」
 		
-		
 		for(WebSocketSession webSocketSession : connectedUsers) {
 			webSocketSession.sendMessage(new TextMessage(connectingUserName));
-			
 		}// end of for()----------------------------------------
+		
+		
+		
+		// ======= 서영학  시작 ======= //
+		String html_login_info = "";  
+		
+		for(WebSocketSession webSocketSession: connectedUsers) {
+			Map<String,Object> map = webSocketSession.getAttributes();
+		 /*
+            webSocketSession.getAttributes(); 은 
+            HttpSession에 setAttribute("키",오브젝트); 되어 저장되어진 값들을 읽어오는 것으로써,
+                          리턴값은  "키",오브젝트로 이루어진 Map<String, Object> 으로 받아온다.
+         */
+			
+		    MemberVO loginuser = (MemberVO)map.get("loginuser");	
+		  // "loginuser" 은 HttpSession에 저장된 키 값으로 로그인 되어진 사용자이다.
+		  
+		  // **** 서영학 웹채팅에 연결한 사용자들의 정보를 저장하기 **** //
+		     html_login_info = "<tr id='"+ loginuser.getEmpid() +"'>"
+		  // html_login_info = "<tr>"
+			 		    	  + "<td style='width: 70px; text-align: center;'>"
+				    		  + "<img src='/KEDAI/resources/files/employees/"+ loginuser.getImgfilename() +"' width=50px; height=50px;>"
+				    		  + "</td>"
+				    		  + "<td style='width: 70px; text-align: center;'>" + loginuser.getName() +"</td>"
+				    		  + "<td style='width: 70px; text-align: center;'>" + loginuser.getDept_name() +"</td>"
+				    		  + "<td style='width: 70px; text-align: center;'>" + loginuser.getJob_name() +"</td>"
+				    		 + "</tr>";
+		     
+		     html += html_login_info;
+		     
+		}// end of for()----------------------------------------------------
+		
+	
+		for(WebSocketSession webSocketSession : connectedUsers) {
+			webSocketSession.sendMessage(new TextMessage(html_login_info));
+		}// end of for()----------------------------------------
+		
+		// ======= 서영학  끝 ======= //
 		
 		
 		///// ===== 웹소켓 서버에 접속시 접속자명단을 알려주기 위한 것 끝 ===== /////
@@ -357,5 +390,52 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
             webSocketSession.sendMessage(new TextMessage(connectingUserName));
         }// end of for------------------------------------------
         ///// ===== 접속을 끊을시 접속자명단을 알려주기 위한 것 끝 ===== ///// 
+        
+        
+        //// ==== 서영학 시작 ===== /////
+        
+        int idx = html.indexOf("<tr id='"+ loginuser.getEmpid() +"'>");
+        String remain_html = html.substring(idx);   // 채팅에서 빠져나가는 사람 부터 끝까지 출력한것
+        
+        
+        
+        int len = html.substring(0,idx).length();   // 채팅에 참여한 모든 사람에서  채팅에서 빠져나가는 사람 전까지 출력한 문자열 길이
+        
+        String first_html = html.substring(0, idx); // 채팅에 참여한 모든 사람에서  채팅에서 빠져나가는 사람 전까지 출력한것
+        
+		/*
+		 * System.out.println(html);
+		 * 
+		 * System.out.println(first_html);
+		 * 
+		 * System.out.println(remain_html);
+		 * 
+		 * System.out.println(len);
+		 * 
+		 * System.out.println(html.substring(0, len)); // 대표이사
+		 * 
+		 * System.out.println(html.substring(len)); // 강동원
+		 */    
+        System.out.println(html);
+        System.out.println(html.substring(0, len)); // + ? 
+        
+        for (WebSocketSession webSocketSession : connectedUsers) {
+            webSocketSession.sendMessage(new TextMessage(html.substring(0, len)));
+        }// end of for------------------------------------------
+        
+        
+   /*     
+        int out_index = remain_html.indexOf("</tr>"); //  20 + 5
+        
+        int index = len + out_index; 
+                
+     // out_html.substring(채팅에서 빠져나가는 사람의 </tr>의 인덱스 + 5);  // 채팅에서 빠져나가는 사람 뒤 부터 끝까지 출력한것
+         
+        String result = html.substring(0, idx) + remain_html.substring(index + 5);
+        
+        System.out.println("==== 채팅에서 남은 사람 정보 보여주기 ======");
+        System.out.println(result);
+   */     
+        //// ==== 서영학 끝 ===== /////
 	}
 }
