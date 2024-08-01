@@ -372,8 +372,8 @@ public class MemberController {
 			String root = session.getServletContext().getRealPath("/"); 
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 			
-			String path = root+"resources"+File.separator+"files";
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			String path = root+"resources"+File.separator+"files"+File.separator+"employees";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\employees
 			
 			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
 			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
@@ -558,19 +558,6 @@ public class MemberController {
 		jsonObj.put("n", n);
 		jsonObj.put("message", message);
 		jsonObj.put("loc", loc);
-		
-		return jsonObj.toString();
-	}
-	
-	// 사원수 조회하기
-	@ResponseBody
-	@GetMapping(value="/member/memberTotalCountJSON.kedai", produces="text/plain;charset=UTF-8")
-	public String memberTotalCountJSON(HttpServletRequest request) {
-		
-		int totalCount = service.memberTotalCountJSON();
-		
-		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("totalCount", totalCount*1000);
 		
 		return jsonObj.toString();
 	}

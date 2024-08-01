@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.app.board.model.CommunityDAO;
 import com.spring.app.domain.CommentVO;
 import com.spring.app.domain.CommunityCategoryVO;
+import com.spring.app.domain.CommunityFileVO;
 import com.spring.app.domain.CommunityVO;
 
 @Service
@@ -94,6 +95,41 @@ public class CommunityService_imple implements CommunityService {
 		CommunityVO cvo = dao.getView(paraMap);
 		return cvo;
 	}
+	
+	// 첨부파일 조회하기
+	@Override
+	public List<CommunityFileVO> getAttachFileList(String fk_community_seq) {
+		List<CommunityFileVO> attachFileList = dao.getAttachFileList(fk_community_seq);
+		return attachFileList;
+	}
+	
+	// 첨부파일 다운로드 받기
+	@Override
+	public CommunityFileVO getFilename(Map<String, String> paraMap) {
+		CommunityFileVO cfvo = dao.getFilename(paraMap);
+		return cfvo;
+	}
+	
+	// 커뮤니티 첨부파일 삭제하기
+	@Override
+	public int community_attachfile_delete(String community_seq) {
+		int attach_delete_result = dao.community_attachfile_delete(community_seq);
+		return attach_delete_result;
+	}	
+	
+	// 커뮤니티 글 수정하기
+	@Override
+	public int edit(CommunityVO cvo) {
+		int n = dao.edit(cvo);
+		return n;
+	}
+	
+	// 커뮤니티 글 삭제하기
+	@Override
+	public int del(String fk_community_seq) {
+		int n = dao.del(fk_community_seq);
+		return n;
+	}
 
 	// 댓글쓰기(Transaction 처리)
 	@Override
@@ -134,6 +170,41 @@ public class CommunityService_imple implements CommunityService {
 	public int getCommentTotalCount(String fk_community_seq) {
 		int totalCount = dao.getCommentTotalCount(fk_community_seq);
 		return totalCount;
+	}
+
+	// 댓글 수정하기(Ajax 로 처리)
+	@Override
+	public int updateComment(Map<String, String> paraMap) {
+		int n = dao.updateComment(paraMap);
+		return n;
+	}
+
+	// 댓글 삭제하기(Ajax 로 처리 & Transaction 처리)
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor={Throwable.class})
+	public int deleteComment(Map<String, String> paraMap) throws Throwable {
+		int n = dao.deleteComment(paraMap.get("comment_seq"));
+		
+		int m = 0;
+		if(n == 1) { // 댓글삭제 시 tbl_community 테이블에 comment_count 컬럼이 1감소(update)
+			m = dao.updateCommentCount_decrease(paraMap.get("fk_community_seq"));
+		}
+		
+		return n*m;
+	}
+
+	// 좋아요 누르기
+	@Override
+	public int likeAdd(Map<String, String> paraMap) {
+		int n = dao.likeAdd(paraMap);
+		return n;
+	}
+
+	// 좋아요 취소하기
+	@Override
+	public int likeMinus(Map<String, String> paraMap) {
+		int n = dao.likeMinus(paraMap);
+		return n;
 	}
 
 }

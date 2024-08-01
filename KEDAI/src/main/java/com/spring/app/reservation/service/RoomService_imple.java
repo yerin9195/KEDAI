@@ -3,19 +3,12 @@ package com.spring.app.reservation.service;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.app.common.AES256;
-import com.spring.app.domain.BusVO;
-import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
-import com.spring.app.domain.SalaryVO;
-import com.spring.app.reservation.model.CarDAO;
+import com.spring.app.domain.RoomVO;
 import com.spring.app.reservation.model.RoomDAO;
 
 @Service
@@ -42,18 +35,30 @@ public class RoomService_imple implements RoomService {
 		return roomall;
 	}
 
-//	급여명세서 직원목록 불러오기
+
 	@Override
-	public List<MemberVO> memberListView() {
-		List<MemberVO> membervoList = dao.memberListView();
-		return membervoList;
+	public int insertreserve(RoomVO roomVO) {
+		int n = dao.insertreserve(roomVO);
+		System.out.println("n : "+ n);
+		return n;
 	}
 
-	//	급여 전체 계산
 	@Override
-	public int salaryCal(SalaryVO salaryvo) {
-		int n = dao.salaryCal(salaryvo);
-		return n;
+	public List<RoomSubVO> getRoomData(String subroom) {
+		List<RoomSubVO> getRoomData = dao.getRoomData(subroom);
+		return getRoomData;
+	}
+
+	@Override
+	public List<RoomVO> getAllReservations() {
+		List<RoomVO> getAllReservations = dao.getAllReservations();
+		return getAllReservations;
+	}
+
+	@Override
+	public RoomVO getReservationById(int reservationId) {
+		RoomVO getReservationById = dao.getReservationById(reservationId);
+		return getReservationById;
 	}
 
 

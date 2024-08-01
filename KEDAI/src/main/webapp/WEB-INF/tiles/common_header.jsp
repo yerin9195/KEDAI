@@ -11,10 +11,17 @@
 	InetAddress inet = InetAddress.getLocalHost();
  	String serverIP = inet.getHostAddress();
  	
+ 	// System.out.println("serverIP : " + serverIP);
+ 	// serverIP : 192.168.0.210
+ 	
  	// 서버 포트번호 알아오기
  	int portnumber = request.getServerPort();
+	// System.out.println("portnumber : " + portnumber);
+ 	// portnumber : 9099
  	
  	String serverName = "http://"+serverIP+":"+portnumber;
+ 	// System.out.println("serverName : " + serverName);
+ 	// serverName : http://192.168.0.210:9099
 %>
 <style type="text/css">
 	.form-control:active, 
@@ -35,12 +42,13 @@
 	input::-webkit-search-results-decoration {
 		display: none;
 	}
-	.input_search {
+	.search_input {
+		position: relative;
 		border: none;
 	 	border-radius: 25px;
 	 	padding: 2% 0% 2% 8%;
 	}
-	.input_search:focus {
+	.search_input:focus {
 		outline: none;
 	}
 	.btn:active, .btn:focus { 
@@ -80,16 +88,71 @@
 	.tooltipbottom:hover .tooltiptext {
   		opacity: 1;
 	}
+	.autocomplete-items {
+		position: absolute;
+	  	width: 105%;
+	  	border: 1px solid #e68c0e;
+	  	border-bottom: none;
+	  	border-top: none;
+	  	z-index: 999;
+	  	top: 105%;
+	  	left: 0;
+	  	right: 0;
+	}
+	.autocomplete-items div {
+		padding: 10px;
+	  	cursor: pointer;
+	  	background-color: #fff;
+	}
+	.autocomplete-items div:hover {
+	 	color: #e68c0e;
+		text-decoration: underline; 
+	}
+	.autocomplete-active {
+		color: #e68c0e !important;
+		text-decoration: underline;
+	}
 </style>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		$("button.header_search_btn").click(function(){
+			goFind();
+		});
+		
+		$("input.search_input").bind("keyup", function(e){
+			if(e.keyCode == 13){
+				goFind();
+			}
+		});
+		
+	}); // end of $(document).ready(function(){}) ----------
+	
+	function goFind(){
+		
+		const sideMenu = $("input.search_input").val().trim();
+
+		if(sideMenu == ""){
+			alert("검색어를 입력하세요.");
+			return;
+		}
+		
+		const frm = document.menuFindFrm;
+        frm.action = "<%= ctxPath%>/index/menuFind.kedai";
+        frm.method = "get";
+   	  	frm.submit();
+		
+	} // end of function goFind() ----------
+</script>
 
 <%-- header start --%>
 <div class="container-fluid">
 	<nav class="navbar navbar-expand-lg pl-3 pr-3 pt-0 pb-0">
 		<a class="navbar-brand" href="<%= ctxPath%>/index.kedai"><img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver2.png" width="30%" /></a>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<form class="form-inline ml-auto my-2 mr-3 my-lg-0" style="position: relative;">
-	      		<input class="mr-sm-2 mb-0 input_search" type="search" placeholder="Search">
-	      		<button class="btn my-2 my-sm-0" type="submit" style="position: absolute; right: 1%;"><img alt="btn_search" src="<%= ctxPath%>/resources/images/common/btn_search.png" width="80%" /></button>
+			<form class="form-inline ml-auto my-2 mr-3 my-lg-0" style="position: relative;" autocomplete="off" name="menuFindFrm">
+	      		<input class="mr-sm-2 mb-0 search_input autocomplete" id="myInput" type="text" placeholder="Search" name="searchWord">
+	      		<button class="btn my-2 my-sm-0 header_search_btn" type="submit" style="position: absolute; right: -5%;"><img alt="btn_search" src="<%= ctxPath%>/resources/images/common/btn_search.png" width="80%" /></button>
 	    	</form>
 	    	&nbsp;&nbsp;&nbsp;
 	    	<ul class="navbar-nav">
@@ -109,4 +172,87 @@
 		</div>
 	</nav>
 </div>
+
+<script type="text/javascript">
+	function autocomplete(inp, arr) {
+			var currentFocus;
+	
+			inp.addEventListener("input", function(e) {
+	  		var a, b, i, val = this.value;
+	  
+	  		closeAllLists();
+	  		if (!val) { return false;}
+	  		currentFocus = -1;
+	  
+	  		a = document.createElement("DIV");
+	  		a.setAttribute("id", this.id + "autocomplete-list");
+	  		a.setAttribute("class", "autocomplete-items");
+	  	
+	  		this.parentNode.appendChild(a);
+	 
+	  		for (i = 0; i < arr.length; i++) {
+	    		if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+	      			b = document.createElement("DIV");
+	      			b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+	   				b.innerHTML += arr[i].substr(val.length);
+	      			b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+	      			b.addEventListener("click", function(e) {
+	          			inp.value = this.getElementsByTagName("input")[0].value;
+	          			closeAllLists();
+	      			});
+	      			a.appendChild(b);
+	    		}
+	  		}
+			});
+	
+			inp.addEventListener("keydown", function(e) {
+	  		var x = document.getElementById(this.id + "autocomplete-list");
+	  		if (x) x = x.getElementsByTagName("div");
+	  		if (e.keyCode == 40) { // key down
+				currentFocus++;
+	    		addActive(x);
+	  		} 
+	  		else if (e.keyCode == 38) { // key up
+	    		currentFocus--;
+	    		addActive(x);
+	  		} 
+	  		else if (e.keyCode == 13) { // enter
+	    		e.preventDefault();
+	    		if (currentFocus > -1) {
+	      			if (x) x[currentFocus].click();
+	    		}
+	  		}
+			});
+			
+			function addActive(x) {
+			if (!x) return false;
+		    removeActive(x);
+		    if (currentFocus >= x.length) currentFocus = 0;
+		    if (currentFocus < 0) currentFocus = (x.length - 1);
+			x[currentFocus].classList.add("autocomplete-active");
+			}
+			
+	  	function removeActive(x) {
+	    	for (var i = 0; i < x.length; i++) {
+	      		x[i].classList.remove("autocomplete-active");
+	   	 	}
+	  	}
+	  	
+			function closeAllLists(elmnt) {
+			var x = document.getElementsByClassName("autocomplete-items");
+			for (var i = 0; i < x.length; i++) {
+	  			if (elmnt != x[i] && elmnt != inp) {
+	    			x[i].parentNode.removeChild(x[i]);
+	  			}
+			}
+			}
+	
+			document.addEventListener("click", function (e) {
+	  		closeAllLists(e.target);
+			});
+	}
+	
+	var sideMenu = ["전자결재", "급여명세서", "회의실예약", "게시판", "커뮤니티", "카쉐어", "통근버스", "사내연락망", "거래처정보", "일정관리"];
+	autocomplete(document.getElementById("myInput"), sideMenu);
+</script>
 <%-- header end --%>
