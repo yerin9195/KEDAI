@@ -106,11 +106,18 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		
-		$("li.nav-item > a.active").trigger('click');
-		
 		loopshowNowTime();
 		showWeather();
+		showBoardList();
 		
+		$(document).on('click', 'li.nav-item', function() {
+			showBoardList();
+	    });
+		
+		$(document).on("click", "tbody > tr.boardList", function(e){
+			location.href="<%= ctxPath%>/board/list.kedai";
+		});
+	
 		// 사원수 조회하기
 		$.ajax({
 			url: "${pageContext.request.contextPath}/index/memberTotalCountJSON.kedai",
@@ -143,57 +150,6 @@
 			error: function(request, status, error){
             	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
             }
-		});
-		
-		// 게시판 글 조회하기
-		$("li.nav-item").click(function(e){
-			$.ajax({
-				url: "${pageContext.request.contextPath}/index/boardListJSON.kedai",
-				type: "get",
-				data: {"category_code" : $(e.target).find('input').val()},
-				dataType: "json",	 
-			   	success: function(json){
-			   	//	console.log(JSON.stringify(json));
-			   		
-			   		let v_html = `<table class='table table-bordered table-hover' style='table-layout: fixed'>`;
-			   		v_html += `<thead><tr>`;
-			   		v_html += `<td style='width: 50%;' align='center'>글제목</td>`;
-	   				v_html += `<td style='width: 20%;' align='center'>작성자</td>`;
-	   				v_html += `<td style='width: 30%;' align='center'>작성일자</td>`;
-	   				v_html += `</tr></thead><tbody>`;
-			   		
-			   		if(json.length > 0){ // 검색된 데이터가 있는 경우
-			   			
-			   			$.each(json, function(index, item){
-			   				const subject = item.subject;
-			   				const name = item.name;
-			   				const registerday = item.registerday;
-			   				
-			   				v_html += `<tr style='cursor: pointer;' class='boardList'>`
-			   				v_html += `<td style='text-overflow:ellipsis; overflow:hidden; white-space:nowrap;'>\${subject}</td>`;
-			   				v_html += `<td align='center'>\${name}</td>`;
-			   				v_html += `<td align='center'>\${registerday}</td></tr>`;
-			   				
-			   			}); // end of $.each(json, function(index, item) ----------
-			   			
-			   		}
-			   		else{
-			   			v_html += `<tr><td colspan='3'>데이터가 존재하지 않습니다.</td></tr>`
-			   		}
-			   		
-			   		v_html += `</tbody></table>`;
-			   		
-			   		$("div.tab-pane").html(v_html);
-			   	},
-				error: function(request, status, error){
-	            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	            }
-			});
-		   			
-		});
-			
-		$(document).on("click", "tbody > tr.boardList", function(e){
-			location.href="<%= ctxPath%>/board/list.kedai"; 
 		});
 		
 		// 식단표 조회하기
@@ -377,7 +333,7 @@
 				const updateTime = $(weather).attr("year")+"년 "+$(weather).attr("month")+"월 "+$(weather).attr("day")+"일 "+$(weather).attr("hour")+"시"; // 2024년 07월 29일 15시
 				const localArr = rootElement.find("local"); // 97
 				
-				let html = "<div class='row'><div class='col-9'><i class='fa-solid fa-temperature-high'></i>&nbsp;&nbsp;<span style='font-weight:bold;'>"+updateTime+"</span>&nbsp;";
+				let html = "<div class='row'><div class='col-9'><img src='<%= ctxPath%>/resources/images/common/rain-cloud.gif' width='8%;' />&nbsp;&nbsp;<span style='font-weight:bold;'>"+updateTime+"</span>&nbsp;";
 		            html += "<span style='color: #e68c0e; cursor: pointer; font-size: 9pt; text-decoration: underline;' onclick='javascript:showWeather();'>업데이트</span></div><div class='col-3 d-md-flex justify-content-md-end'><button type='button' data-toggle='modal' data-target='#myWeather' style='cursor: pointer; background: none;'>더보기&nbsp;<i class='fa-solid fa-angles-right'></i></button></div></div>";
 		            html += "<div style='max-height: 250px; overflow-y: scroll; margin-top: 3%;'><table class='table table-hover' align='center'>";
 			        html += "<tr>";
@@ -490,6 +446,63 @@
 		});
 		
 	} // end of function showWeather() ----------
+	
+	// 게시판 글 조회하기
+	function showBoardList(){
+		
+		const activeItem = $("li.nav-item").find("a.nav-link.active");
+		
+		if(activeItem.length) {
+			const category_code = activeItem.find("input[name='category_code']").val();
+			
+			$.ajax({
+				url: "${pageContext.request.contextPath}/index/boardListJSON.kedai",
+				type: "get",
+				data: {"category_code" : category_code},
+				dataType: "json",	 
+			   	success: function(json){
+			   	//	console.log(JSON.stringify(json));
+			   		
+			   		let v_html = `<table class='table table-bordered table-hover' style='table-layout: fixed'>`;
+			   		v_html += `<thead><tr>`;
+			   		v_html += `<td style='width: 50%;' align='center'>글제목</td>`;
+	   				v_html += `<td style='width: 20%;' align='center'>작성자</td>`;
+	   				v_html += `<td style='width: 30%;' align='center'>작성일자</td>`;
+	   				v_html += `</tr></thead><tbody>`;
+			   		
+			   		if(json.length > 0){ // 검색된 데이터가 있는 경우
+			   			
+			   			$.each(json, function(index, item){
+			   				const subject = item.subject;
+			   				const name = item.name;
+			   				const registerday = item.registerday;
+			   				
+			   				v_html += `<tr style='cursor: pointer;' class='boardList'>`
+			   				v_html += `<td style='text-overflow:ellipsis; overflow:hidden; white-space:nowrap;'>\${subject}</td>`;
+			   				v_html += `<td align='center'>\${name}</td>`;
+			   				v_html += `<td align='center'>\${registerday}</td></tr>`;
+			   				
+			   			}); // end of $.each(json, function(index, item) ----------
+			   			
+			   		}
+			   		else{
+			   			v_html += `<tr><td colspan='3'>데이터가 존재하지 않습니다.</td></tr>`
+			   		}
+			   		
+			   		v_html += `</tbody></table>`;
+			   		
+			   		$("div.tab-pane").html(v_html);
+			   	},
+				error: function(request, status, error){
+	            	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	            }
+			});
+			
+		}
+		
+		
+		
+	} // end of function showBoardList() ----------
 </script>
 
 <%-- content start --%>
@@ -593,7 +606,7 @@
 		</div>
 			
 		<div class="col-3 pl-0" style="border: 1px solid red; text-align: center;">
-			<div class="h2" style="width: 120px; height: 40px; background: #e68c0e; color: #fff; margin: 0 auto;">MENU</div>
+			<div class="h2" style="width: 120px; height: 40px; background: #e68c0e; color: #fff; border-radius: 15px 0; margin: 0 auto;">MENU</div>
 			<div data-toggle='modal' data-target='#myMenu' style="margin-top: 8%;"><span class="filename" style="cursor: pointer;"></span></div>
 			<div class="modal" id="myMenu">
 				<div class="modal-dialog" style="max-width: 900px;">

@@ -172,11 +172,11 @@
 		      		<option value="name">작성자</option>
 		   		</select>
 		   		
-		   		<input type="text" name="searchWord" size="40" width="500px" autocomplete="off" style="height: 30px;" /> 
+		   		<input type="text" name="searchWord" size="40" autocomplete="off" style="width: 350px; height: 30px;" /> 
 		   		<input type="text" style="display: none;"/> 
 		   		<button type="button" class="search_btn" onclick="goSearch()">검색</button>
 		   		
-		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 25.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
+		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 24.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
 				</div>
 			</form>
 			
