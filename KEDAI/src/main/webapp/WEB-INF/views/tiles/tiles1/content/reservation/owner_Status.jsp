@@ -135,6 +135,27 @@
             return new Date(year, month, day);
         }
         
+        $('input[type="button"].subject').on('click', function() {
+            // 클릭된 버튼의 부모 <tr> 요소를 찾음
+            var $tr = $(this).closest('tr');
+            
+            // 해당 <tr> 내의 <input> 요소 중 name이 last_date인 요소를 찾음
+            var $lastDateInput = $tr.find('input[name="last_date"]');
+            var $startDateInput = $tr.find('input[name="start_date"]');
+            // last_date 입력 요소의 값을 가져옴
+            var startDateValue = $startDateInput.val();
+            var lastDateValue = $lastDateInput.val();
+            // 콘솔에 값 출력 (확인용)
+            console.log('Last Date:', lastDateValue);
+            console.log('start Date:', startDateValue);
+            // 필요시 해당 값을 다른 로직에 사용 가능
+            // 예: 모달 창에 날짜 설정 등
+        	resetModal(); // Ensure the modal is reset before showing
+            modal.show();
+            calendar.render();
+            
+        });
+        
      var start_date = $("input:hidden[name='start_date']").val();
      var convertedstart_date = parseDate(start_date, 0);
      var last_date = $("input:hidden[name='last_date']").val();
@@ -194,14 +215,26 @@
                 $('.fc-daygrid-day').removeClass('fc-daygrid-day-clicked');
             }
 
-            // 모달창 키기 id은 status.index로 각각 설정해주고 해당 클래스를 불러온다.
-            $('.subject').click(function() {
-                resetModal(); // Ensure the modal is reset before showing
+/*             // 모달창 키기 id은 status.index로 각각 설정해주고 해당 클래스를 불러온다.
+            $(document).on("click", "input.subject", function(){
+            	var $td = $(this).parent();
+            	alert("~~~ 확인용 : " + $td.find($("input:hidden[name='last_date']").val()));
+            	resetModal(); // Ensure the modal is reset before showing
                 modal.show();
                 calendar.render();
-            });
+            }); */
 
-            // When the user clicks on <span> (x), close the modal and reset content
+/*             $('.subject').click(function(e) {
+                
+            	
+            	resetModal(); // Ensure the modal is reset before showing
+                modal.show();
+                calendar.render();
+                
+                
+            }); */
+            
+			// When the user clicks on <span> (x), close the modal and reset content
             span.click(function() {
                 modal.hide();
                 resetModal();

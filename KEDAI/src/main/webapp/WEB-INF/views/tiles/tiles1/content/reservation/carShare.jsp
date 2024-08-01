@@ -233,7 +233,7 @@
                             <form name="carShareFrm${status.index}">
                                 <input type="hidden" name="res_num" value="${carShare.res_num}"/>
                             </form> 
-                            <td>${carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${carShare.ds_name}</td>
+                            <td align="center">${carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${carShare.ds_name}</td>
                             <td align="center">${carShare.nickname}</td>
                             <c:set var="startDate" value="${carShare.start_date}" />
                             <c:set var="lastDate" value="${carShare.last_date}" />
