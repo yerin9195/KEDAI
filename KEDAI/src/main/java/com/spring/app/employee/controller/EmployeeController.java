@@ -178,12 +178,12 @@ public class EmployeeController {
     	}
     	
     	mav.addObject("loginEmpInfoList" , loginEmpInfoList);
-    	// System.out.println("loginEmpInfoList : " + loginEmpInfoList);
-    	 
+    	System.out.println("loginEmpInfoList : " + loginEmpInfoList);
+    	// loginEmpInfoList : [{job_name=전무, imgfilename=20240716235337265539922875800.jpg, name=이주빈, dept_name=회계부}]
     	mav.setViewName("multichat");
     	
 		return mav;
       
    }
-	
+	 
 }

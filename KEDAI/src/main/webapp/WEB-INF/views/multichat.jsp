@@ -391,14 +391,14 @@ body, html {
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${requestScope.loginuser}" var="user"> 
+			<c:forEach items="${requestScope.loginEmpInfoList}" var="logEmp"> 
 				<tr>
 					<td style="width: 70px; text-align: center;">
-						<img src="<%= ctxPath%>/resources/files/employees/${requestScope.imgfilename}" width=50px; height=50px;>
+						<img src="<%= ctxPath%>/resources/files/employees/${requestScope.logEmp.imgfilename}" width=50px; height=50px;>
 					</td>
-					<td style="width: 70px; text-align: center;">${requestScope.name}</td>
-					<td style="width: 70px; text-align: center;">${requestScope.dept_name}</td>
-					<td style="width: 70px; text-align: center;">${requestScope.job_name}</td>
+					<td style="width: 70px; text-align: center;">${requestScope.logEmp.name}</td>
+					<td style="width: 70px; text-align: center;">${requestScope.logEmp.dept_name}</td>
+					<td style="width: 70px; text-align: center;">${requestScope.logEmp.job_name}</td>
 				</tr>
 			</c:forEach>
 		</tbody> 
@@ -417,11 +417,11 @@ body, html {
                </div>
                <input type="hidden" id="to" placeholder="귓속말대상웹소켓.getEmpid()"/>
                <br/>
-                  ♡ 귓속말대상 : <span id="privateWho" style="font-weight: bold; color: red;"></span>
+                	  ♡ 귓속말대상 : <span id="privateWho" style="font-weight: bold; color: red;"></span>
                <br>
                   <button type="button" id="btnAllDialog" class="btn btn-secondary btn-sm">귀속말대화끊기</button>
                <br><br>
-                 ☆현재접속자명단:<br/>
+             		   ☆현재접속자명단:<br/>
                <div id="connectingUserList" style="max-height: 100px; overFlow: auto; position:fixed;"></div>
                
                <div id="chatMessage" style="max-height: 500px; overFlow: auto; margin: 20px 0;"></div>
