@@ -469,6 +469,7 @@
                          if (response.success) {
                              alert("예약이 완료되었습니다.");
                              $("#reservationModal").modal("hide");
+                             window.location.href = response.redirectUrl;
                          } else {
                              alert("예약에 실패하였습니다.");
                          }

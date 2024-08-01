@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
@@ -143,7 +144,12 @@ public class RoomController {
 	            // 서비스 호출
 	            service.insertreserve(roomVO);
 
+	            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+	            String contextPath = attributes.getRequest().getContextPath();
+	            String redirectUrl = contextPath + "/roomResercation.kedai";
+	            
 	            response.put("success", true);
+	            response.put("redirectUrl", redirectUrl);
 	        } catch (ParseException e) {
 	            response.put("success", false);
 	            response.put("message", "날짜 형식이 잘못되었습니다: " + e.getMessage());
@@ -151,6 +157,7 @@ public class RoomController {
 	            response.put("success", false);
 	            response.put("message", e.getMessage());
 	        }
+	        
 	        return ResponseEntity.ok(response);
 	    }
 
