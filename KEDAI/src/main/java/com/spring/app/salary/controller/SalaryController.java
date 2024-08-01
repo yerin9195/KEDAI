@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,14 +21,13 @@ import com.spring.app.domain.SalaryVO;
 import com.spring.app.salary.service.SalaryService;
 //import com.spring.app.reservation.service.RoomService2;
 
-//@Controller
+@Controller
 public class SalaryController {
 	
 	@Autowired
 	private SalaryService service;
 	
 	@GetMapping(value = "/pay_stub.kedai")
-	@ResponseBody
 	public String pay_stub(HttpServletRequest request) {
 		
 		return "tiles1/pay_stub/pay_stub.tiles";
