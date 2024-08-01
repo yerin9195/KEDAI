@@ -452,4 +452,31 @@
 		where doc_file_no = #{fileNo}
  	</select>
  	
+ 	<update id="updateDocOk" parameterType="HashMap">
+ 		UPDATE tbl_doc SET doc_status = to_number(#{doc_status}) 
+ 		WHERE doc_no = #{fk_doc_no}
+ 	</update>
+ 	
+ 	<update id="updateApprovalOk" parameterType="HashMap">
+		UPDATE tbl_approval SET status = 1, approval_date = to_date(#{approval_date}, 'yyyy-mm-dd hh24:mi:ss') 
+		<if test='approval_comment != ""'>
+		, approval_comment = #{approval_comment}
+		</if>
+ 		WHERE fk_doc_no = #{fk_doc_no} and fk_empid = #{loginEmpId}
+	</update>
+	
+	
+	<update id="updateDocReject" parameterType="HashMap">
+ 		UPDATE tbl_doc SET doc_status = to_number(#{doc_status}) 
+ 		WHERE doc_no = #{fk_doc_no}
+ 	</update>
+ 	
+ 	<update id="updateApprovalReject" parameterType="HashMap">
+		UPDATE tbl_approval SET status = 1, approval_date = to_date(#{approval_date}, 'yyyy-mm-dd hh24:mi:ss') 
+		<if test='approval_comment != ""'>
+		, approval_comment = #{approval_comment}
+		</if>
+ 		WHERE fk_doc_no = #{fk_doc_no} and fk_empid = #{loginEmpId}
+	</update>
+	
 </mapper>

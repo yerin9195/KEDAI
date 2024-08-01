@@ -198,6 +198,20 @@ public class ApprovalService_imple implements ApprovalService {
 		return getDocfileOne;
 	}
 
+	// 결재하기 눌렀을 떄 결재, doc테이블 업데이트 하기
+	@Override
+	public void updateDocApprovalOk(Map<String, String> paraMap) {
+		dao.updateApprovalOk(paraMap); // tbl_approval업데이트
+		dao.updateDocOk(paraMap); // tbl_doc업데이트		
+	}
+
+	// 반려하기 눌렀을 떄 결재, doc테이블 업데이트 하기
+	@Override
+	public void updateDocApprovalReject(Map<String, String> paraMap) {
+		dao.updateApprovalReject(paraMap); // tbl_approval업데이트
+		dao.updateDocReject(paraMap); // tbl_doc업데이트
+	}
+
 
 
 }

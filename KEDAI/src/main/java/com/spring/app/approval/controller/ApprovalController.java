@@ -994,11 +994,9 @@ public class ApprovalController {
 			boolean isExist = false;
 			boolean isNowApproval = false; 
 			for(ApprovalVO avo : approvalvoList) {
-				System.out.println("확인용 avo doc_no" + avo.getFk_doc_no());
 			    if(avo.getFk_empid().equals(login_userid) && "0".equals(avo.getStatus())) { 
 			    	// 로그인한 사용자가 결재자로 있고, 결재하지 않은 상태일 때  ==> level_no를 level_no_str 변수에 담기
 			    	level_no_str = avo.getLevel_no();
-			    	System.out.println("확인용 level_no_str : " + level_no_str);
 			    }
 			}
 			if(level_no_str != null) {
@@ -1025,6 +1023,7 @@ public class ApprovalController {
 			System.out.println("확인용 isNowApproval " + isNowApproval );
 			mav.addObject("isNowApproval",isNowApproval);
 			mav.addObject("docvo",docvo);
+			mav.addObject("level_no_str", level_no_str);
 			mav.setViewName("tiles1/approval/viewOneDoc.tiles");
 			
 			
@@ -1168,6 +1167,7 @@ public class ApprovalController {
         SimpleDateFormat sdfrmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String approval_date = sdfrmt.format(now);
         
+        
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");	
 		String loginEmpId = loginuser.getEmpid();
@@ -1179,7 +1179,7 @@ public class ApprovalController {
         paraMap.put("loginEmpId", loginEmpId);
         paraMap.put("doc_status", doc_status); // tbl_doc의 status 업데이트
         
-        //service.updateDocApproval(paraMap);
+        service.updateDocApprovalOk(paraMap); // tbl_doc, tbl_approval업데이트
         
 		return "redirect:/approval/main.kedai"; // 메인 화면으로 돌아가기
 	}
@@ -1192,6 +1192,33 @@ public class ApprovalController {
 	//	return mav;
 	
 
-	
+	//반려하기를 눌렀을 때
+	@PostMapping("/approval/appReject.kedai")
+	public String appReject(ModelAndView mav, HttpServletRequest request) {
+		
+		String fk_doc_no = request.getParameter("doc_no");
+		String approval_comment = request.getParameter("approval_comment").trim();
+		String doc_status = "3"; // 서류 상태는 반려로 설정
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");	
+		String loginEmpId = loginuser.getEmpid();
+		
+		Date now = new Date(); // 현재시각 
+        SimpleDateFormat sdfrmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String approval_date = sdfrmt.format(now);
+        
+        Map<String, String> paraMap = new HashMap<>();
+        paraMap.put("fk_doc_no", fk_doc_no);
+        paraMap.put("approval_comment", approval_comment);
+        paraMap.put("approval_date", approval_date);
+        paraMap.put("loginEmpId", loginEmpId);
+        paraMap.put("doc_status", doc_status); // tbl_doc의 status 업데이트
+        
+        service.updateDocApprovalReject(paraMap); // tbl_doc, tbl_approval업데이트
+		
+		return "redirect:/approval/main.kedai"; // 메인 화면으로 돌아가기
+	}
+			
 	
 }

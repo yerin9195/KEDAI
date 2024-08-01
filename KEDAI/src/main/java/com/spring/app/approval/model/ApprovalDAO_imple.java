@@ -179,6 +179,30 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return getDocfileOne;
 	}
 
+	// 결재하기 눌렀을 떄 doc테이블 업데이트 하기
+	@Override
+	public void updateDocOk(Map<String, String> paraMap) {
+		sqlsession.update("approval.updateDocOk", paraMap);
+	}
+
+	// 결재하기 눌렀을 떄 결재 테이블 업데이트 하기
+	@Override
+	public void updateApprovalOk(Map<String, String> paraMap) {
+		sqlsession.update("approval.updateApprovalOk", paraMap);
+	}
+
+	// 반려하기 눌렀을 떄 doc테이블 업데이트 하기
+	@Override
+	public void updateDocReject(Map<String, String> paraMap) {
+		sqlsession.update("approval.updateDocReject", paraMap);
+	}
+
+	// 반려하기 눌렀을 떄 결재 테이블 업데이트 하기
+	@Override
+	public void updateApprovalReject(Map<String, String> paraMap) {
+		sqlsession.update("approval.updateApprovalReject", paraMap);
+	}
+
 
 
 	// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청

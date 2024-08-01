@@ -60,6 +60,12 @@ public interface ApprovalService {
 	// 첨부 파일 다운로드
 	DocfileVO getDocfileOne(String fileNo);
 
+	// 결재하기 눌렀을 떄 결재, doc테이블 업데이트 하기
+	void updateDocApprovalOk(Map<String, String> paraMap);
+
+	// 반려하기 눌렀을 떄 결재, doc테이블 업데이트 하기
+	void updateDocApprovalReject(Map<String, String> paraMap);
+
 
 
 
