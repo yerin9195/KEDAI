@@ -6,6 +6,7 @@ import java.util.Map;
 import com.spring.app.domain.BoardVO;
 import com.spring.app.domain.BusVO;
 import com.spring.app.domain.CarVO;
+import com.spring.app.domain.Car_shareVO;
 import com.spring.app.domain.Day_shareVO;
 
 public interface CarService {
@@ -41,6 +42,8 @@ public interface CarService {
 	List<Map<String, String>> owner_carShareListSearch_withPaging(Map<String, String> paraMap);
 
 	int owner_getTotalCount(Map<String, String> paraMap);
+
+	Car_shareVO owner_dateInfo(String date);
 
 
 }

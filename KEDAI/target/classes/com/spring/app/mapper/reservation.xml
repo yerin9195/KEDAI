@@ -456,4 +456,34 @@
 			<otherwise></otherwise>		<!-- else -->
 		</choose>
 	</select>
+	
+	<resultMap id="owner_dateDetail" type="Car_shareVO">
+		<result property="pf_res_num" column="pf_res_num" javaType="int"/>
+	    <result property="pf_empid" column="pf_empid"	javaType="String"/>
+	    <result property="share_date" column="share_date" javaType="String"/>
+	    <result property="share_may_time" column="share_may_time"	javaType="String"/>
+	    <result property="accept_yon" column="accept_yon"	javaType="String"/>
+	    <result property="reason_nonaccept" column="reason_nonaccept"	javaType="String"/>
+	    <result property="rdp_name" column="rdp_name"	javaType="String"/>
+	    <result property="rdp_add" column="rdp_add"	javaType="String"/>
+	    <result property="rdp_lat" column="rdp_lat"	javaType="double"/>
+	    <result property="rdp_lng" column="rdp_lng"	javaType="double"/>
+	    <result property="rds_name" column="rds_name"	javaType="String"/>
+	    <result property="rds_add" column="rds_add"	javaType="String"/>
+	    <result property="rds_lat" column="rds_lat"	javaType="double"/>
+	    <result property="rds_lng" column="rds_lng"	javaType="double"/>
+	    <result property="getin_time" column="getin_time"	javaType="String"/>
+	    <result property="getout_time" column="getout_time"	javaType="String"/>
+	    <result property="use_time" column="use_time"	javaType="String"/>
+	    <result property="settled_amount" column="settled_amount"	javaType="int"/>
+	    <result property="payment_amount" column="payment_amount"	javaType="int"/>
+	    <result property="nonpaymnet_amount" column="nonpayment_amount"	javaType="int"/>
+	</resultMap>
+	<select id="getowner_dateInfo" resultMap="owner_dateDetail">
+		select pf_res_num, pf_empid, share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, getin_time, getout_time, use_time, settled_amount, payment_amount, nonpayment_amount
+		from tbl_car_share
+		where to_date(share_date, 'yyyy-mm-dd') = to_date(#{date}, 'yyyy-mm-dd')
+	</select>
+	
+	
 </mapper>

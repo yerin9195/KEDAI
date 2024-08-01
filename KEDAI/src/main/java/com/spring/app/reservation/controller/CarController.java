@@ -3,6 +3,8 @@ package com.spring.app.reservation.controller;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import com.spring.app.common.MyUtil;
 import com.spring.app.domain.BoardVO;
 import com.spring.app.domain.BusVO;
 import com.spring.app.domain.CarVO;
+import com.spring.app.domain.Car_shareVO;
 import com.spring.app.domain.Day_shareVO;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.reservation.service.CarService;
@@ -255,7 +258,12 @@ public class CarController {
         
 		mav.addObject("carShareList", carShareList);
 
+		// sysdate
+	    Date today = new Date();
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    String todayStr = sdf.format(today);
 		
+	    mav.addObject("todayStr", todayStr);
 		mav.setViewName("tiles1/reservation/carShare.tiles");
 		return mav;
 
@@ -639,8 +647,6 @@ public class CarController {
 	@PostMapping("/carApply_detail.kedai")
 	public ModelAndView requiredLogin_carApply_detail(HttpServletRequest request, HttpServletResponse response, Day_shareVO dsvo, ModelAndView mav) { 
 
-		
-		
 		String userid = request.getParameter("userid");
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
@@ -906,26 +912,36 @@ public class CarController {
         
 		mav.addObject("owner_carShareList", owner_carShareList);
 
+
 		
 		mav.setViewName("tiles1/reservation/owner_Status.tiles");
 		return mav;
 
 	}
 
+
+	// 마이페이지에서 카셰어링정산(신청자) 페이지 만들기
+	@PostMapping("/owner_Status_detail.kedai")
+	public ModelAndView owner_Status_detail(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
+
+		//날짜 넘겨주기
+		String date =request.getParameter("date");
+//		System.out.println("~~~ 확인용 date : " + date);
+//		~~~ 확인용 date : 2024-08-08
+		mav.addObject("date", date);
+		
+		// 선택한 날짜에 해당하는 카셰어링 정보를 가져오기
+		Car_shareVO csvo = service.owner_dateInfo(date);
+		
+		mav.setViewName("tiles1/reservation/owner_Status_detail.tiles");
+		return mav;
+
+	}
 	// 마이페이지에서 카셰어링정산(차주) 페이지 만들기
 	@GetMapping("/owner_Settlement.kedai")
 	public ModelAndView owner_Settlement(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
 
 		mav.setViewName("tiles1/reservation/owner_Settlement.tiles");
-		return mav;
-
-	}
-
-	// 마이페이지에서 카셰어링신청(신청자) 페이지 만들기
-	@GetMapping("/customer_apply.kedai")
-	public ModelAndView customer_apply(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
-
-		mav.setViewName("tiles1/reservation/customer_apply.tiles");
 		return mav;
 
 	}

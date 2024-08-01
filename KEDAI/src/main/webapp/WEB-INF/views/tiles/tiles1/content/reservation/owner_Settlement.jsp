@@ -38,9 +38,6 @@
         <a class="nav-link active" style="color: white; font-size:12pt;" href="<%= ctxPath %>/owner_Settlement.kedai">카셰어링정산(차주)</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_apply.kedai">카셰어링신청(신청자)</a>
-    </li>
-    <li class="nav-item">
         <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">카셰어링신청현황(신청자)</a>
     </li>
     <li class="nav-item">

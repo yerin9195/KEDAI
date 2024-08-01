@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 
 <%
    String ctxPath = request.getContextPath();
@@ -30,7 +32,7 @@
 		});
 		
 		// 검색 시 검색조건 및 검색어 값 유지시키기
-		if(${not empty requestScope.paraMap}){ // paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다.
+		if(${not empty requestScope.paraMap}){ /* paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다. */
 			$("select[name='searchType']").val("${requestScope.paraMap.searchType}");
 			$("input[name='searchWord']").val("${requestScope.paraMap.searchWord}");
 		}
@@ -243,12 +245,12 @@
                                 <fmt:formatDate value="${parsedLastDate}" pattern="yyyy-MM-dd" />
                             </td>
                             <td align="center">${carShare.start_time}</td>
-                            <c:if test="${carShare.end_status == 1 && carShare.cancel_status == 1}">
+                            <c:if test="${carShare.end_status == 1 && carShare.cancel_status == 1 && (carShare.start_date le requestScope.todayStr && carShare.last_date ge requestScope.todayStr) || carShare.start_date > requestScope.todayStr}">
                                 <td align="center">
                                     <input type="button" value="신청가능" class="subject" onclick="goApply('carShareFrm${status.index}')" />
                                 </td>
                             </c:if>
-                            <c:if test="${carShare.end_status == 0 || carShare.cancel_status == 0}">
+                            <c:if test="${carShare.end_status == 0 || carShare.cancel_status == 0 || !(carShare.start_date le requestScope.todayStr && carShare.last_date ge requestScope.todayStr) && carShare.start_date <= requestScope.todayStr}">
                                 <td align="center">신청불가능</td>
                             </c:if>
                             <td align="center">${carShare.readCount}</td>

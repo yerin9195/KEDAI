@@ -84,7 +84,7 @@
     border-radius: 3px;
     cursor: pointer;
 }
-a {
+.fc-daygrid-day-number{
    color:#2c4459;
 }
 /* 모달 끝 */    
@@ -95,7 +95,54 @@ a {
 <script type="text/javascript">
     $(document).ready(function(){
        
+    	/* 날짜 바꾸기 시작 */
+    	
+        function convertDateFormat(start_date) {
+            // 입력된 날짜 문자열을 확인하고 출력
+//          console.log("Input Date: ", inputDate);
+
+            // 날짜 문자열을 분리 (2024-07-17 00:00:00)
+            const dateTimeParts = start_date.split(' ');
+            const dateParts = dateTimeParts[0].split('-');
+            const timeParts = dateTimeParts[1].split(':');
+
+            // 연도, 월, 일, 시간, 분, 초 추출
+            const year = dateParts[0];
+            const month = dateParts[1] - 1; // 월은 0부터 시작
+            const day = dateParts[2];
+            const hours = timeParts[0];
+            const minutes = timeParts[1];
+            const seconds = timeParts[2];
+
+            // Date 객체 생성 (년, 월, 일, 시, 분, 초)
+            const date = new Date(year, month, day, hours, minutes, seconds);
+//          console.log("Date Object: ", date);
+//			Date Object:  Wed Jul 17 2024 00:00:00 GMT+0900 (한국 표준시)
+            // 날짜 포맷 변경
+            const formattedDate = date.toString();
+
+            return date;
+        }
+	
+        function parseDate(str, add) {
+            var datePart = str.substring(0, 10);
+            // 분리된 날짜에서 하이픈을 제거 (2024-01-01 -> 20240101)
+            var formattedDate = datePart.replace(/-/g, '');
+
+            var year = parseInt(formattedDate.substring(0, 4), 10);
+            var month = parseInt(formattedDate.substring(4, 6), 10) - 1; // 월은 0부터 시작
+            var day = parseInt(formattedDate.substring(6, 8), 10) + add;
+            return new Date(year, month, day);
+        }
+        
+     var start_date = $("input:hidden[name='start_date']").val();
+     var convertedstart_date = parseDate(start_date, 0);
+     var last_date = $("input:hidden[name='last_date']").val();
+     var convertedlast_date = parseDate(last_date, 1);
+     
        /* 모달 시작 */
+        var startDate = convertedstart_date;
+    	var endDate = convertedlast_date;
        // Initialize the calendar
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -109,17 +156,24 @@ a {
                     // Add background color to clicked cell
                     $(info.dayEl).addClass('fc-daygrid-day-clicked');
 
-                    // Create a new select button
-                    var button = $('<button class="select-button">Select</button>');
-                    // Append the button to the clicked cell
+                 // 새로운 select 버튼 생성
+                    var button = $('<button type="button" class="select-button" style="background-color: #2c4459;">선택</button>');
+                    // 버튼을 클릭된 셀에 추가
                     $(info.dayEl).append(button);
 
-                    // Add click event to the button
+                    // 버튼에 클릭 이벤트 추가
                     button.click(function() {
-                        alert('Date selected: ' + info.dateStr);
-                        $('#myModal').hide(); // Close the modal
-                        resetModal(); // Reset modal content
+                    //  alert('Date selected: ' + info.dateStr);
+                        $('#myModal').hide(); // 모달 닫기
+                        resetModal(); // 모달 내용 초기화
+                        // dateStr 값을 가지고 새로운 페이지로 이동
+                        goDetail(info.dateStr);
                     });
+
+                },
+                validRange: {
+                    start: startDate, // 가져온 start_date
+                    end: endDate // 가져온 last_date
                 }
             });
 
@@ -140,8 +194,8 @@ a {
                 $('.fc-daygrid-day').removeClass('fc-daygrid-day-clicked');
             }
 
-            // When the user clicks the button, open the modal and render the calendar
-            btn.click(function() {
+            // 모달창 키기 id은 status.index로 각각 설정해주고 해당 클래스를 불러온다.
+            $('.subject').click(function() {
                 resetModal(); // Ensure the modal is reset before showing
                 modal.show();
                 calendar.render();
@@ -310,6 +364,15 @@ a {
          
     }); // end of $(document).ready(function(){}) ----------
 
+    // select 버튼 클릭시 새로운 페이지로 이동하는 함수
+	function goDetail(dateStr) {
+	    const frm = document.date_frm;
+	    frm.method = "post";
+	    frm.action = "<%= ctxPath %>/owner_Status_detail.kedai";
+	    frm.date.value = dateStr; // 폼의 히든 필드에 날짜 값 설정
+	    frm.submit();
+	}
+    
    function goSearch(){
       
       const frm = document.member_search_frm;
@@ -329,6 +392,12 @@ a {
 </script>
 
 <div style="border: 0px solid red; padding: 2% 0; width: 90%;">
+<form name="date_frm" method="get">
+    <input type="hidden" name="date" value="">
+    <%-- ${requestScope.day_shareInfo.res_num} --%>
+    <!-- 다른 필요한 폼 필드들 -->
+</form>
+
 <!-- Navigation Tabs -->
 <ul class="nav nav-tabs" style="margin-bottom:4%;">
     <li class="nav-item">
@@ -339,9 +408,6 @@ a {
     </li>
     <li class="nav-item">
         <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Settlement.kedai">카셰어링정산(차주)</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_apply.kedai">카셰어링신청(신청자)</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">카셰어링신청현황(신청자)</a>
@@ -388,12 +454,24 @@ a {
                 </tr>
             </thead>
             <tbody>
+                         <!-- The Modal -->
+                         <div id="myModal" class="modal">
+                             <!-- Modal content -->
+                             <div class="modal-content">
+                                 <span class="close">&times;</span>
+                                 <span style="text-align:center; font-size: 20pt; font-weight:300;">조회하고 싶은 날짜를 선택하세요</span>
+                                 <div id="calendar"></div>
+                             </div>
+                         </div>
+            
                 <c:if test="${not empty requestScope.owner_carShareList}">
                     <c:forEach var="owner_carShare" items="${requestScope.owner_carShareList}" varStatus="status">
                         <tr>
                            <td align="center">${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
                             <form name="carShareFrm${status.index}">
                                 <input type="hidden" name="res_num" value="${owner_carShare.res_num}"/>
+                                <input type="hidden" name="start_date" value="${owner_carShare.start_date}">
+						    	<input type="hidden" name="last_date" value="${owner_carShare.last_date}">
                             </form> 
                             <td>${owner_carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${owner_carShare.ds_name}</td>
                             <c:set var="startDate" value="${owner_carShare.start_date}" />
@@ -407,17 +485,8 @@ a {
                             </td>
                             <td align="center">${owner_carShare.start_time}</td>
                             <td align="center">
-                                <input type="button" value="날짜선택" class="subject" id="openModalBtn" />
+                                <input type="button" value="날짜선택" class="subject" id="openModalBtn${status.index}" />
                             </td>
-                         <!-- The Modal -->
-                         <div id="myModal" class="modal">
-                             <!-- Modal content -->
-                             <div class="modal-content">
-                                 <span class="close">&times;</span>
-                                 <span style="text-align:center; font-size: 20pt; font-weight:300;">조회하고 싶은 날짜를 선택하세요</span>
-                                 <div id="calendar"></div>
-                             </div>
-                         </div>
                         </tr>
                     </c:forEach>
                 </c:if>
