@@ -575,328 +575,6 @@ where status = 1;
 select count(*)
 from tbl_board;
 
------------------------------------------------------------------------
-
--- 커뮤니티 카테고리 테이블
-create table tbl_community_category
-(category_code  NUMBER(4)      not null
-,category_name  VARCHAR2(100)  not null
-,constraint PK_tbl_community_category_code primary key(category_code)
-);
--- Table TBL_COMMUNITY_CATEGORY이(가) 생성되었습니다.
-
-comment on table tbl_community_category 
-is '커뮤니티 카테고리 정보가 들어있는 테이블';
--- Comment이(가) 생성되었습니다.
-
-comment on column tbl_community_category.category_code is '커뮤니티 카테고리코드'; 
-comment on column tbl_community_category.category_name is '커뮤니티 카테고리명'; 
--- Comment이(가) 생성되었습니다.
-
-select *
-from user_tab_comments
-where table_name = 'TBL_COMMUNITY_CATEGORY';
-
-select column_name, comments
-from user_col_comments
-where table_name = 'TBL_COMMUNITY_CATEGORY';
-
-insert into tbl_community_category(category_code, category_name)
-values(1, '동호회');
--- 1 행 이(가) 삽입되었습니다.
-
-insert into tbl_community_category(category_code, category_name)
-values(2, '건의함');
--- 1 행 이(가) 삽입되었습니다.
-
-insert into tbl_community_category(category_code, category_name)
-values(3, '사내소식');
--- 1 행 이(가) 삽입되었습니다.
-
-commit;
--- 커밋 완료.
-
-select category_code, category_name
-from tbl_community_category
-order by category_code asc;
-
------------------------------------------------------------------------
-
--- 커뮤니티 테이블
-create table tbl_community
-(community_seq     NUMBER                not null
-,fk_category_code  NUMBER(4)             not null
-,fk_empid          VARCHAR2(30)          not null
-,name              VARCHAR2(30)          not null
-,subject           NVARCHAR2(200)        not null
-,content           NVARCHAR2(2000)       not null
-,pwd               VARCHAR2(20)          not null
-,read_count        NUMBER DEFAULT 0      not null
-,registerday       DATE DEFAULT SYSDATE  not null
-,status            NUMBER(1) DEFAULT 1   not null
-,commentCount      NUMBER DEFAULT 0      not null
-,constraint PK_tbl_community_community_seq primary key(community_seq)
-,constraint FK_tbl_community_category_code foreign key(fk_category_code) references tbl_community_category(category_code)
-,constraint FK_tbl_community_fk_empid      foreign key(fk_empid) references tbl_employees(empid)
-,constraint CK_tbl_community_status        check(status in(0,1))
-);
--- Table TBL_COMMUNITY이(가) 생성되었습니다.
-
-ALTER TABLE tbl_community RENAME COLUMN commentCount TO comment_count;
--- Table TBL_COMMUNITY이(가) 변경되었습니다.
-
-desc tbl_community;
-
-create sequence community_seq
-start with 1
-increment by 1
-nomaxvalue
-nominvalue
-nocycle
-nocache;
--- Sequence COMMUNITY_SEQ이(가) 생성되었습니다.
-
-comment on table tbl_community
-is '커뮤니티 정보가 들어있는 테이블';
--- Comment이(가) 생성되었습니다.
-
-comment on column tbl_community.community_seq is '글번호'; 
-comment on column tbl_community.fk_category_code is '카테고리코드';
-comment on column tbl_community.fk_empid is '사원아이디';
-comment on column tbl_community.name is '글쓴이';
-comment on column tbl_community.subject is '글제목';
-comment on column tbl_community.content is '글내용';
-comment on column tbl_community.pwd is '글암호';
-comment on column tbl_community.read_count is '글조회수';
-comment on column tbl_community.registerday is '작성일자';
-comment on column tbl_community.status is '글삭제여부';
-comment on column tbl_community.commentCount is '댓글의개수';
--- Comment이(가) 생성되었습니다.
-
-select *
-from user_tab_comments
-where table_name = 'TBL_COMMUNITY';
-
-select column_name, comments
-from user_col_comments
-where table_name = 'TBL_COMMUNITY';
-
------------------------------------------------------------------------
-
--- 커뮤니티 첨부파일 테이블
-create table tbl_community_file
-(file_seq          NUMBER         not null
-,fk_community_seq  NUMBER         not null
-,orgfilename       VARCHAR2(255)  not null
-,filename          VARCHAR2(255)  not null
-,filesize          NUMBER         not null
-,constraint PK_tbl_community_file_seq     primary key(file_seq)
-,constraint FK_tbl_community_file_com_seq foreign key(fk_community_seq) references tbl_community(community_seq)
-);
--- Table TBL_COMMUNITY_FILE이(가) 생성되었습니다.
-
-create sequence file_seq
-start with 1
-increment by 1
-nomaxvalue
-nominvalue
-nocycle
-nocache;
--- Sequence FILE_SEQ이(가) 생성되었습니다.
-
-comment on table tbl_community_file
-is '커뮤니티 첨부파일 정보가 들어있는 테이블';
--- Comment이(가) 생성되었습니다.
-
-comment on column tbl_community_file.file_seq is '첨부파일번호'; 
-comment on column tbl_community_file.fk_community_seq is '글번호';
-comment on column tbl_community_file.orgfilename is '원본파일명';
-comment on column tbl_community_file.filename is '저장파일명';
-comment on column tbl_community_file.filesize is '파일크기';
--- Comment이(가) 생성되었습니다.
-
-select *
-from user_tab_comments
-where table_name = 'TBL_COMMUNITY_FILE';
-
-select column_name, comments
-from user_col_comments
-where table_name = 'TBL_COMMUNITY_FILE';
-
------------------------------------------------------------------------
-
--- 커뮤니티 댓글 테이블
-create table tbl_comment
-(comment_seq       NUMBER                not null
-,fk_community_seq  NUMBER                not null
-,fk_empid          VARCHAR2(30)          not null
-,name              VARCHAR2(30)          not null
-,content           NVARCHAR2(1000)       not null
-,registerday       DATE DEFAULT SYSDATE  not null
-,status            NUMBER(1) DEFAULT 1   not null
-,constraint PK_tbl_comment_comment_seq   primary key(comment_seq)
-,constraint FK_tbl_comment_community_seq foreign key(fk_community_seq) references tbl_community(community_seq) 
-,constraint FK_tbl_comment_fk_empid      foreign key(fk_empid) references tbl_employees(empid)
-,constraint CK_tbl_comment_status        check(status in(0,1))
-);
--- Table TBL_COMMENT이(가) 생성되었습니다.
-
-ALTER TABLE tbl_comment 
-DROP CONSTRAINT FK_tbl_comment_community_seq;
--- Table TBL_COMMENT이(가) 변경되었습니다.
-
-ALTER TABLE tbl_comment
-ADD CONSTRAINT FK_tbl_comment_community_seq FOREIGN KEY(fk_community_seq)
-REFERENCES tbl_community(community_seq) ON DELETE CASCADE; 
--- Table TBL_COMMENT이(가) 변경되었습니다.
-
-create sequence comment_seq
-start with 1
-increment by 1
-nomaxvalue
-nominvalue
-nocycle
-nocache;
--- Sequence COMMENT_SEQ이(가) 생성되었습니다.
-
-comment on table tbl_comment
-is '커뮤니티 댓글 정보가 들어있는 테이블';
--- Comment이(가) 생성되었습니다.
-
-comment on column tbl_comment.comment_seq is '댓글번호';
-comment on column tbl_comment.fk_community_seq is '원글번호';
-comment on column tbl_comment.fk_empid is '사원아이디';
-comment on column tbl_comment.name is '글쓴이';
-comment on column tbl_comment.content is '댓글내용';
-comment on column tbl_comment.registerday is '작성일자';
-comment on column tbl_comment.status is '글삭제여부';
--- Comment이(가) 생성되었습니다.
-
-select *
-from user_tab_comments
-where table_name = 'TBL_COMMENT';
-
-select column_name, comments
-from user_col_comments
-where table_name = 'TBL_COMMENT';
-
------------------------------------------------------------------------
-
--- 커뮤니티 좋아요 테이블
-create table tbl_community_like
-(fk_empid          VARCHAR2(30)  not null 
-,fk_community_seq  NUMBER        not null
-,constraint PK_tbl_community_like         primary key(fk_empid,fk_community_seq) -- 누가 어떤 글에 대해 좋아요를 누른 경우 => 복합 primary key
-,constraint FK_tbl_community_like_empid   foreign key(fk_empid) references tbl_employees(empid)
-,constraint FK_tbl_community_like_com_seq foreign key(fk_community_seq) references tbl_community(community_seq) on delete cascade
-);
--- Table TBL_COMMUNITY_LIKE이(가) 생성되었습니다.
-
-comment on table tbl_community_like
-is '커뮤니티 좋아요 정보가 들어있는 테이블';
--- Comment이(가) 생성되었습니다.
-
-comment on column tbl_community_like.fk_empid is '사원아이디';
-comment on column tbl_community_like.fk_community_seq is '글번호';
--- Comment이(가) 생성되었습니다.
-
------------------------------------------------------------------------
-
-select category_code, category_name
-from tbl_community_category
-order by category_code asc;
-
-drop table tbl_community_file;
--- Table TBL_COMMUNITY_FILE이(가) 삭제되었습니다.
-
-flashback table tbl_community_file to before drop;
--- Flashback을(를) 성공했습니다.
-
-desc tbl_community_file;
-
-ALTER TABLE tbl_community_file DROP PRIMARY KEY;
--- Table TBL_COMMUNITY_FILE이(가) 변경되었습니다.
-
-ALTER TABLE tbl_community_file ADD CONSTRAINT PK_tbl_community_file_seq PRIMARY KEY(file_seq);
--- Table TBL_COMMUNITY_FILE이(가) 변경되었습니다.
-
-ALTER TABLE tbl_community_file
-ADD CONSTRAINT FK_tbl_community_file_com_seq FOREIGN KEY(fk_community_seq)
-REFERENCES tbl_community(community_seq) ON DELETE CASCADE; 
--- Table TBL_COMMENT이(가) 변경되었습니다.
-
-select *
-from user_constraints
-where table_name in('TBL_COMMUNITY_FILE');
-
------------------------------------------------------------------------
-
--- 커뮤니티 글쓰기
-desc tbl_community;
-
-insert into tbl_community(community_seq, fk_category_code, fk_empid, name, subject, content, pwd, read_count, registerday, status, commentcount)
-values(community_seq.nextval, to_number(#{fk_category_code}), #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, default);
-
--- 첨부파일 등록하기
-desc tbl_community_file;
-
-insert into tbl_community_file(file_seq, fk_community_seq, orgfilename, filename, filesize)
-values(file_seq.nextval, #{fk_community_seq}, #{orgfilename}, #{filename}, #{filesize});
-
-select *
-from tbl_community;
-
-select *
-from tbl_community_file;
-
-select count(*)
-from tbl_community
-where status = 1 and subject like '%' ||'t'||'%';
-
-SELECT community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, orgfilename, read_count, registerday, comment_count
-FROM
-(
-    SELECT rownum AS rno
-         , community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, orgfilename, read_count, registerday, comment_count
-    FROM 
-    (
-        select community_seq, fk_category_code, A.category_name, fk_empid, C.name, E.nickname, E.imgfilename, subject, content, F.orgfilename, read_count, registerday, comment_count
-        from tbl_community C 
-        LEFT JOIN tbl_community_category A ON C.fk_category_code = A.category_code
-        LEFT JOIN tbl_community_file F ON C.community_seq = F.fk_community_seq
-        LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
-        where C.status = 1
-        order by community_seq desc
-    ) V
-) T
-WHERE RNO between 1 and 10
-
-SELECT previousseq, previoussubject
-     , community_seq, fk_category_code, fk_empid, name, nickname, subject, content, pwd, orgfilename
-     , read_count, registerday, comment_count
-     , nextseq, nextsubject
-FROM
-(
-    select lag(community_seq, 1) over(order by community_seq desc) AS previousseq
-         , lag(subject, 1) over(order by community_seq desc) AS previoussubject
-    
-         , community_seq, fk_category_code, fk_empid, C.name, E.nickname, subject, content, C.pwd, F.orgfilename
-         , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count
-         
-         , lead(community_seq, 1) over(order by community_seq desc) AS nextseq
-         , lead(subject, 1) over(order by community_seq desc) AS nextsubject
-    from tbl_community C
-    LEFT JOIN tbl_community_file F ON C.community_seq = F.fk_community_seq
-    LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
-    where C.status = 1
-) V
-WHERE V.community_seq = 3;
-
-desc tbl_community_file;
-desc tbl_employees;
-
-update tbl_community set read_count = read_count + 1
-where community_seq = 1;
 
 desc tbl_community;
 desc tbl_comment;
@@ -1020,3 +698,40 @@ FROM
 WHERE RNO between 1 and 10
 
 SELECT fk_community_seq, COUNT(*) AS like_count FROM tbl_community_like GROUP BY fk_community_seq;
+
+SELECT category_name, name, subject, registerday
+FROM
+(
+    SELECT rownum AS rno, category_name, name, subject, registerday
+    FROM
+    (
+        select C.category_name, name, subject, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday
+        from tbl_board B
+        LEFT JOIN tbl_category C ON B.fk_category_code = C.category_code
+        where status = 1
+        and B.fk_category_code = 3
+        order by board_seq desc
+    ) V
+) T
+WHERE RNO between 1 and 5;
+
+desc tbl_board;
+
+select content, filename
+from tbl_board
+where fk_category_code = 3
+order by board_seq desc;
+
+SELECT subject, content, filename
+FROM 
+(
+    SELECT subject, content, filename
+    FROM tbl_board
+    WHERE fk_category_code = 3
+    ORDER BY board_seq DESC
+)
+WHERE ROWNUM = 1;
+
+select 
+from tbl_employees
+where empid = '2010001-001'

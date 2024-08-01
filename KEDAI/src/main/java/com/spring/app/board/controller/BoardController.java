@@ -47,7 +47,7 @@ public class BoardController {
 	
 	// 게시판 글 등록하는 페이지 이동
 	@GetMapping("/board/add.kedai")
-	public ModelAndView add(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLogin_add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		// 답변 글쓰기가 추가된 경우
 		String subject = "[답변] " + request.getParameter("subject");
@@ -340,7 +340,7 @@ public class BoardController {
 		
 		if(wordList != null) {
 			for(String word : wordList) {
-				JSONObject jsonObj = new JSONObject(); // {}
+				JSONObject jsonObj = new JSONObject();
 				
 				jsonObj.put("word", word);
 				
@@ -380,6 +380,7 @@ public class BoardController {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
+			
 		}
 		else { // redirect 되어서 넘어온 데이터가 아닌 경우 => sendRedirect 하지않고 직접 넘어온 경우
 			board_seq = request.getParameter("board_seq"); // 조회하고자 하는 글번호 받아오기
@@ -396,6 +397,7 @@ public class BoardController {
 			if(searchWord == null) { // 검색어가 없는 경우 원복한다.
 				searchWord = "";
 			}
+			
 		}
 		
 		mav.addObject("goBackURL", goBackURL);
@@ -763,16 +765,4 @@ public class BoardController {
 	
 	}
 	
-	// 게시글수 조회하기
-	@ResponseBody
-	@GetMapping(value="/board/boardTotalCountJSON.kedai", produces="text/plain;charset=UTF-8")
-	public String boardTotalCountJSON(HttpServletRequest request) {
-		
-		int totalCount = service.boardTotalCountJSON();
-		
-		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("totalCount", totalCount*10);
-		
-		return jsonObj.toString();
-	}
 }

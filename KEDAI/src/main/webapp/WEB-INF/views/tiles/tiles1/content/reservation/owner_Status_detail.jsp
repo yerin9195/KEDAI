@@ -1,18 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     String ctxPath = request.getContextPath();
     //    /MyMVC
 %>
-
 <!-- Font Awesome 6 Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 <!-- Kakao Maps -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f8cd36a9ca80015c17a395ab719b2d8d"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f8cd36a9ca80015c17a395ab719b2d8d&libraries=services,places"></script>
 <!-- FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
 <!-- FullCalendar JS -->
@@ -24,48 +24,32 @@
 <style type="text/css">
    
 @charset "UTF-8";
-/* /* 360px 이하 */  /* 일반적으로 휴대폰 세로 */
-@media screen and (max-width: 360px){
-   div#search {
-      padding-left: 0 !important;
-   }
-   
-   div#nav button {
-      width: 100%;
-   }   
+.nav-tabs .nav-link.active {
+    background-color: #2c4459; /* 활성화된 탭의 배경색 변경 */
+    color: white; /* 활성화된 탭의 글자색 변경 */
+    border-bottom-color: transparent; /* 활성화된 탭의 하단 선 제거 */
 }
-
-/* 361px ~ 767px 이하 */  /* 일반적으로 휴대폰 가로 */
-@media screen and (min-width: 361px) and (max-width: 767px){
-   div#search {
-      padding-left: 0 !important;
-   }
-   
-   div#nav button {
-      width: 100%;
-   }
-} */
-
+.nav-tabs .nav-item {
+    flex: 1; /* 각 탭을 균등하게 분배 */
+    text-align: center;
+}
 #container{
     background-color: white;
     color: #2c4459;
-    font-size: 15pt;
     font-weight: 300;
     position: relative;
 }
 #in-container {
     background-color: white;
     color: black;
-    width: 25%;
-    height: 830px;
+    width: 50%;
+    height: 700px;
     position: absolute; /* 절대 위치 지정 */
     top: 0; /* 부모 요소의 위쪽에 위치 */
     left: 0; /* 부모 요소의 왼쪽에 위치 */
     z-index: 10; /* 다른 요소들보다 앞에 오도록 z-index 설정 */
     overflow: hidden;
 }
-
-	
 /* 지도 시작 */
    
 div#title {
@@ -107,14 +91,62 @@ div.mycontent {
 
   /* 지도 끝 */
 	
+.requiredInfo {
+    width: 360px;
+    border: none;
+    border-bottom: 1px solid #2c4459;
+    margin-top: 8px;
+}
+.btnRegister button {
+	border-radius: 25px;
+	color: #fff;
+	width: 100px;
+	height: 50px;
+}
+.btnRegister button:nth-child(1) {
+	background: #2c4459;
+	margin-right: 10px;
+}
+.btnRegister button:nth-child(2) {
+	background: #e68c0e;
+}
 
+   #map {
+       width: 100%;
+       height: 400px;
+       margin-top: 10px;
+   }
+   #results {
+       list-style: none;
+       padding: 0;
+       max-height: 200px;
+       overflow-y: auto;
+       margin-top: 10px;
+   }
+   #results li {
+       padding: 10px;
+       border-bottom: 1px solid #ddd;
+       cursor: pointer;
+   }
+   #results li:hover {
+       background-color: #f0f0f0;
+   }
+   .selectButton {
+    display: none;
+    margin-left: 10px;
+    padding: 5px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+   }
 </style>
 <script type="text/javascript">
 
 $(document).ready(function(){ 
-	
+  
     // 지도를 담을 영역의 DOM 레퍼런스
-   var mapContainer = document.getElementById("map");
+   var mapContainer = document.getElementById("dmap");
    
    // 지도를 생성할때 필요한 기본 옵션
    var options = {
@@ -305,8 +337,6 @@ $(document).ready(function(){
        resultDiv.innerHTML = htmlMessage;
    });
     // ================== 지도에 클릭 이벤트를 등록하기 끝 ======================= //
-   
-   $('#startTime').timepicker();
 }); // end of $(document).ready(function(){})----------------------------------------------------
 
 //!! 인포윈도우를 표시하는 클로저(closure => 함수 내에서 함수를 정의하고 사용하도록 만든것)를 만드는 함수(카카오에서 제공해준것임)입니다 !! // 
@@ -326,23 +356,81 @@ $(document).ready(function(){
        
    }// end of function makeOverListener(mapobj, marker, infowindow, infowindowArr)--------
    
-    
 </script>
-
-<div id="container">
-    <div id="map" style="margin-left:25%; width:75%; height:900px;"></div>
-
-    <div id="in-container">
-		<div class="mt-3" style="display: flex;">
-			<div>
-				<select name="searchType" style="width: 170px;">
-				   <option value="total">전체</option>
-				   <option value="going">진행중</option>
-				   <option value="end">마감</option>
-				</select> 
-				<span></span>  
-			</div>
-		</div>
-    </div>
+<div style="border: 0px solid red; padding: 2% 0; width: 90%;">
+	<!-- Navigation Tabs -->
+	<ul class="nav nav-tabs" style="margin-bottom:4%;">
+	    <li class="nav-item">
+	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/myCar.kedai">차량정보</a>
+	    </li>
+	    <li class="nav-item">
+	        <a class="nav-link active" style="color: white; font-size:12pt;" href="<%= ctxPath %>/owner_Status.kedai">카셰어링현황(차주)</a>
+	    </li>
+	    <li class="nav-item">
+	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Settlement.kedai">카셰어링정산(차주)</a>
+	    </li>
+	    <li class="nav-item">
+	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">카셰어링신청현황(신청자)</a>
+	    </li>
+	    <li class="nav-item">
+	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_Settlement.kedai">카셰어링정산(신청자)</a>
+	    </li>
+	</ul>
+	<div id="container">
+	    <div id="dmap" style="margin-left:25%; width:75%; height:700px;"></div>
+				
+	    <div id="in-container" style="border: 0px solid red;">
+		<h2 style="width: 95%; margin: auto; padding-bottom: 3%;">${requestScope.date}</h2>
+		<table style="width: 95%; margin: auto;" class="table table-bordered">
+            <thead>
+            	<tr>
+                    <th style="width: 70px; text-align: center;">no</th>
+                    <th style="width: 240px; text-align: center;">이름</th>
+                    <th style="width: 70px; text-align: center;">승인</th>
+                    <th style="width: 200px; text-align: center;">거부(사유)</th>
+                    <th style="width: 70px; text-align: center;">미승인</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:if test="${not empty requestScope.carShareList}">
+                    <c:forEach var="carShare" items="${requestScope.carShareList}" varStatus="status">
+                        <tr>
+                        	<td align="center">${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
+                            <form name="carShareFrm${status.index}">
+                                <input type="hidden" name="res_num" value="${carShare.res_num}"/>
+                            </form> 
+                            <td>${carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${carShare.ds_name}</td>
+                            <td align="center">${carShare.nickname}</td>
+                            <c:set var="startDate" value="${carShare.start_date}" />
+                            <c:set var="lastDate" value="${carShare.last_date}" />
+                            <td align="center">
+                                <fmt:parseDate value="${startDate}" var="parsedStartDate" pattern="yyyy-MM-dd HH:mm:ss" />
+                                <fmt:formatDate value="${parsedStartDate}" pattern="yyyy-MM-dd" />
+                                ~
+                                <fmt:parseDate value="${lastDate}" var="parsedLastDate" pattern="yyyy-MM-dd HH:mm:ss" />
+                                <fmt:formatDate value="${parsedLastDate}" pattern="yyyy-MM-dd" />
+                            </td>
+                            <td align="center">${carShare.start_time}</td>
+                            <c:if test="${carShare.end_status == 1 && carShare.cancel_status == 1}">
+                                <td align="center">
+                                    <input type="button" value="신청가능" class="subject" onclick="goApply('carShareFrm${status.index}')" />
+                                </td>
+                            </c:if>
+                            <c:if test="${carShare.end_status == 0 || carShare.cancel_status == 0}">
+                                <td align="center">신청불가능</td>
+                            </c:if>
+                            <td align="center">${carShare.readCount}</td>
+                        </tr>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty requestScope.carShareList}">
+                    <tr>
+                        <td colspan="7">데이터가 존재하지 않습니다.</td>
+                    </tr>
+                </c:if>
+            </tbody>
+        </table>
+		
+	    </div>
+	</div>
 </div>
-<!-- 해당 페이지에서는 들어오자마자 전체 카셰어링을 다 보여주고  -->
