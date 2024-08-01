@@ -55,7 +55,7 @@ function goView(doc_no, fk_doctype_code){
 	}
 
 	frm.method = "post";
-	frm.action = "<%= ctxPath%>/approval/viewOneMyDoc.kedai";
+	frm.action = "<%= ctxPath%>/approval/viewOneDoc.kedai";
 	frm.submit();
 
 }//end of goView(doc_no, fk_doctype_code)---------------------------
@@ -70,6 +70,7 @@ function goSearch(){
 }// end of function goSearch()--------------
 
 </script>
+
 
 
 
