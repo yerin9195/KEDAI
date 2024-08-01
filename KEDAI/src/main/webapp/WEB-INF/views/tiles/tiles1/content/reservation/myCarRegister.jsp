@@ -81,7 +81,16 @@
     // Function Declaration
     function goRegister() {
 	       
-	    
+	    // 차 사진
+	    var car_image = document.getElementById('file-id').value.trim();
+	    if(car_image == ""){
+			$(".requiredInfo :input").prop("disabled", true);
+			$("input#file-id").parent().find("span.error").show();
+			return false;
+	    }
+	    else{
+	    	$("input#file-id").parent().find("span.error").hide();
+	    }
 		// 차종
 		var car_type = document.getElementById('car_type').value.trim();
 		if(car_type == ""){
@@ -168,12 +177,12 @@
 
     <form name="registerFrm" enctype="multipart/form-data" class="row mt-5" style="border: 0px solid green;">
         <div class="col-2" style="border: 0px solid blue;">
-            <h6>차량 사진등록</h6>
+            <h6>차량 사진등록<span class="star">*</span><span class="error" id="carimageError" style="font-size: 8pt;">&nbsp;차량사진은 필수입니다.</span></h6>
             <div style="width: 200px; height: 230px; overflow: hidden; border: 1px solid #ddd;">
                 <img id="previewImg" style="width: 100%; height: 100%;" />
             </div>
             <br>
-            <input type="file" name="attach" class="infoData img_file" accept='image/*' />
+            <input type="file" name="attach" id="file-id" class="infoData img_file" accept='image/*'/>
         </div>
 
         <div class="col-10 row" id="empRegister">

@@ -233,7 +233,7 @@
                             <form name="carShareFrm${status.index}">
                                 <input type="hidden" name="res_num" value="${carShare.res_num}"/>
                             </form> 
-                            <td>${carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${carShare.ds_name}</td>
+                            <td align="center">${carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${carShare.ds_name}</td>
                             <td align="center">${carShare.nickname}</td>
                             <c:set var="startDate" value="${carShare.start_date}" />
                             <c:set var="lastDate" value="${carShare.last_date}" />
@@ -246,12 +246,12 @@
                             </td>
                             <td align="center">${carShare.start_time}</td>
                             <c:if test="${carShare.end_status == 1 && carShare.cancel_status == 1 && (carShare.start_date le requestScope.todayStr && carShare.last_date ge requestScope.todayStr) || carShare.start_date > requestScope.todayStr}">
-                                <td align="center">
-                                    <input type="button" value="신청가능" class="subject" onclick="goApply('carShareFrm${status.index}')" />
+                                <td align="center" style="background-color:#2c4459;">
+                                    <input type="button" style="border:none; background-color: #2c4459; color: white;" value="신청가능" class="subject" onclick="goApply('carShareFrm${status.index}')" />
                                 </td>
                             </c:if>
                             <c:if test="${carShare.end_status == 0 || carShare.cancel_status == 0 || !(carShare.start_date le requestScope.todayStr && carShare.last_date ge requestScope.todayStr) && carShare.start_date <= requestScope.todayStr}">
-                                <td align="center">신청불가능</td>
+                                <td align="center" style="color: #e68c0e;">신청불가능</td>
                             </c:if>
                             <td align="center">${carShare.readCount}</td>
                         </tr>
