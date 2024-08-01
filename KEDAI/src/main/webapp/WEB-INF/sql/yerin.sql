@@ -281,7 +281,7 @@ commit;
 
 select *
 from tbl_employees
-where fk_dept_code = '300'
+where fk_dept_code = '200'
 order by fk_job_code asc;   
 
 delete from tbl_employees
@@ -600,5 +600,101 @@ LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
 where C.status = 1 and fk_community_seq = 17
 order by comment_seq desc;
 
+SELECT community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count, fk_community_seq
+FROM
+(
+    SELECT rownum AS rno
+         , community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count
+         , fk_community_seq
+    FROM 
+    (
+        select community_seq, fk_category_code, A.category_name, fk_empid, C.name, E.nickname, E.imgfilename, subject, content 
+             , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count
+             , fk_community_seq
+        from tbl_community C 
+        LEFT JOIN tbl_community_category A ON C.fk_category_code = A.category_code
+        LEFT JOIN (select fk_community_seq from tbl_community_file group by fk_community_seq) F ON C.community_seq = F.fk_community_seq
+        LEFT JOIN tbl_employees E ON C.fk_empid = E.empid 
+        where C.status = 1
+        order by community_seq desc
+    ) V
+) T
+WHERE RNO between 1 and 10
 
+desc tbl_community_file;
 
+select file_seq, fk_community_seq, orgfilename, filename, filesize
+from tbl_community_file
+where fk_community_seq = 27 and orgfilename = 'LG_싸이킹청소기_사용설명서.pdf'
+
+desc tbl_comment;
+desc tbl_community;
+
+update tbl_comment set content = #{content}, registerday = sysdate
+where comment_seq = #{comment_seq}
+
+update tbl_community set comment_count = comment_count - 1
+where community_seq = #{fk_community_seq}
+
+desc tbl_community_like;
+
+insert into tbl_community_like(fk_empid, fk_community_seq)
+values(#{fk_empid}, #{fk_community_seq})
+
+select count(*)
+from tbl_community_like
+where fk_community_seq = 3
+
+update tbl_community set fk_category_code = #{fk_category_code}, subject = #{subject}, content = #{content}, registerday = sysdate
+where community_seq = #{community_seq}
+
+update tbl_community_file set orgfilename = #{orgfilename}, filename = #{filename}, filesize = #{filesize}
+where fk_community_seq = #{fk_community_seq}
+
+select *
+from tbl_community
+where community_seq = 31
+
+select orgfilename, filename, filesize
+from tbl_community_file
+where fk_community_seq = 30
+          
+delete from tbl_community_file
+where fk_community_seq = #{fk_community_seq}
+
+select orgfilename, filename
+from tbl_community_file
+
+select count(*)
+from tbl_comment
+where fk_community_seq = 30
+
+select *
+from tbl_community_like
+where fk_empid = '2011300-001' and fk_community_seq = 20
+
+delete from tbl_community_like
+where fk_empid = '2010001-001' and fk_community_seq = 28
+
+-- 좋아요 개수가 추가된 경우
+SELECT community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count, fk_community_seq, like_count
+FROM
+(
+    SELECT rownum AS rno
+         , community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count, fk_community_seq, like_count
+    FROM 
+    (
+        select community_seq, fk_category_code, A.category_name, fk_empid, C.name, E.nickname, E.imgfilename, subject, content 
+             , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count, F.fk_community_seq, COALESCE(L.like_count, 0) AS like_count
+        from tbl_community C 
+        LEFT JOIN tbl_community_category A ON C.fk_category_code = A.category_code
+        LEFT JOIN (select fk_community_seq from tbl_community_file group by fk_community_seq) F ON C.community_seq = F.fk_community_seq
+        LEFT JOIN (SELECT fk_community_seq, COUNT(*) AS like_count FROM tbl_community_like GROUP BY fk_community_seq) L ON C.community_seq = L.fk_community_seq
+        LEFT JOIN tbl_employees E ON C.fk_empid = E.empid 
+        where C.status = 1
+        order by community_seq desc
+    ) V
+) T
+WHERE RNO between 1 and 10
+
+SELECT fk_community_seq, COUNT(*) AS like_count FROM tbl_community_like GROUP BY fk_community_seq;

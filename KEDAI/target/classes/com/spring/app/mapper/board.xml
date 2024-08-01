@@ -204,7 +204,7 @@
 	</update>
 	
 	<update id="edit" parameterType="BoardVO">
-		update tbl_board set fk_category_code = #{fk_category_code}, subject = #{subject}, content = #{content}
+		update tbl_board set fk_category_code = #{fk_category_code}, subject = #{subject}, content = #{content}, registerday = sysdate
 		where board_seq = #{board_seq}
 	</update>
 	

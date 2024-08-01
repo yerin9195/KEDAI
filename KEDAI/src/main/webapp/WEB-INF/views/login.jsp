@@ -61,6 +61,7 @@
   			if(loginid != null){
   				$("input#empid").val(loginid);
   				$("input:checkbox[id='idSave']").prop("checked", true);
+  				$("input:password[name='pwd']").focus();
   			}
 		}
 	}); // end of $(document).ready(function(){}) ----------

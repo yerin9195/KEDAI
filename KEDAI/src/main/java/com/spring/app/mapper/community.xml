@@ -16,13 +16,13 @@
 	</select>
 	
 	<insert id="add" parameterType="CommunityVO">
-		insert into tbl_community(community_seq, fk_category_code, fk_empid, name, subject, content, pwd, read_count, registerday, status, commentcount)
+		insert into tbl_community(community_seq, fk_category_code, fk_empid, name, subject, content, pwd, read_count, registerday, status, comment_count)
 		values(to_number(#{community_seq}), to_number(#{fk_category_code}), #{fk_empid}, #{name}, #{subject}, #{content}, #{pwd}, default, default, default, default)
 	</insert>
 	
 	<insert id="community_attachfile_insert" parameterType="HashMap">
 		insert into tbl_community_file(file_seq, fk_community_seq, orgfilename, filename, filesize)
-		values(file_seq.nextval, to_number(#{community_seq}), #{orgfilename}, #{filename}, #{filesize})
+		values(file_seq.nextval, to_number(#{fk_community_seq}), #{orgfilename}, #{filename}, #{filesize})
 	</insert>
 	
 	<select id="getTotalCount" parameterType="HashMap" resultType="int">
@@ -46,35 +46,20 @@
 		</choose>
 	</select>
 	
-	<resultMap type="CommunityVO" id="communityJoinCategory">
-		<result property="community_seq" 	column="community_seq" 	  javaType="String" />
-		<result property="fk_category_code" column="fk_category_code" javaType="String" />
-		<result property="category_name" 	column="category_name" 	  javaType="String" />
-		<result property="fk_empid" 		column="fk_empid" 		  javaType="String" />
-		<result property="name" 			column="name" 			  javaType="String" />
-		<result property="nickname" 		column="nickname" 		  javaType="String" />
-		<result property="imgfilename" 		column="imgfilename" 	  javaType="String" />
-		<result property="subject" 			column="subject" 		  javaType="String" />
-		<result property="content" 			column="content" 		  javaType="String" />
-		<result property="orgfilename" 		column="orgfilename" 	  javaType="String" />
-		<result property="read_count" 		column="read_count" 	  javaType="String" />
-		<result property="registerday" 		column="registerday" 	  javaType="String" />
-		<result property="comment_count" 	column="comment_count" 	  javaType="String" />
-	</resultMap>
-	
-	<select id="communityListSearch_withPaging" parameterType="HashMap" resultType="CommunityVO" resultMap="communityJoinCategory">
-		SELECT community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, orgfilename, read_count, registerday, comment_count
+	<select id="communityListSearch_withPaging" parameterType="HashMap" resultType="CommunityVO">
+		SELECT community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count, fk_community_seq, like_count
 		FROM
 		(
 		    SELECT rownum AS rno
-		         , community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, orgfilename, read_count, registerday, comment_count
+		         , community_seq, fk_category_code, category_name, fk_empid, name, nickname, imgfilename, subject, content, read_count, registerday, comment_count, fk_community_seq, like_count
 		    FROM 
 		    (
-		        select community_seq, fk_category_code, A.category_name, fk_empid, C.name, E.nickname, E.imgfilename, subject, content, F.orgfilename
-		             , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count
+		        select community_seq, fk_category_code, A.category_name, fk_empid, C.name, E.nickname, E.imgfilename, subject, content 
+		             , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count, F.fk_community_seq, COALESCE(L.like_count, 0) AS like_count
 		        from tbl_community C 
 		        LEFT JOIN tbl_community_category A ON C.fk_category_code = A.category_code
-		        LEFT JOIN tbl_community_file F ON C.community_seq = F.fk_community_seq
+		        LEFT JOIN (select fk_community_seq from tbl_community_file group by fk_community_seq) F ON C.community_seq = F.fk_community_seq
+		        LEFT JOIN (SELECT fk_community_seq, COUNT(*) AS like_count FROM tbl_community_like GROUP BY fk_community_seq) L ON C.community_seq = L.fk_community_seq
 		        LEFT JOIN tbl_employees E ON C.fk_empid = E.empid 
 		        where C.status = 1
 		        <choose>
@@ -130,23 +115,39 @@
 	
 	<select id="getView" parameterType="HashMap" resultType="CommunityVO">
 		SELECT previousseq, previoussubject
-		     , community_seq, fk_category_code, fk_empid, name, nickname, subject, content, pwd, orgfilename
-		     , read_count, registerday, comment_count
+		     , community_seq, fk_category_code, fk_empid, name, nickname, subject, content, pwd
+		     , read_count, registerday, comment_count, fk_community_seq
 		     , nextseq, nextsubject
 		FROM
 		(
 			select lag(community_seq, 1) over(order by community_seq desc) AS previousseq
 			     , lag(subject, 1) over(order by community_seq desc) AS previoussubject
 			
-			     , community_seq, fk_category_code, fk_empid, C.name, E.nickname, subject, content, C.pwd, F.orgfilename
-			     , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count
+			     , community_seq, fk_category_code, fk_empid, C.name, E.nickname, subject, content, C.pwd
+			     , read_count, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday, comment_count, fk_community_seq
 			     
 			     , lead(community_seq, 1) over(order by community_seq desc) AS nextseq
 			     , lead(subject, 1) over(order by community_seq desc) AS nextsubject
 			from tbl_community C
-			LEFT JOIN tbl_community_file F ON C.community_seq = F.fk_community_seq
+			LEFT JOIN (select fk_community_seq from tbl_community_file group by fk_community_seq) F ON C.community_seq = F.fk_community_seq
 			LEFT JOIN tbl_employees E ON C.fk_empid = E.empid
 			where C.status = 1
+			<choose>
+	        	<!-- 검색조건과 검색어가 존재하는 경우 -->
+				<when test='searchType == "subject" and searchWord != ""'>
+					and lower(subject) like '%'||lower(#{searchWord})||'%'
+				</when>
+				<when test='searchType == "content" and searchWord != ""'>
+					and lower(content) like '%'||lower(#{searchWord})||'%'
+				</when>
+				<when test='searchType == "subject_content" and searchWord != ""'>
+					and (lower(subject) like '%'||lower(#{searchWord})||'%' or lower(content) like '%'||lower(#{searchWord})||'%')
+				</when>
+				<when test='searchType == "name" and searchWord != ""'>
+					and lower(name) like '%'||lower(#{searchWord})||'%'
+				</when>
+				<otherwise></otherwise>
+			</choose>
 		) V
 		WHERE V.community_seq = #{community_seq}
 	</select>
@@ -156,6 +157,33 @@
 		where community_seq = #{community_seq}
 	</update>
 	
+	<select id="getAttachFileList" parameterType="String" resultType="com.spring.app.domain.CommunityFileVO">
+		select orgfilename, filename, filesize
+		from tbl_community_file
+		where fk_community_seq = #{fk_community_seq}	
+	</select>
+	
+	<select id="getFilename" parameterType="HashMap" resultType="com.spring.app.domain.CommunityFileVO">
+		select file_seq, fk_community_seq, orgfilename, filename, filesize
+		from tbl_community_file
+		where fk_community_seq = #{fk_community_seq} and orgfilename = #{orgfilename}
+	</select>
+	
+	<delete id="community_attachfile_delete" parameterType="String">
+		delete from tbl_community_file
+		where fk_community_seq = #{community_seq}
+	</delete>
+	
+	<update id="edit" parameterType="CommunityVO">
+		update tbl_community set fk_category_code = #{fk_category_code}, subject = #{subject}, content = #{content}, registerday = sysdate
+		where community_seq = #{community_seq}
+	</update>
+	
+	<delete id="del" parameterType="String">
+		delete from tbl_community
+		where community_seq = #{fk_community_seq}
+	</delete>
+
 	<insert id="addComment" parameterType="CommentVO">
 		insert into tbl_comment(comment_seq, fk_community_seq, fk_empid, name, content, registerday, status)
 		values(comment_seq.nextval, #{fk_community_seq}, #{fk_empid}, #{name}, #{content}, default, default)
@@ -190,5 +218,30 @@
 		from tbl_comment
 		where fk_community_seq = #{fk_community_seq}
 	</select>
+	
+	<update id="updateComment" parameterType="HashMap">
+		update tbl_comment set content = #{content}, registerday = sysdate
+		where comment_seq = #{comment_seq}
+	</update>
+	
+	<delete id="deleteComment" parameterType="String">
+		delete from tbl_comment 
+		where comment_seq = #{comment_seq}
+	</delete>
+	
+	<update id="updateCommentCount_decrease" parameterType="String">
+		update tbl_community set comment_count = comment_count - 1
+		where community_seq = #{fk_community_seq}
+	</update>
+	
+	<insert id="likeAdd" parameterType="HashMap">
+		insert into tbl_community_like(fk_empid, fk_community_seq)
+		values(#{fk_empid}, #{fk_community_seq})
+	</insert>
+	
+	<delete id="likeMinus" parameterType="HashMap">
+		delete from tbl_community_like
+		where fk_empid = #{fk_empid} and fk_community_seq = #{fk_community_seq}
+	</delete>
 
 </mapper>
