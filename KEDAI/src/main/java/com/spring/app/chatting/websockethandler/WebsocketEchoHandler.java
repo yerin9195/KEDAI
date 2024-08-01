@@ -94,7 +94,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 		    MemberVO loginuser = (MemberVO)map.get("loginuser");	
 		  // "loginuser" 은 HttpSession에 저장된 키 값으로 로그인 되어진 사용자이다.
 		  
-		    connectingUserName += loginuser.getName()+" "+loginuser.getDept_name()+" ";
+		    connectingUserName += loginuser.getName()+" ";
 		}// end of for()----------------------------------------------------
 		
 		connectingUserName += "」 ";
@@ -416,8 +416,8 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 		 * 
 		 * System.out.println(html.substring(len)); // 강동원
 		 */    
-        System.out.println(html);
-        System.out.println(html.substring(0, len)); // + ? 
+       // System.out.println(html);
+       // System.out.println(html.substring(0, len)); // + ? 
         
         for (WebSocketSession webSocketSession : connectedUsers) {
             webSocketSession.sendMessage(new TextMessage(html.substring(0, len)));

@@ -235,10 +235,10 @@ body, html {
     	  }
     	  // ======= 서영학  끝 ======= //
           else {
-             // event.data 는 수신받은 채팅 문자이다.
-          //   $("div#chatMessage").append(event.data);
-          //   $("div#chatMessage").append("<br>");
-          //   $("div#chatMessage").scrollTop(99999999);
+           // 	event.data 는 수신받은 채팅 문자이다.
+           //		$("div#chatMessage").append(event.data);
+          //		$("div#chatMessage").append("<br>");
+          //		$("div#chatMessage").scrollTop(99999999);
           }
 	    };
 	    
