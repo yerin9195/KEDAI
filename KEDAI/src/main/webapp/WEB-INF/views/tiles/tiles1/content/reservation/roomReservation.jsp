@@ -93,6 +93,7 @@
         
         .reserveBtn {
             padding: 22px;
+            background-color: transparent;
         }
 
         .date-time-group {
@@ -550,6 +551,8 @@
 	        $("#currentDate").text(formattedToday);
 	        $("#startDate").val(formattedToday);
 	        $("#endDate").val(formattedToday);
+	        
+	        fetchReservations();
 	    }
 
 
