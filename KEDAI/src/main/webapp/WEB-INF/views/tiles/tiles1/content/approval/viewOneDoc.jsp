@@ -166,10 +166,13 @@ function btnOk(doc_no){
 	const frm = document.appfrm;
 	// hidden 필드에 doc_no 값을 설정
     frm.doc_no.value = doc_no;
+    frm.level_no.value = level_no;
 	frm.method = "post";
 	frm.action = "<%= ctxPath%>/approval/appOk.kedai";
 	frm.submit();
 	
+	
+	alert("결재 완료 되었습니다.");
 }
 
 function btnReject(doc_no){
@@ -355,6 +358,7 @@ function formatFileSize(size) {
 			</div>
 		</div>
 		 <input type="hidden" name="doc_no" id="doc_no_field" />
+		 <input type="hidden" name="level_no" id="level_no_field" />
 		</form>
 		
 	</div>

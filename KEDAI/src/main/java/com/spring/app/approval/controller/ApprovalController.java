@@ -324,7 +324,7 @@ public class ApprovalController {
 	@GetMapping(value="/approval/newDocEnd.kedai")
 	public String newDocEnd(ModelAndView mav, HttpServletRequest request ) {
 	      
-		return "tiles1/approval/main.tiles";
+		return "redirect:/approval/main.kedai"; // 메인 화면으로 돌아가기
 	    //  /WEB-INF/views/tiles1/email/emailWrite_done.jsp 페이지를 만들어야 한다.
 	}	
 	
@@ -867,8 +867,8 @@ public class ApprovalController {
 		return mav;
 	}
 	
-	@RequestMapping("/approval/viewOneMyDoc.kedai")
-	public ModelAndView viewOneMyDoc(ModelAndView mav, HttpServletRequest request) {
+	@RequestMapping("/approval/viewOneDoc.kedai")
+	public ModelAndView viewOneDoc(ModelAndView mav, HttpServletRequest request) {
 		//String seq = request.getParameter("seq");
 		String doc_no="";
 		String fk_doctype_code="";
@@ -1027,7 +1027,7 @@ public class ApprovalController {
 			System.out.println("확인용 isNowApproval " + isNowApproval );
 			mav.addObject("isNowApproval",isNowApproval);
 			mav.addObject("docvo",docvo);
-			mav.setViewName("tiles1/approval/viewMyOneDoc.tiles");
+			mav.setViewName("tiles1/approval/viewOneDoc.tiles");
 			
 			
 		}catch (NumberFormatException e ) {
@@ -1151,6 +1151,40 @@ public class ApprovalController {
 		}
 	}
 	
+	//결재 완료를 눌렀을 때
+	@PostMapping("/approval/appOk.kedai")
+	public String appOk(ModelAndView mav, HttpServletRequest request) {
+		
+		String fk_doc_no = request.getParameter("doc_no");
+		String approval_comment = request.getParameter("approval_comment").trim();
+		String level_no_str = request.getParameter("level_no");
+		String doc_status;
+		if("1".equals(level_no_str)) {
+			doc_status = "2";
+		}
+		else {
+			doc_status = "1";
+		}
+		
+		Date now = new Date(); // 현재시각 
+        SimpleDateFormat sdfrmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String approval_date = sdfrmt.format(now);
+        
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");	
+		String loginEmpId = loginuser.getEmpid();
+		
+        Map<String, String> paraMap = new HashMap<>();
+        paraMap.put("fk_doc_no", fk_doc_no);
+        paraMap.put("approval_comment", approval_comment);
+        paraMap.put("approval_date", approval_date);
+        paraMap.put("loginEmpId", loginEmpId);
+        paraMap.put("doc_status", doc_status); // tbl_doc의 status 업데이트
+        
+        //service.updateDocApproval(paraMap);
+        
+		return "redirect:/approval/main.kedai"; // 메인 화면으로 돌아가기
+	}
 	
  //  	<definition name="*/*/*/*.tiles" extends="layout-tiles">
 //  	<put-attribute name="content" value="/WEB-INF/views/tiles/{1}/content/{2}/{3}/{4}.jsp"/>

@@ -155,7 +155,8 @@ function goSearch(){
    							<td>${allAList.name}</td>					
    							<c:if test="${allAList.doc_status eq 0}"><td>미처리</td></c:if>
 							<c:if test="${allAList.doc_status eq 1}"><td>진행중</td></c:if>
-							<c:if test="${allAList.doc_status eq 2}"><td>반려</td></c:if>
+							<c:if test="${allAList.doc_status eq 2}"><td>결재완료</td></c:if>
+							<c:if test="${allAList.doc_status eq 3}"><td>반려</td></c:if>
    						</tr>
    					</c:if>
   				</c:forEach>

@@ -10,7 +10,7 @@ public class DocVO {
 	private String doc_content;   			// 기안문서내용
 	private String created_date;   		// 서류작성일자
 	private String doc_comment;   		// 기안의견
-	private int doc_status;   		// 기안상태  0:미결재  1:결재중 2:반려
+	private int doc_status;   		// 기안상태  0:미결재  1:결재중   2:결재완료 3:반려
 	
 	///////////////////////////////////////////select 용////////////////////////////////
 	private int rno;
