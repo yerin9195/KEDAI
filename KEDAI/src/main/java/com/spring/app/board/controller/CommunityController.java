@@ -522,8 +522,7 @@ public class CommunityController {
 				
 				jsonObj.put("orgfileName", attachFile.getOrgfilename());
 		
-				jsonArr.put(jsonObj); // [{}, {}, {}]
-				
+				jsonArr.put(jsonObj); // [{}, {}, {}]	
 			} // end of for ----------
 			
 		} // end of if ----------

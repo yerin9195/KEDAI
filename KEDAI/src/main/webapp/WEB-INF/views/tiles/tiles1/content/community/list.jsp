@@ -170,7 +170,7 @@
 		      		<option value="name">작성자</option>
 		   		</select>
 		   		
-		   		<input type="text" name="searchWord" size="40" width="500px" autocomplete="off" style="height: 30px;" /> 
+		   		<input type="text" name="searchWord" size="40" autocomplete="off" style="width: 350px; height: 30px;" /> 
 		   		<input type="text" style="display: none;"/> 
 		   		<button type="button" class="search_btn" onclick="goSearch()">검색</button>
 		   		
