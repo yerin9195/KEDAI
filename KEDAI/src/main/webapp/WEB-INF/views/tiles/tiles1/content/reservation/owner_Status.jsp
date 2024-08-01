@@ -484,8 +484,8 @@
                                 <fmt:formatDate value="${parsedLastDate}" pattern="yyyy-MM-dd" />
                             </td>
                             <td align="center">${owner_carShare.start_time}</td>
-                            <td align="center">
-                                <input type="button" value="날짜선택" class="subject" id="openModalBtn${status.index}" />
+                            <td align="center" style="background-color:#2c4459;">
+                                <input type="button" value="날짜선택" style="border:none; background-color: #2c4459; color: white;" class="subject" id="openModalBtn${status.index}" />
                             </td>
                         </tr>
                     </c:forEach>

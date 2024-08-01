@@ -103,18 +103,17 @@ function goRegister(){
 	                    <div style="display: flex;">
 	                        <div class="col-6" style="border-right: 2px solid lightgray;">
 	                            <h4>운전 종별</h4>
-	                            <span style="display:block; text-align: center; font-size: 30pt;">
+	                            <div style="display: flex; align-items:center; width: 200px; margin: 0 auto; text-align: center; font-size: 30pt;">
 	                                <i class="fa-solid fa-id-card"></i>&nbsp;&nbsp;
-	                                <input type="text" style="font-size:23pt; border:none;" name="car_type" id="car_type" value="${car.license }"/>
-	                                
-	                            </span>
+	                                <input type="text" style="font-size:23pt; width: 100px; border:none;" name="car_type" id="car_type" value="${car.license }"/>
+	                            </div>
 	                        </div>
 	                        <div class="col-6">
 	                            <h4>운전 경력</h4>
-	                            <span style="display:block; text-align: center; font-size: 30pt;">
+	                            <div style="display: flex; align-items: center; width: 200px; margin: 0 auto; text-align: center; font-size: 30pt;">
 	                                <i class="fa-solid fa-car"></i>&nbsp;&nbsp;
-	                                <input type="text" name="drive_year" id="drive_year" style="font-size:23pt; border:none;" value="${car.drive_year}">
-	                            </span>
+	                                <input type="text" name="drive_year" id="drive_year" style="font-size:23pt; width: 150px; border:none;" value="${car.drive_year}">
+	                            </div>
 	                        </div>
 	                    </div>
 	                    <div style="display: flex; margin-top: 4%;">
