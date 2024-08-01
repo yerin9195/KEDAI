@@ -8,14 +8,20 @@
 	//     /KEDAI
 %>
 <style type="text/css">
+	.orgfileName {
+		color: #363636;
+		text-decoration: none; 
+	}
+	.orgfileName:hover {
+		color: #e68c0e;
+	}
 	.subject div {
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 	.moveColor {
-		color: #2c4459;
-		font-weight: bold;
+		color: #e68c0e;
 		cursor: pointer;
 	}
 	.list_btn:hover {
@@ -101,7 +107,7 @@
 					</tr>
 					<tr>
 						<th style="width: 30%;">첨부파일</th>
-						<td><a href="<%= ctxPath%>/board/download.kedai?board_seq=${requestScope.bvo.board_seq}">${requestScope.bvo.orgfilename}</a></td>
+						<td><a href="<%= ctxPath%>/board/download.kedai?board_seq=${requestScope.bvo.board_seq}" class="orgfileName">${requestScope.bvo.orgfilename}</a></td>
 					</tr>
 				</table>
 				

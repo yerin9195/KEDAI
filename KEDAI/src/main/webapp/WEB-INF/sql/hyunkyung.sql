@@ -158,16 +158,12 @@ create table tbl_doc
 ,doc_content        NVARCHAR2(2000)      not null    -- 기안문서내용
 ,created_date       date default sysdate not null    -- 서류작성일자
 ,doc_comment            NVARCHAR2(100)                   -- 기안의견
--- ,doc_status         NUMBER  default 0    not null    -- 기안상태  0:기안 1:반려                
+,doc_status         NUMBER  default 0    not null    -- 기안상태  0:기안 1:반려  
 ,constraint PK_tbl_doc_doc_no primary key(doc_no)
 ,constraint FK_tbl_doc_fk_doctype_code foreign key(fk_doctype_code) references tbl_doctype(doctype_code)
 ,constraint FK_tbl_doc_fk_empid foreign key(fk_empid) references tbl_employees(EMPID)
 -- ,constraint ck_tbl_doc_doc_status CHECK (doc_status IN(0, 1))
 );
-
-ALTER TABLE tbl_doc
-DROP COLUMN doc_status;
-
 
 ALTER TABLE tbl_doc RENAME COLUMN content TO doc_content;
 
@@ -285,9 +281,9 @@ create table tbl_approval
 );
 
 ALTER TABLE tbl_approval DROP CONSTRAINT PK_tbl_approval_new;
-
+ -- pk를 2개 설정한다.
 ALTER TABLE tbl_approval 
-ADD CONSTRAINT PK_tbl_approval_no_empid PRIMARY KEY (approval_no, fk_empid);
+ADD CONSTRAINT PK_tbl_approval_no_empid PRIMARY KEY (approval_no, fk_empid); 
 
 SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE, TABLE_NAME
 FROM USER_CONSTRAINTS
@@ -794,9 +790,445 @@ JOIN tbl_approval t2 ON t1.FK_DOC_NO = t2.FK_DOC_NO
 WHERE t1.FK_EMPID = '2012100-001'
   AND t2.LEVEL_NO = t1.LEVEL_NO + 1;
   
-  SELECT t1.APPROVAL_NO, t1.FK_DOC_NO, t1.FK_EMPID, t1.STATUS, t1.LEVEL_NO,
-       t2.APPROVAL_NO AS NEXT_APPROVAL_NO, t2.STATUS AS NEXT_STATUS, t2.LEVEL_NO AS NEXT_LEVEL_NO, T2.FK_EMPID
-FROM tbl_approval t1
-JOIN tbl_approval t2 ON t1.FK_DOC_NO = t2.FK_DOC_NO
-WHERE t1.FK_EMPID = '2012100-001'
-  AND t2.LEVEL_NO = t1.LEVEL_NO + 1;
+
+SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+        D.doc_subject, D.doc_content, D.created_date,T.doctype_name,
+        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
+        CASE WHEN F.doc_org_filename IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+FROM tbl_approval A1
+JOIN tbl_doc D 
+ON D.doc_no = A1.fk_doc_no
+JOIN tbl_doctype T 
+ON T.doctype_code = D.fk_doctype_code
+LEFT JOIN tbl_doc_file F 
+ON F.fk_doc_no = A1.fk_doc_no
+LEFT JOIN tbl_approval A2 
+ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+WHERE A1.FK_EMPID = '2010001-001' AND A1.STATUS = 0 
+
+select *
+from tbl_approval A
+join tbl_doc_file D
+on A.fk_doc_no = D.fk_doc_no
+order by approval_no, LEVEL_NO
+
+
+
+
+
+
+
+SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+        D.doc_subject, D.doc_content, D.created_date,T.doctype_name,
+        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
+        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+FROM tbl_approval A1
+JOIN tbl_doc D 
+ON D.doc_no = A1.fk_doc_no
+JOIN tbl_doctype T 
+ON T.doctype_code = D.fk_doctype_code
+LEFT JOIN tbl_approval A2 
+ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+LEFT JOIN (
+    SELECT fk_doc_no
+    FROM tbl_doc_file
+    GROUP BY fk_doc_no
+) F ON F.fk_doc_no = D.doc_no
+WHERE A1.FK_EMPID = '2013200-001' AND A1.STATUS = 0 
+
+
+
+SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+		        D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+		        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
+		        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
+		FROM tbl_approval A1
+		JOIN tbl_doc D 
+		ON D.doc_no = A1.fk_doc_no
+		JOIN tbl_doctype T 
+		ON T.doctype_code = D.fk_doctype_code
+		LEFT JOIN tbl_approval A2 
+		ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+		LEFT JOIN (
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F ON F.fk_doc_no = D.doc_no
+		WHERE A1.FK_EMPID = '2014100-003' AND A1.STATUS = 0 
+		ORDER BY D.created_date DESC, D.DOC_NO DESC;
+        
+        
+
+
+SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+		        D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+		        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
+		        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
+FROM tbl_approval A1
+JOIN tbl_doc D 
+ON D.doc_no = A1.fk_doc_no
+		JOIN tbl_doctype T 
+		ON T.doctype_code = D.fk_doctype_code
+		LEFT JOIN tbl_approval A2 
+		ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+		LEFT JOIN (
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F ON F.fk_doc_no = D.doc_no
+		WHERE A1.FK_EMPID = #{loginEmpId} AND A1.STATUS = 0 
+		ORDER BY D.created_date DESC, D.DOC_NO DESC;
+        
+        
+        
+SELECT COUNT(*)
+FROM tbl_doc D
+join tbl_doctype T
+on D.fk_doctype_code = T.doctype_code
+WHERE lower(doctype_name) LIKE '%' || lower('회의') || '%';     
+
+
+select *
+from tbl_doc D
+
+
+SELECT rno, doc_no, fk_empid, name, doc_subject, doc_content, created_date, doctype_name
+         , doc_status, isAttachment
+FROM(
+    SELECT rownum AS rno
+         , doc_no, fk_empid, name, doc_subject, doc_content, created_date, doctype_name
+         , doc_status, isAttachment
+    FROM 
+        (select D.doc_no, D.fk_empid, E.name, D.doc_subject, D.doc_content,
+                to_char(created_date, 'yyyy-mm-dd hh24:mi:ss') AS created_date, T.doctype_name, D.doc_status,
+                CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+        from tbl_doc D
+        join tbl_doctype T
+        on D.fk_doctype_code = T.doctype_code  
+        join tbl_employees E
+        on D.fk_empid = E.empid
+        LEFT JOIN (
+                SELECT fk_doc_no
+                FROM tbl_doc_file
+                GROUP BY fk_doc_no
+        ) F ON F.fk_doc_no = D.doc_no
+        <choose>
+            <when test='searchType == "doctype_name" and searchWord != "" '>
+                where lower(doctype_name) like '%'|| lower(#{searchWord}) || '%'
+            </when>
+            <when test='searchType == "doc_subject" and searchWord != ""'>
+                where lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' 
+            </when>
+            <when test='searchType == "doc_content" and searchWord != ""'>
+                where lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
+            </when>
+            <when test='searchType == "doc_no" and searchWord != ""'>
+                where lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
+            </when>
+            <when test='searchType == "doc_subject_content" and searchWord != ""'>
+                where (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
+            </when>
+            <otherwise></otherwise>
+        </choose> 
+        order by doc_no desc
+    ) V
+) T     
+WHERE rno between #{startRno} and #{endRno}
+
+
+
+
+
+
+SELECT  D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
+    		, T.doctype_name
+    		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
+		FROM tbl_doc D
+		JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
+		LEFT JOIN ( 
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F 
+		ON F.fk_doc_no = D.doc_no
+		WHERE D.fk_empid = '2020200-006' and doc_status =0
+		ORDER BY D.created_date DESC, D.DOC_NO DESC
+
+-- 메인화면에서 글목록 가져오기 예전 sql문
+SELECT  D.doc_no, D.fk_empid, D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date
+    		, T.doctype_name, AP.status, AP.level_no, AP.approval_empid
+    		, CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
+		FROM tbl_doc D
+		JOIN tbl_doctype T ON T.doctype_code = D.fk_doctype_code
+		JOIN ( 
+		    SELECT A1.fk_doc_no, A2.status, A1.level_no, A2.fk_empid AS APPROVAL_EMPID
+		    FROM (
+		        SELECT fk_doc_no, MIN(level_no) AS level_no
+		        FROM tbl_approval 
+		        GROUP BY fk_doc_no
+		    ) A1
+		    JOIN tbl_approval A2 
+		    ON A1.fk_doc_no = A2.fk_doc_no AND A1.level_no = A2.level_no
+		) AP
+		ON AP.fk_doc_no = D.doc_no
+		LEFT JOIN ( 
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F 
+		ON F.fk_doc_no = D.doc_no
+		WHERE D.fk_empid = #{loginEmpId}
+		ORDER BY D.created_date DESC, D.DOC_NO DESC;
+        
+        
+SELECT doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date, doc_comment, doc_status, doctype_name, name, dept_name
+    , CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment
+FROM tbl_doc D
+JOIN tbl_doctype T
+ON T.doctype_code = D.fk_doctype_code
+JOIN (
+    SELECT empid, name, fk_dept_code
+	FROM tbl_employees
+) E
+ON E.empid = D.fk_empid
+JOIN tbl_dept P
+ON P.dept_code = E.fk_dept_code
+LEFT JOIN ( 
+    SELECT fk_doc_no
+    FROM tbl_doc_file
+    GROUP BY fk_doc_no
+) F 
+ON F.fk_doc_no = D.doc_no
+WHERE D.doc_no = 'KD24-101-7'
+
+
+ON 
+
+JOIN tbl_minutes M
+ON D.doc_no = M.
+
+select *
+from tbl_minutes
+where fk_doc_no = 'KD24-101-7'
+
+
+
+select *
+from tbl_approval 
+order by fk_doc_no, level_no, fk_empid
+
+2012100-001
+
+select count(*)
+from tbl_doc D
+join tbl_approval A
+on d.doc_no = a.fk_doc_no
+where A.fk_empid = '2012100-001' and status = 0 
+
+        SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+		        D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+		        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
+		        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
+		FROM tbl_approval A1
+		JOIN tbl_doc D 
+		ON D.doc_no = A1.fk_doc_no
+		JOIN tbl_doctype T 
+		ON T.doctype_code = D.fk_doctype_code
+		LEFT JOIN tbl_approval A2 
+		ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+		LEFT JOIN (
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F ON F.fk_doc_no = D.doc_no
+		WHERE ((D.doc_status = 0 AND A2.status = 1) OR A2.status IS NULL) AND A1.FK_EMPID = '2012100-001' 
+		ORDER BY D.created_date DESC, D.DOC_NO DESC
+
+
+    SELECT rno, approval_no, fk_doc_no, fk_empid, status, level_no, doc_subject, created_date, doctype_name,
+                pre_status, pre_level_no, pre_empid, isAttachment, doc_status
+		FROM(
+    		SELECT rownum AS rno
+         		, approval_no, fk_doc_no, fk_empid, status, level_no, doc_subject, created_date, doctype_name,
+                pre_status, pre_level_no, pre_empid, isAttachment, doc_status
+        FROM (
+        SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+		        D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+		        A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
+		        CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, doc_status
+		FROM tbl_approval A1
+		JOIN tbl_doc D 
+		ON D.doc_no = A1.fk_doc_no
+		JOIN tbl_doctype T 
+		ON T.doctype_code = D.fk_doctype_code
+		LEFT JOIN tbl_approval A2 
+		ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+		LEFT JOIN (
+		    SELECT fk_doc_no
+		    FROM tbl_doc_file
+		    GROUP BY fk_doc_no
+		) F ON F.fk_doc_no = D.doc_no
+		WHERE ((D.doc_status = 0 AND A2.status = 1) OR A2.status IS NULL) AND A1.FK_EMPID = '2012100-001' 
+            and lower(doc_no) like '%'|| lower('KD') || '%'
+		ORDER BY D.created_date DESC, D.DOC_NO DESC
+        ) V
+        	) T     
+
+
+
+SELECT rno, doc_no, fk_empid, name, doc_subject, doc_content, created_date, doctype_name
+        	 , doc_status, isAttachment, fk_doctype_code
+		FROM(
+    		SELECT rownum AS rno
+         		, doc_no, fk_empid, name, doc_subject, doc_content, created_date, doctype_name
+         		, doc_status, isAttachment, fk_doctype_code
+    		FROM (
+    			SELECT D.doc_no, D.fk_empid, E.name, D.doc_subject, D.doc_content,
+                	to_char(created_date, 'yyyy-mm-dd') AS created_date, T.doctype_name, D.doc_status,
+                	CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, fk_doctype_code
+		        FROM tbl_doc D
+		        JOIN tbl_doctype T
+		        ON D.fk_doctype_code = T.doctype_code  
+		        JOIN tbl_employees E
+		        ON D.fk_empid = E.empid
+		        LEFT JOIN (
+		                SELECT fk_doc_no
+		                FROM tbl_doc_file
+		                GROUP BY fk_doc_no
+		        ) F ON F.fk_doc_no = D.doc_no
+		        where fk_empid = #{loginEmpId}
+                		and lower(doctype_name) like '%'|| lower(#{searchWord}) || '%'
+	
+        		ORDER BY D.created_date DESC, D.DOC_NO DESC
+    		) V
+		) T     
+		WHERE rno between #{startRno} and #{endRno}
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        SELECT rno, approval_no, fk_doc_no, fk_empid, status, level_no, doc_subject, created_date, doctype_name,
+       pre_status, pre_level_no, pre_empid, isAttachment, doc_status, NAME, writer, dept_name
+FROM (
+    SELECT rownum AS rno,
+           approval_no, fk_doc_no, fk_empid, status, level_no, doc_subject, created_date, doctype_name,
+           pre_status, pre_level_no, pre_empid, isAttachment, doc_status, NAME, writer, dept_name
+    FROM (
+        SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+               D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+               A2.status AS pre_status, A2.level_no AS pre_level_no, A2.fk_empid as pre_empid,
+               CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, D.doc_status, NAME, dept_name, D.fk_empid AS writer
+        FROM tbl_approval A1
+        JOIN tbl_doc D 
+        ON D.doc_no = A1.fk_doc_no
+        JOIN tbl_doctype T 
+        ON T.doctype_code = D.fk_doctype_code
+        LEFT JOIN tbl_approval A2 ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+        LEFT JOIN (
+            SELECT fk_doc_no
+            FROM tbl_doc_file
+            GROUP BY fk_doc_no
+        ) F ON F.fk_doc_no = D.doc_no
+        JOIN tbl_employees E
+        ON E.empid = D.fk_empid
+        JOIN tbl_dept DP
+        ON E.fk_dept_code = DP.dept_code
+        WHERE ((D.doc_status = 0 AND A2.status = 1) OR A2.status IS NULL)
+          AND A1.FK_EMPID = '2012100-001'
+          AND LOWER(D.doc_no) LIKE '%' || LOWER('KD') || '%'
+        ORDER BY D.created_date DESC, D.doc_no DESC
+    ) V
+)T2
+
+desc tbl_approval
+
+
+select A.FK_DOC_NO, A.STATUS, A.APPROVAL_COMMENT, A.APPROVAL_DATE, A.LEVEL_NO, E.name, J.job_name
+from tbl_approval A
+join tbl_employees E
+on E.empid = A.FK_EMPID
+join tbl_job J
+ON J.job_code = E.fk_job_code
+where fk_doc_no = 'KD24-101-8'
+order by level_no   
+
+SELECT
+    col.column_name,
+    cons.constraint_name,
+    cons.constraint_type
+FROM
+    all_cons_columns col
+JOIN
+    all_constraints cons
+    ON col.constraint_name = cons.constraint_name
+WHERE
+    cons.constraint_type = 'P' -- P indicates Primary Key
+    AND col.table_name = 'TBL_APPROVAL'
+
+select *
+from TBL_APPROVAL
+
+
+select A1.fk_doc_no, A1.status, A1.approval_comment, A1.approval_date, A1.level_no, E.name, J.job_name, E.sign_img,
+A2.status AS pre_status, A2.level_no AS pre_level_no
+from tbl_approval A1
+join tbl_employees E
+on E.empid = A1.FK_EMPID
+join tbl_job J
+ON J.job_code = E.fk_job_code
+LEFT JOIN tbl_approval A2 
+ON A1.FK_DOC_NO = A2.FK_DOC_NO AND A2.LEVEL_NO = A1.LEVEL_NO + 1
+where A1.fk_doc_no = 'KD24-101-3'
+order by A1.level_no 
+
+
+select A.approval_no, A.fk_doc_no, A.fk_empid, A.status, A.approval_comment, 
+ 				A.approval_date, A.level_no, E.name, E.sign_img, J.job_name, D.doc_status
+from tbl_approval A
+join tbl_employees E
+on E.empid = A.FK_EMPID
+join tbl_job J
+ON J.job_code = E.fk_job_code
+JOIN tbl_doc D
+ON D.doc_no = A.fk_doc_no
+where fk_doc_no = 'KD24-101-3'
+order by level_no 
+
+select *
+from tbl_approval
+order by approval_no, level_no
+
+UPDATE tbl_doc
+SET doc_status = 1
+WHERE doc_no ='KD24-101-3'
+
+
+
+commit;
+
+select *
+from tbl_employees
+
+
+SELECT *
+FROM tbl_approval
+order by approval_no, level_no
+
+
+desc tbl_approval
+
+UPDATE tbl_approval
+SET approval_date = TO_DATE('2024-07-23', 'YYYY-MM-DD')
+WHERE approval_no = 1 AND level_no = 2;
+
+
+

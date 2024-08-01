@@ -1,4 +1,4 @@
-package com.spring.app.domain;
+	package com.spring.app.domain;
 
 public class Car_shareVO {
 	private int pf_res_num;

@@ -10,15 +10,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.app.board.service.BoardService;
 import com.spring.app.common.MyUtil;
+import com.spring.app.domain.MemberVO;
+import com.spring.app.board.service.BoardService;
+import com.spring.app.member.service.IndexService;
 
 // ==== #53. 공통관심사 클래스(Aspect 클래스) 생성하기 ==== //
 // AOP(Aspect Oriented Programming)
@@ -91,7 +96,7 @@ public class CommonAop {
 	public void pointPlus() {}
 	
 	@Autowired
-	private BoardService service;
+	private BoardService boardService;
 	
 	// After Advice(공통관심사, 보조업무)를 구현
 	// 사원의 포인트를 특정점수(예: 100점, 200점, 300점) 만큼 증가시키는 메소드
@@ -101,9 +106,53 @@ public class CommonAop {
 		
 		Map<String, String> paraMap = (Map<String, String>)joinpoint.getArgs()[0];
 		
-		service.pointPlus(paraMap);
+		boardService.pointPlus(paraMap);
 	}
 	
 	///////////////////////////////////////////////////////////////
 	
+	// ==== Around Advice(보조업무) 만들기 ==== // "주 업무를 하기 전후에 ~~"
+	@Pointcut("execution(public * com.spring.app..*Controller.pointMinus_*(..) )") 
+	public void pointMinus() {}
+	
+	@Autowired
+	private IndexService indexService;
+	
+	// Around Advice(공통관심사, 보조업무)를 구현
+	// 사원의 포인트를 특정점수(예: 100점, 200점, 300점) 만큼 감소시키는 메소드
+	@SuppressWarnings("unchecked")
+	@Around("pointMinus()")
+	public String pointMinus(ProceedingJoinPoint joinpoint) throws Throwable {
+		
+		String viewPage = (String)joinpoint.proceed();
+		
+		HttpServletRequest request = (HttpServletRequest)joinpoint.getArgs()[1]; 
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser"); 
+		
+		String message = "";
+		if(loginuser.getPoint() <= 0) {
+			message = "포인트 잔액이 부족합니다.\n포인트 충전 후 다시 시도해주세요.";
+		}
+		else {
+			Map<String, String> paraMap = (Map<String, String>)joinpoint.getArgs()[0];
+			int n = indexService.pointMinus(paraMap);
+			
+			if(n == 1) {
+				message = "포인트 결제가 정상적으로 처리되었습니다.";
+				loginuser.setPoint(loginuser.getPoint());
+			}
+		}
+		
+		String loc = request.getContextPath()+"/index.kedai"; 
+		
+		request.setAttribute("message", message);
+		request.setAttribute("loc", loc);
+          
+     	viewPage = "msg";
+		
+		return viewPage;
+	}
+	
+	///////////////////////////////////////////////////////////////
 }

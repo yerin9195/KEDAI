@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.spring.app.domain.BoardVO;
 import com.spring.app.domain.BusVO;
 import com.spring.app.domain.CarVO;
+import com.spring.app.domain.Car_shareVO;
 import com.spring.app.domain.Day_shareVO;
 
 @Repository
@@ -105,6 +106,31 @@ public class CarDAO_imple implements CarDAO {
 		List<String> wordList = sqlsession.selectList("reservation.searchShow", paraMap);
 		return wordList;
 	}
+
+	@Override
+	public List<Map<String, String>> getowner_carShareList(String empid) {
+		List<Map<String, String>> owner_carShareList = sqlsession.selectList("reservation.getowner_carShareList", empid);
+		return owner_carShareList;
+	}
+
+	@Override
+	public List<Map<String, String>> owner_carShareListSearch_withPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> owner_carShareList = sqlsession.selectList("reservation.owner_carShareListSearch_withPaging", paraMap);
+		return owner_carShareList;
+	}
+
+	@Override
+	public int owner_getTotalCount(Map<String, String> paraMap) {
+		int owner_totalCount = sqlsession.selectOne("reservation.owner_getTotalCount", paraMap);
+		return owner_totalCount;
+	}
+
+	@Override
+	public Car_shareVO getowner_dateInfo(String date) {
+		Car_shareVO owner_dateInfo = sqlsession.selectOne("reservation.getowner_dateInfo", date);
+		return owner_dateInfo;
+	}
+
 
 
 

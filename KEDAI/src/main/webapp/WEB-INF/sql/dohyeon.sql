@@ -725,3 +725,91 @@ from tbl_car a join tbl_employees b
 on a.fk_empid = b.empid
 )h
 where h.car_seq = v.fk_car_seq and cancel_status = 1 and lower(nickname) like '%' ||lower('dory')||'%'
+
+
+select *
+from tbl_car_share
+
+desc tbl_car_share
+
+ALTER TABLE tbl_car_share MODIFY (SHARE_MAY_TIME VARCHAR2(10));
+commit;
+
+SELECT COLUMN_NAME, DATA_DEFAULT
+FROM USER_TAB_COLUMNS
+WHERE TABLE_NAME = 'tbl_car_share';
+
+ALTER TABLE tbl_car_share MODIFY (ACCEPT_YON number DEFAULT 0);
+
+    select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname, readCount
+    from
+    (
+    select row_number() over(order by res_num desc) AS rno, res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, nickname, readCount
+    from 
+    (
+    select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, fk_car_seq, readCount
+    from tbl_day_share
+    where end_status = 1 and cancel_status = 1
+                    AND TO_DATE('2024-07-29', 'YYYY-MM-DD') BETWEEN start_date AND last_date
+    )a cross join
+    (
+        select car_seq, fk_empid, car_num, car_type, max_num, nickname
+        from 
+        (
+            select *
+            from tbl_car
+        ) v cross join
+        (
+            select *
+            from tbl_employees
+        ) h
+        where fk_empid = h.empid
+    )b
+    where fk_car_seq = b.car_seq
+    )C
+WHERE c.rno between 1 and 10
+
+select *
+from tbl_day_share
+
+select count(*)
+from 
+(
+select res_num, start_date, last_date, dp_name, ds_name, want_max, end_status, cancel_status, start_time, fk_car_seq
+from tbl_day_share
+where end_status = 1 and cancel_status = 1
+)a cross join
+(
+    select car_seq, fk_empid, car_num, car_type, max_num, nickname
+    from 
+    (
+        select *
+        from tbl_car
+    ) v cross join
+    (
+        select *
+        from tbl_employees
+        where empid = '2010400-001'
+    ) h
+    where fk_empid = h.empid
+)b
+where fk_car_seq = b.car_seq and lower(dp_name) like '%'|| lower('cj')||'%'
+
+select count(*)
+from tbl_day_share
+where cancel_status = 1
+
+desc tbl_car_share;
+
+
+ALTER TABLE tbl_car_share
+MODIFY (PAYMENT_AMOUNT number);
+
+ALTER TABLE tbl_car_share
+RENAME COLUMN NONPAYMNET_AMOUNT TO NONPAYMENT_AMOUNT;
+
+COMMIT;
+
+select pf_res_num, pf_empid, share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, getin_time, getout_time, use_time, settled_amount, payment_amount, nonpaymnet_amount
+from tbl_car_share
+where to_date(share_date, 'yyyy-mm-dd') = to_date('24-07-30', 'yyyy-mm-dd')

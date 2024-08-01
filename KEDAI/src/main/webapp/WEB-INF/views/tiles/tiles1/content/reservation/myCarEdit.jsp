@@ -216,7 +216,7 @@
         <c:forEach var="car" items="${requestScope.myCar}">
             <h6>차량 사진등록</h6>
             <div style="width: 200px; height: 230px; overflow: hidden; border: 1px solid #ddd;">
-                <img src="<%= ctxPath %>/resources/images/car/${car.car_orgimgfilename}" id="previewImg" style="width: 100%; height: 100%;" />
+                <img src="<%= ctxPath %>/resources/files/car/${car.car_imgfilename}" id="previewImg" style="width: 100%; height: 100%;" />
             </div>
             <br>
             <input type="file" name="attach" class="infoData img_file" accept='image/*' />

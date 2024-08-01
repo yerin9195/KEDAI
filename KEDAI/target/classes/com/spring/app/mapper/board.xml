@@ -218,9 +218,4 @@
 		where board_seq = #{board_seq}
 	</delete>
 	
-	<select id="boardTotalCountJSON" resultType="int">
-		select count(*)
-		from tbl_board
-	</select>
-	
 </mapper>
