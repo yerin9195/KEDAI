@@ -325,6 +325,47 @@
 		
 	</select>
 	
+	<select id="searchShow_owner" parameterType="HashMap" resultType="String">
+		<choose>
+		<when test='searchType == "rdp_name"'>
+			<!-- searchType은 subject인 경우  글제목을 select해준다.-->
+			select distinct rdp_name
+		</when>
+		<when test='searchType == "rds_name"'>
+			<!-- searchType은 subject인 경우  글제목을 select해준다.-->
+			select distinct rds_name
+		</when>
+		<otherwise></otherwise>
+		</choose>
+		from tbl_car_share
+		<choose>
+			<when test='searchType == "rdp_name" and searchWord != ""'>
+				<!-- searchWord가 공백이면 안되고 searchType은 dp_name(출발지인 경우 -->
+				where lower(rdp_name) like '%'||lower(#{searchWord})||'%'
+				<!-- 대소문자 구분치 않게 한다. -->
+			</when>
+			<when test='searchType == "rds_name" and searchWord != ""'>
+				<!-- searchWord가 공백이면 안되고 searchType은 dp_name(출발지인 경우 -->
+				where lower(rds_name) like '%'||lower(#{searchWord})||'%'
+				<!-- 대소문자 구분치 않게 한다. -->
+			</when>
+			<otherwise></otherwise>
+		</choose>
+		<choose>
+			<!-- 글제목의 경우 sort 해준다  (가장 최근 글부터 보여주도록 해당 구별 컬럼은 seq)==> order by  -->
+			<when test='searchType == "rdp_name"'>
+				order by rdp_name desc
+			</when>
+			<when test='searchType == "rds_name"'>
+				order by rds_name desc
+			</when>
+			<!-- 글쓴이의 경우 sort 해준다  가나다라 순==> order by  -->
+			<otherwise>
+			</otherwise>
+		</choose>
+		
+	</select>
+	
 	<resultMap id="owner_carShareList" type="HashMap">
 		<result property="res_num" column="res_num" javaType="int"/>
 	    <result property="start_date" column="start_date" javaType="String"/>
@@ -387,11 +428,11 @@
 		from tbl_day_share
 		where end_status = 1 and cancel_status = 1
 				<choose>
-					<when test='searchType == "dp_name" and searchWord != ""'>
-						and lower(dp_name) like '%'|| lower(#{searchWord})||'%'
+					<when test='searchType == "rdp_name" and searchWord != ""'>
+						and lower(rdp_name) like '%'|| lower(#{searchWord})||'%'
 					</when>		<!-- if -->
-					<when test='searchType == "ds_name" and searchWord != ""'>
-						and lower(ds_name) like '%'|| lower(#{searchWord})||'%'
+					<when test='searchType == "rds_name" and searchWord != ""'>
+						and lower(rds_name) like '%'|| lower(#{searchWord})||'%'
 					</when>		<!-- else if -->
 				    <when test='searchType == "share_date" and start != ""'>
 				    <!-- 출발 날짜와 도착 날짜가 해당 날짜 사이에 포함되어 있는 경우로 로직 짜기 -->

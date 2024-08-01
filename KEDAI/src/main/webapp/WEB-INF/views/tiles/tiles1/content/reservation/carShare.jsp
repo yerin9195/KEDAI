@@ -216,10 +216,12 @@
         <table style="width: 100%; margin-top: 1%;" class="table table-bordered">
             <thead>
                 <tr>
-                    <th style="width: 70px; text-align: center;">no</th>
-                    <th style="width: 240px; text-align: center;">출발지 -> 도착지</th>
+                    <th style="width: 10px; text-align: center;">no</th>
+                    <th style="width: 175px; text-align: center; border:none;">출발지</th>
+                    <th style="width: 10px; text-align: center; border:none;"><i class="fa-solid fa-arrow-right"></i></th>
+                    <th style="width: 175px; text-align: center; border:none;">도착지</th>
                     <th style="width: 70px; text-align: center;">차주 닉네임</th>
-                    <th style="width: 200px; text-align: center;">셰어링 날짜</th>
+                    <th style="width: 150px; text-align: center;">셰어링 날짜</th>
                     <th style="width: 70px; text-align: center;">출발시간</th>
                     <th style="width: 70px; text-align: center;">신청가능여부</th>
                     <th style="width: 70px; text-align: center;">조회수</th>
@@ -233,7 +235,9 @@
                             <form name="carShareFrm${status.index}">
                                 <input type="hidden" name="res_num" value="${carShare.res_num}"/>
                             </form> 
-                            <td align="center">${carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${carShare.ds_name}</td>
+                            <td align="center" style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">${carShare.dp_name}</td>
+                            <td align="center" style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;"><i class="fa-solid fa-arrow-right"></i></td>
+                            <td align="center" style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">${carShare.ds_name}</td>
                             <td align="center">${carShare.nickname}</td>
                             <c:set var="startDate" value="${carShare.start_date}" />
                             <c:set var="lastDate" value="${carShare.last_date}" />

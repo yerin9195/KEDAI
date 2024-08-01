@@ -283,12 +283,11 @@
             $("div#displayList").hide();
          }
          else {
-            if($("select[name='searchType']").val() == "dp_name" ||
-               $("select[name='searchType']").val() == "ds_name" ||
-               $("select[name='searchType']").val() == "nickname" ){
+            if($("select[name='searchType']").val() == "rdp_name" ||
+               $("select[name='searchType']").val() == "rds_name"){
                
                $.ajax({
-                  url: "<%= ctxPath%>/carShare/searchShow.kedai",
+                  url: "<%= ctxPath%>/carShare/searchShow_owner.kedai",
                   type: "get",
                   data: {"searchType":$("select[name='searchType']").val(),
                         "searchWord":$("input[name='searchWord']").val()},
@@ -328,7 +327,7 @@
       
       $('select[name="searchType"]').change(function() {
             var selected = $(this).val();
-            if (selected === 'dp_name' || selected === 'ds_name' || selected === '' ) {
+            if (selected === 'rdp_name' || selected === 'rds_name' || selected === '' ) {
                 $('input[name="searchWord"]').show();
                 $('input[name="start"]').hide();
             } else if (selected === 'share_date') {
@@ -458,8 +457,8 @@
         <form name="member_search_frm" class="col-10">
             <select name="searchType">
                <option value="">검색대상</option>
-               <option value="dp_name">출발지</option>
-               <option value="ds_name">도착지</option>
+               <option value="rdp_name">출발지</option>
+               <option value="rds_name">도착지</option>
                <option value="share_date">셰어링 날짜</option>
             </select>
             &nbsp;
@@ -480,7 +479,9 @@
             <thead>
                 <tr>
                     <th style="width: 70px; text-align: center;">no</th>
-                    <th style="width: 240px; text-align: center;">출발지 -> 도착지</th>
+                    <th style="width: 175px; text-align: center; border:none;">출발지</th>
+                    <th style="width: 10px; text-align: center; border:none;"><i class="fa-solid fa-arrow-right"></i></th>
+                    <th style="width: 175px; text-align: center; border:none;">도착지</th>
                     <th style="width: 200px; text-align: center;">셰어링 날짜</th>
                     <th style="width: 70px; text-align: center;">출발시간</th>
                     <th style="width: 70px; text-align: center;">조회</th>
@@ -506,7 +507,9 @@
                                 <input type="hidden" name="start_date" value="${owner_carShare.start_date}">
 						    	<input type="hidden" name="last_date" value="${owner_carShare.last_date}">
                             </form> 
-                            <td>${owner_carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${owner_carShare.ds_name}</td>
+                            <td align="center" style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">${owner_carShare.dp_name}</td>
+                            <td align="center" style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;"><i class="fa-solid fa-arrow-right"></i></td>
+                            <td align="center" style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">${owner_carShare.ds_name}</td>
                             <c:set var="startDate" value="${owner_carShare.start_date}" />
                             <c:set var="lastDate" value="${owner_carShare.last_date}" />
                             <td align="center">

@@ -45,5 +45,7 @@ public interface CarService {
 
 	Car_shareVO owner_dateInfo(String date);
 
+	List<String> searchShow_owner(Map<String, String> paraMap);
+
 
 }

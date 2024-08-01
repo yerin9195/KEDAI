@@ -44,5 +44,7 @@ public interface CarDAO {
 
 	Car_shareVO getowner_dateInfo(String date);
 
+	List<String> searchShow_owner(Map<String, String> paraMap);
+
 
 }

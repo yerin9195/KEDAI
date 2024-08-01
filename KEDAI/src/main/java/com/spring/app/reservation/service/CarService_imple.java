@@ -107,6 +107,12 @@ public class CarService_imple implements CarService {
 	}
 
 	@Override
+	public List<String> searchShow_owner(Map<String, String> paraMap) {
+		List<String> wordList_owner = dao.searchShow_owner(paraMap);
+		return wordList_owner;
+	}
+	
+	@Override
 	public List<Map<String, String>> owner_carShareList(String empid) {
 		List<Map<String, String>> owner_carShareList = dao.getowner_carShareList(empid);
 		return owner_carShareList;
@@ -130,6 +136,8 @@ public class CarService_imple implements CarService {
 		Car_shareVO owner_dateInfo = dao.getowner_dateInfo(date);
 		return owner_dateInfo;
 	}
+
+
 
 
 

@@ -108,6 +108,13 @@ public class CarDAO_imple implements CarDAO {
 	}
 
 	@Override
+	public List<String> searchShow_owner(Map<String, String> paraMap) {
+		List<String> wordList_owner = sqlsession.selectList("reservation.searchShow_owner", paraMap);
+		return wordList_owner;
+	}
+
+	
+	@Override
 	public List<Map<String, String>> getowner_carShareList(String empid) {
 		List<Map<String, String>> owner_carShareList = sqlsession.selectList("reservation.getowner_carShareList", empid);
 		return owner_carShareList;
@@ -130,6 +137,7 @@ public class CarDAO_imple implements CarDAO {
 		Car_shareVO owner_dateInfo = sqlsession.selectOne("reservation.getowner_dateInfo", date);
 		return owner_dateInfo;
 	}
+
 
 
 
