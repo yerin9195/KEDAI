@@ -127,6 +127,12 @@
             margin-left: 10px;
             cursor: pointer;
         }
+        
+        .highlighted {
+		    background-color: blue !important;
+		    color: white; /* 텍스트 색상도 변경하여 가독성 향상 */
+		}
+
     </style>
  
  <script type="text/javascript">
@@ -148,7 +154,8 @@
             data: { date: selectedDate },
             dataType: "json",
             success: function(reservations) {
-                $("td.time-slot").css("background-color", "");
+                // 기존 강조 표시를 제거
+                $("td.time-slot").removeClass("highlighted");
 
                 reservations.forEach(function(reservation) {
                     var startTime = parseTime(reservation.startTime);
@@ -157,6 +164,7 @@
                     var reservationId = reservation.id;
 
                     $("td.time-slot").each(function() {
+                        var self = this;
                         var cellHour = $(this).data('hour');
                         var cellMinute = $(this).data('minute');
                         var cellRoomName = $(this).data('roomname');
@@ -174,11 +182,8 @@
                                     var cellRoomFullName = roomMainName + roomSubName;
 
                                     if (cellRoomFullName === reservationRoomName && cellTime >= startTime && cellTime < endTime) {
-                                        console.log("매칭된 셀: ", $(this));
-                                        $(this).css("background-color", "blue !important");
-                                        console.log("셀 배경색: ", $(this).css("background-color"));
-
-                                        $(this).off('click').on('click', function() {
+                                        $(self).addClass("highlighted");
+                                        $(self).off('click').on('click', function() {
                                             window.location.href = "<%= request.getContextPath() %>/reservation_detail.kedail?id=" + reservationId;
                                         });
                                     }
