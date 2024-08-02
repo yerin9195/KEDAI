@@ -66,8 +66,12 @@
         FROM tbl_room
 	</select>
 	
-	<select id="getReservationById" parameterType="int" resultType="RoomVO">
-    	SELECT * FROM tbl_room WHERE id = #{reservationId}
+
+	<select id="getReservations" resultType="RoomVO">
+    	 SELECT reservation_seq, fk_empid, fk_room_name, content, start_time, end_time, registerday, reservation_status
+        FROM tbl_room
+        where reservation_seq = #{reservation_seq}
 	</select>
+	
 
 </mapper>

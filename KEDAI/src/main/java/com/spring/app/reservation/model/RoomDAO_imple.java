@@ -66,11 +66,17 @@ public class RoomDAO_imple implements RoomDAO {
 
 
 	@Override
-	public RoomVO getReservationById(int reservationId) {
-		RoomVO reservation = sqlsession.selectOne("Room.getReservationById", reservationId);
-	    return reservation;
+	public List<RoomVO> getReservations(String reservation_seq) {
+	    List<RoomVO> reservations = sqlsession.selectList("Room.getReservations", reservation_seq);
+	    if (reservations == null || reservations.isEmpty()) {
+	        System.out.println("No reservations found for ID: " + reservation_seq);
+	    } else {
+	        for (RoomVO reservation : reservations) {
+	            System.out.println("Reservation found: " + reservation);
+	        }
+	    }
+	    return reservations;
 	}
-
 
 	
 

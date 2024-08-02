@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.domain.RoomMainVO;
 import com.spring.app.domain.RoomSubVO;
@@ -186,6 +188,7 @@ public class RoomController {
 
 	        for (RoomVO reservation : reservations) {
 	            JSONObject jsonObj = new JSONObject();
+	            jsonObj.put("reservation_seq", reservation.getReservation_seq());
 	            jsonObj.put("roomName", reservation.getFk_room_name());
 	            jsonObj.put("reserver", reservation.getFk_empid());
 	            jsonObj.put("startTime", reservation.getStart_time());
@@ -198,22 +201,15 @@ public class RoomController {
 	        return ResponseEntity.ok(jsonArr.toString());
 	    }
 	  
-	  @PostMapping(value = "/reservation_detail.kedai", produces = "application/json;charset=UTF-8")
-	    public ResponseEntity<String> getReservationDetail(@RequestParam int reservationId) {
-	        RoomVO reservation = service.getReservationById(reservationId);
-
-	        if (reservation != null) {
-	            JSONObject jsonObj = new JSONObject();
-	            jsonObj.put("roomName", reservation.getFk_room_name());
-	            jsonObj.put("reserver", reservation.getFk_empid());
-	            jsonObj.put("startTime", reservation.getStart_time());
-	            jsonObj.put("endTime", reservation.getEnd_time());
-	            jsonObj.put("purpose", reservation.getContent());
-	            jsonObj.put("status", reservation.getReservation_status());
-
-	            return ResponseEntity.ok(jsonObj.toString());
-	        } else {
-	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reservation not found");
-	        }
-	    }
+	  @GetMapping("/reservation_detail.kedai")
+	  public String getReservationDetail(@RequestParam("reservation_seq") String reservation_seq, Model model) {
+		    List<RoomVO> reservations = service.getReservations(reservation_seq);
+		    // 로그 출력
+		    for (RoomVO reservation : reservations) {
+		        System.out.println(reservation);
+		    }
+		    model.addAttribute("reservations", reservations);
+		    return "tiles1/reservation/reservation_detail.tiles";
+		}
+	  
 }

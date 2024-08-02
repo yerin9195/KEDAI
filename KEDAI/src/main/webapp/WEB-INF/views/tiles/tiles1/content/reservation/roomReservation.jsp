@@ -625,7 +625,7 @@
 	    }
 
 	    function fetchReservations() {
-	        var selectedDate = $("#currentDate").text().substr(0, 10);  // 현재 날짜 가져오기
+	    	var selectedDate = $("#currentDate").text().substr(0, 10);  // 현재 날짜 가져오기
 
 	        $.ajax({
 	            url: "<%= request.getContextPath() %>/getReservations.kedai",
@@ -642,9 +642,9 @@
 	                    var startTime = parseTime(reservation.startTime);
 	                    var endTime = parseTime(reservation.endTime);
 	                    var reservationRoomName = reservation.roomName;
-	                    var reservationId = reservation.id;
+	                    var reservationId = reservation.reserver;
+	                    var reservation_seq = reservation.reservation_seq;
 
-	                  
 	                    // 예약 날짜가 현재 날짜와 일치하는 경우에만 처리
 	                    if (startReservationDate === selectedDate) {
 	                        $("td.time-slot").each(function() {
@@ -667,8 +667,9 @@
 
 	                                        if (cellRoomFullName === reservationRoomName && cellTime >= startTime && cellTime < endTime) {
 	                                            $(self).addClass("highlighted");
+
 	                                            $(self).off('click').on('click', function() {
-	                                                window.location.href = "<%= request.getContextPath() %>/reservation_detail.kedail?id=" + reservationId;
+	                                                window.location.href = "<%= request.getContextPath() %>/reservation_detail.kedai?reservation_seq=" + encodeURIComponent(reservation_seq);
 	                                            });
 	                                        }
 	                                    } else {
