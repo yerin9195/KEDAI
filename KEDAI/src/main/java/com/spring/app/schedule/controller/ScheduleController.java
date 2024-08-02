@@ -18,7 +18,7 @@ public class ScheduleController {
 	@GetMapping("/scheduler/main.kedai")
 	public ModelAndView showSchedule(ModelAndView mav) { 
 		
-		mav.setViewName("tiles1/scheduler/main.tiles");
+		mav.setViewName("tiles1/scheduler/scheduleManage.tiles");
 		// /WEB-INF/views/tiles/tiles1/content/approval/main.jsp
 	//	/WEB-INF/views/tiles/tiles1/content/approval/main.tiles.jsp 페이지를 만들어야 한다.
 		
