@@ -13,6 +13,7 @@ import com.spring.app.common.AES256;
 import com.spring.app.domain.BoardVO;
 import com.spring.app.domain.BusVO;
 import com.spring.app.domain.CarVO;
+import com.spring.app.domain.Car_shareVO;
 import com.spring.app.domain.Day_shareVO;
 import com.spring.app.reservation.model.CarDAO;
 
@@ -103,6 +104,31 @@ public class CarService_imple implements CarService {
 	public List<String> searchShow(Map<String, String> paraMap) {
 		List<String> wordList = dao.searchShow(paraMap);
 		return wordList;
+	}
+
+	@Override
+	public List<Map<String, String>> owner_carShareList(String empid) {
+		List<Map<String, String>> owner_carShareList = dao.getowner_carShareList(empid);
+		return owner_carShareList;
+	}
+
+	@Override
+	public List<Map<String, String>> owner_carShareListSearch_withPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> owner_carShareList = dao.owner_carShareListSearch_withPaging(paraMap);
+		return owner_carShareList;
+	}
+
+	@Override
+	public int owner_getTotalCount(Map<String, String> paraMap) {
+		int owner_totalCount = dao.owner_getTotalCount(paraMap);
+		return owner_totalCount;
+	}
+
+	// 선택한 날짜에 해당하는 카셰어링 정보를 가져오기
+	@Override
+	public Car_shareVO owner_dateInfo(String date) {
+		Car_shareVO owner_dateInfo = dao.getowner_dateInfo(date);
+		return owner_dateInfo;
 	}
 
 

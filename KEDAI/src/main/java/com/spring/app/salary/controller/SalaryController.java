@@ -1,5 +1,7 @@
 package com.spring.app.salary.controller;
 
+import java.util.List;
+
 //import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,16 +18,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.SalaryVO;
-import com.spring.app.member.service.MemberService;
+import com.spring.app.salary.service.SalaryService;
 //import com.spring.app.reservation.service.RoomService2;
 
-//@Controller
-/*public class SalaryController {
+@Controller
+public class SalaryController {
 	
 	@Autowired
-	private RoomService2 service;
+	private SalaryService service;
 	
-	@GetMapping(value = "/pay_stub.kedai")  // http://localhost:8090/board/pay_stub.action
+	@GetMapping(value = "/pay_stub.kedai")
 	public String pay_stub(HttpServletRequest request) {
 		
 		return "tiles1/pay_stub/pay_stub.tiles";
@@ -65,8 +67,8 @@ import com.spring.app.member.service.MemberService;
 		                           // 또는 "[]"
 		
 	}
-*/	
-/*	
+	
+	
 	@PostMapping(value = "/salaryCal.kedai", produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String salaryCal(@RequestParam("workday") int workday, @RequestParam("empid[]") List<String> empidList, HttpSession session) {
@@ -109,4 +111,3 @@ import com.spring.app.member.service.MemberService;
 	
 	
 }
-*/

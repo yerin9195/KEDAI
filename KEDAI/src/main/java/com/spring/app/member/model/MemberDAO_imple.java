@@ -57,11 +57,4 @@ public class MemberDAO_imple implements MemberDAO {
 		return n;
 	} 
 	
-	@Override
-	public int memberTotalCountJSON() {
-		int totalCount = sqlsession.selectOne("member.memberTotalCountJSON");
-		return totalCount;
-	}
-	
-	
 }

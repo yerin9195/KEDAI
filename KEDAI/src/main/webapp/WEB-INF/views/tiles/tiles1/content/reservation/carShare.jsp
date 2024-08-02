@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 
 <%
    String ctxPath = request.getContextPath();
@@ -11,6 +13,8 @@
     th {background-color: #e68c0e;}
     .subjectStyle {font-weight: bold; color: navy; cursor: pointer; }
     a {text-decoration: none !important;} /* 페이지바의 a 태그에 밑줄 없애기 */
+
+
 </style>
 
 <script type="text/javascript">
@@ -28,7 +32,7 @@
 		});
 		
 		// 검색 시 검색조건 및 검색어 값 유지시키기
-		if(${not empty requestScope.paraMap}){ // paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다.
+		if(${not empty requestScope.paraMap}){ /* paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다. */
 			$("select[name='searchType']").val("${requestScope.paraMap.searchType}");
 			$("input[name='searchWord']").val("${requestScope.paraMap.searchWord}");
 		}
@@ -45,7 +49,7 @@
 			else {
 				if($("select[name='searchType']").val() == "dp_name" ||
 				   $("select[name='searchType']").val() == "ds_name" ||
-				   $("select[name='searchType']").val() == "nickname" ){
+				   $("select[name='searchType']").val() == "share_date" ){
 					
 					$.ajax({
 						url: "<%= ctxPath%>/carShare/searchShow.kedai",
@@ -86,6 +90,20 @@
 			}
 		}); // end of $("input[name='searchWord']").keyup(function(){}) ----------
 		
+		$('select[name="searchType"]').change(function() {
+            var selected = $(this).val();
+            if (selected === 'dp_name' || selected === 'ds_name' || selected === '' ) {
+                $('input[name="searchWord"]').show();
+                $('input[name="start"]').hide();
+            } else if (selected === 'share_date') {
+                $('input[name="searchWord"]').hide();
+                $('input[name="start"]').show();
+            } else {
+                $('input[name="searchWord"]').hide();
+                $('input[name="start"]').hide();
+            }
+        }).trigger('change'); // 페이지 로드 시 초기 상태 설정
+        
 		$(document).on("click", "span.result", function(e){
 			const word = $(e.target).text();
 			
@@ -176,7 +194,6 @@
                <option value="">검색대상</option>
                <option value="dp_name">출발지</option>
                <option value="ds_name">도착지</option>
-               <option value="nickname">차주 닉네임</option>
                <option value="share_date">셰어링 날짜</option>
             </select>
             &nbsp;
@@ -216,7 +233,7 @@
                             <form name="carShareFrm${status.index}">
                                 <input type="hidden" name="res_num" value="${carShare.res_num}"/>
                             </form> 
-                            <td>${carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${carShare.ds_name}</td>
+                            <td align="center">${carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${carShare.ds_name}</td>
                             <td align="center">${carShare.nickname}</td>
                             <c:set var="startDate" value="${carShare.start_date}" />
                             <c:set var="lastDate" value="${carShare.last_date}" />
@@ -228,13 +245,13 @@
                                 <fmt:formatDate value="${parsedLastDate}" pattern="yyyy-MM-dd" />
                             </td>
                             <td align="center">${carShare.start_time}</td>
-                            <c:if test="${carShare.end_status == 1 && carShare.cancel_status == 1}">
-                                <td align="center">
-                                    <input type="button" value="신청가능" class="subject" onclick="goApply('carShareFrm${status.index}')" />
+                            <c:if test="${carShare.end_status == 1 && carShare.cancel_status == 1 && (carShare.start_date le requestScope.todayStr && carShare.last_date ge requestScope.todayStr) || carShare.start_date > requestScope.todayStr}">
+                                <td align="center" style="background-color:#2c4459;">
+                                    <input type="button" style="border:none; background-color: #2c4459; color: white;" value="신청가능" class="subject" onclick="goApply('carShareFrm${status.index}')" />
                                 </td>
                             </c:if>
-                            <c:if test="${carShare.end_status == 0 || carShare.cancel_status == 0}">
-                                <td align="center">신청불가능</td>
+                            <c:if test="${carShare.end_status == 0 || carShare.cancel_status == 0 || !(carShare.start_date le requestScope.todayStr && carShare.last_date ge requestScope.todayStr) && carShare.start_date <= requestScope.todayStr}">
+                                <td align="center" style="color: #e68c0e;">신청불가능</td>
                             </c:if>
                             <td align="center">${carShare.readCount}</td>
                         </tr>
@@ -260,3 +277,4 @@
 	<input type="hidden" name="searchType" />
 	<input type="hidden" name="searchWord" />
 </form> 
+<!--  검색대상이 셰어링 날짜일 경우 textform 이 아닌 datepicker 폼으로 변경하기 -->

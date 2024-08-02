@@ -562,17 +562,4 @@ public class MemberController {
 		return jsonObj.toString();
 	}
 	
-	// 사원수 조회하기
-	@ResponseBody
-	@GetMapping(value="/member/memberTotalCountJSON.kedai", produces="text/plain;charset=UTF-8")
-	public String memberTotalCountJSON(HttpServletRequest request) {
-		
-		int totalCount = service.memberTotalCountJSON();
-		
-		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("totalCount", totalCount*1000);
-		
-		return jsonObj.toString();
-	}
-	
 }

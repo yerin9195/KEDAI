@@ -47,7 +47,7 @@ public class BoardController {
 	
 	// 게시판 글 등록하는 페이지 이동
 	@GetMapping("/board/add.kedai")
-	public ModelAndView add(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLogin_add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		// 답변 글쓰기가 추가된 경우
 		String subject = "[답변] " + request.getParameter("subject");
@@ -85,8 +85,8 @@ public class BoardController {
 			String root = session.getServletContext().getRealPath("/"); 
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 			
-			String path = root+"resources"+File.separator+"files";
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			String path = root+"resources"+File.separator+"files"+File.separator+"board_attach_file";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\board_attach_file
 			
 			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
 			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
@@ -157,8 +157,8 @@ public class BoardController {
 		String root = session.getServletContext().getRealPath("/"); 
 		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 		
-		String path = root+"resources"+File.separator+"photo_upload";
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\photo_upload
+		String path = root+"resources"+File.separator+"files"+File.separator+"photo_upload";
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\photo_upload
 		
 		File dir = new File(path);
 		
@@ -179,7 +179,7 @@ public class BoardController {
 			
 			String strURL = "";
 			strURL += "&bNewLine=true&sFileName="+newFilename; 
-			strURL += "&sFileURL="+ctxPath+"/resources/photo_upload/"+newFilename;
+			strURL += "&sFileURL="+ctxPath+"/resources/files/photo_upload/"+newFilename;
 			
 			// 웹브라우저 상에 사진 이미지를 쓰기
 			PrintWriter out = response.getWriter();
@@ -340,7 +340,7 @@ public class BoardController {
 		
 		if(wordList != null) {
 			for(String word : wordList) {
-				JSONObject jsonObj = new JSONObject(); // {}
+				JSONObject jsonObj = new JSONObject();
 				
 				jsonObj.put("word", word);
 				
@@ -380,6 +380,7 @@ public class BoardController {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
+			
 		}
 		else { // redirect 되어서 넘어온 데이터가 아닌 경우 => sendRedirect 하지않고 직접 넘어온 경우
 			board_seq = request.getParameter("board_seq"); // 조회하고자 하는 글번호 받아오기
@@ -396,6 +397,7 @@ public class BoardController {
 			if(searchWord == null) { // 검색어가 없는 경우 원복한다.
 				searchWord = "";
 			}
+			
 		}
 		
 		mav.addObject("goBackURL", goBackURL);
@@ -553,8 +555,8 @@ public class BoardController {
 			String root = session.getServletContext().getRealPath("/"); 
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 			
-			String path = root+"resources"+File.separator+"files";
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			String path = root+"resources"+File.separator+"files"+File.separator+"board_attach_file";
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\board_attach_file
 			
 			// 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
 			String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
@@ -684,8 +686,8 @@ public class BoardController {
 			String root = session.getServletContext().getRealPath("/"); 
 			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 			
-			String path = root+"resources"+File.separator+"files";
-			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+			String path = root+"resources"+File.separator+"files"+File.separator+"board_attach_file";;
+			// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\board_attach_file
 		
 			paraMap.put("path", path);
 			paraMap.put("fileName", fileName);
@@ -738,8 +740,8 @@ public class BoardController {
 				String root = session.getServletContext().getRealPath("/"); 
 				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 				
-				String path = root+"resources"+File.separator+"files";
-				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files
+				String path = root+"resources"+File.separator+"files"+File.separator+"board_attach_file";
+				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\board_attach_file
 			
 				boolean flag = false;
 				flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
@@ -747,7 +749,7 @@ public class BoardController {
 				
 				if(!flag) {
 					out = response.getWriter();
-					out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+					out.println("<script type='text/javascript'>alert('파일다운로드가 실패하였습니다.'); history.back();</script>");
 				}
 			
 			}
@@ -763,16 +765,4 @@ public class BoardController {
 	
 	}
 	
-	// 게시글수 조회하기
-	@ResponseBody
-	@GetMapping(value="/board/boardTotalCountJSON.kedai", produces="text/plain;charset=UTF-8")
-	public String boardTotalCountJSON(HttpServletRequest request) {
-		
-		int totalCount = service.boardTotalCountJSON();
-		
-		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("totalCount", totalCount*10);
-		
-		return jsonObj.toString();
-	}
 }

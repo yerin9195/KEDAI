@@ -4,8 +4,8 @@ public class MinutesVO {
 	private String minutes_code;   	// 회의록시퀀스
 	private String fk_doc_no; 	   	// 기안문서번호
 	private String meeting_date;	// 회의일자
-	private String content; 	   	// 회의록내용
 	private String attendees; 	   	// 회의참석자
+	private String host_dept; 		// 회의 주관 부서
 	
 	
 	public String getMinutes_code() {
@@ -29,19 +29,19 @@ public class MinutesVO {
 		this.meeting_date = meeting_date;
 	}
 	
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
-	
 	public String getAttendees() {
 		return attendees;
 	}
 	public void setAttendees(String attendees) {
 		this.attendees = attendees;
 	}
+	public String getHost_dept() {
+		return host_dept;
+	}
+	public void setHost_dept(String host_dept) {
+		this.host_dept = host_dept;
+	}
+	
 	
 
 }
