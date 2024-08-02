@@ -80,7 +80,7 @@ public class EmployeeService_imple implements EmployeeService{
 	public List<Map<String, String>> empDetailList (Map<String, String> paraMap) {
 		
 		List<Map<String, String>> empDetailList = dao.empDetailList(paraMap);
-		
+		//System.out.println("empDetailList : " + empDetailList);
 		empDetailList.forEach( map -> {
 			
 			try {			

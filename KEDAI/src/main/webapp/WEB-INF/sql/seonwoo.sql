@@ -462,6 +462,24 @@ select *
 from tbl_dept;
 
 
+update tbl_employees
+set nickname = 'Jing9'
+where name = '여진구';
+
+commit;
+
+select *
+from tbl_member;
+
+
+
+
+
+
+
+
+
+
 
 
 

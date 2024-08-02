@@ -304,7 +304,7 @@ color:#2c4459;
 }
 .emp-detail.popup{
 	width: 70%;
-	outline: 2px solid red;
+	/* outline: 2px solid red; */
 	padding: 20px 60px;
 	border-radius: 20px;
 	position: relative;
@@ -435,6 +435,26 @@ bigName{
   background-color: #ddd;
   color: #2c4459;
 }
+
+.emp_table{
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+.emp_table th, .emp_table td {
+    border: 1px solid #ddd; /* 테두리 추가 */
+    padding: 8px; /* 패딩 추가 */
+    text-align: center; /* 중앙 정렬 */
+    overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
+    white-space: nowrap; /* 줄 바꿈 방지 */
+} 
+
+
+
+
+
+
 </style>
 
 
@@ -455,11 +475,11 @@ bigName{
 				display : 'none'
 			});
 		});
-
+		
 		/* 조직도 팝업 여는 함수 시작 끝 */
 		
 		// 클릭 시 팝업
-		$('.emp-dept, .emp-rank, .emp-name, .dept-tel, .personal-tel, .emp-email ').click(function() {
+		$('.emp-dept, .emp-rank, .emp-name, .dept-tel, .personal-tel, .emp-email , .emp-nickname').click(function() {
 			$('.popup-overlay-emp').css({
 				display : 'flex'
 			});
@@ -586,6 +606,8 @@ bigName{
 	 	      			$('#empDetailAddress').val(item.detailaddress);
 	 	      			$('#empExtraAddress').val(item.extraaddress);
 	 	      			$("#pop_partnerImg").attr("src", "<%= ctxPath%>/resources/files/employees/" + item.imgfilename);
+	 	      			$('#gender').val(item.gender);
+	 	      			$('#age').val(item.age);
 	 	      			// console.log("empName : " + item.name);
 	 	      		})
 	 	        }
@@ -629,7 +651,6 @@ bigName{
 			<div class="sch_left">
 				<form name="employee_search_frm" method="post">
 					<select name ="searchType">
-						<option value="">검색대상</option>
 						<option value="department" <c:if test="${'department' eq searchType}">selected</c:if>>부서</option>
 						<option value="position" <c:if test="${'position' eq searchType}">selected</c:if>>직위</option>
 						<option value="name" <c:if test="${'name' eq searchType}">selected</c:if>>이름</option>
@@ -638,7 +659,7 @@ bigName{
 					<input type="text" name="searchWord" value="${searchWord}" />
 					<input type="hidden" name="pageNumber" value="${pagedResult.pageable.pageNumber}" />
 					<input type="hidden" name="pageSize" value="${pagedResult.pageable.pageSize}" />
-					<button type="button" onclick="goSearch()">검색</button>
+					<button type="button" onclick="goSearch()" style="border: 1px solid black; margin-left:3px;">검색</button>
 				
 					<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 10%; background: #fff; overflow: hidden; overflow-y: scroll;">
 					</div>
@@ -684,6 +705,7 @@ bigName{
 			          <th id ="depart">부서</th>
 			          <th id ="position">직위</th>
 			          <th id="name">이름</th>
+			          <th id="nickname">닉네임</th>
 			          <th id="dept-tel">내선번호</th>
 			          <th id="personal-tel">휴대폰번호</th>
 			          <th id="email">E-MAIL</th>
@@ -695,12 +717,13 @@ bigName{
 			 	   <tr id="empInfo">
 			 	     <td class="empid" hidden>${empList.empid}</td>
 			 	   	<%--  <td class="empid type=hidden">${empList.empid}</td> <!-- 이렇게 하면 값까지 아예 날려버림 (empid 이용해서 값가져올 수 없음) --> --%>
-			 	   	 <td class="emp-dept">${empList.dept_name}</td>
-		   			 <td class="emp-rank">${empList.job_name}</td>
-		   			 <td class="emp-name">${empList.name}</td>
-		  			 <td class="dept-tel">${empList.dept_tel}</td>
-		  			 <td class="personal-tel">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
-		  			 <td class="emp-email">${empList.email}</td>
+			 	   	 <td class="emp-dept" style="width:20%;">${empList.dept_name}</td>
+		   			 <td class="emp-rank" style="width:7%;">${empList.job_name}</td>
+		   			 <td class="emp-name" style="width:8%;">${empList.name}</td>
+		   			 <td class="emp-nickname" style="width:10%;">${empList.nickname}</td>
+		  			 <td class="dept-tel" style="width:10%;">${empList.dept_tel}</td>
+		  			 <td class="personal-tel" style="width:10%;">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
+		  			 <td class="emp-email" style="width:10%;">${empList.email}</td>
 	  			   </tr>
 	  			</c:forEach>   
 		   		</tbody>
@@ -760,7 +783,7 @@ bigName{
 							</label>
 							<label>
 							 	<span>휴대폰번호</span>
-							 	<input type="text" class="form-control" id="empPersonal-Tel" value="000#" readonly>
+							 	<input type="text" class="form-control" id="empPersonal-Tel" readonly>
 							</label>
 							
 						<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
@@ -776,7 +799,14 @@ bigName{
 								<span>포인트</span> 
 								<input type="text" class="form-control" id="point" readonly>
 							</label>
-					
+							<label> 
+								<span>나이</span> 
+								<input type="text" class="form-control" id="age" readonly>
+							</label>
+							<label> 
+								<span>성별</span> 
+								<input type="text" class="form-control" id="gender" readonly>
+							</label>
 							</div>
 								<div class="input-address">
 									<label>

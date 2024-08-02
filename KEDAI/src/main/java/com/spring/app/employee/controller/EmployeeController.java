@@ -81,7 +81,7 @@ public class EmployeeController {
 		paraMap.put("empid", empid);
 		
 		List<Map<String, String>> empDetailList = service.empDetailList(paraMap);
-		
+		// System.out.println("empDetailList :" + empDetailList);
 		JSONArray jsonArr = new JSONArray();
 		if(empDetailList != null) {
 			for(Map<String, String> map : empDetailList) {
@@ -107,6 +107,10 @@ public class EmployeeController {
 				jsonObj.put("job_code", map.get("job_code"));
 				jsonObj.put("job_name", map.get("job_name"));
 				jsonObj.put("dept_tel", map.get("dept_tel"));
+				jsonObj.put("gender", map.get("gender"));
+				jsonObj.put("age", map.get("age"));
+				// 디테일 팝업에 gender , age 항목 추가하기
+				
 
 				jsonArr.put(jsonObj);
 			}// end of for---------------
