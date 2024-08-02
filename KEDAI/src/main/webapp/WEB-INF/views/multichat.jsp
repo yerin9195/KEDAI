@@ -225,22 +225,20 @@ body, html {
     	   if(event.data.substr(0,1)=="「") {
     		 //  alert(event.data); 
     		  $("div#connectingUserList").html(event.data);
-          }
-    	  // ======= 서영학  시작 ======= //
-    	// else if(event.data.substr(0,7)=="<tr id=" && event.data.substr(event.data.length-1)==">") {
-    	   else if(event.data.substr(0,7)=="<tr id=") {
-    	//	  alert(event.data);
-    		  $("#tbody").append(event.data);
-    	//	  $("#tbody").html(event.data);
-    	  }
-    	  // ======= 서영학  끝 ======= //
-          else {
+           }
+    	  
+    	   /// ★
+    	   else if(event.data.substr(0,1)=="⊇"){
+    		  $("tbody#tbody").html(event.data);  
+    	   }
+    	   
+           else {
            // 	event.data 는 수신받은 채팅 문자이다.
-           //		$("div#chatMessage").append(event.data);
-          //		$("div#chatMessage").append("<br>");
-          //		$("div#chatMessage").scrollTop(99999999);
-          }
-	    };
+           		$("div#chatMessage").append(event.data);
+          		$("div#chatMessage").append("<br>");
+          		$("div#chatMessage").scrollTop(99999999);
+           }
+	     };
 	    
 		 // === 웹소켓 연결 해제시 콜백함수 정의하기 === //
 	     websocket.onclose = function(){
