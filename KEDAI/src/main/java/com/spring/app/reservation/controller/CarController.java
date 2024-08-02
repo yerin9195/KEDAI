@@ -890,7 +890,7 @@ public class CarController {
 		mav.addObject("owner_carShareList", owner_carShareList);
 
 		// 검색 시 검색조건 및 검색어 값 유지시키기
-		if ("rdp_name".equals(searchType) || "rds_name".equals(searchType) || "share_date".equals(searchType)) {
+		if ("dp_name".equals(searchType) || "ds_name".equals(searchType) || "share_date".equals(searchType)) {
 			mav.addObject("paraMap", paraMap);
 		}
 
