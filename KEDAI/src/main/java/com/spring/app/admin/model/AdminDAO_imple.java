@@ -1,6 +1,7 @@
 package com.spring.app.admin.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,14 @@ public class AdminDAO_imple implements AdminDAO {
 	public int empRegister(MemberVO mvo) {
 		int n = sqlsession.insert("admin.empRegister", mvo);	
 		return n;
+	}
+
+	///////////////////////////////////////////////////////////////
+	
+	@Override
+	public List<Map<String, String>> pageurlEmpname() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

@@ -1,6 +1,7 @@
 package com.spring.app.admin.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,19 @@ public class AdminService_imple implements AdminService {
 	public int empRegister(MemberVO mvo) {		
 		int n = dao.empRegister(mvo);
 		return n;
+	}
+
+	
+	///////////////////////////////////////////////////////////////
+	
+	// 페이지별 사원 접속통계
+	@Override
+	public String pageurlEmpname() {
+		
+		List<Map<String, String>> pageurlEmpnameList = dao.pageurlEmpname();
+		
+		
+		return null;
 	}
 
 	

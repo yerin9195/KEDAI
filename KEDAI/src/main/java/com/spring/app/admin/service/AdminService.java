@@ -20,7 +20,19 @@ public interface AdminService {
 	// 이메일중복확인
 	String emailDuplicateCheck(String email);
 
+	///////////////////////////////////////////////////////////////
+	
 	// 사원정보 등록하기
 	int empRegister(MemberVO mvo);
+
+
+	
+	
+	
+	
+	///////////////////////////////////////////////////////////////
+	
+	// 페이지별 사원 접속통계
+	String pageurlEmpname();
 
 }

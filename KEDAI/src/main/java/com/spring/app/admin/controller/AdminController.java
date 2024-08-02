@@ -272,7 +272,20 @@ public class AdminController {
 		return mav;
 	}
 	
-	@GetMapping("/admin/chart.kedai")
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	///////////////////////////////////////////////////////////////
+	
+	// 통계정보(Chart) 조회하는 페이지 이동
+	@GetMapping("chart.kedai")
 	public ModelAndView chart(ModelAndView mav) {
 		
 		mav.setViewName("tiles1/admin/chart.tiles");
@@ -280,6 +293,13 @@ public class AdminController {
 		return mav;
 	}
 	
+	// 페이지별 사원 접속통계
+	@ResponseBody
+	@GetMapping(value="chart/pageurlEmpname.kedai", produces="text/plain;charset=UTF-8")
+	public String pageurlEmpname() {
+		
+		return service.pageurlEmpname();
+	}
 	
 
 }

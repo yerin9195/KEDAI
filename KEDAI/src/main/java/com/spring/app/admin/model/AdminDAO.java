@@ -1,6 +1,7 @@
 package com.spring.app.admin.model;
 
 import java.util.List;
+import java.util.Map;
 
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.JobVO;
@@ -22,5 +23,10 @@ public interface AdminDAO {
 
 	// 사원정보 등록하기
 	int empRegister(MemberVO mvo);
+
+	///////////////////////////////////////////////////////////////
+	
+	// 페이지별 사원 접속통계
+	List<Map<String, String>> pageurlEmpname();
 
 }
