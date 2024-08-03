@@ -29,8 +29,36 @@ public class EmployeeService_imple implements EmployeeService{
     private AES256 aES256;
 	
 	
+	
+	
 	// 직원정보 가져오기
 	@Override
+	public List<MemberVO> employee_list() {
+		List<MemberVO> employeeList = dao.employee_list();
+		// 각 직원의 이메일과 모바일 번호 복호화
+	    employeeList.forEach(member -> {
+	        try {
+	            // 암호화된 이메일과 모바일 번호를 복호화
+	            String decryptedEmail = aES256.decrypt(member.getEmail());
+	            String decryptedMobile = aES256.decrypt(member.getMobile());
+	            member.setEmail(decryptedEmail);   // 복호화된 이메일 설정
+	            member.setMobile(decryptedMobile); // 복호화된 모바일 번호 설정
+	        } catch (UnsupportedEncodingException | GeneralSecurityException e) {
+	            e.printStackTrace();
+	            // 복호화 실패 시 적절한 처리 (예: 기본값 설정 등)
+	            member.setEmail("복호화 오류");
+	            member.setMobile("복호화 오류");
+	        }
+	    });
+
+	    return employeeList;
+	}
+	
+	
+	
+	
+	// 직원정보 가져오기
+	/*@Override
 	public Page<Map<String,String>> employeeList(String searchType, String searchWord, Pageable pageable) {
 		Map<String, String> paraMap = new HashedMap<String, String>();
 		if (StringUtils.hasText(searchWord)) {
@@ -69,6 +97,24 @@ public class EmployeeService_imple implements EmployeeService{
 										
 		return page;
 	}
+	*/
+	
+	// 총 게시물 건수 구하기 
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		
+		int totalCount = dao.getTotalCount(paraMap);
+		
+		return totalCount;
+	}
+
+	// 직원목록 가져오기(페이징처리를 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것)
+	@Override
+	public List<MemberVO> employeeListSearch_withPaging(Map<String, String> paraMap) {
+		
+		List<MemberVO> employeeList = dao.employeeListSearch_withPaging(paraMap);
+		return employeeList;
+	}
 	
 	
 	
@@ -103,6 +149,16 @@ public class EmployeeService_imple implements EmployeeService{
 		return wordList;
 	}
 
+
+
+	
+
+
+
+
+
+
+	
 	
 }	
 	

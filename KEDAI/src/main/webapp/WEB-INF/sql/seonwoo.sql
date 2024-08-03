@@ -376,7 +376,7 @@ FROM
     from tbl_business_part
     and lower(partner_name) like '%'||'삼'||'%'
 ) V
-WHERE rno between 1 and 10
+WHERE rno between 1 and 10;
 
 
 select * 
@@ -469,19 +469,104 @@ where name = '여진구';
 commit;
 
 select *
-from tbl_member;
+from tbl_employees;
+
+ select count(*)
+		    from tbl_employees E1
+		    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+			LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+			WHERE status = 1 
+			and dept_code is not null
+           AND lower(mobile) like SELECT empid, name, nickname, mobile, email
+     , postcode, address, detailaddress, extraaddress
+     , imgfilename, orgimgfilename, hire_date, salary, point
+     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel
+FROM 
+    (
+        select empid, name, nickname
+             , email, mobile, postcode, address, detailaddress, extraaddress
+             , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, point
+             , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+             , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
+             , dept_tel
+             , rownum row_num
+        from tbl_employees E1 
+        LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+        LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+        WHERE rownum <= ((3 * 10))
+        and status = 1 
+        and dept_code is not null
+)
+'%'||'01087060582'||'%'
 
 
 
+SELECT empid, name, nickname, mobile, email
+     , postcode, address, detailaddress, extraaddress
+     , imgfilename, orgimgfilename, hire_date, salary, point
+     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel
+    FROM 
+    (
+        select empid, name, nickname
+             , email, mobile, postcode, address, detailaddress, extraaddress
+             , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, point
+             , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+             , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
+             , dept_tel
+             , rownum as rno
+        from tbl_employees E1 
+        LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+        LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+        WHERE rownum <= ((3 * 10))
+        and status = 1 
+        and dept_code is not null
+        AND lower(dept_name) like '%'||'영업'||'%'
+        order by dept_name asc, job_code asc
+    ) E
+    WHERE RNO between 1 and 4
 
 
+SELECT empid, name, nickname, mobile, email
+     , postcode, address, detailaddress, extraaddress
+     , imgfilename, orgimgfilename, hire_date, salary, point
+     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel
+FROM 
+(
+    select empid, name, nickname
+         , email, mobile, postcode, address, detailaddress, extraaddress
+         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, point
+         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
+         , dept_tel
+         , rownum row_num
+    from tbl_employees E1 
+    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+    WHERE rownum <= ((1 * 10))
+    and status = 1 
+    and dept_code is not null
+)
 
-
-
-
-
-
-
+----------------------------------------------------------------------------------------------------------------------
+SELECT empid, name, nickname, mobile, email
+	     , postcode, address, detailaddress, extraaddress
+	     , imgfilename, orgimgfilename, hire_date, salary, point
+	     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel
+FROM 
+(
+    select empid, name, nickname
+         , email, mobile, postcode, address, detailaddress, extraaddress
+         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, point
+         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
+         , dept_tel
+    from tbl_employees E1 
+    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+    WHERE rownum <= ((1 * 10))
+    and status = 1 
+    and dept_code is not null
+)
 
 
 

@@ -23,15 +23,29 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 	private SqlSessionTemplate sqlsession;
 	
 	// 직원정보 가져오기
+	@Override
+	public List<MemberVO> employee_list() {
+		List<MemberVO> employeeList = sqlsession.selectList("employee.employee_list");
+		return employeeList;
+	}	
+
+	
+	
+	
+	
+	// 직원정보 가져오기
 	//@Override
-	public List<Map<String, String>> employeeList(Map<String, String> paraMap) {
+	/*
+	 public List<Map<String, String>> employeeList(Map<String, String> paraMap) {
+	 
 		
 		List<Map<String, String>> employeeList = sqlsession.selectList("employee.employeeList", paraMap);
 		// System.out.println("111employeeList : " + employeeList);
 		return employeeList;
 	}
+	*/
 	
-	
+	/*
 	@Override 
 	public Long employeeListTotal(Map<String, String> paraMap) { 
 		Long employeeListTotal = sqlsession.selectOne("employee.employeeListTotal" , paraMap); 
@@ -40,6 +54,7 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 		return employeeListTotal;
 	 
 	}
+	*/
 	
 	// 직원정보 상세보기 팝업 어떤것 클릭했는지 알아오기(직원 아이디로 가져오기)
 	@Override
@@ -58,7 +73,27 @@ public class EmployeeDAO_imple implements EmployeeDAO {
 		return wordList;
 	}
 
+	// 총 직원명수  구하기 
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		
+		int totalCount = sqlsession.selectOne("employee.getTotalCount", paraMap);
+		return totalCount;
+	}
+	
+	
+	
+	// 직원목록 가져오기(페이징처리를 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것)
+	@Override
+	public List<MemberVO> employeeListSearch_withPaging(Map<String, String> paraMap) {
+		List<MemberVO> employeeList = sqlsession.selectList("employee.employeeListSearch_withPaging", paraMap);
+		return employeeList;
+	
+	}
 
+	
+
+	
 	
 	
 }

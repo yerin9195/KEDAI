@@ -508,7 +508,6 @@ text-decoration: none; / 링크 밑줄 제거 */
 	
     <form name="employee_search_frm" style="position:relative;" class="col-10">
 		<select name ="searchType" style="margin-right:10px;">
-			<option value="">검색대상</option>
 			<option value="partner_name">거래처명</option>
 			<option value="partner_type">업종</option>
 			<option value="part_emp_name">담당자명</option>
@@ -572,7 +571,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 	    </c:forEach>
     </c:if>
     <c:if test="${empty requestScope.partnerList}">
-    	<div>거래처가 존재하지 않습니다.</div>
+    	<div>데이터가 존재하지 않습니다.</div>
     </c:if>
   </div>
  
