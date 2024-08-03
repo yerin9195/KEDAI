@@ -330,7 +330,7 @@
 				const localArr = rootElement.find("local"); // 97
 				
 				let html = "<div class='row'><div class='col-9'><img src='<%= ctxPath%>/resources/images/common/rain-cloud.gif' width='8%;' />&nbsp;&nbsp;<span style='font-weight:bold;'>"+updateTime+"</span>&nbsp;";
-		            html += "<span style='color: #e68c0e; cursor: pointer; font-size: 9pt; text-decoration: underline;' onclick='javascript:showWeather();'>업데이트</span></div><div class='col-3 d-md-flex justify-content-md-end'><button type='button' data-toggle='modal' data-target='#myWeather' style='cursor: pointer; background: none;'>더보기&nbsp;<i class='fa-solid fa-angles-right'></i></button></div></div>";
+		            html += "<span style='color: #e68c0e; cursor: pointer; font-size: 10pt; text-decoration: underline;' onclick='javascript:showWeather();'>업데이트</span></div><div class='col-3 d-md-flex justify-content-md-end'><button type='button' data-toggle='modal' data-target='#myWeather' style='cursor: pointer; background: none;'>더보기&nbsp;<i class='fa-solid fa-angles-right'></i></button></div></div>";
 		            html += "<div style='max-height: 250px; overflow-y: scroll; margin-top: 2%;'><table class='table table-hover' align='center'>";
 			        html += "<tr>";
 			        html += "<th style='width: 30%;'>지역</th>";
@@ -523,13 +523,13 @@
 		            allowPointSelect: true,
 		            cursor: 'pointer',
 		            dataLabels: {
-		                enabled: true,
-		                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-		            }
+		                enabled: false
+		            },
+		            showInLegend: true
 		        }
 		    },
 		    series: [{
-		        name: 'Global Market',
+		        name: 'Brands',
 		        colorByPoint: true,
 		        data: [{
 		            name: 'Asia Pacific',
@@ -551,13 +551,10 @@
 		        },  {
 		            name: 'Sub-Saharan Africa',
 		            y: 0.9
-		        }, {
-		            name: 'Russia, Caucasus and Central Asia',
-		            y: 0.7
 		        }]
 		    }]
 		});
-		
+
 	} // end of showChartList() ----------
 </script>
 
@@ -593,7 +590,7 @@
 				</div>
 			</div>
 			
-			<div class="row justify-content-between mt-2" style="border: 0px solid red; height: 300px;">
+			<div class="row justify-content-between mt-3" style="border: 0px solid red; height: 300px;">
 				<div class="col-6 pl-0" style="border: 0px solid red;" id="displayWeather"></div>
 				<div class="modal" id="myWeather">
 					<div class="modal-dialog">
@@ -649,8 +646,8 @@
 	</section>
 	
 	<section class="row justify-content-between mt-3" style="height: 400px;">
-		<div class="col-5 pl-0" style="border: 0px solid red; height: 100%;">
-			<ul class="nav nav-tabs">
+		<div class="col-5 pl-0 pt-3" style="border: 0px solid red; height: 100%;">
+			<ul class="nav nav-tabs h5">
 				<li class="nav-item">
 					<a class="nav-link active" data-toggle="tab" href="#menu1">사내공지 <input type="hidden" name="category_code" value="1" /></a>
 				</li>
@@ -665,9 +662,9 @@
 			</div>	
 		</div>
 			
-		<div class="col-3 pl-0" style="border: 0px solid red; height: 100%; text-align: center;">
+		<div class="col-3 pr-0" style="border: 0px solid red; height: 100%; text-align: center;">
 			<div class="h2" style="width: 120px; height: 40px; background: #e68c0e; color: #fff; border-radius: 15px 0; margin: 0 auto;">MENU</div>
-			<div data-toggle='modal' data-target='#myMenu' style="margin-top: 8%;"><span class="filename" style="cursor: pointer;"></span></div>
+			<div data-toggle='modal' data-target='#myMenu' style="margin-top: 7%;"><span class="filename" style="cursor: pointer;"></span></div>
 			<div class="modal" id="myMenu">
 				<div class="modal-dialog" style="max-width: 900px;">
 			    	<div class="modal-content" style="width: 900px; height: 800px;">
@@ -685,7 +682,7 @@
 			</div>
 		</div>
 		
-		<div class="col-4 p1-0 pr-3" style="border: 0px solid red; height: 100%; text-align: center; overflow: hidden;">
+		<div class="col-4 p1-0 pr-3" style="border: 0px solid red; height: 100%; text-align: center; overflow: hidden; padding-left: 0">
 			<figure class="highcharts-figure" style="margin: 0 auto;">
 			    <div id="global_chart_container"></div>
 			</figure>

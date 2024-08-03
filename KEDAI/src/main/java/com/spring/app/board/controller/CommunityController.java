@@ -565,8 +565,8 @@ public class CommunityController {
 				String root = session.getServletContext().getRealPath("/"); 
 				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\
 				
-				String path = root+"resources"+File.separator+"community_attach_file";
-				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\community_attach_file
+				String path = root+"resources"+File.separator+"files"+File.separator+"community_attach_file";
+				// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\community_attach_file
 				
 				boolean flag = false;
 				flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
