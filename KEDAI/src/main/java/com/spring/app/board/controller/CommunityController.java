@@ -211,7 +211,7 @@ public class CommunityController {
 	
 	// 게시판 목록 보여주기
 	@RequestMapping("/community/list.kedai")
-	public ModelAndView list(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView empmanager_list(HttpServletRequest request, ModelAndView mav) {
 		
 		List<CommunityVO> communityList = null;
 		

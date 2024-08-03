@@ -49,7 +49,7 @@ public class ApprovalController {
 	private FileManager fileManager;
 	
 	@GetMapping(value = "/approval/main.kedai")
-	public ModelAndView approval(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView empmanager_approval(HttpServletRequest request, ModelAndView mav) {
 		
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");

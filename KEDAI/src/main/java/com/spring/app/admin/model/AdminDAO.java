@@ -26,7 +26,12 @@ public interface AdminDAO {
 
 	///////////////////////////////////////////////////////////////
 	
+	// 해당 페이지에 접속한 이후에, 페이지에 접속한 페이지URL, 사용자ID, 접속IP주소, 접속시간을 기록으로 DB에 tbl_empManager_accessTime 테이블에 insert 하기  
+	void insert_accessTime(Map<String, String> paraMap);
+	
 	// 페이지별 사원 접속통계
 	List<Map<String, String>> pageurlEmpname();
+
+	
 
 }

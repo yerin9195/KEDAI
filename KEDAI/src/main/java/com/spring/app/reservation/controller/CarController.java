@@ -46,7 +46,7 @@ public class CarController {
 
 	// sidebar에서 통근버스 클릭시 이동하는 페이지 만들기
 	@GetMapping("/bus.kedai")
-	public ModelAndView requiredLogin_bus(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
+	public ModelAndView empmanager_bus(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
 
 		mav.setViewName("tiles1/reservation/bus.tiles");
 		return mav;
@@ -119,7 +119,7 @@ public class CarController {
 
 	// sidebar에서 카쉐어 클릭시 이동하는 페이지 만들기
 	@GetMapping("/carShare.kedai")
-	public ModelAndView requiredLogin_carShare(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView empmanager_carShare(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		// car테이블에서 mycar정보 가져오기
 		List<Map<String, String>> carShareList = service.carShareList();

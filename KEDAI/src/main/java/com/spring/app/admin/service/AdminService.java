@@ -1,6 +1,7 @@
 package com.spring.app.admin.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.JobVO;
@@ -19,20 +20,18 @@ public interface AdminService {
 
 	// 이메일중복확인
 	String emailDuplicateCheck(String email);
-
-	///////////////////////////////////////////////////////////////
 	
 	// 사원정보 등록하기
 	int empRegister(MemberVO mvo);
-
-
-	
-	
-	
 	
 	///////////////////////////////////////////////////////////////
 	
+	// 해당 페이지에 접속한 이후에, 페이지에 접속한 페이지URL, 사용자ID, 접속IP주소, 접속시간을 기록으로 DB에 tbl_empManager_accessTime 테이블에 insert 하기  
+	void insert_accessTime(Map<String, String> paraMap);
+	
 	// 페이지별 사원 접속통계
 	String pageurlEmpname();
+
+	
 
 }

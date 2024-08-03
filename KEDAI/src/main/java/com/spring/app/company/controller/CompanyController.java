@@ -174,7 +174,7 @@ public class CompanyController {
 
 	// 거래처 정보 조회하기 #######################################################
 	@RequestMapping(value = "/othercom_list.kedai")
-	public ModelAndView otherCom_list_select(ModelAndView mav) {
+	public ModelAndView otherCom_list_select(ModelAndView mav, HttpServletRequest request) {
 
 		List<PartnerVO> partnervoList = service.otherCom_list_select();
 
@@ -284,7 +284,7 @@ public class CompanyController {
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	// 거래처 목록 보여주기 (여기서 페이징 처리 && 검색
 	@GetMapping("/othercom_list.kedai")
-	public ModelAndView partnerComList(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView empmanager_partnerComList(HttpServletRequest request, ModelAndView mav) {
 		
 		List<PartnerVO> partnerList = null;
 		

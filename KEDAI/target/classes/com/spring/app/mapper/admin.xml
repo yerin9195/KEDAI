@@ -44,5 +44,47 @@
 	    	</when>
 		</choose>
 	</insert>
+	
+	<insert id="insert_accessTime" parameterType="HashMap">
+		insert into tbl_empManager_accessTime(accessTime_seq, pageUrl, fk_empid, clientIP, accessTime)
+		values(empManager_accessTime_seq.nextval, #{pageUrl}, #{fk_empid}, #{clientIP}, #{accessTime})
+	</insert>
+	
+  	<resultMap type="HashMap" id="pageurlEmpname_Map">
+    	<result property="pagename"   column="PAGENAME"   javaType="String" />
+       	<result property="name"       column="NAME"       javaType="String" />
+       	<result property="cnt"        column="CNT"        javaType="String" />
+   	</resultMap>
+	
+	<select id="pageurlEmpname" resultMap="pageurlEmpname_Map">
+		SELECT case 
+		       when instr(PAGEURL, '/KEDAI/approval/main.kedai', 1, 1) > 0 then '전자결재' 
+		       when instr(PAGEURL, '/KEDAI/pay_stub.kedai', 1, 1) > 0 then '급여명세서'
+		       when instr(PAGEURL, '/KEDAI/roomResercation.kedai', 1, 1) > 0 then '회의실예약'
+		       when instr(PAGEURL, '/KEDAI/board/list.kedai', 1, 1) > 0 then '게시판'
+		       when instr(PAGEURL, '/KEDAI/community/list.kedai', 1, 1) > 0 then '커뮤니티'
+		       when instr(PAGEURL, '/KEDAI/carShare.kedai', 1, 1) > 0 then '카쉐어'
+		       when instr(PAGEURL, '/KEDAI/bus.kedai', 1, 1) > 0 then '통근버스'
+		       when instr(PAGEURL, '/KEDAI/employee.kedai', 1, 1) > 0 then '사내연락망'
+		       when instr(PAGEURL, '/KEDAI/othercom_list.kedai', 1, 1) > 0 then '거래처정보'
+		       else '기타'
+		       end AS PAGENAME
+		     , name     
+		     , CNT
+		FROM 
+		(
+		    SELECT E.name, A.pageurl, A.cnt 
+		    FROM 
+		    (
+		        select NVL(substr(pageurl, 1, instr(pageurl, '?', 1, 1)-1), pageurl) AS PAGEURL 
+		             , fk_empid
+		             , count(*) AS CNT 
+		        from tbl_empManager_accessTime
+		        group by NVL(substr(pageurl, 1, instr(pageurl, '?', 1, 1)-1), pageurl), fk_empid
+		    ) A JOIN tbl_employees E
+		    ON A.fk_empid = E.empid
+		) V
+		ORDER BY 1, 2
+	</select>
 
 </mapper>

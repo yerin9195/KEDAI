@@ -56,11 +56,20 @@ public class AdminDAO_imple implements AdminDAO {
 
 	///////////////////////////////////////////////////////////////
 	
+	// 해당 페이지에 접속한 이후에, 페이지에 접속한 페이지URL, 사용자ID, 접속IP주소, 접속시간을 기록으로 DB에 tbl_empManager_accessTime 테이블에 insert 하기 
+	@Override
+	public void insert_accessTime(Map<String, String> paraMap) {
+		sqlsession.insert("admin.insert_accessTime", paraMap);	
+	}
+	
+	// 페이지별 사원 접속통계
 	@Override
 	public List<Map<String, String>> pageurlEmpname() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Map<String, String>> pageurlEmpnameList = sqlsession.selectList("admin.pageurlEmpname");
+		return pageurlEmpnameList;
 	}
+
+	
 	
 	
 	
