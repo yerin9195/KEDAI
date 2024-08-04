@@ -247,11 +247,6 @@
      // 페이지 로드 시 드롭다운 초기화
      populateTimeSelect();
 
-     // 시작 시간이 변경될 때 종료 시간 옵션 업데이트
-     $("#startTime").on("change", function() {
-         updateEndTimeOptions();
-     });
-
      // 모달 표시 시 날짜와 시간을 설정
      $(document).on("click", ".reserveBtn", function() {
     	 // 클릭한 버튼의 왼쪽 값 추출

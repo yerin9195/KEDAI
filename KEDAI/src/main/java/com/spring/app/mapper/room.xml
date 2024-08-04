@@ -64,6 +64,7 @@
     <select id="getAllReservations" resultType="RoomVO">
     	 SELECT reservation_seq, fk_empid, fk_room_name, content, start_time, end_time, registerday, reservation_status
         FROM tbl_room
+        where reservation_status = 1
 	</select>
 	
 
@@ -72,6 +73,26 @@
         FROM tbl_room
         where reservation_seq = #{reservation_seq}
 	</select>
+	
+	<update id="updateReservation" parameterType="map">
+	    UPDATE tbl_room
+	    SET 
+	        fk_empid = #{fk_empid},
+	        fk_room_name = #{fk_room_name},
+	        content = #{content},
+	        start_time = TO_DATE(#{start_time}, 'YYYY-MM-DD HH24:MI'),
+	        end_time = TO_DATE(#{end_time}, 'YYYY-MM-DD HH24:MI'),
+	        registerday = TO_DATE(#{registerday}, 'YYYY-MM-DD HH24:MI:SS'),
+	        reservation_status = #{reservation_status}
+	    WHERE 
+	        reservation_seq = #{reservation_seq}
+	</update>
+	
+	<update id="deleteReservation" parameterType="int">
+        UPDATE tbl_room
+        set reservation_status = 0
+        WHERE reservation_seq = #{reservationSeq}
+    </update>
 	
 
 </mapper>
