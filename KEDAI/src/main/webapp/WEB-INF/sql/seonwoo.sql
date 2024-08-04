@@ -660,12 +660,12 @@ SELECT empid, name, nickname, mobile, email
     WHERE RNO between 1 and 10
 
 
+show user;
 
 
 
-
-
-
+select * 
+from tbl_member;
 
 
 
