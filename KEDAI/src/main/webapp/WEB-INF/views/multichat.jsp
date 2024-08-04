@@ -86,7 +86,6 @@ body, html {
 #speechbubble{
 
 .tooltip{
- 
   position: absolute;
   top: 50%;
   left: 106%;
@@ -109,6 +108,13 @@ body, html {
 	height: 50px;
 	margin-bottom:258%;
 }
+
+
+#btnSendMessage #btnExitMessage{
+	margin-bottom: 150%;
+}
+
+
 
 </style> 
 
@@ -256,7 +262,6 @@ body, html {
         let isOnlyOneDialog = false; // 귀속말 여부. true 이면 귀속말, false 이면 모두에게 공개되는 말 
        
         $("input#btnSendMessage").click(function(){
-       
           if( $("input#message").val().trim() != "" ) {
              
           	// ==== 자바스크립트에서 replace를 replaceAll 처럼 사용하기 ====
@@ -276,13 +281,13 @@ body, html {
                // 또는
                messageObj = {}; // 자바스크립트 객체 생성함. 
                messageObj.message = messageVal;
-               messageObj.type = "all";
-               messageObj.to = "all";
-             
                const to = $("input#to").val();
-               if( to != "" ){
+               if( to != "" || isOnlyOneDialog){
                   	messageObj.type = "one";
                   	messageObj.to = to;
+               } else {
+                   messageObj.type = "all";
+                   messageObj.to = "all";
                }
                
                websocket.send(JSON.stringify(messageObj));
@@ -346,6 +351,7 @@ body, html {
           */
           
           const ws_id = $(this).prev().text();
+          console.log("prev-text : " + ws_id);
        // alert(ws_id);
           $("input#to").val(ws_id); 
            
@@ -416,14 +422,14 @@ body, html {
 	</table>
 </div>
 
-<div class="container-fluid" style="border: 1px solid blue;">
+<div class="container-fluid" style="border: 1px solid blue; width: 80%; height:90%;">
    <div class="message_body">
       <div class="row">
-         <div class="col-md-10 offset-md-1">
+         <div class="col-md-12 offset-md-1" style="overflow:hidden;">
             <div id="chatStatus"></div>
-               <div class="my-3">
+               <div style="width:100%;">
                   - 상대방의 대화내용이 검정색으로 보이면 채팅에 참여한 모두에게 보여지는 것입니다.<br>
-                  - 상대방의 대화내용이 <span style="color: #e68c0e; font-weight: bold">주황색</span>으로 보이면 나에게만 보여지는 1:1 귓속말 입니다.<br>
+                  - 상대방의 대화내용이 <span style="color: red; font-weight: bold">빨간색</span>으로 보이면 나에게만 보여지는 1:1 귓속말 입니다.<br>
                   - 1:1 채팅(귓속말)을 하시려면 예를 들어, 채팅시 보이는 [이순신]대화내용 에서 이순신을 클릭하시면 됩니다.
                </div>
                <input type="hidden" id="to" placeholder="귓속말대상웹소켓.getEmpid()"/>
@@ -437,7 +443,7 @@ body, html {
                
                <div id="chatMessage" style="max-height: 500px; overFlow: auto; margin: 20px 0;"></div>
                <div class="message_container">
-                  <input type="text" id="message" class="form-control" placeholder="메시지 내용"/>
+                  <input type="text" id="message" class="form-control" width="80%;" placeholder="메시지 내용"/>
                   
                   <div class = "button_group">
                      <input type="button" id="btnSendMessage" class="btn btn-success btn-sm my-3" value="메시지보내기" />

@@ -111,6 +111,15 @@ public class EmployeeService_imple implements EmployeeService{
 	// 직원목록 가져오기(페이징처리를 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것)
 	@Override
 	public List<MemberVO> employeeListSearch_withPaging(Map<String, String> paraMap) {
+		String mobile = null;
+		if ("mobile".equals(paraMap.get("searchType"))) {
+			mobile = paraMap.get("searchWord");
+			try {
+				paraMap.put("searchWord", aES256.encrypt(paraMap.get("searchWord").replaceAll("-", "")));
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		List<MemberVO> employeeList = dao.employeeListSearch_withPaging(paraMap);
 		
@@ -125,6 +134,9 @@ public class EmployeeService_imple implements EmployeeService{
 			} 
 		}
 		
+		if ("mobile".equals(paraMap.get("searchType"))) {
+			paraMap.put("searchWord", mobile);
+		}
 
 		return employeeList;
 	}
