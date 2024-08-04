@@ -481,7 +481,7 @@ bigName{
 		/* 조직도 팝업 여는 함수 시작 끝 */
 		
 		// 클릭 시 팝업
-		$('.emp-dept, .emp-rank, .emp-name, .dept-tel, .personal-tel, .emp-email , .emp-nickname').click(function() {
+		$('.dept_name, .job_name, .name, .nickname, .dept_tel, .mobile, .email').click(function() {
 			$('.popup-overlay-emp').css({
 				display : 'flex'
 			});
@@ -632,16 +632,10 @@ bigName{
 		const frm = document.employee_search_frm;
 		
 		frm.method="get";
-		frm.action ="<%=ctxPath%>/employee/employee.kedai";
+		frm.action ="<%=ctxPath%>/employee.kedai";
 		frm.submit();
 		
 	} // end of function goSearch() ------------------------------
-	
-	/*
-	function goPage(page) {
-		goSearch(page);
-	}
-	*/
 	
 	
 </script>
@@ -655,21 +649,17 @@ bigName{
 		
 		<div class="search_bar">
 			<div class="sch_left">
-				<form name="employee_search_frm" method="post">
+				<form name="employee_search_frm">
 					<select name ="searchType">
-						<%-- <option value="department" <c:if test="${'department' eq searchType}">selected</c:if>>부서</option> --%>
-						<option value="department">부서</option>
-						<%-- <option value="position" <c:if test="${'position' eq searchType}">selected</c:if>>직위</option> --%>
-						<option value="position">직위</option>
-						<%-- <option value="name" <c:if test="${'name' eq searchType}">selected</c:if>>이름</option> --%>
+						<option value="dept_name">부서</option>
+						<option value="job_name">직위</option>
 						<option value="name">이름</option>
-						<%-- <option value="personal-tel" <c:if test="${'personal-tel' eq searchType}">selected</c:if>>휴대폰번호</option> --%>
-						<option value="personal-tel">휴대폰번호</option>
+						<option value="mobile">휴대폰번호</option>
 					</select>
 					
-					<input type="text" name="searchWord" value="${searchWord}" />
-					<%-- <input type="hidden" name="pageNumber" value="${pagedResult.pageable.pageNumber}" /> --%>
-					<%-- <input type="hidden" name="pageSize" value="${pagedResult.pageable.pageSize}" /> --%>
+					<input type="text" name="searchWord" />
+					<input type="text" style="display: none;"/>
+					
 					<button type="button" onclick="goSearch()" style="border: 1px solid black; margin-left:3px;">검색</button>
 				
 					<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 10%; background: #fff; overflow: hidden; overflow-y: scroll;">
@@ -698,27 +688,19 @@ bigName{
 			    	</div>
 			    </div>
 			</div>
-				
-			<%-- <div class="sch_right">
-				<span style="font-size: 12pt; font-weight: bold;">페이지당 직원명수&nbsp;-&nbsp;</span>
-					<select name="sizePerPage" id="sizePerPage" onchange="goSearch(1)">
-						<option value="3" <c:if test="${3 == pagedResult.pageable.pageSize}">selected</c:if>>3명</option>
-						<option value="5" <c:if test="${5 == pagedResult.pageable.pageSize}">selected</c:if>>5명</option>
-						<option value="10" <c:if test="${10 == pagedResult.pageable.pageSize}">selected</c:if>>10명</option>		
-					</select>
-			</div>  --%>
+			
 		</div>
 					
 			<table class="emp_table" id="empTbl"><!-- id="empInfo" -->
 			   <thead>
 			       <tr>
 			         <!--  <th id ="empid">ID</th> -->
-			          <th id ="depart" style="width:10%;">부서</th>
-			          <th id ="position" style="width:5%;">직위</th>
+			          <th id ="dept_name" style="width:10%;">부서</th>
+			          <th id ="job_name" style="width:5%;">직위</th>
 			          <th id="name" style="width:10%;">이름</th>
 			          <th id="nickname" style="width:10%;">닉네임</th>
 			          <th id="dept-tel" style="width:15%;">내선번호</th>
-			          <th id="personal-tel" style="width:15%;">휴대폰번호</th>
+			          <th id="mobile" style="width:15%;">휴대폰번호</th>
 			          <th id="email" style="width:20%;">E-MAIL</th>
 			       </tr>
 			   </thead>
@@ -732,24 +714,21 @@ bigName{
 			 	   <tr id="empInfo">
 			 	     <td class="empid" hidden>${empList.empid}</td>
 			 	   	<%--  <td class="empid type=hidden">${empList.empid}</td> <!-- 이렇게 하면 값까지 아예 날려버림 (empid 이용해서 값가져올 수 없음) --> --%>
-			 	   	 <td class="emp-dept" style="width:10%;">${empList.dept_name}</td>
-		   			 <td class="emp-rank" style="width:5%;">${empList.job_name}</td>
-		   			 <td class="emp-name" style="width:10%;">${empList.name}</td>
-		   			 <td class="emp-nickname" style="width:10%;">${empList.nickname}</td>
-		  			 <td class="dept-tel" style="width:15%;">${empList.dept_tel}</td>
-		  			 <td class="personal-tel" style="width:15%;">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
-		  			 <td class="emp-email" style="width:20%;">${empList.email}</td>
+			 	   	 <td class="dept_name" style="width:10%;">${empList.dept_name}</td>
+		   			 <td class="job_name" style="width:5%;">${empList.job_name}</td>
+		   			 <td class="name" style="width:10%;">${empList.name}</td>
+		   			 <td class="nickname" style="width:10%;">${empList.nickname}</td>
+		  			 <td class="dept_tel" style="width:15%;">${empList.dept_tel}</td>
+		  			 <td class="mobile" style="width:15%;">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
+		  			 <td class="email" style="width:20%;">${empList.email}</td>
 	  			   </tr>
 	  			</c:forEach>   
-	  			<c:if test="${empty requestScope.empList}">
-		   			<div>데이터가 존재하지 않습니다.</div>
-		   		</c:if>
 		   		</tbody>
 			</table>
 		</div>	
 	</div>		
 				            
-	<div align="center" style="border: solid 0px gray; width: 50%; margin: 2% auto;  height: 100px;">
+	<div align="center" style="border: solid 1px gray; width: 50%; margin: 2% auto;  height: 100px;">
 		${requestScope.pageBar}
 	</div>
 

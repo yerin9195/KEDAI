@@ -371,7 +371,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 			
 	function goSearch(){
 		
-		const frm = document.employee_search_frm;
+		const frm = document.company_search_frm;
 		// console.log(frm);
 		frm.method = "get";
 		frm.action = "<%= ctxPath%>/othercom_list.kedai";
@@ -506,7 +506,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 </div>
 <div class="reg-search row">
 	
-    <form name="employee_search_frm" style="position:relative;" class="col-10">
+    <form name="company_search_frm" style="position:relative;" class="col-10">
 		<select name ="searchType" style="margin-right:10px;">
 			<option value="partner_name">거래처명</option>
 			<option value="partner_type">업종</option>

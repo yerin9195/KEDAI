@@ -39,45 +39,35 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService service;
 	
-
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 
 	//////////////////////////////////////////////////////////////////////////
 	// 전체 사원들 정보 조회하기
-	@GetMapping(value="/employee.kedai") 
+	@RequestMapping(value="/employee.kedai") 
 	public ModelAndView employee_list(ModelAndView mav) {
 		
 		List<MemberVO> employeeList = service.employee_list();
-		// 전체 목록 널이뜨는것 같음 확인하기 
+		
 		
 		mav.addObject("employeeList", employeeList);
-		System.out.println("employeeList : " + employeeList);
+		// System.out.println("employeeList : " + employeeList);
 		mav.setViewName("tiles1/employee/employee.tiles");
 		
 		return mav;
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	//////////////////////////////////////////////////////////////////////////////
 	
 	// 사원리스트  보여주기 ( 여기서 페이징 처리 && 검색 만들기)
-	@RequestMapping(value="/employee.kedai") 
+	@GetMapping(value="/employee.kedai") 
 	public ModelAndView employeelist_select(ModelAndView mav, HttpServletRequest request) {
 		
 		List<MemberVO> employeeList = null;
-		System.out.println("employeeList : " + employeeList);
+		
+		// System.out.println("employeeList : " + employeeList);
 		// 글조회수(readCount)증가 => 새로고침(F5)을 했을 경우에는 증가가 되지 않도록 해야 한다. => session 을 사용하여 처리하기
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
@@ -143,15 +133,15 @@ public class EmployeeController {
         employeeList = service.employeeListSearch_withPaging(paraMap);
 
         mav.addObject("employeeList", employeeList);
-		System.out.println("");
+		// System.out.println("");
         // 검색 시 검색조건 및 검색어 값 유지시키기	
 		if("dept_name".equals(searchType) ||
-		   "job_type".equals(searchType)  ||
+		   "job_name".equals(searchType)  ||
 		   "name".equals(searchType)	  ||
 		   "mobile".equals(searchType)) {
 			mav.addObject("paraMap" , paraMap);
 		}
-		
+		// System.out.println(" paraMap : " + paraMap);
 		
 		// 페이지바 만들기
         int blockSize = 3; // 1개 블럭(토막)당 보여지는 페이지번호의 개수
@@ -194,7 +184,7 @@ public class EmployeeController {
         pageBar += "</ul>";
         // System.out.println(pageBar);
         mav.addObject("pageBar", pageBar);
-        
+        // System.out.println("pageBar : " + pageBar);
         // 특정 글제목을 클릭하여 상세내용을 본 이후 사용자가 "검색된결과목록보기" 버튼을 클릭했을 때 돌아갈 페이지를 알려주기 위해 현재 페이지 주소를 뷰단으로 넘겨준다.
         String goBackURL = MyUtil.getCurrentURL(request);
         mav.addObject("goBackURL", goBackURL);
@@ -234,13 +224,6 @@ public class EmployeeController {
 	}
 	
 	*/
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

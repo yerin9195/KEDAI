@@ -113,6 +113,19 @@ public class EmployeeService_imple implements EmployeeService{
 	public List<MemberVO> employeeListSearch_withPaging(Map<String, String> paraMap) {
 		
 		List<MemberVO> employeeList = dao.employeeListSearch_withPaging(paraMap);
+		
+		for(MemberVO map : employeeList) {
+			try {
+				map.setEmail(aES256.decrypt(map.getEmail()));
+				map.setMobile(aES256.decrypt(map.getMobile()));
+
+				
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			} 
+		}
+		
+
 		return employeeList;
 	}
 	
