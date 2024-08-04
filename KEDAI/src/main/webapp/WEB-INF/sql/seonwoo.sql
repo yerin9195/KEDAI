@@ -654,7 +654,7 @@ SELECT empid, name, nickname, mobile, email
     LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
     WHERE status = 1 
     and dept_code is not null
-    and lower(mobile) like '%'||UiW0IXUoJ9wuomNX9TO9VQ==||'%'
+    and lower(mobile) like '%'||'UiW0IXUoJ9wuomNX9TO9VQ=='||'%'
     order by dept_name asc, job_code asc
 ) E
     WHERE RNO between 1 and 10
