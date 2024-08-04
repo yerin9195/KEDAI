@@ -508,7 +508,7 @@
 		        type: 'pie'
 		    },
 		    title: {
-		        text: 'KEDAI 해외시장 점유율, 2024'
+		        text: '<span style="font-size: 16pt; font-weight: bold; color: #e68c0e;">[ KEDAI 해외시장 점유율, 2024 ]</span>'
 		    },
 		    tooltip: {
 		        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -630,8 +630,7 @@
 						<ul class="dropdown-menu" style="padding-left: 3%;">
 							<li><a href="<%= ctxPath%>/member/memberEdit.kedai">나의 정보 수정</a></li>
 							<li><a href="<%= ctxPath%>/myCar.kedai">나의 카셰어링</a></li>
-							<li><a href="#">포인트 결제 내역</a></li>
-							<li><a href="#">나의 결재 내역</a></li>
+							<li><a href="#">나의 결재 문서 내역</a></li>
 							<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
 								<li><a href="<%= ctxPath%>/admin/chart.kedai">통계정보(Chart)</a></li>
 							</c:if>
@@ -647,7 +646,7 @@
 	
 	<section class="row justify-content-between mt-3" style="height: 400px;">
 		<div class="col-5 pl-0 pt-3" style="border: 0px solid red; height: 100%;">
-			<ul class="nav nav-tabs h5">
+			<ul class="nav nav-tabs h6">
 				<li class="nav-item">
 					<a class="nav-link active" data-toggle="tab" href="#menu1">사내공지 <input type="hidden" name="category_code" value="1" /></a>
 				</li>
@@ -664,7 +663,7 @@
 			
 		<div class="col-3 pr-0" style="border: 0px solid red; height: 100%; text-align: center;">
 			<div class="h2" style="width: 120px; height: 40px; background: #e68c0e; color: #fff; border-radius: 15px 0; margin: 0 auto;">MENU</div>
-			<div data-toggle='modal' data-target='#myMenu' style="margin-top: 7%;"><span class="filename" style="cursor: pointer;"></span></div>
+			<div data-toggle='modal' data-target='#myMenu' style="margin-top: 10%;"><span class="filename" style="cursor: pointer;"></span></div>
 			<div class="modal" id="myMenu">
 				<div class="modal-dialog" style="max-width: 900px;">
 			    	<div class="modal-content" style="width: 900px; height: 800px;">

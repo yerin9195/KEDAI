@@ -326,7 +326,7 @@ commit;
 
 select *
 from tbl_employees
-where fk_dept_code = '300'
+where fk_dept_code = '100'
 order by fk_job_code;
 
 update tbl_employees set fk_job_code = 1
@@ -738,6 +738,49 @@ where empid = '2010001-001'
 
 -----------------------------------------------------------------------
 
+-- 부서별 인원통계
+select count(*) 
+from tbl_employees
+
+select NVL(dept_name, '부서없음') AS dept_name
+     , count(*) AS cnt
+     , round(count(*) / (select count(*) from tbl_employees) * 100, 2) AS percentage
+from tbl_employees E LEFT JOIN tbl_dept D
+ON E.fk_dept_code = D.dept_code
+group by D.dept_name
+order by cnt desc, dept_name asc;
+
+-- 성별 인원통계
+select func_gender(jubun) AS gender
+from tbl_employees
+
+SELECT gender
+     , count(*) AS cnt
+     , round(count(*) / (select count(*) from tbl_employees) * 100, 1) AS percentage
+FROM 
+(
+    select func_gender(jubun) AS gender
+    from tbl_employees
+)
+GROUP BY gender
+order by cnt desc;
+
+-- 부서별 성별 인원통계
+SELECT gender
+     , count(*) AS cnt
+     , round(count(*) / (select count(*) from tbl_employees) * 100, 2) AS percentage
+FROM
+(
+    select fk_dept_code, func_gender(jubun) AS gender
+    from tbl_employees
+) E LEFT JOIN tbl_dept D
+ON E.fk_dept_code = D.dept_code
+WHERE D.dept_name is null
+GROUP BY gender
+ORDER BY gender;
+
+-----------------------------------------------------------------------
+
 -- 페이지별 사원 접속통계
 create table tbl_empManager_accessTime
 (accessTime_seq  number
@@ -783,15 +826,15 @@ from tbl_empManager_accessTime
 order by accessTime_seq desc;
 
 SELECT case 
-       when instr(PAGEURL, '/KEDAI/approval/main.kedai', 1, 1) > 0 then '전자결재' 
-       when instr(PAGEURL, '/KEDAI/pay_stub.kedai', 1, 1) > 0 then '급여명세서'
-       when instr(PAGEURL, '/KEDAI/roomResercation.kedai', 1, 1) > 0 then '회의실예약'
-       when instr(PAGEURL, '/KEDAI/board/list.kedai', 1, 1) > 0 then '게시판'
-       when instr(PAGEURL, '/KEDAI/community/list.kedai', 1, 1) > 0 then '커뮤니티'
-       when instr(PAGEURL, '/KEDAI/carShare.kedai', 1, 1) > 0 then '카쉐어'
-       when instr(PAGEURL, '/KEDAI/bus.kedai', 1, 1) > 0 then '통근버스'
-       when instr(PAGEURL, '/KEDAI/employee.kedai', 1, 1) > 0 then '사내연락망'
-       when instr(PAGEURL, '/KEDAI/othercom_list.kedai', 1, 1) > 0 then '거래처정보'
+       when instr(PAGEURL, 'approval/main.kedai', 1, 1) > 0 then '전자결재' 
+       when instr(PAGEURL, 'pay_stub.kedai', 1, 1) > 0 then '급여명세서'
+       when instr(PAGEURL, 'roomResercation.kedai', 1, 1) > 0 then '회의실예약'
+       when instr(PAGEURL, 'board/list.kedai', 1, 1) > 0 then '게시판'
+       when instr(PAGEURL, 'community/list.kedai', 1, 1) > 0 then '커뮤니티'
+       when instr(PAGEURL, 'carShare.kedai', 1, 1) > 0 then '카쉐어'
+       when instr(PAGEURL, 'bus.kedai', 1, 1) > 0 then '통근버스'
+       when instr(PAGEURL, 'employee.kedai', 1, 1) > 0 then '사내연락망'
+       when instr(PAGEURL, 'othercom_list.kedai', 1, 1) > 0 then '거래처정보'
        else '기타'
        end AS PAGENAME
      , name     
@@ -815,4 +858,9 @@ desc tbl_empManager_accessTime;
 
 insert into tbl_empManager_accessTime(accessTime_seq, pageUrl, fk_empid, clientIP, accessTime)
 values(empManager_accessTime_seq.nextval, #{pageUrl}, #{fk_empid}, #{clientIP}, #{accessTime})
+
+drop table tbl_empManager_accessTime purge;
+-- Table TBL_EMPMANAGER_ACCESSTIME이(가) 삭제되었습니다.
+drop sequence empManager_accessTime_seq;
+-- Sequence EMPMANAGER_ACCESSTIME_SEQ이(가) 삭제되었습니다.
 

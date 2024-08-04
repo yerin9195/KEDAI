@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,11 +15,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.spring.app.admin.service.AdminService;
 import com.spring.app.common.AES256;
 import com.spring.app.common.FileManager;
@@ -281,6 +286,60 @@ public class AdminController {
 		mav.setViewName("tiles1/admin/chart.tiles");
 		
 		return mav;
+	}
+	
+	// 부서별 인원통계
+	@ResponseBody
+	@GetMapping(value="chart/empCntByDeptname.kedai", produces="text/plain;charset=UTF-8")
+	public String empCntByDeptname() {
+		
+		List<Map<String, String>> deptnamePercentageList = service.empCntByDeptname();
+		
+		JsonArray jsonArr = new JsonArray(); // [] 
+		// JsonArray(소문자) 은 google 에서 제공하고 있는 gjson 이다.
+		
+		for(Map<String, String> map : deptnamePercentageList) {
+			JsonObject jsonObj = new JsonObject(); // {} 
+			jsonObj.addProperty("dept_name", map.get("dept_name"));
+			jsonObj.addProperty("cnt", map.get("cnt"));
+			jsonObj.addProperty("percentage", map.get("percentage"));
+			
+			jsonArr.add(jsonObj);
+		} // end of for ----------
+		
+		Gson gson = new Gson();
+		return gson.toJson(jsonArr);
+	}
+	
+	// 성별 인원통계
+	@ResponseBody
+	@GetMapping(value="chart/empCntByGender.kedai", produces="text/plain;charset=UTF-8")
+	public String empCntByGender() {
+		
+		List<Map<String, String>> genderPercentageList = service.empCntByGender();
+		
+		JsonArray jsonArr = new JsonArray(); // [] 
+		// JsonArray(소문자) 은 google 에서 제공하고 있는 gjson 이다.
+		
+		for(Map<String, String> map : genderPercentageList) {
+			JsonObject jsonObj = new JsonObject(); // {} 
+			jsonObj.addProperty("gender", map.get("gender"));
+			jsonObj.addProperty("cnt", map.get("cnt"));
+			jsonObj.addProperty("percentage", map.get("percentage"));
+			
+			jsonArr.add(jsonObj);
+		} // end of for ----------
+		
+		Gson gson = new Gson();
+		return gson.toJson(jsonArr);
+	}
+	
+	// 부서별 성별 인원통계
+	@ResponseBody
+	@GetMapping(value="chart/genderCntSpecialDeptname.kedai", produces="text/plain;charset=UTF-8")
+	public String genderCntSpecialDeptname(@RequestParam(defaultValue = "") String dept_name) {
+		
+		return service.genderCntSpecialDeptname(dept_name);
 	}
 	
 	// 페이지별 사원 접속통계

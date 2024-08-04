@@ -179,7 +179,7 @@ public class CommonAop {
         HttpSession session = request.getSession();
         MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
         
-        if (loginuser == null || Integer.parseInt(loginuser.getFk_job_code()) > 8) {
+        if (loginuser == null || Integer.parseInt(loginuser.getFk_job_code()) > 5) { // 권한 설정 => 대표이사, 전무, 상무, 부장
             // 권한이 없는 경우
             String message = "접근할 수 있는 권한이 없습니다.";
             String loc;
@@ -197,7 +197,7 @@ public class CommonAop {
             ModelAndView mav = new ModelAndView("msg"); 
             return mav;
             
-        } else { // 로그인 되어진 사용자의 직급코드가 8 이하인 경우 => 주업무 실행하기
+        } else { // 로그인 되어진 사용자의 직급이 '대표이사, 전무, 상무, 부장' 인 경우 => 주업무 실행하기
             try {
                 Object result = joinPoint.proceed();
                 

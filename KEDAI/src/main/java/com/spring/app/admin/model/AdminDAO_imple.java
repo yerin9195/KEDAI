@@ -56,6 +56,27 @@ public class AdminDAO_imple implements AdminDAO {
 
 	///////////////////////////////////////////////////////////////
 	
+	// 부서별 인원통계
+	@Override
+	public List<Map<String, String>> empCntByDeptname() {
+		List<Map<String, String>> deptnamePercentageList = sqlsession.selectList("admin.empCntByDeptname");
+		return deptnamePercentageList;
+	}
+	
+	// 성별 인원통계
+	@Override
+	public List<Map<String, String>> empCntByGender() {
+		List<Map<String, String>> genderPercentageList = sqlsession.selectList("admin.empCntByGender");
+		return genderPercentageList;
+	}
+	
+	// 부서별 성별 인원통계
+	@Override
+	public List<Map<String, String>> genderCntSpecialDeptname(String dept_name) {
+		List<Map<String, String>> genderPercentageList = sqlsession.selectList("admin.genderCntSpecialDeptname", dept_name);
+		return genderPercentageList;
+	}
+		
 	// 해당 페이지에 접속한 이후에, 페이지에 접속한 페이지URL, 사용자ID, 접속IP주소, 접속시간을 기록으로 DB에 tbl_empManager_accessTime 테이블에 insert 하기 
 	@Override
 	public void insert_accessTime(Map<String, String> paraMap) {
@@ -69,9 +90,4 @@ public class AdminDAO_imple implements AdminDAO {
 		return pageurlEmpnameList;
 	}
 
-	
-	
-	
-	
-	
 }

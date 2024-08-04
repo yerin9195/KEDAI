@@ -57,6 +57,42 @@ public class AdminService_imple implements AdminService {
 
 	///////////////////////////////////////////////////////////////
 	
+	// 부서별 인원통계
+	@Override
+	public List<Map<String, String>> empCntByDeptname() {
+		List<Map<String, String>> deptnamePercentageList = dao.empCntByDeptname();
+		return deptnamePercentageList;
+	}
+	
+	// 성별 인원통계
+	@Override
+	public List<Map<String, String>> empCntByGender() {
+		List<Map<String, String>> genderPercentageList = dao.empCntByGender();
+		return genderPercentageList;
+	}
+	
+	// 부서별 성별 인원통계
+	@Override
+	public String genderCntSpecialDeptname(String dept_name) {
+		List<Map<String, String>> genderPercentageList = dao.genderCntSpecialDeptname(dept_name);
+		
+		JsonArray jsonArr = new JsonArray();
+		
+		if(genderPercentageList != null && genderPercentageList.size() > 0) {
+			for(Map<String, String> map : genderPercentageList) {
+				JsonObject jsonObj = new JsonObject();
+				jsonObj.addProperty("gender", map.get("gender"));
+				jsonObj.addProperty("cnt", map.get("cnt"));
+				jsonObj.addProperty("percentage", map.get("percentage"));
+			
+				jsonArr.add(jsonObj);
+			}  // end of for ----------
+		}
+		
+		Gson gson = new Gson();
+		return gson.toJson(jsonArr);
+	}
+		
 	// 해당 페이지에 접속한 이후에, 페이지에 접속한 페이지URL, 사용자ID, 접속IP주소, 접속시간을 기록으로 DB에 tbl_empManager_accessTime 테이블에 insert 하기  
 	@Override
 	public void insert_accessTime(Map<String, String> paraMap) {
@@ -66,7 +102,6 @@ public class AdminService_imple implements AdminService {
 	// 페이지별 사원 접속통계
 	@Override
 	public String pageurlEmpname() {
-		
 		List<Map<String, String>> pageurlEmpnameList = dao.pageurlEmpname();
 		
 		JsonObject jsonObj = new JsonObject(); // {}
@@ -101,10 +136,5 @@ public class AdminService_imple implements AdminService {
 		
 		return gson.toJson(jsonObj);
 	}
-
-	
-
-	
-	
 	
 }
