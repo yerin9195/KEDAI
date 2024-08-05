@@ -85,7 +85,7 @@ public class AdminService_imple implements AdminService {
 				jsonObj.addProperty("cnt", map.get("cnt"));
 				jsonObj.addProperty("percentage", map.get("percentage"));
 			
-				jsonArr.add(jsonObj);
+				jsonArr.add(jsonObj); 
 			}  // end of for ----------
 		}
 		

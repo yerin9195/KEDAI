@@ -616,7 +616,6 @@
 		
 		<div class="col-3" style="border: 0px solid red; background: #2c4459; text-align: center; color: #fff;">
 			<div class="mt-5" style="width: 180px; height: 180px; overflow: hidden; display: inline-block;">
-				<img alt="img" style="width: 100%; height: 100%; border-radius: 50%;" src="<%= ctxPath%>/resources/images/member/${(sessionScope.loginuser).orgimgfilename}">
 				<img alt="img" style="width: 100%; height: 100%; border-radius: 50%;" src="<%= ctxPath%>/resources/files/employees/${(sessionScope.loginuser).imgfilename}">
 			</div>
 			<div class="mt-3">

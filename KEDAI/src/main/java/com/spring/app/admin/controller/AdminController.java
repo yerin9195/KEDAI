@@ -350,5 +350,4 @@ public class AdminController {
 		return service.pageurlEmpname();
 	}
 	
-
 }
