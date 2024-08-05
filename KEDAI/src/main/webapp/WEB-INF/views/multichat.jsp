@@ -78,7 +78,10 @@ body, html {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	margin-top: 20px;
+	width:800px;
+	height: 300px;
+	margin-right: 50px;
+	
 }
 
 .message_body{
@@ -123,8 +126,16 @@ body, html {
 
 #chatting_box {
 	width: 900px;
-	height: 1200px;
+	height: 890px;
+	
 }
+
+
+
+
+
+
+
 
 </style> 
 
@@ -434,7 +445,7 @@ body, html {
 
 <div class="container-fluid" style="width: 80%; height:90%; border-radius: 10px;">
    <div class="message_body">
-      <div class="row" id="chatting_box" style="border: 1px solid black; border-radius: 10px; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);">
+      <div class="row" id="chatting_box" style="border: 1px solid black; width: 890px; height: 890px; border-radius: 10px; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);">
          <div class="col-md-12 offset-md-1" style="overflow:hidden;">
             <div id="chatStatus"></div>
                <div style="width:100%;">
@@ -451,11 +462,12 @@ body, html {
              		   ☆현재접속자명단:<br/>
                <div id="connectingUserList" style="max-height: 100px; overFlow-y: auto; position:fixed;"></div>
                
-               <div id="chatMessage" style="max-height: 500px; overFlow: auto; margin: 15px 0;"></div>
-               <div class="message_container">
-                  <input type="text" id="message" class="form-control" width="80%;" placeholder="메시지 내용"/>
+               <div id="chatMessage" style="max-height: 500px; overFlow: auto;"></div>
+               
+               <div class="message_container" style="border: 0px solid red; position: fixed; bottom: -16%; right: 50px; transform: translateX(-40%);">
+                  <input type="text" id="message" class="form-control" width="100px;" placeholder="메시지 내용"/>
                   
-                  <div class = "button_group" style="margin-bottom: 3%;">
+                  <div class = "button_group">
                      <input type="button" id="btnSendMessage" class="btn btn-success btn-sm my-3" value="메시지보내기" />
                      <input type="button" id="btnExitMessage" class="btn btn-danger btn-sm my-3 mx-3" onclick="javascript:location.href='<%=request.getContextPath() %>/index.kedai'" value="채팅방나가기" />
                   </div> 
