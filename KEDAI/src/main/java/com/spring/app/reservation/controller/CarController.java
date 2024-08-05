@@ -968,7 +968,8 @@ public class CarController {
 
 		// 날짜 넘겨주기
 		String date = request.getParameter("date");
-//		System.out.println("~~~ 확인용 date : " + date);
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		System.out.println("~~~ 우하하하하하 ######## 확인용 date : " + date);
 //		~~~ 확인용 date : 2024-08-08
 		mav.addObject("date", date);
 		
@@ -992,7 +993,20 @@ public class CarController {
 //		System.out.println("~~~ 확인용 : " + totalCount);
 		totalPage = (int) Math.ceil((double) totalCount / sizePerPage);
 		// (double)124/10 => 12.4 ==> Math.ceil(12.4) => 13.0 ==> (int)13.0 ==> 13
+		if (str_currentShowPageNo == null) {
+			currentShowPageNo = 1; // 게시판에 보여지는 초기화면
+		} else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
 
+				if (currentShowPageNo < 1 || currentShowPageNo > totalPage) { // "GET" 방식이므로 0 또는 음수나 실제 데이터베이스에 존재하는
+																				// 페이지수 보다 더 큰값을 입력하여 장난친 경우
+					currentShowPageNo = 1;
+				}
+			} catch (Exception e) { // "GET" 방식이므로 숫자가 아닌 문자를 입력하여 장난친 경우
+				currentShowPageNo = 1;
+			}
+		}
 
 		// 가져올 게시글의 범위 => 공식 적용하기
 		int startRno = ((currentShowPageNo - 1) * sizePerPage) + 1; // 시작 행번호
@@ -1025,12 +1039,13 @@ public class CarController {
 		// [맨처음][이전] 만들기
 		if (pageNo != 1) { // 맨처음 페이지일 때는 보이지 않도록 한다.
 			pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='" + url
-					+ "?currentShowPageNo=1'>[처음]</a></li>";
+					+ "?currentShowPageNo=1&date="+ date + "&res_num=" + res_num+"'>[처음]</a></li>";
 			pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='" + url
-					+ "?currentShowPageNo=" + (pageNo - 1)
+					+ "?currentShowPageNo=" + (pageNo - 1) + "&date=" + date + "&res_num=" + res_num
 					+ "'>[이전]</a></li>";
 		}
 
+		System.out.println("~~~~ 확인용 : " + currentShowPageNo);
 		while (!(loop > blockSize || pageNo > totalPage)) {
 
 			if (pageNo == currentShowPageNo) {
@@ -1038,9 +1053,9 @@ public class CarController {
 						+ pageNo + "</li>";
 			} else {
 				pageBar += "<li style='display: inline-block; width: 30px; font-size: 12pt;'><a href='" + url
-						+ "?currentShowPageNo=" + pageNo
+						+ "?currentShowPageNo=" + pageNo + "&date=" + date+ "&res_num=" + res_num
 						+ "' style='color: #2c4459;'>" + pageNo + "</a></li>";
-			}
+			}                         
 
 			loop++;
 			pageNo++;
@@ -1049,10 +1064,10 @@ public class CarController {
 		// [다음][마지막] 만들기
 		if (pageNo <= totalPage) { // 맨마지막 페이지일 때는 보이지 않도록 한다.
 			pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='" + url
-					+ "?currentShowPageNo=" + pageNo
+					+ "?currentShowPageNo=" + pageNo + "&date=" + date + "&res_num=" + res_num
 					+ "' style='color: #2c4459;'>[다음]</a></li>";
 			pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='" + url
-					+ "?currentShowPageNo=" + totalPage
+					+ "?currentShowPageNo=" + totalPage + "&date=" + date + "&res_num=" + res_num
 					+ "' style='color: #2c4459;'>[마지막]</a></li>";
 		}
 
@@ -1196,7 +1211,7 @@ public class CarController {
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		String empid = loginuser.getEmpid();
-		
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 		// car테이블에서 mycar정보 가져오기
 		List<Map<String, String>> owner_SettlementList = service.owner_SettlementList(empid);
 		
@@ -1219,7 +1234,20 @@ public class CarController {
 		int startRno = ((currentShowPageNo - 1) * sizePerPage) + 1; // 시작 행번호
 		int endRno = startRno + sizePerPage - 1; // 끝 행번호
 
-		
+		if (str_currentShowPageNo == null) {
+			currentShowPageNo = 1; // 게시판에 보여지는 초기화면
+		} else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+
+				if (currentShowPageNo < 1 || currentShowPageNo > totalPage) { // "GET" 방식이므로 0 또는 음수나 실제 데이터베이스에 존재하는
+																				// 페이지수 보다 더 큰값을 입력하여 장난친 경우
+					currentShowPageNo = 1;
+				}
+			} catch (Exception e) { // "GET" 방식이므로 숫자가 아닌 문자를 입력하여 장난친 경우
+				currentShowPageNo = 1;
+			}
+		}
 		
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));
@@ -1243,7 +1271,7 @@ public class CarController {
 		// 세번째 블럭의 페이지번호 시작값(pageNo)은 11 => ((11-1)/5)*5+1 => 11
 
 		String pageBar = "<ul style='list-style: none;'>";
-		String url = "owner_Status_detail.kedai";
+		String url = "owner_Settlement.kedai";
 
 		// [맨처음][이전] 만들기
 		if (pageNo != 1) { // 맨처음 페이지일 때는 보이지 않도록 한다.

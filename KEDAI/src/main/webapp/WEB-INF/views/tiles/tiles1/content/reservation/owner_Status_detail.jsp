@@ -478,9 +478,9 @@ $(document).ready(function(){
                     <th style="width: 175px; text-align: center; border: none;">출발지</th>
 					<th style="width: 10px; text-align: center; border: none;"><i class="fa-solid fa-arrow-right"></i></th>
 					<th style="width: 175px; text-align: center; border: none;">도착지</th>
-					<th style="width: 175px; text-align: center;">출발시간</th>
+					<th style="width: 100px; text-align: center;">출발시간</th>
                     <th style="width: 20px; text-align: center;">승인</th>
-                    <th style="width: 130px; text-align: center;">거부(사유)</th>
+                    <th style="width: 205px; text-align: center;">거부(사유)</th>
                     <th style="width: 50px; text-align: center;">미승인</th>
                     <th style="width: 50px; text-align: center;">알림보내기</th>
                 </tr>

@@ -135,6 +135,7 @@ public class CarDAO_imple implements CarDAO {
 	@Override
 	public List<Map<String, Object>> getowner_dateInfo(String date) {
 		List<Map<String, Object>> owner_dateInfo = sqlsession.selectList("reservation.getowner_dateInfo", date);
+		System.out.println("~~~~~~ 도현아~!! 울지마라 ㅎㅎㅎ  " + date);
 		return owner_dateInfo;
 	}
 
