@@ -291,7 +291,9 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
      // %tl              시간을 1~12 으로 출력
      // %tM              분을 00~59 으로 출력
      
+
 	//  System.out.println("message.type:" + messageVO.getType() + ", to: " + messageVO.getTo());
+
      	for(WebSocketSession webSocketSession : connectedUsers) { 
     	 	if("all".equals(messageVO.getType())) {
              // 채팅할 대상이 "전체" 일 경우
@@ -315,7 +317,10 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
     	 		// webSocketSession 은 웹소켓서버에 연결한 모든 클라이언트중 하나이며, 그 클라이언트의 웹소켓의 고유한 id 값을 알아오는 것임. 
              
     	 		if(messageVO.getTo().equals(ws_id)) { 
-	    	 		// System.out.println("one - webSocketSession.getId():" + webSocketSession.getId());
+
+
+	    	 		//  System.out.println("one - webSocketSession.getId():" + webSocketSession.getId());
+
     	 			// messageVO.getTo() 는 클라이언트가 보내온 귓속말대상웹소켓.getId() 임. 
     	 			webSocketSession.sendMessage(
                		

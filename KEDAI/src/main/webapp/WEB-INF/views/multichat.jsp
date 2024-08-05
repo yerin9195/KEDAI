@@ -87,6 +87,8 @@ body, html {
 .message_body{
 	
 }
+
+/*
 #speechbubble{
 
 .tooltip{
@@ -100,6 +102,7 @@ body, html {
   border-color:  transparent transparent transparent #555;
 }
 }
+*/
 
 /* common header에 있는 말풍선 참고하기 tooltip */
 
@@ -180,6 +183,8 @@ body, html {
 	    // alert("url : " + url);
 	    // url : 192.168.0.210:9099
 	    
+	    // const url = "192.168.0.210:9099";
+	    
 	    const pathname = window.location.pathname;	// 최초 '/' 부터 오른쪽에 있는 모든 경로를 알려준다. 
 	    // alert("pathname : " + pathname);
 	   // pathname : /KEDAI/chatting/multichat.kedai
@@ -258,7 +263,6 @@ body, html {
     	   else if(event.data.substr(0,1)=="⊇"){
     		  $("tbody#tbody").html(event.data);  
     	   }
-    	   
            else {
            // 	event.data 는 수신받은 채팅 문자이다.
            		$("div#chatMessage").append(event.data);
@@ -283,6 +287,7 @@ body, html {
         let isOnlyOneDialog = false; // 귀속말 여부. true 이면 귀속말, false 이면 모두에게 공개되는 말 
        
         $("input#btnSendMessage").click(function(){
+        	
           if( $("input#message").val().trim() != "" ) {
              
           	// ==== 자바스크립트에서 replace를 replaceAll 처럼 사용하기 ====
@@ -302,13 +307,13 @@ body, html {
                // 또는
                messageObj = {}; // 자바스크립트 객체 생성함. 
                messageObj.message = messageVal;
+               messageObj.message = "all";
+               messageObj.message = "all";
+               
                const to = $("input#to").val();
-               if( to != "" || isOnlyOneDialog){
+               if( to != "" ){
                   	messageObj.type = "one";
                   	messageObj.to = to;
-               } else {
-                   messageObj.type = "all";
-                   messageObj.to = "all";
                }
                
                websocket.send(JSON.stringify(messageObj));
@@ -407,8 +412,7 @@ body, html {
     	   })
     	   
        })
-       
-       
+
 	}); // end of $(document).ready(function(){}---------------------------------------
 
 
