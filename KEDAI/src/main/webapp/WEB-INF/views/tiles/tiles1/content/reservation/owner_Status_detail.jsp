@@ -468,7 +468,7 @@ $(document).ready(function(){
 	</ul>
 	<div id="container">
 		<h2 style="margin: auto; padding-bottom: 0.5%;">${requestScope.date}</h2>
-	    <div id="dmap" style="height:350px; margin-bottom:0.5%;"></div>	
+	    <div id="dmap" style="height:400px; margin-bottom:0.5%;"></div>	
 	    <div id="in-container" style="border: 0px solid red;">
 		<table style="margin: auto;" class="table table-bordered">
             <thead>
