@@ -50,13 +50,13 @@ div#cover_all{
 
 
 div#othercom_list .artWrap article {
-	width: calc(33.33% - 20px);
+	width: 300px;
 
   background-color: #fff;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
   padding-bottom: 20px;
   border-radius: 10px;
-  flex: 1 1 calc(33.33% - 20px);
+  flex: 1 1 calc(33.33333% - 20px);
 }
 
 div#othercom_list .artWrap article:nth-of-type(3) ~ article {

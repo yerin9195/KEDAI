@@ -523,6 +523,7 @@ bigName{
 				if($("select[name='searchType']").val() == "dept_name" ||
 				   $("select[name='searchType']").val() == "job_name" ||
 				   $("select[name='searchType']").val() == "name" ||
+				   $("select[name='searchType']").val() == "nickname" ||
 				   $("select[name='searchType']").val() == "mobile"){
 					
 					$.ajax({
@@ -654,6 +655,7 @@ bigName{
 						<option value="dept_name">부서</option>
 						<option value="job_name">직위</option>
 						<option value="name">이름</option>
+						<option value="nickname">닉네임</option>
 						<option value="mobile">휴대폰번호</option>
 					</select>
 					
@@ -728,7 +730,7 @@ bigName{
 		</div>	
 	</div>		
 				            
-	<div align="center" style="border: solid 1px gray; width: 50%; margin: 2% auto;  height: 100px;">
+	<div align="center" style="border: solid 0px gray; width: 50%; margin: 2% auto;  height: 100px;">
 		${requestScope.pageBar}
 	</div>
 

@@ -22,6 +22,7 @@ body, html {
   display: flex;
   justify-content: center; /* 수평 중앙 정렬 */
   align-items: center; /* 수직 중앙 정렬 */
+  overflow: hidden;
 }
 #chatStatus {
   background-color: #f1f1f1; /* 배경 색상 설정 */
@@ -111,10 +112,19 @@ body, html {
 
 
 #btnSendMessage #btnExitMessage{
-	margin-bottom: 150%;
+	margin-bottom: 120%;
 }
 
+#chatStatus {
+	border-radius: 10px;
+	font-weight: 700;
+	color: #2c4459;
+}
 
+#chatting_box {
+	width: 900px;
+	height: 1200px;
+}
 
 </style> 
 
@@ -351,7 +361,7 @@ body, html {
           */
           
           const ws_id = $(this).prev().text();
-          console.log("prev-text : " + ws_id);
+       // console.log("prev-text : " + ws_id);
        // alert(ws_id);
           $("input#to").val(ws_id); 
            
@@ -422,9 +432,9 @@ body, html {
 	</table>
 </div>
 
-<div class="container-fluid" style="border: 1px solid blue; width: 80%; height:90%;">
+<div class="container-fluid" style="width: 80%; height:90%; border-radius: 10px;">
    <div class="message_body">
-      <div class="row">
+      <div class="row" id="chatting_box" style="border: 1px solid black; border-radius: 10px; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);">
          <div class="col-md-12 offset-md-1" style="overflow:hidden;">
             <div id="chatStatus"></div>
                <div style="width:100%;">
@@ -439,13 +449,13 @@ body, html {
                   <button type="button" id="btnAllDialog" class="btn btn-secondary btn-sm">귀속말대화끊기</button>
                <br><br>
              		   ☆현재접속자명단:<br/>
-               <div id="connectingUserList" style="max-height: 100px; overFlow: auto; position:fixed;"></div>
+               <div id="connectingUserList" style="max-height: 100px; overFlow-y: auto; position:fixed;"></div>
                
-               <div id="chatMessage" style="max-height: 500px; overFlow: auto; margin: 20px 0;"></div>
+               <div id="chatMessage" style="max-height: 500px; overFlow: auto; margin: 15px 0;"></div>
                <div class="message_container">
                   <input type="text" id="message" class="form-control" width="80%;" placeholder="메시지 내용"/>
                   
-                  <div class = "button_group">
+                  <div class = "button_group" style="margin-bottom: 3%;">
                      <input type="button" id="btnSendMessage" class="btn btn-success btn-sm my-3" value="메시지보내기" />
                      <input type="button" id="btnExitMessage" class="btn btn-danger btn-sm my-3 mx-3" onclick="javascript:location.href='<%=request.getContextPath() %>/index.kedai'" value="채팅방나가기" />
                   </div> 

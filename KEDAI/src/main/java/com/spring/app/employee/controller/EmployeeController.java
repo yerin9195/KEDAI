@@ -138,6 +138,7 @@ public class EmployeeController {
 		if("dept_name".equals(searchType) ||
 		   "job_name".equals(searchType)  ||
 		   "name".equals(searchType)	  ||
+		   "nickname".equals(searchType)	  ||
 		   "mobile".equals(searchType)) {
 			mav.addObject("paraMap" , paraMap);
 		}

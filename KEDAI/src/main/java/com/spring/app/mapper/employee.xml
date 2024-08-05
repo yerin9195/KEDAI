@@ -116,6 +116,9 @@
 			<when test='searchType == "name" and searchWord != ""'>
 			AND lower(name) like '%'||lower(#{searchWord})||'%'
 			</when>
+			<when test='searchType == "nickname" and searchWord != ""'>
+			AND lower(nickname) like '%'||lower(#{searchWord})||'%'
+			</when>
 			<when test='searchType == "mobile" and searchWord != ""'>
 			AND lower(mobile) like '%'||lower(#{searchWord})||'%'
 			</when>
@@ -193,6 +196,9 @@
 		<when test='searchType == "name" and searchWord != ""'>
 		AND lower(name)like '%'||lower(#{searchWord})||'%'
 		</when>
+		<when test='searchType == "nickname" and searchWord != ""'>
+		AND lower(nickname)like '%'||lower(#{searchWord})||'%'
+		</when>
 		<when test='searchType == "mobile" and searchWord != ""'>
 		and lower(mobile) like '%'||lower(#{searchWord})||'%'
 		</when>
@@ -241,6 +247,9 @@
 			<when test='searchType == "name"'>
 				select name
 			</when>
+			<when test='searchType == "nickname"'>
+				select nickname
+			</when>
 			<when test='searchType == "mobile"'>
 				select mobile
 			</when>
@@ -257,6 +266,9 @@
 			</when>
 			<when test='searchType == "name" and searchWord != ""'>
 				where lower(name) like '%' ||lower(#{searchWord})|| '%'
+			</when>
+			<when test='searchType == "nickname" and searchWord != ""'>
+				where lower(nickname) like '%' ||lower(#{searchWord})|| '%'
 			</when>
 			<when test='searchType == "mobile" and searchWord != ""'>
 				where lower(mobile) like '%' ||lower(#{searchWord})|| '%'
