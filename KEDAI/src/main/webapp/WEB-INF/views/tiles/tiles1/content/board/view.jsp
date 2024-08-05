@@ -126,7 +126,7 @@
 						<button type="button" class="btn mr-3 view_btn" onclick="javascript:location.href='<%= ctxPath%>/board/del.kedai?board_seq=${requestScope.bvo.board_seq}'">삭제</button>
 					</c:if>
 					
-					<c:if test="${not empty sessionScope.loginuser && sessionScope.loginuser.fk_job_code <= 6}">
+					<c:if test="${not empty sessionScope.loginuser && sessionScope.loginuser.fk_job_code <= 7}"> <!-- 사원을 제외한 모든 직급 -->
 						<button type="button" class="btn mr-3 view_btn" onclick="javascript:location.href='<%= ctxPath%>/board/add.kedai?subject=${requestScope.bvo.subject}&groupno=${requestScope.bvo.groupno}&fk_seq=${requestScope.bvo.board_seq}&depthno=${requestScope.bvo.depthno}'">답변글쓰기</button>
 					</c:if>
 				</div>
