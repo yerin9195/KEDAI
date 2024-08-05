@@ -100,6 +100,10 @@
 		ORDER BY gender
 	</select>
 	
+	<select id="empCntByGenderHireYear">
+		
+	</select>
+	
 	<insert id="insert_accessTime" parameterType="HashMap">
 		insert into tbl_empManager_accessTime(accessTime_seq, pageUrl, fk_empid, clientIP, accessTime)
 		values(empManager_accessTime_seq.nextval, #{pageUrl}, #{fk_empid}, #{clientIP}, #{accessTime})

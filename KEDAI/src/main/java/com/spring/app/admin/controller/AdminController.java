@@ -342,6 +342,14 @@ public class AdminController {
 		return service.genderCntSpecialDeptname(dept_name);
 	}
 	
+	// 입사년도별 성별 인원통계
+	@ResponseBody
+	@GetMapping(value="chart/empCntByGenderHireYear.kedai", produces="text/plain;charset=UTF-8")
+	public String empCntByGenderHireYear() {
+		
+		return service.empCntByGenderHireYear();
+	}
+	
 	// 페이지별 사원 접속통계
 	@ResponseBody
 	@GetMapping(value="chart/pageurlEmpname.kedai", produces="text/plain;charset=UTF-8")

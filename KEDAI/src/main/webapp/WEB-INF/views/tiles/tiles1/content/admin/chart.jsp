@@ -437,33 +437,44 @@
 						let v_html = "<table class='table table-bordered'>";
 						
 						v_html += "<tr>"+
-								  "<th style='width: 50%;'>부서명</th>"+
-								  "<th style='width: 50%;'>합계</th>"+
+								  "<th style='width: 30%; vertical-align: middle;' rowspan='2'>부서명</th>"+
+								  "<th style='width: 50%;' colspan='2'>성별</th>"+
+								  "<th style='width: 20%; vertical-align: middle;' rowspan='2'>합계</th>"+
 								  "</tr>";
-						
-					  	let totalPercentage = 0;
-					  	
-					 	$.each(json, function(index, item){
-					 		
-					 		v_html += "<tr>"+
-					 		          "<td>"+item.dept_name+"</td>"+
-					 		          "<td>"+item.percentage+"</td>"+
-					 		          "</tr>";
-					 		          
-					 		totalPercentage += parseFloat(item.percentage);
-					 	});
+								  
+						v_html += "<tr>"+
+								  "<th>남자</th>"+
+				 		          "<th>여자</th>"+
+								  "</tr>";
+					  
+						malePercentageArr = [15.15, 15.15, 9.09, 12.12, 3.03, 3.03];   // 남자 퍼센티지
+				    	femalePercentageArr = [15.15, 6.06, 12.12, 6.06, 3.03]; // 여자 퍼센티지  		  
+	                    let totalPercentage = 0; // 총 퍼센트 변수 초기화
+
+	                    $.each(json, function(index2, item2) {
+	                        const malePercentage = malePercentageArr[index2] !== undefined ? malePercentageArr[index2] : '';
+	                        const femalePercentage = femalePercentageArr[index2] !== undefined ? femalePercentageArr[index2] : '';
+
+	                        v_html += "<tr>"+
+	                                  "<td>"+item2.dept_name+"</td>"+
+	                                  "<td>"+malePercentage+"</td>"+
+	                                  "<td>"+femalePercentage+"</td>"+
+	                                  "<td>"+item2.percentage+"</td>"+
+	                                  "</tr>";
+	                        
+	                        totalPercentage += parseFloat(item2.percentage);
+	                    });
 					 	
 					 	totalPercentage = isNaN(totalPercentage)?'Invalid':totalPercentage.toFixed(1);
 					 	
 					 	v_html += "<tr style='font-weight: bold;'>"+
-					 			  "<td>합계</td>"+
+					 			  "<td colspan='3'>합계</td>"+
 					 			  "<td>"+totalPercentage+"</td>"+
 					 	          "</tr>";
 					 	
 					 	v_html += "</table>";
 					 	
 					 	$("div#table_container").html(v_html);
-						
 		    		},
 			    	error: function(request, status, error){
 					   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -471,7 +482,7 @@
 				});
 			
 				break;
-		<%--		
+				
 			case "genderHireYear": // 입사년도별 성별 인원통계
 				$.ajax({
 					url:"<%= ctxPath%>/admin/chart/empCntByGenderHireYear.kedai",
@@ -486,7 +497,7 @@
 				});
 			
 				break; 
-		--%>		
+				
 			case "pageurlEmpname": // 페이지별 사원 접속통계
 				$.ajax({
 					url:"<%= ctxPath%>/admin/chart/pageurlEmpname.kedai",

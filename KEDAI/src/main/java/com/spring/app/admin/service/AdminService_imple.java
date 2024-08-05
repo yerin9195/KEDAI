@@ -76,11 +76,11 @@ public class AdminService_imple implements AdminService {
 	public String genderCntSpecialDeptname(String dept_name) {
 		List<Map<String, String>> genderPercentageList = dao.genderCntSpecialDeptname(dept_name);
 		
-		JsonArray jsonArr = new JsonArray();
+		JsonArray jsonArr = new JsonArray(); // []
 		
 		if(genderPercentageList != null && genderPercentageList.size() > 0) {
 			for(Map<String, String> map : genderPercentageList) {
-				JsonObject jsonObj = new JsonObject();
+				JsonObject jsonObj = new JsonObject(); // {}
 				jsonObj.addProperty("gender", map.get("gender"));
 				jsonObj.addProperty("cnt", map.get("cnt"));
 				jsonObj.addProperty("percentage", map.get("percentage"));
@@ -88,6 +88,24 @@ public class AdminService_imple implements AdminService {
 				jsonArr.add(jsonObj); 
 			}  // end of for ----------
 		}
+		
+		Gson gson = new Gson();
+		return gson.toJson(jsonArr);
+	}
+	
+	// 입사년도별 성별 인원통계
+	@Override
+	public String empCntByGenderHireYear() {
+		List<Map<String, String>> genderHireYearList = dao.empCntByGenderHireYear();
+		
+		JsonArray jsonArr = new JsonArray(); // []
+		
+		for(Map<String, String> map : genderHireYearList) {
+			JsonObject jsonObj = new JsonObject(); // {}
+			
+			
+			jsonArr.add(jsonObj); 
+		} // end of for ----------
 		
 		Gson gson = new Gson();
 		return gson.toJson(jsonArr);
