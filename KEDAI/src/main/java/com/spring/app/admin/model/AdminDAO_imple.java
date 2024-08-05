@@ -1,6 +1,7 @@
 package com.spring.app.admin.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +53,41 @@ public class AdminDAO_imple implements AdminDAO {
 		int n = sqlsession.insert("admin.empRegister", mvo);	
 		return n;
 	}
+
+	///////////////////////////////////////////////////////////////
 	
+	// 부서별 인원통계
+	@Override
+	public List<Map<String, String>> empCntByDeptname() {
+		List<Map<String, String>> deptnamePercentageList = sqlsession.selectList("admin.empCntByDeptname");
+		return deptnamePercentageList;
+	}
 	
+	// 성별 인원통계
+	@Override
+	public List<Map<String, String>> empCntByGender() {
+		List<Map<String, String>> genderPercentageList = sqlsession.selectList("admin.empCntByGender");
+		return genderPercentageList;
+	}
 	
+	// 부서별 성별 인원통계
+	@Override
+	public List<Map<String, String>> genderCntSpecialDeptname(String dept_name) {
+		List<Map<String, String>> genderPercentageList = sqlsession.selectList("admin.genderCntSpecialDeptname", dept_name);
+		return genderPercentageList;
+	}
+		
+	// 해당 페이지에 접속한 이후에, 페이지에 접속한 페이지URL, 사용자ID, 접속IP주소, 접속시간을 기록으로 DB에 tbl_empManager_accessTime 테이블에 insert 하기 
+	@Override
+	public void insert_accessTime(Map<String, String> paraMap) {
+		sqlsession.insert("admin.insert_accessTime", paraMap);	
+	}
 	
+	// 페이지별 사원 접속통계
+	@Override
+	public List<Map<String, String>> pageurlEmpname() {
+		List<Map<String, String>> pageurlEmpnameList = sqlsession.selectList("admin.pageurlEmpname");
+		return pageurlEmpnameList;
+	}
+
 }

@@ -1,6 +1,9 @@
 package com.spring.app.aop;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -17,11 +20,13 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.MyUtil;
 import com.spring.app.domain.MemberVO;
+import com.spring.app.admin.service.AdminService;
 import com.spring.app.board.service.BoardService;
 import com.spring.app.member.service.IndexService;
 
@@ -155,4 +160,79 @@ public class CommonAop {
 	}
 	
 	///////////////////////////////////////////////////////////////
+	
+	// ==== Around Advice(보조업무) 만들기 ==== // "주 업무를 하기 전후에 ~~"
+	@Pointcut("execution(public * com.spring.app..*Controller.empmanager_*(..) )")
+	public void empmanager() {}
+	
+	@Autowired
+	AdminService adminService;
+	
+	// Around Advice(공통관심사, 보조업무)를 구현
+	// 주업무를 실행하는 데 있어서 권한이 있는지를 알아보는 것을 보조업무로 보겠다.  
+	// 해당 페이지에 접속한 이후에, 페이지에 접속한 페이지URL, 사용자ID, 접속IP주소, 접속시간을 기록으로 DB에 tbl_empManager_accessTime 테이블에 insert 하도록 한다.  
+	@Around("empmanager()")
+    public Object checkAuthority(ProceedingJoinPoint joinPoint) throws Throwable { // 권한 검사하기
+        
+        // 보조업무 1 시작
+        HttpServletRequest request = (HttpServletRequest) joinPoint.getArgs()[0];
+        HttpSession session = request.getSession();
+        MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+        
+        if (loginuser == null || Integer.parseInt(loginuser.getFk_job_code()) > 5) { // 권한 설정 => 대표이사, 전무, 상무, 부장
+            // 권한이 없는 경우
+            String message = "접근할 수 있는 권한이 없습니다.";
+            String loc;
+            
+            if (loginuser == null) { // 로그인하지 않은 경우
+                loc = request.getContextPath() + "/login.kedai"; // 로그인 페이지로 이동
+            } else { // 로그인은 했지만 직급코드가 8 이상인 경우
+                loc = "javascript:history.back()"; // 이전 페이지로 이동
+            }
+            
+            request.setAttribute("message", message);
+            request.setAttribute("loc", loc);
+            
+            // ModelAndView를 생성하여 반환
+            ModelAndView mav = new ModelAndView("msg"); 
+            return mav;
+            
+        } else { // 로그인 되어진 사용자의 직급이 '대표이사, 전무, 상무, 부장' 인 경우 => 주업무 실행하기
+            try {
+                Object result = joinPoint.proceed();
+                
+                if (result instanceof ModelAndView) { // 반환된 결과가 ModelAndView 인 경우
+                    ModelAndView mav = (ModelAndView) result;
+                    
+                    // 열람 기록을 남겨준다.
+                    recordAccess(request, loginuser);
+                    return mav; // ModelAndView 반환
+                    
+                } else { // ModelAndView가 아닌 경우 처리
+                    recordAccess(request, loginuser);
+                    return result; // 그대로 반환
+                }
+            } catch (Throwable e) { // 주업무가 실패한 경우
+                e.printStackTrace();
+                return "tiles1/error";
+            }
+        }
+    }
+
+    private void recordAccess(HttpServletRequest request, MemberVO loginuser) {
+        // 보조업무 2 시작
+        // DB 에 insert 하기
+        Map<String, String> paraMap = new HashMap<>();
+        paraMap.put("pageUrl", request.getContextPath() + MyUtil.getCurrentURL(request)); // 현재 페이지 알아와서 Map 에 담아준다.
+        paraMap.put("fk_empid", loginuser.getEmpid());
+        paraMap.put("clientIP", request.getRemoteAddr()); // request.getRemoteAddr() 이 WAS 에 접속한 클라이언트 IP 주소이다.
+        
+        Date now = new Date();
+        SimpleDateFormat sdfrmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String accessTime = sdfrmt.format(now);
+        paraMap.put("accessTime", accessTime);
+        
+        adminService.insert_accessTime(paraMap);
+    }
+	
 }

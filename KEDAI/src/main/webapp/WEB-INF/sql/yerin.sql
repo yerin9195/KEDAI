@@ -326,7 +326,7 @@ commit;
 
 select *
 from tbl_employees
-where fk_dept_code = '300'
+where fk_dept_code = '100'
 order by fk_job_code;
 
 update tbl_employees set fk_job_code = 1
@@ -735,3 +735,132 @@ WHERE ROWNUM = 1;
 select 
 from tbl_employees
 where empid = '2010001-001'
+
+-----------------------------------------------------------------------
+
+-- 부서별 인원통계
+select count(*) 
+from tbl_employees
+
+select NVL(dept_name, '부서없음') AS dept_name
+     , count(*) AS cnt
+     , round(count(*) / (select count(*) from tbl_employees) * 100, 2) AS percentage
+from tbl_employees E LEFT JOIN tbl_dept D
+ON E.fk_dept_code = D.dept_code
+group by D.dept_name
+order by cnt desc, dept_name asc;
+
+-- 성별 인원통계
+select func_gender(jubun) AS gender
+from tbl_employees
+
+SELECT gender
+     , count(*) AS cnt
+     , round(count(*) / (select count(*) from tbl_employees) * 100, 1) AS percentage
+FROM 
+(
+    select func_gender(jubun) AS gender
+    from tbl_employees
+)
+GROUP BY gender
+order by cnt desc;
+
+-- 부서별 성별 인원통계
+SELECT gender
+     , count(*) AS cnt
+     , round(count(*) / (select count(*) from tbl_employees) * 100, 2) AS percentage
+FROM
+(
+    select fk_dept_code, func_gender(jubun) AS gender
+    from tbl_employees
+) E LEFT JOIN tbl_dept D
+ON E.fk_dept_code = D.dept_code
+WHERE D.dept_name is null
+GROUP BY gender
+ORDER BY gender;
+
+-----------------------------------------------------------------------
+
+-- 페이지별 사원 접속통계
+create table tbl_empManager_accessTime
+(accessTime_seq  number
+,pageUrl         varchar2(150) not null
+,fk_empid        varchar2(30)  not null
+,clientIP        varchar2(30)  not null
+,accessTime      varchar2(20)  default sysdate not null
+,constraint PK_tbl_empManager_accessTime primary key(accessTime_seq)
+,constraint FK_tbl_empManager_accessTime foreign key(fk_empid) references tbl_employees(empid)
+);
+-- Table TBL_EMPMANAGER_ACCESSTIME이(가) 생성되었습니다.
+
+create sequence empManager_accessTime_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence EMPMANAGER_ACCESSTIME_SEQ이(가) 생성되었습니다.
+
+comment on table tbl_empManager_accessTime
+is '페이지별 사원 접속통계 정보가 들어있는 테이블';
+-- Comment이(가) 생성되었습니다.
+
+comment on column tbl_empManager_accessTime.accessTime_seq is '접속번호'; 
+comment on column tbl_empManager_accessTime.pageUrl is '페이지(URL)주소'; 
+comment on column tbl_empManager_accessTime.fk_empid is '사원아이디'; 
+comment on column tbl_empManager_accessTime.clientIP is '사원IP주소'; 
+comment on column tbl_empManager_accessTime.accessTime is '접속시간'; 
+-- Comment이(가) 생성되었습니다.
+
+select *
+from user_tab_comments
+where table_name = 'TBL_EMPMANAGER_ACCESSTIME';
+
+select column_name, comments
+from user_col_comments
+where table_name = 'TBL_EMPMANAGER_ACCESSTIME';
+
+select * 
+from tbl_empManager_accessTime
+order by accessTime_seq desc;
+
+SELECT case 
+       when instr(PAGEURL, 'approval/main.kedai', 1, 1) > 0 then '전자결재' 
+       when instr(PAGEURL, 'pay_stub.kedai', 1, 1) > 0 then '급여명세서'
+       when instr(PAGEURL, 'roomResercation.kedai', 1, 1) > 0 then '회의실예약'
+       when instr(PAGEURL, 'board/list.kedai', 1, 1) > 0 then '게시판'
+       when instr(PAGEURL, 'community/list.kedai', 1, 1) > 0 then '커뮤니티'
+       when instr(PAGEURL, 'carShare.kedai', 1, 1) > 0 then '카쉐어'
+       when instr(PAGEURL, 'bus.kedai', 1, 1) > 0 then '통근버스'
+       when instr(PAGEURL, 'employee.kedai', 1, 1) > 0 then '사내연락망'
+       when instr(PAGEURL, 'othercom_list.kedai', 1, 1) > 0 then '거래처정보'
+       else '기타'
+       end AS PAGENAME
+     , name     
+     , CNT
+FROM 
+(
+    SELECT E.name, A.pageurl, A.cnt 
+    FROM 
+    (
+        select NVL(substr(pageurl, 1, instr(pageurl, '?', 1, 1)-1), pageurl) AS PAGEURL 
+             , fk_empid
+             , count(*) AS CNT 
+        from tbl_empManager_accessTime
+        group by NVL(substr(pageurl, 1, instr(pageurl, '?', 1, 1)-1), pageurl), fk_empid
+    ) A JOIN tbl_employees E
+    ON A.fk_empid = E.empid
+) V
+ORDER BY 1, 2;
+
+desc tbl_empManager_accessTime;
+
+insert into tbl_empManager_accessTime(accessTime_seq, pageUrl, fk_empid, clientIP, accessTime)
+values(empManager_accessTime_seq.nextval, #{pageUrl}, #{fk_empid}, #{clientIP}, #{accessTime})
+
+drop table tbl_empManager_accessTime purge;
+-- Table TBL_EMPMANAGER_ACCESSTIME이(가) 삭제되었습니다.
+drop sequence empManager_accessTime_seq;
+-- Sequence EMPMANAGER_ACCESSTIME_SEQ이(가) 삭제되었습니다.
+

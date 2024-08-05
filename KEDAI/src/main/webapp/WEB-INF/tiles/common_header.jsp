@@ -116,23 +116,23 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 
-		$("button.header_search_btn").click(function(){
-			goFind();
+		$("button.word_search_btn").click(function(){
+			goMenuFind();
 		});
 		
-		$("input.search_input").bind("keyup", function(e){
+		$("input:text[name='searchMenu']").bind("keyup", function(e){
 			if(e.keyCode == 13){
-				goFind();
+				goMenuFind();
 			}
 		});
 		
 	}); // end of $(document).ready(function(){}) ----------
 	
-	function goFind(){
+	function goMenuFind(){
 		
-		const sideMenu = $("input.search_input").val().trim();
+		const searchMenu = $("input:text[name='searchMenu']").val().trim();
 
-		if(sideMenu == ""){
+		if(searchMenu == ""){
 			alert("검색어를 입력하세요.");
 			return;
 		}
@@ -151,8 +151,8 @@
 		<a class="navbar-brand" href="<%= ctxPath%>/index.kedai"><img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver2.png" width="30%" /></a>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<form class="form-inline ml-auto my-2 mr-3 my-lg-0" style="position: relative;" autocomplete="off" name="menuFindFrm">
-	      		<input class="mr-sm-2 mb-0 search_input autocomplete" id="myInput" type="text" placeholder="Search" name="searchWord">
-	      		<button class="btn my-2 my-sm-0 header_search_btn" type="submit" style="position: absolute; right: -5%;"><img alt="btn_search" src="<%= ctxPath%>/resources/images/common/btn_search.png" width="80%" /></button>
+	      		<input class="mr-sm-2 mb-0 search_input autocomplete" id="myInput" type="text" placeholder="Search" name="searchMenu">
+	      		<button class="btn my-2 my-sm-0 word_search_btn" type="submit" style="position: absolute; right: -5%;"><img alt="btn_search" src="<%= ctxPath%>/resources/images/common/btn_search.png" width="80%" /></button>
 	    	</form>
 	    	&nbsp;&nbsp;&nbsp;
 	    	<ul class="navbar-nav">
