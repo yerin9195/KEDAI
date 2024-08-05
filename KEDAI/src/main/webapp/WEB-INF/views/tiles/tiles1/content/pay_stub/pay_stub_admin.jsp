@@ -362,48 +362,75 @@
     }
 	 
 	
-	function addNewRow() {
-		const table = document.querySelector('tbody');
-	    const newRow = table.insertRow();
-	    
-	    var today = new Date()
-	    let year = today.getFullYear(); // 년도
-	    let month = today.getMonth() + 1;  // 월
-	    let date = today.getDate();  // 날짜
-	    let seq = 1;
-	    
-	    const cellsContent = [
-	        year+'년 0'+month+'월 급여',
-	        '급여',
-	        year+'/'+month+'/02',
-	        year+'/'+month,
-	        '<button id="workListcom_btn">근무기록확정</button>',
-	        '<button id="total_bth">전체계산</button>',
-	        '인원수',
-	        '<button>조회</button>',
-	        '<button>조회</button>',
-	        '지급총액'
-	    ];
-	
-	    for (let i = 0; i < cellsContent.length; i++) {
-	        const newCell = newRow.insertCell(i);
-	        newCell.innerHTML = cellsContent[i];
-	        seq++;
-	    }
-	   
-	    // 전체계산 버튼 클릭 이벤트 바인딩
-	    newRow.querySelector('#workListcom_btn').addEventListener('click', function() {
-	    	 $('#modal1').modal("show");
-			 Memberview();
-	    });
-	    
+    function addNewRow() {
+        const table = document.querySelector('tbody');
+        const newRow = table.insertRow();
 
-	    // 전체계산 버튼 클릭 이벤트 바인딩
-	    newRow.querySelector('#total_bth').addEventListener('click', function() {
-	        $('#modal3').modal("show");
-	    });
-	    
-	}
+        // Create select elements for year and month
+        const yearSelect = document.createElement('select');
+        yearSelect.classList.add('yearSelect');
+        const monthSelect = document.createElement('select');
+        monthSelect.classList.add('monthSelect');
+
+        const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth() + 1; // Month is zero-indexed in JavaScript
+
+        // Populate year select with the past 5 years
+        for (let i = 0; i < 5; i++) {
+            const yearOption = document.createElement('option');
+            yearOption.value = currentYear - i;
+            yearOption.textContent = (currentYear - i).toString();
+            yearSelect.appendChild(yearOption);
+        }
+
+        // Populate month select with 1 to 12
+        for (let i = 1; i <= 12; i++) {
+            const monthOption = document.createElement('option');
+            monthOption.value = i < 10 ? '0' + i : i.toString();
+            monthOption.textContent = i < 10 ? '0' + i : i.toString();
+            monthSelect.appendChild(monthOption);
+        }
+
+        // Set the initial values for the select elements to the current year and month
+        yearSelect.value = currentYear.toString();
+        monthSelect.value = currentMonth < 10 ? '0' + currentMonth : currentMonth.toString();
+
+        const cellsContent = [
+            '', // This will be replaced with the select elements for year and month
+            '급여',
+            '<button id="workListcom_btn">근무기록확정</button>',
+            '<button id="total_bth">전체계산</button>',
+            '인원수',
+            '<button>조회</button>',
+            '<button>조회</button>',
+            '지급총액'
+        ];
+
+        // Append cells to the new row
+        for (let i = 0; i < cellsContent.length; i++) {
+            const newCell = newRow.insertCell(i);
+            if (i === 0) {
+                newCell.appendChild(yearSelect);
+                newCell.appendChild(document.createTextNode('년 '));
+                newCell.appendChild(monthSelect);
+                newCell.appendChild(document.createTextNode('월 급여'));
+            } else {
+                newCell.innerHTML = cellsContent[i];
+            }
+        }
+
+        // 전체계산 버튼 클릭 이벤트 바인딩
+        newRow.querySelector('#workListcom_btn').addEventListener('click', function() {
+            $('#modal1').modal("show");
+            Memberview();
+        });
+
+        // 전체계산 버튼 클릭 이벤트 바인딩
+        newRow.querySelector('#total_bth').addEventListener('click', function() {
+            $('#modal3').modal("show");
+        });
+    }
+
 	
 	//	근로 일수 저장에 따른 급여명세서 계산
 	function salary_submit(){
@@ -460,8 +487,6 @@
             <tr>
             	<th>대장명칭</th>
                 <th>급여구분</th>                
-                <th>지급일</th>
-                <th>지급연월</th>
                 <th>사전작업</th>
                 <th>급여계산</th>
                 <th>인원수</th>
@@ -471,18 +496,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-            	<td>2023년 07월 급여</td>
-                <td>급여</td>
-                <td>2023/06/02</td>
-                <td>2023/06</td>
-                <td><button id="workListcom_btn">근무기록확정</button></td>
-                <td><button id="total_bth">전체계산</button></td>
-                <td>2</td>
-                <td><button>조회</button></td>
-                <td><button>버튼</button></td>
-                <td>1,000,000</td>
-            </tr>
+           
         </tbody>
     </table>
     <br>
