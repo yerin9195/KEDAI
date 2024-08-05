@@ -122,15 +122,15 @@ public class RoomController {
 	            String endDateTime = (String) reservationData.get("endDateTime");
 
 	            // 디버깅을 위한 출력
-	            System.out.println("Received startDateTime: " + startDateTime);
-	            System.out.println("Received endDateTime: " + endDateTime);
+	            //	System.out.println("Received startDateTime: " + startDateTime);
+	            //	System.out.println("Received endDateTime: " + endDateTime);
 
 	            Date startDate = inputFormat.parse(startDateTime);
 	            Date endDate = inputFormat.parse(endDateTime);
 
 	            // 디버깅을 위한 출력
-	            System.out.println("Parsed startDate: " + startDate);
-	            System.out.println("Parsed endDate: " + endDate);
+	            //	System.out.println("Parsed startDate: " + startDate);
+	            //	System.out.println("Parsed endDate: " + endDate);
 
 	            // TO_DATE 형식과 일치하도록 문자열로 포맷
 	            String formattedStartTime = dbDateFormat.format(startDate);

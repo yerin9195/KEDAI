@@ -71,42 +71,43 @@ public class SalaryController {
 	
 	@PostMapping(value = "/salaryCal.kedai", produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String salaryCal(@RequestParam("workday") int workday, @RequestParam("empid[]") List<String> empidList, HttpSession session) {
-	    if (empidList.isEmpty()) {
-	        return "{\"error\": \"No member found in session\"}";
+	public String salaryCal(@RequestParam("workday") int workday, 
+							@RequestParam("empid[]") List<String> empidList, 
+							@RequestParam("memberSalary") String memberSalary) {
+	    if (empidList == null || empidList.isEmpty()) {
+	        return "{\"error\": \"No employee IDs provided\"}";
 	    }
 	    
-	    String empid = empidList.get(0); // 여기서는 첫 번째 사원의 empid만 사용하는 예시
-	    
-	    MemberVO membervo = (MemberVO) session.getAttribute("memberVO_" + empid);
-	   
+	    MemberVO membervo = new MemberVO();
 	    SalaryVO salaryvo = new SalaryVO();
-	    salaryvo.setFk_empid(membervo.getEmpid());
-	    salaryvo.setWork_day(workday);
-	    salaryvo.setWork_day_plus(workday);  // 예시로 동일하게 설정
-	    salaryvo.setBase_salary(membervo.getSalary());
 	    
-	    
-	    int n = 0;
-	    try {
-
-		    System.out.println("Workday: " + salaryvo.getWork_day());
-		    System.out.println("EmpID: " + salaryvo.getFk_empid());
-		    System.out.println("Salary: " + salaryvo.getBase_salary());
-	        n = service.salaryCal(salaryvo);
-	    } catch(Throwable e) {
-	        e.printStackTrace();
+	    for(int i=0; i<empidList.size(); i++) {
+	    	salaryvo.setFk_empid(empidList.get(i));
+		    System.out.println(salaryvo.getFk_empid());
+		    salaryvo.setWork_day(workday);
+		    salaryvo.setWork_day_plus(workday);
+		    salaryvo.setBase_salary(memberSalary);
+	
+		    int n = 0;
+		    try {
+		        System.out.println("Workday: " + salaryvo.getWork_day());
+		        System.out.println("EmpID: " + salaryvo.getFk_empid());
+		        System.out.println("Salary: " + salaryvo.getBase_salary());
+		        n = service.salaryCal(salaryvo);
+		    } catch(Throwable e) {
+		        e.printStackTrace();
+		    }
+		    
+		    JSONObject jsonObj = new JSONObject(); 
+		    jsonObj.put("n", n);
+		    jsonObj.put("empid", membervo.getEmpid());
+		    jsonObj.put("base_salary", membervo.getSalary());
+		    jsonObj.put("work_day", workday);
+		    
+		    System.out.println(jsonObj.toString());
 	    }
-	    
-	    JSONObject jsonObj = new JSONObject(); 
-	    jsonObj.put("n", n);
-	    jsonObj.put("empid", membervo.getEmpid());
-	    jsonObj.put("base_salary", membervo.getSalary());
-	    jsonObj.put("work_day", workday);
-	    
-	    System.out.println(jsonObj.toString());
-	    
-	    return jsonObj.toString(); 
+		return jsonObj.toString();
+		    
 	}
 	
 	

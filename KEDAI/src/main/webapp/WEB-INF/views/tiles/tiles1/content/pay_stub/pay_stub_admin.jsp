@@ -239,6 +239,7 @@
 	    		        newRow += '<td>' + item.fk_dept_code + '</td>'; // 부서명
 	    		        newRow += '<td><input type="text" class="form-control" id="weekdayCountfi" readonly /></td>'; // 근무일수
 	    		        newRow += '<td><input type="text" class="form-control" readonly /></td>'; // 추가근무일수 (데이터가 없어서 비워둠)
+	    		        newRow += '<input type="text" id="memberSalary" value="' + item.salary + '"/>';
 	    		        newRow += '</tr>';
 	    		        
 	    		        // 새로운 행을 tbody에 추가
@@ -436,38 +437,47 @@
 	function salary_submit(){
 		var workdayval = $("#weekdayCount").val();
 		var empidval = [];
+		var memberSalary = $("#memberSalary").val();
 		
 		 $(".checkbox-member:checked").each(function() {
 		        var empid = $(this).closest('tr').find('.empid').text();
 		        empidval.push(empid.trim()); // empid 값을 배열에 추가
 		    });
-		
-		 console.log(empidval);
 		 
+		 console.log(memberSalary);
 		
-        $.ajax({
-        	 url: "<%= ctxPath%>/salaryCal.kedai",
-        	 type : "post",
-             data: { "workday" : workdayval, "empid[]" : empidval},
-             dataType: 'json', // 서버에서 반환되는 데이터 형식을 JSON으로 설정
-             success: function(json) {
-                 // 정상적으로 JSON 데이터를 받았는지 확인
-                 //	console.log(JSON.stringify(json));
-                 if (workdayval > 0) {
-                     for (var i = 0; i < json.length; i++) {
-                         console.log("사원번호: " + json[i].empid);
-                         console.log("성명: " + json[i].name);
-                         console.log("부서: " + json[i].fk_dept_code);
-                         // 필요한 작업 수행
-                     }
-                 } else {
-                     alert("근로 일자를 확정하여 주시기 바랍니다.")
-                 }
-             },
-            error: function(request, status, error){
-                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-            }
-        });
+		
+		 $.ajax({
+			    url: "<%= ctxPath%>/salaryCal.kedai",
+			    type: "post",
+			    data: { 
+			        "workday": workdayval, 
+			        "empid[]": empidval, 
+			        "memberSalary" : memberSalary
+			    },
+			    
+			    dataType: 'json', // 서버에서 반환되는 데이터 형식을 JSON으로 설정
+			    success: function(json) {
+			        console.log(json); // 서버에서 반환된 데이터를 로그로 출력
+			        if (workdayval > 0) {
+			            if (Array.isArray(json)) {
+			                for (var i = 0; i < json.length; i++) {
+			                    console.log("사원번호: " + json[i].empid);
+			                    console.log("성명: " + json[i].name);
+			                    console.log("부서: " + json[i].fk_dept_code);
+			                }
+			            } else {
+			                console.error("서버로부터 예상치 못한 데이터를 수신했습니다.");
+			            }
+			        } else {
+			            alert("근로 일자를 확정하여 주시기 바랍니다.");
+			        }
+			    },
+			    error: function(request, status, error){
+			        alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+			    }
+			});
+
 		
 	}	//	end of function salary_submit(){---------
 		
