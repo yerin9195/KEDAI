@@ -11,6 +11,10 @@
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/bootstrap-4.6.2-dist/css/bootstrap.min.css" > 
 
 <style type="text/css">
+
+a{
+	color:#fff;
+}
 div.col-md-6 {
 	padding-left:0;
 	padding-right:40px;

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.app.common.MyUtil;
 import com.spring.app.domain.CalendarScheduleVO;
 import com.spring.app.domain.CalendarSmallCategoryVO;
+import com.spring.app.domain.MemberVO;
 import com.spring.app.schedule.service.ScheduleService;
 
 @Controller
@@ -403,11 +405,11 @@ public class ScheduleController {
 	public String selectSmallCategory(HttpServletRequest request) {
 		
 		String fk_lgcatgono = request.getParameter("fk_lgcatgono"); // 캘린더 대분류 번호
-		String fk_userid = request.getParameter("fk_userid");       // 사용자아이디
+		String fk_empid = request.getParameter("fk_empid");       // 사용자아이디
 		
 		Map<String,String> paraMap = new HashMap<>();
 		paraMap.put("fk_lgcatgono", fk_lgcatgono);
-		paraMap.put("fk_userid", fk_userid);
+		paraMap.put("fk_empid", fk_empid);
 		
 		List<CalendarSmallCategoryVO> smallCategoryVO_List = service.selectSmallCategory(paraMap);
 			
@@ -423,6 +425,166 @@ public class ScheduleController {
 		}
 		
 		return jsArr.toString();
+	}
+	
+	
+	// === 공유자를 찾기 위한 특정글자가 들어간 회원명단 불러오기 ===
+	@ResponseBody
+	@RequestMapping(value="/scheduler/insertSchedule/searchJoinUserList.kedai", produces="text/plain;charset=UTF-8")
+	public String searchJoinUserList(HttpServletRequest request) {
+		
+		String joinUserName = request.getParameter("joinUserName");
+		
+		// 사원 명단 불러오기
+		List<MemberVO> joinUserList = service.searchJoinUserList(joinUserName);
+
+		JSONArray jsonArr = new JSONArray();
+		if(joinUserList != null && joinUserList.size() > 0) {
+			for(MemberVO mvo : joinUserList) {
+				JSONObject jsObj = new JSONObject();
+				jsObj.put("empid", mvo.getEmpid());
+				jsObj.put("name", mvo.getName());
+				
+				jsonArr.put(jsObj);
+			}
+		}
+		
+		return jsonArr.toString();
+		
+	}
+	
+	
+	// === 일정 등록하기 ===
+	@PostMapping("/scheduler/registerSchedule_end.kedai")
+	public ModelAndView registerSchedule_end(ModelAndView mav, HttpServletRequest request) throws Throwable {
+		
+		String cal_startdate= request.getParameter("startdate");
+   	//  System.out.println("확인용 startdate => " + startdate);
+	//  확인용 startdate => 20231129140000
+   	    
+		String cal_enddate = request.getParameter("enddate");
+		String cal_subject = request.getParameter("subject");
+		String fk_lgcatgono= request.getParameter("fk_lgcatgono");
+		String fk_smcatgono = request.getParameter("fk_smcatgono");
+		String cal_color = request.getParameter("color");
+		String cal_place = request.getParameter("place");
+		String cal_joinuser = request.getParameter("joinuser");
+		
+     //	System.out.println("확인용 joinuser => " + joinuser);
+	 // 확인용 joinUser_es =>
+	 // 또는 
+	 // 확인용 joinUser_es => 이순신(leess),아이유1(iyou1),설현(seolh) 	
+		
+		String cal_content = request.getParameter("content");
+		String fk_empid = request.getParameter("fk_empid");
+		
+		Map<String,String> paraMap = new HashMap<String, String>();
+		paraMap.put("cal_startdate", cal_startdate);
+		paraMap.put("cal_enddate", cal_enddate);
+		paraMap.put("cal_subject", cal_subject);
+		paraMap.put("fk_lgcatgono",fk_lgcatgono);
+		paraMap.put("fk_smcatgono", fk_smcatgono);
+		paraMap.put("cal_color", cal_color);
+		paraMap.put("cal_place", cal_place);
+		
+		paraMap.put("cal_joinuser", cal_joinuser);
+		
+		paraMap.put("cal_content", cal_content);
+		paraMap.put("fk_empid", fk_empid);
+		
+		int n = service.registerSchedule_end(paraMap);
+
+		if(n == 0) {
+			mav.addObject("message", "일정 등록에 실패하였습니다.");
+		}
+		else {
+			mav.addObject("message", "일정 등록에 성공하였습니다.");
+		}
+		
+		mav.addObject("loc", request.getContextPath()+"/scheduler.kedai");
+		
+		mav.setViewName("msg");
+		
+		return mav;
+	}
+	
+	// === 일정삭제하기 ===
+	@ResponseBody
+	@PostMapping("/scheduler/deleteSchedule.kedai")
+	public String deleteSchedule(HttpServletRequest request) throws Throwable {
+		
+		String scheduleno = request.getParameter("scheduleno");
+				
+		int n = service.deleteSchedule(scheduleno);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("n", n);
+			
+		return jsObj.toString();
+	}
+	
+	// === 일정 수정하기 ===
+	@PostMapping("/scheduler/editSchedule.kedai")
+	public ModelAndView editSchedule(ModelAndView mav, HttpServletRequest request) {
+		
+		String scheduleno= request.getParameter("scheduleno");
+   		
+		try {
+			Integer.parseInt(scheduleno);
+			
+			String gobackURL_detailSchedule = request.getParameter("gobackURL_detailSchedule");
+			
+			HttpSession session = request.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			
+			Map<String,String> map = service.detailSchedule(scheduleno);
+			
+			if( !loginuser.getEmpid().equals( map.get("FK_EMPID") ) ) {
+				String message = "다른 사용자가 작성한 일정은 수정이 불가합니다.";
+				String loc = "javascript:history.back()";
+				
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");
+			}
+			else {
+				mav.addObject("map", map);
+				mav.addObject("gobackURL_detailSchedule", gobackURL_detailSchedule);
+				
+				mav.setViewName("tiles1/scheduler/editSchedule.tiles");
+				
+			}
+		} catch (NumberFormatException e) {
+			mav.setViewName("redirect:/scheduler.kedai");
+		}
+		
+		return mav;
+		
+	}	
+	
+	// === 일정 수정 완료하기 ===
+	@PostMapping("/scheduler/editSchedule_end.kedai")
+	public ModelAndView editSchedule_end(CalendarScheduleVO svo, HttpServletRequest request, ModelAndView mav) {
+		
+		try {
+			 int n = service.editSchedule_end(svo);
+			 
+			 if(n==1) {
+				 mav.addObject("message", "일정을 수정하였습니다.");
+				 mav.addObject("loc", request.getContextPath()+"/scheduler.kedai");
+			 }
+			 else {
+				 mav.addObject("message", "일정 수정에 실패하였습니다.");
+				 mav.addObject("loc", "javascript:history.back()");
+			 }
+			 
+			 mav.setViewName("msg");
+		} catch (Throwable e) {	
+			e.printStackTrace();
+			mav.setViewName("redirect:/scheduler.kedai");
+		}
+			
+		return mav;
 	}
 		
 }

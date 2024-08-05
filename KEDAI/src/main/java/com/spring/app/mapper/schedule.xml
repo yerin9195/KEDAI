@@ -237,11 +237,41 @@
     <select id="selectSmallCategory" parameterType="HashMap" resultType="CalendarSmallCategoryVO">
     	select smcatgono, fk_lgcatgono, smcatgoname
 		from tbl_calendar_small_category
-		where fk_lgcatgono = #{fk_lgcatgono} and fk_userid= #{fk_empid}
+		where fk_lgcatgono = #{fk_lgcatgono} and fk_empid= #{fk_empid}
 		order by smcatgono asc
     </select>
     
+	<!-- 공유자를 찾기 위한 특정글자가 들어간 회원명단 불러오기 -->
+    <select id="searchJoinUserList" parameterType="String" resultType="MemberVO">
+    	select empid, name
+		from tbl_employees
+		where lower(name) like '%'|| lower(#{joinUserName}) ||'%'
+    </select>
+    
+    <!-- 일정 등록하기 -->
+    <insert id="registerSchedule_end" parameterType="HashMap">
+    	insert into tbl_calendar_schedule(scheduleno, cal_startdate, cal_enddate, cal_subject, cal_color, cal_place, cal_joinuser, cal_content, fk_smcatgono, fk_lgcatgono, fk_empid) 
+    	values(seq_scheduleno.nextval, to_date(#{cal_startdate}, 'yyyymmddhh24miss'), to_date(#{cal_enddate}, 'yyyymmddhh24miss'), #{cal_subject}, #{cal_color}, #{cal_place}, #{cal_joinuser}, #{cal_content}, #{fk_smcatgono}, #{fk_lgcatgono}, #{fk_empid})  
+    </insert>
+
+    <!-- 일정삭제하기 -->
+	<delete id="deleteSchedule" parameterType="String">
+		delete from tbl_calendar_schedule 
+		where scheduleno = #{scheduleno} 
+	</delete>
 	
-	
+	<!-- 일정수정하가 -->
+	<update id="editSchedule_end" parameterType="CalendarScheduleVO">
+		update tbl_calendar_schedule set cal_startdate = to_date(#{cal_startdate}, 'yyyymmddhh24miss')
+		                               , cal_enddate = to_date(#{cal_enddate}, 'yyyymmddhh24miss')
+		                               , cal_subject = #{cal_subject}
+		                               , fk_lgcatgono = #{fk_lgcatgono}
+		                               , fk_smcatgono = #{fk_smcatgono}
+		                               , cal_color = #{cal_color}
+		                               , cal_place = #{cal_place}
+		                               , cal_joinuser = #{cal_joinuser}
+		                               , cal_content = #{cal_content}
+		where scheduleno = #{scheduleno} 
+	</update>
 	
 </mapper>

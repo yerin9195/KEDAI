@@ -1370,3 +1370,18 @@ select smcatgono, fk_lgcatgono, smcatgoname
 		where fk_lgcatgono = 1
 		and fk_empid = '2011300-001'
 		order by smcatgono asc
+
+
+desc tbl_calendar_schedule;
+
+scheduleno    NOT NULL NUMBER         
+cal_startdate          DATE           
+cal_enddate            DATE           
+cal_subject            VARCHAR2(400)  
+cal_color              VARCHAR2(50)   
+cal_place              VARCHAR2(200)  
+cal_joinuser           VARCHAR2(4000) 
+cal_content            VARCHAR2(4000) 
+fk_smcatgono           NUMBER(8)      
+fk_lgcatgono           NUMBER(3)      
+fk_empid      NOT NULL VARCHAR2(40)   

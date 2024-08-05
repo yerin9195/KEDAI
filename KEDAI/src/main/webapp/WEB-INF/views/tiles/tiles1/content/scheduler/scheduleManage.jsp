@@ -33,12 +33,16 @@ div#calInfo_right{
 	height: 30px;
 }
 
- .fc-daygrid , .fc-daygrid-day-number{
+.fc-daygrid , .fc-daygrid-day-number {
     color: #000;
     text-decoration: none;
     background-color: transparent;
     cursor: pointer;
 } 
+
+div.fc-scrollgrid-sync-inner a {
+	color: #000;
+}
 
 
 .fc-sat { color: #0000FF; }    /* 토요일 */
@@ -599,10 +603,10 @@ function showmyCal(){
 				html += "<table style='width:80%;'>";	 
 			 
 			 	$.each(json, function(index, item){
-					html += "<tr style='font-size: 11pt;'>";
-				 	html += "<td style='width:60%; padding: 3px 0px;'><input type='checkbox' name='my_smcatgono' class='calendar_checkbox my_smcatgono' style='margin-right: 3px;' value='"+item.smcatgono+"' checked id='my_smcatgono_"+index+"' checked/><label for='my_smcatgono_"+index+"'>"+item.smcatgoname+"</label></td>";   
-				 	html += "<td style='width:20%; padding: 3px 0px;'><button class='btn_edit editCal' data-target='editCal' onclick='editMyCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-edit'></i></button></td>"; 
-				 	html += "<td style='width:20%; padding: 3px 0px;'><button class='btn_edit delCal' onclick='delCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-trash'></i></button></td>";
+					html += "<tr style='font-size: 11pt;  height:20px; margin-bottom:2px;'>";
+				 	html += "<td style='width:60%;'><input type='checkbox' name='my_smcatgono' class='calendar_checkbox my_smcatgono' style='margin-right: 3px;' value='"+item.smcatgono+"' checked id='my_smcatgono_"+index+"' checked/><label style='margin:0; ' for='my_smcatgono_"+index+"'>"+item.smcatgoname+"</label></td>";   
+				 	html += "<td style='width:20%;'><button class='btn_edit editCal' data-target='editCal' onclick='editMyCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-edit'></i></button></td>"; 
+				 	html += "<td style='width:20%;'><button class='btn_edit delCal' onclick='delCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-trash'></i></button></td>";
 			     	html += "</tr>";
 			 	});
 			 
@@ -802,10 +806,10 @@ function goSearch(){
 			<div id="companyCal" style="margin-left: 50px; margin-bottom: 10px;"></div> 
 			
 			<input type="checkbox" id="allMyCal" class="calendar_checkbox" checked/>&nbsp;&nbsp;<label for="allMyCal">내 캘린더</label>
-			<button class="btn_edit" style="margin-left:10%;" onclick="addMyCalendar()"><i class='fas'>&#xf055;</i></button>
+			<button class="btn_edit" style="margin-left:10%;" onclick="addMyCalendar()"><i class="fa-regular fa-calendar-plus"></i></button>
 				
 			<%-- 내 캘린더를 보여주는 곳 --%>
-			<div id="myCal" style="margin-left: 50px; margin-bottom: 10px;"></div>
+			<div id="myCal" style="margin-left: 20px; margin-bottom:10px;"></div>
 			
 			<input type="checkbox" id="sharedCal" class="calendar_checkbox" value="0" checked/>&nbsp;&nbsp;<label for="sharedCal">공유받은 캘린더</label> 
 		</div>

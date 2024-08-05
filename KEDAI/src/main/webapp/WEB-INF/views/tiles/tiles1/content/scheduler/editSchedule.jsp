@@ -11,14 +11,23 @@
 	table#schedule{
 		margin-top: 70px;
 	}
-	table#schedule th{
-		width: 10%;
-		text-align : center;
-	}
 	
 	table#schedule th, td{
-	 	padding: 10px 10px;
+	 	padding: 10px 5px;
 	 	vertical-align: middle;
+	}
+	
+	a{
+	    color: #395673;
+	    text-decoration: none;
+	    cursor: pointer;
+	}
+	
+	a:hover {
+	    color: #395673;
+	    cursor: pointer;
+	    text-decoration: none;
+		font-weight: bold;
 	}
 	
 	select.schedule{
@@ -64,11 +73,54 @@
 <script type="text/javascript">
 
 	$(document).ready(function(){
+				
+		// ==== 종일체크박스에 체크를 할 것인지 안할 것인지를 결정하는 것 시작 ==== //
+		// 시작 시 분
+		var str_startdate = "${requestScope.map.CAL_STARTDATE}";
+	 // console.log(str_startdate); 
+		// 2021-12-01 09:00
+		var target = str_startdate.indexOf(":");
+		var start_min = str_startdate.substring(target+1);
+	 // console.log(start_min);
+		// 00
+		var start_hour = str_startdate.substring(target-2,target);
+	 // console.log(start_hour);
+		// 09
+				
 		
-		// 캘린더 소분류 카테고리 숨기기
-		$("select.small_category").hide();
+		// 종료 시 분
+		var str_enddate = "${requestScope.map.CAL_ENDDATE}";
+	 //	console.log(str_enddate);
+		// 2021-12-01 18:00
+		target = str_enddate.indexOf(":");
+		var end_min = str_enddate.substring(target+1);
+	 // console.log(end_min);
+	    // 00 
+		var end_hour = str_enddate.substring(target-2,target);
+	 //	console.log(end_hour);
+		// 18
 		
-		// === *** 달력(type="date") 관련 시작 *** === //
+		
+		if(start_hour=='00' && start_min=='00' && end_hour=='23' && end_min=='59' ){
+			$("input#allDay").prop("checked",true);
+		}
+		else{
+			$("input#allDay").prop("checked",false);
+		}
+		// ==== 종일체크박스에 체크를 할 것인지 안할 것인지를 결정하는 것 끝 ==== // 
+		
+		
+		// 시작날짜 넣어주기
+		target = str_startdate.indexOf(" ");
+		var start_yyyymmdd = str_startdate.substring(0,target);
+		$("input#startDate").val(start_yyyymmdd);
+		
+		// 종료날짜 넣어주기
+		target = str_enddate.indexOf(" ");
+		var end_yyyymmdd = str_enddate.substring(0,target);
+		$("input#endDate").val(end_yyyymmdd);
+		
+		
 		// 시작시간, 종료시간		
 		var html="";
 		for(var i=0; i<24; i++){
@@ -82,6 +134,10 @@
 		
 		$("select#startHour").html(html);
 		$("select#endHour").html(html);
+		
+		// === *** 시작시간 시 분 넣어주기 *** === //
+		$("select#startHour").val(start_hour);
+		$("select#endHour").val(end_hour);
 		
 		// 시작분, 종료분 
 		html="";
@@ -97,7 +153,11 @@
 		
 		$("select#startMinute").html(html);
 		$("select#endMinute").html(html);
-		// === *** 달력(type="date") 관련 끝 *** === //
+		
+		// === *** 종료시간 시 분 넣어주기 *** === //
+		$("select#startMinute").val(start_min);
+		$("select#endMinute").val(end_min);
+		
 		
 		// '종일' 체크박스 클릭시
 		$("input#allDay").click(function() {
@@ -121,6 +181,31 @@
 			}
 		});
 		
+		// ========== *** 캘린더선택에서 이미 저장된 캘린더 넣어주기 시작 *** ========== //
+		$("select.calType").val("${requestScope.map.FK_LGCATGONO}");
+		
+		$.ajax({
+				url: "<%= ctxPath%>/scheduler/selectSmallCategory.kedai",
+				data: {"fk_lgcatgono":"${requestScope.map.FK_LGCATGONO}", 
+					   "fk_empid":"${requestScope.map.FK_EMPID}"},
+				dataType: "json",
+				async: false,  //동기방식
+				success:function(json){
+					var html ="";
+					if(json.length>0){
+						$.each(json, function(index, item){
+							html+="<option value='"+item.smcatgono+"'>"+item.smcatgoname+"</option>";
+						});
+						$("select.small_category").html(html);
+					}
+				},
+				error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				}
+		});
+	
+		$("select.small_category").val("${requestScope.map.FK_SMCATGONO}");
+		// ========== *** 캘린더선택에서 이미 저장된 캘린더 넣어주기 끝 *** ========== //
 				
 		// 내캘린더,사내캘린더 선택에 따른 서브캘린더 종류를 알아와서 select 태그에 넣어주기 
 		$("select.calType").change(function(){
@@ -154,9 +239,20 @@
 				// 선택하세요 이라면
 				$("select.small_category").hide();
 			}
-			
 		});
 		
+		// **** 수정하기전 이미 저장되어있는 공유자 **** 
+		var stored_joinuser = "${requestScope.map.CAL_JOINUSER}";
+		if(stored_joinuser != "공유자가 없습니다."){
+			var arr_stored_joinuser = stored_joinuser.split(",");
+			var str_joinuser = "";
+			for(var i=0; i<arr_stored_joinuser.length; i++){
+				var user = arr_stored_joinuser[i];
+			//	console.log(user);
+				add_joinUser(user);
+			}// end of for--------------------------
+		}// end of if--------------------------------      
+
 		
 		// 공유자 추가하기
 		$("input#joinUserName").bind("keyup",function(){
@@ -168,10 +264,8 @@
 					dataType:"json",
 					success : function(json){
 						var joinUserArr = [];
-				    
-					//  input태그 공유자입력란에 "이" 를 입력해본 결과를 json.length 값이 얼마 나오는지 알아본다. 
-					//	console.log(json.length);
-					
+				
+				//		console.log("이:"+json.length);
 						if(json.length > 0){
 							
 							$.each(json, function(index,item){
@@ -213,8 +307,8 @@
 		});
 
 		
-		// 등록 버튼 클릭
-		$("button#register").click(function(){
+		// 수정 버튼 클릭
+		$("button#edit").click(function(){
 		
 			// 일자 유효성 검사 (시작일자가 종료일자 보다 크면 안된다!!)
 			var startDate = $("input#startDate").val();	
@@ -290,6 +384,7 @@
 			
 		//  console.log("색상 => " + $("input#color").val());
 			
+			      
 			// 공유자 넣어주기
 			var plusUser_elm = document.querySelectorAll("div.displayUserList > span.plusUser");
 			var joinUserArr = new Array();
@@ -310,12 +405,12 @@
 			
 			$("input[name=cal_joinuser]").val(joinuser);
 			
-			var frm = document.scheduleFrm;
-			frm.action="<%= ctxPath%>/scheduler/registerSchedule_end.kedai";
+		    var frm = document.scheduleFrm;
+		  	frm.action="<%= ctxPath%>/scheduler/editSchedule_end.kedai";
 			frm.method="post";
-			frm.submit();
+			frm.submit(); 
 
-		});// end of $("button#register").click(function(){})--------------------
+		});// end of $("button#edit").click(function(){})--------------------
 		
 	}); // end of $(document).ready(function(){}-----------------------------------
 
@@ -349,9 +444,9 @@
 
 </script>
 
-<div style="margin-left: 80px; width: 88%;">
-<h3>일정 등록</h3>
 
+<div style="margin-left: 80px; width: 88%;">
+<h3 style="display: inline-block;">일정 수정하기</h3>&nbsp;&nbsp;<a href="<%= ctxPath%>/scheduler.kedai"><span>◀캘린더로 돌아가기</span></a>
 	<form name="scheduleFrm">
 		<table id="schedule" class="table table-bordered">
 			<tr>
@@ -371,11 +466,11 @@
 			</tr>
 			<tr>
 				<th>제목</th>
-				<td><input type="text" id="subject" name="cal_subject" class="form-control"/></td>
+				<td><input type="text" id="subject" name="cal_subject" class="form-control" value="${requestScope.map.SUBJECT}"/></td> 
 			</tr>
 			
 			<tr>
-				<th>캘린더 종류</th>
+				<th>캘린더선택</th>
 				<td>
 					<select class="calType schedule" name="fk_lgcatgono">
 					<c:choose>
@@ -387,7 +482,7 @@
 						</c:when>
 					--%> 
 					<%-- 일정등록시 사내캘린더 등록은 loginuser.gradelevel =='10' 인 사용자만 등록이 가능하도록 한다. --%> 
-						<c:when test="${loginuser.fk_job_code =='1'}"> 
+						<c:when test="${loginuser.fk_job_code =='10'}"> 
 							<option value="">선택하세요</option>
 							<option value="1">내 캘린더</option>
 							<option value="2">사내 캘린더</option>
@@ -404,11 +499,11 @@
 			</tr>
 			<tr>
 				<th>색상</th>
-				<td><input type="color" id="color" name="cal_color" value="#009900"/></td>
+				<td><input type="color" id="color" name="cal_color" value="${requestScope.map.CAL_COLOR}"/></td>
 			</tr>
 			<tr>
 				<th>장소</th>
-				<td><input type="text" name="cal_place" class="form-control"/></td>
+				<td><input type="text" name="cal_place" class="form-control" value="${requestScope.map.CAL_PLACE}"/></td>
 			</tr>
 			
 			<tr>
@@ -421,14 +516,15 @@
 			</tr>
 			<tr>
 				<th>내용</th>
-				<td><textarea rows="10" cols="100" style="height: 200px;" name="cal_content" id="content"  class="form-control"></textarea></td>
+				<td><textarea rows="10" cols="100" style="height: 200px;" name="cal_content" id="content" class="form-control">${requestScope.map.CAL_CONTENT}</textarea></td>
 			</tr>
 		</table>
 		<input type="hidden" value="${sessionScope.loginuser.empid}" name="fk_empid"/>
+		<input type="hidden" value="${requestScope.map.SCHEDULENO}" name="scheduleno"/>
 	</form>
 	
 	<div style="float: right;">
-	<button type="button" id="register" class="btn_normal" style="margin-right: 10px; background-color: #0071bd;">등록</button>
-	<button type="button" class="btn_normal" style="background-color: #990000;" onclick="javascript:location.href='<%= ctxPath%>/scheduler.kedai'">취소</button> 
+	<button type="button" id="edit" class="btn_normal" style="margin-right: 10px; background-color: #0071bd;">완료</button>
+	<button type="button" class="btn_normal" style="background-color: #990000;" onclick="javascript:location.href='<%= ctxPath%>${gobackURL_detailSchedule}'">취소</button> 
 	</div>
 </div>

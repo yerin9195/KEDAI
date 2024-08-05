@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.app.domain.CalendarScheduleVO;
 import com.spring.app.domain.CalendarSmallCategoryVO;
+import com.spring.app.domain.MemberVO;
 import com.spring.app.schedule.model.ScheduleDAO;
 
 @Service
@@ -117,6 +118,33 @@ public class ScheduleService_imple implements ScheduleService {
 	public List<CalendarSmallCategoryVO> selectSmallCategory(Map<String, String> paraMap) {
 		List<CalendarSmallCategoryVO> smallCategoryVO_List = dao.selectSmallCategory(paraMap);
 		return smallCategoryVO_List;
+	}
+
+	// 공유자를 찾기 위한 특정글자가 들어간 회원명단 불러오기 
+	@Override
+	public List<MemberVO> searchJoinUserList(String joinUserName) {
+		List<MemberVO> joinUserList = dao.searchJoinUserList(joinUserName);
+		return joinUserList;
+	}
+
+	// 일정 등록하기
+	@Override
+	public int registerSchedule_end(Map<String, String> paraMap) throws Throwable {
+		int n = dao.registerSchedule_end(paraMap);
+		return n;
+	}
+
+	// 일정삭제하기 
+	@Override
+	public int deleteSchedule(String scheduleno) throws Throwable {
+		int n = dao.deleteSchedule(scheduleno);
+		return n;
+	}
+
+	@Override
+	public int editSchedule_end(CalendarScheduleVO svo) throws Throwable {
+		int n = dao.editSchedule_end(svo);
+		return n;
 	}
 
 
