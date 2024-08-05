@@ -133,10 +133,47 @@ public class CarDAO_imple implements CarDAO {
 	}
 
 	@Override
-	public Car_shareVO getowner_dateInfo(String date) {
-		Car_shareVO owner_dateInfo = sqlsession.selectOne("reservation.getowner_dateInfo", date);
+	public List<Map<String, Object>> getowner_dateInfo(String date) {
+		List<Map<String, Object>> owner_dateInfo = sqlsession.selectList("reservation.getowner_dateInfo", date);
 		return owner_dateInfo;
 	}
+
+	@Override
+	public int getTotalCount_owner_Status_detail(Map<String, Object> paraMap) {
+		int totalCount_owner_Status_detail = sqlsession.selectOne("reservation.getTotalCount_owner_Status_detail", paraMap);
+		return totalCount_owner_Status_detail;
+	}
+
+	@Override
+	public List<Map<String, Object>> owner_Status_detail_withPaging(Map<String, Object> paraMap) {
+		List<Map<String, Object>> owner_carShareList_detail = sqlsession.selectList("reservation.owner_Status_detail_withPaging", paraMap);
+		return owner_carShareList_detail;
+	}
+
+	@Override
+	public int updateStatus(Map<String, Object> paraMap) {
+		int n = sqlsession.update("reservation.updateStatus", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> getowner_SettlementList(String empid) {
+		List<Map<String, String>> owner_SettlementList = sqlsession.selectList("reservation.getowner_SettlementList", empid);
+		return owner_SettlementList;
+	}
+
+	@Override
+	public int getTotalcount_owner_SettlementList(Map<String, String> paraMap) {
+		int totalCount_owner_SettlementList = sqlsession.selectOne("reservation.getTotalcount_owner_SettlementList", paraMap);
+		return totalCount_owner_SettlementList;
+	}
+
+	@Override
+	public List<Map<String, String>> owner_SettlementList_withPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> owner_SettlementList_withPaging = sqlsession.selectList("reservation.owner_SettlementList_withPaging", paraMap);
+		return owner_SettlementList_withPaging;
+	}
+
 
 
 

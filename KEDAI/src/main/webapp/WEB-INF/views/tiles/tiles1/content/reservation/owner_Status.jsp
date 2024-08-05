@@ -145,9 +145,11 @@
             // 해당 <tr> 내의 <input> 요소 중 name이 last_date인 요소를 찾음
             var $lastDateInput = $tr.find('input[name="last_date"]');
             var $startDateInput = $tr.find('input[name="start_date"]');
+            var $res_num = $tr.find('input[name="res_num"]');
             // last_date 입력 요소의 값을 가져옴
             let startDateValue = $startDateInput.val();
             let lastDateValue = $lastDateInput.val();
+            let res_num = $res_num.val();
             // 콘솔에 값 출력 (확인용)
             console.log('start Date:', startDateValue);
             console.log('Last Date:', lastDateValue);
@@ -158,7 +160,7 @@
       //    calendar.render();
             
             //////////////////////////////////////////////
-            func_calendar_call(startDateValue, lastDateValue);
+            func_calendar_call(startDateValue, lastDateValue, res_num);
             /////////////////////////////////////////////
         });
   /*      
@@ -169,13 +171,13 @@
   */ 
   //////////////////////////////////////////////////////////////////////////////////////////////
   
-     function func_calendar_call(startDateValue, lastDateValue){
+     function func_calendar_call(startDateValue, lastDateValue, res_num){
 	        var start_date = startDateValue;
 	        var convertedstart_date = parseDate(start_date, 0);
 	        var last_date = lastDateValue;
 	        var convertedlast_date = parseDate(last_date, 1);
 	     
-	        alert("시작일자 : " + start_date + ", 종료일자 : " + last_date);
+	        alert("시작일자 : " + start_date + ", 종료일자 : " + last_date + ", res_num :" + res_num );
 	       /* 모달 시작 */
 	        var startDate = convertedstart_date;
 	    	var endDate = convertedlast_date;
@@ -203,7 +205,7 @@
 	                        $('#myModal').hide(); // 모달 닫기
 	                        resetModal(); // 모달 내용 초기화
 	                        // dateStr 값을 가지고 새로운 페이지로 이동
-	                        goDetail(info.dateStr);
+	                        goDetail(info.dateStr, res_num);
 	                    });
 
 	                },
@@ -214,7 +216,7 @@
 	        });
 	        
 	        calendar.render();
-     }// end of func_calendar_call(startDateValue, lastDateValue)-------------------------
+     }// end of func_calendar_call(startDateValue, lastDateValue, res_num)-------------------------
      ///////////////////////////////////////////////////////////////////////////////////////////////
 
      
@@ -421,11 +423,12 @@
     }); // end of $(document).ready(function(){}) ----------
 
     // select 버튼 클릭시 새로운 페이지로 이동하는 함수
-	function goDetail(dateStr) {
+	function goDetail(dateStr, res_num) {
 	    const frm = document.date_frm;
-	    frm.method = "post";
+	    frm.method = "get";
 	    frm.action = "<%= ctxPath %>/owner_Status_detail.kedai";
 	    frm.date.value = dateStr; // 폼의 히든 필드에 날짜 값 설정
+	    frm.res_num.value = res_num;
 	    frm.submit();
 	}
     
@@ -444,6 +447,7 @@
 <div style="border: 0px solid red; padding: 2% 0; width: 90%;">
 <form name="date_frm" method="get">
     <input type="hidden" name="date" value="">
+    <input type="hidden" name="res_num" value="">
     <%-- ${requestScope.day_shareInfo.res_num} --%>
     <!-- 다른 필요한 폼 필드들 -->
 </form>

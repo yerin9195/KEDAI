@@ -37,16 +37,11 @@
     background-color: white;
     color: #2c4459;
     font-weight: 300;
-    position: relative;
+
 }
 #in-container {
     background-color: white;
     color: black;
-    width: 50%;
-    height: 700px;
-    position: absolute; /* 절대 위치 지정 */
-    top: 0; /* 부모 요소의 위쪽에 위치 */
-    left: 0; /* 부모 요소의 왼쪽에 위치 */
     z-index: 10; /* 다른 요소들보다 앞에 오도록 z-index 설정 */
     overflow: hidden;
 }
@@ -356,10 +351,105 @@ $(document).ready(function(){
        
    }// end of function makeOverListener(mapobj, marker, infowindow, infowindowArr)--------
    
+   function updateAcceptYon(index, pf_empid, pf_res_num, nickname, email) {
+	    // 선택된 라디오 버튼의 값을 가져옴
+	    var acceptYonElements = document.getElementsByName('accept_yon_' + index);
+	    var denyReasonElement = document.querySelector('input[name="deny_reason_' + index + '"]');
+
+	    console.log("~~~ 확인용 : " + pf_empid);
+	    var acceptYonValue = null;
+	    for (var i = 0; i < acceptYonElements.length; i++) {
+	        if (acceptYonElements[i].checked) {
+	            acceptYonValue = acceptYonElements[i].value;
+	            break;
+	        }
+	    }
+
+	    if (acceptYonValue === null) {
+	        alert("라디오 버튼을 선택하세요.");
+	        return;
+	    }
+
+	    var denyReason = denyReasonElement ? denyReasonElement.value : '';
+
+	    // 필요한 로직 수행 (예: Ajax 호출로 서버에 데이터 전송)
+	    console.log("Index: " + index + ", Accept Yon Value: " + acceptYonValue + ", Deny Reason: " + denyReason + ", pf_empid: " + pf_empid);
+
+	    if (acceptYonValue === "0") {
+	        // 미승인일 경우 업데이트 안함.
+	        alert("미승인 상태입니다. 업데이트하지 않습니다.");
+	    } else if (acceptYonValue === "1") {
+	        // 승인일 경우 업데이트를 하고 신청자에게 메일을 보낸다.
+	        alert("승인 상태입니다. 업데이트하고 신청자에게 메일을 보냅니다.");
+	        
+	        // 컨트롤러에 변경된 값을 넘겨주기 (Ajax 사용)
+	        $.ajax({
+	            type: 'GET',
+	            url:"<%=ctxPath%>/owner_Status_detail_update.kedai",
+	            async: true,
+	            data: {
+	                index: index,
+	                accept_yon: 1,
+	                pf_empid: pf_empid,
+	                pf_res_num: pf_res_num,
+	                nickname: nickname,
+	                email: email
+	            },
+	            success: function(response) {
+	                console.log('Update success:', response);
+	                // 성공 후 추가로 수행할 작업이 있으면 여기에 작성
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('Update failed:', error);
+	                // 실패 시 수행할 작업이 있으면 여기에 작성
+	            }
+	        });
+	    } else if (acceptYonValue === "2") {
+	        // 거부인 경우 업데이트를 하고 신청자에게 거부사유와 함께 메일을 보낸다.
+	        if (denyReason.trim() === "") {
+	            alert("거부 사유를 입력하세요.");
+	            return;
+	        }
+	        alert("거부 상태입니다. 업데이트하고 신청자에게 거부 사유와 함께 메일을 보냅니다.");
+
+	        // 컨트롤러에 변경된 값을 넘겨주기 (Ajax 사용)
+	        $.ajax({
+	            type: 'GET',
+	            url:"<%=ctxPath%>/owner_Status_detail_update.kedai",
+	            data: {
+	                index: index,
+	                accept_yon: 2,
+	                deny_reason: denyReason,
+	                pf_empid: pf_empid,
+	                pf_res_num: pf_res_num,
+	                nickname: nickname,
+	                email: email
+	            },
+	            success: function(response) {
+	                console.log('Update success:', response);
+	                // 성공 후 추가로 수행할 작업이 있으면 여기에 작성
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('Update failed:', error);
+	                // 실패 시 수행할 작업이 있으면 여기에 작성
+	            }
+	        });
+	    } else {
+	        alert("라디오버튼을 선택해주세요.");
+	    }
+	    
+		
+	}// end of function updateAcceptYon(index, pf_empid, pf_res_num) {})----------------------------------
+
+
+
+
+
+
 </script>
 <div style="border: 0px solid red; padding: 2% 0; width: 90%;">
 	<!-- Navigation Tabs -->
-	<ul class="nav nav-tabs" style="margin-bottom:4%;">
+	<ul class="nav nav-tabs" style="margin-bottom:0.5%;">
 	    <li class="nav-item">
 	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/myCar.kedai">차량정보</a>
 	    </li>
@@ -377,60 +467,66 @@ $(document).ready(function(){
 	    </li>
 	</ul>
 	<div id="container">
-	    <div id="dmap" style="margin-left:25%; width:75%; height:700px;"></div>
-				
+		<h2 style="margin: auto; padding-bottom: 0.5%;">${requestScope.date}</h2>
+	    <div id="dmap" style="height:350px; margin-bottom:0.5%;"></div>	
 	    <div id="in-container" style="border: 0px solid red;">
-		<h2 style="width: 95%; margin: auto; padding-bottom: 3%;">${requestScope.date}</h2>
-		<table style="width: 95%; margin: auto;" class="table table-bordered">
+		<table style="margin: auto;" class="table table-bordered">
             <thead>
             	<tr>
-                    <th style="width: 70px; text-align: center;">no</th>
-                    <th style="width: 240px; text-align: center;">이름</th>
-                    <th style="width: 70px; text-align: center;">승인</th>
-                    <th style="width: 200px; text-align: center;">거부(사유)</th>
-                    <th style="width: 70px; text-align: center;">미승인</th>
+                    <th style="width: 20px; text-align: center;">no</th>
+                    <th style="width: 50px; text-align: center;">닉네임</th>
+                    <th style="width: 175px; text-align: center; border: none;">출발지</th>
+					<th style="width: 10px; text-align: center; border: none;"><i class="fa-solid fa-arrow-right"></i></th>
+					<th style="width: 175px; text-align: center; border: none;">도착지</th>
+					<th style="width: 175px; text-align: center;">출발시간</th>
+                    <th style="width: 20px; text-align: center;">승인</th>
+                    <th style="width: 130px; text-align: center;">거부(사유)</th>
+                    <th style="width: 50px; text-align: center;">미승인</th>
+                    <th style="width: 50px; text-align: center;">알림보내기</th>
                 </tr>
             </thead>
             <tbody>
-                <c:if test="${not empty requestScope.carShareList}">
-                    <c:forEach var="carShare" items="${requestScope.carShareList}" varStatus="status">
-                        <tr>
-                        	<td align="center">${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
-                            <form name="carShareFrm${status.index}">
-                                <input type="hidden" name="res_num" value="${carShare.res_num}"/>
-                            </form> 
-                            <td>${carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${carShare.ds_name}</td>
-                            <td align="center">${carShare.nickname}</td>
-                            <c:set var="startDate" value="${carShare.start_date}" />
-                            <c:set var="lastDate" value="${carShare.last_date}" />
-                            <td align="center">
-                                <fmt:parseDate value="${startDate}" var="parsedStartDate" pattern="yyyy-MM-dd HH:mm:ss" />
-                                <fmt:formatDate value="${parsedStartDate}" pattern="yyyy-MM-dd" />
-                                ~
-                                <fmt:parseDate value="${lastDate}" var="parsedLastDate" pattern="yyyy-MM-dd HH:mm:ss" />
-                                <fmt:formatDate value="${parsedLastDate}" pattern="yyyy-MM-dd" />
-                            </td>
-                            <td align="center">${carShare.start_time}</td>
-                            <c:if test="${carShare.end_status == 1 && carShare.cancel_status == 1}">
+ 				<c:if test="${not empty requestScope.owner_dateInfoList}">
+                        <c:forEach var="owner_dateInfoList" items="${requestScope.owner_dateInfoList}" varStatus="status">
+                            <tr>
+                            	<td align="center">${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
+                                <td align="center">${owner_dateInfoList.nickname}</td>
+                                <td align="center"
+									style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">${owner_dateInfoList.rdp_name}</td>
+								<td align="center"
+									style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;"><i
+									class="fa-solid fa-arrow-right"></i></td>
+								<td align="center"
+									style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">${owner_dateInfoList.rds_name}</td>
+								<td align="center">${owner_dateInfoList.share_may_time}</td>
                                 <td align="center">
-                                    <input type="button" value="신청가능" class="subject" onclick="goApply('carShareFrm${status.index}')" />
+                                    <input type="radio" name="accept_yon_${status.index}" value="1" <c:if test="${owner_dateInfoList.accept_yon == 1}">checked</c:if>>
                                 </td>
-                            </c:if>
-                            <c:if test="${carShare.end_status == 0 || carShare.cancel_status == 0}">
-                                <td align="center">신청불가능</td>
-                            </c:if>
-                            <td align="center">${carShare.readCount}</td>
-                        </tr>
-                    </c:forEach>
-                </c:if>
-                <c:if test="${empty requestScope.carShareList}">
+                                <td>
+                                    <input type="radio" name="accept_yon_${status.index}" value="2" <c:if test="${owner_dateInfoList.accept_yon == 2}">checked</c:if>>
+                                    <c:if test="${not empty owner_dateInfoList.reason_nonaccept}"><input type="text" name="deny_reason_${status.index}" style="border-bottom:1px solid gray; border-left: none; border-right:none; border-top:none; width: 90%; font-size: 10pt;" value="${owner_dateInfoList.reason_nonaccept}"/></c:if>
+                                    <c:if test="${empty owner_dateInfoList.reason_nonaccept}"><input type="text" name="deny_reason_${status.index}" style="border-bottom:1px solid gray; border-left: none; border-right:none; border-top:none; width: 90%; font-size: 10pt;" placeholder="거부사유를 입력하세요(20자 내외)" value=""/></c:if>
+                                </td>
+                                <td align="center">
+                                    <input type="radio" name="accept_yon_${status.index}" value="0" <c:if test="${owner_dateInfoList.accept_yon == 0}">checked</c:if>>
+                                </td>
+                                <td align="center">
+                                    <input type="button" value="UPDATE" style="background-color: #2c4459; border-radius: 25px; color:white;" onclick="updateAcceptYon(${status.index}, '${owner_dateInfoList.pf_empid}','${owner_dateInfoList.pf_res_num}', '${owner_dateInfoList.nickname}', '${owner_dateInfoList.email}' )"/>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:if>
+                <c:if test="${empty requestScope.owner_dateInfoList}">
                     <tr>
-                        <td colspan="7">데이터가 존재하지 않습니다.</td>
+                        <td colspan="5" style="text-align: center;">데이터가 존재하지 않습니다.</td>
                     </tr>
                 </c:if>
             </tbody>
         </table>
-		
+        <div id="pageBar" align="center" style="border: solid 0px gray; width: 50%; margin: 3% auto;">
+                ${requestScope.pageBar}
+        </div>
+        </div>
 	    </div>
 	</div>
 </div>
