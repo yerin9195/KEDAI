@@ -350,25 +350,17 @@
 										[{"gender":"남","cnt":"4","percentage":"12.12"},{"gender":"여","cnt":"2","percentage":"6.06"}]
 				    				*/
 				    				
-				    				const genderArr = [];
+				    				let subArr = [];
 				    				
-				    				$.each(json2, function(index2, items2) {
-				    				    // Create a new series object for each item
-				    				    const obj_series = { name: '', data: [] };
-				    				    
-				    				    obj_series.name = items2[0].gender; 
-
-				    				    // Iterate through the items to build the data array
-				    				    $.each(items, function(innerIndex, item3) {
-				    				        obj_series.data.push(parseFloat(item3.percentage)); // Convert percentage to number
-				    				    });
-
-				    				    // Add the series data to the genderArr
-				    				    genderArr.push({
-				    				        name: obj_series.name,
-				    				        data: obj_series.data
-				    				    });
+				    				$.each(json2, function(index2, item2){
+				    					subArr.push([item2.gender, Number(item2.percentage)]);
 				    				});
+				    				
+				    				genderArr.push({
+				    					
+				    				});
+				    				
+				    				
 				    				
 				    			},
 				    			error: function(request, status, error){
@@ -434,19 +426,7 @@
 						    credits: {
 						        enabled: false
 						    },
-						    series: [{
-						        name: 'Year 1990',
-						        data: [631, 727, 3202, 721, 26]
-						    }, {
-						        name: 'Year 2000',
-						        data: [814, 841, 3714, 726, 31]
-						    }, {
-						        name: 'Year 2010',
-						        data: [1044, 944, 4170, 735, 40]
-						    }, {
-						        name: 'Year 2018',
-						        data: [1276, 1007, 4561, 746, 42]
-						    }]
+						    series: genderArr
 						});
 						
 		    		},
