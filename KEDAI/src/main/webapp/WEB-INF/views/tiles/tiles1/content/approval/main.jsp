@@ -16,6 +16,16 @@ div.col-md-6 {
 	padding-right:40px;
 }
 
+
+.nav-tabs .nav-link.active {
+    background-color: #2c4459; /* 활성화된 탭의 배경색 변경 */
+    color: white; /* 활성화된 탭의 글자색 변경 */
+    border-bottom-color: transparent; /* 활성화된 탭의 하단 선 제거 */
+}
+.nav-tabs .nav-item {
+    text-align: center;
+}
+
 </style>
 
 
@@ -86,11 +96,42 @@ div.col-md-6 {
 	
 </script>
 
+<div style="border : 1px red solid;  padding: 2% 0; display:flex;">
+<c:if test="${(sessionScope.loginuser).fk_dept_code != null}">
+	<button type="button" data-toggle="modal" style="width: 150px; height:43px; margin-right:5%; background-color:white; border : solid 1px black;" data-target="#newDocModal" >결재 작성하기</button>
+</c:if>
+<!-- Navigation Tabs -->
 
+<c:if test="${(sessionScope.loginuser).fk_dept_code == null}">
+<ul class="nav nav-tabs" style="margin-bottom:0;">	
+	<li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Status.kedai">나의 결재함</a>
+    </li>
+     <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">모든 문서함</a>
+    </li>
+</ul>
+</c:if>
+<c:if test="${(sessionScope.loginuser).fk_dept_code != null}">
+<ul class="nav nav-tabs" style="margin-bottom:0;">
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/allDoc.kedai">모든 문서함</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">팀 문서함</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Status.kedai">나의 결재함</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Status.kedai">나의 상신 문서</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">모든 문서함</a>
+    </li>
+</ul>
+</c:if>
 
-<div style="border : 1px red solid; display:flex; ">
-<span style="border : solid 1px #e68c0e; text-align :center; align-items: center; justify-content: center; " >전체 </span>
-<button type="button" data-toggle="modal" style="width: 150px; height:5%; margin-top:1%; background-color:white; border : solid 1px black;" data-target="#newDocModal" >결재 작성하기</button>
 </div>
 	<!-- Modal -->
 	<!-- Modal 구성 요소는 현재 페이지 상단에 표시되는 대화 상자/팝업 창입니다. -->
@@ -219,7 +260,7 @@ div.col-md-6 {
 	      								<td>${myDocList.created_date}</td>
 	      								<td>${myDocList.doctype_name}</td>
 	      								<td>${myDocList.doc_no}</td>
-	      								<td><span class="subject" onclick="goView('${myDocList.doc_no}', '${myDocList.doctype_code}')">${myDocList.doc_subject}</span>
+	      								<td><span class="subject" onclick="goView('${myDocList.doc_no}', '${myDocList.fk_doctype_code}')">${myDocList.doc_subject}</span>
 	      									<c:if test="${myDocList.isAttachment eq 1}">
 	      										&nbsp;<i class="fa-solid fa-paperclip"></i>
 	      									</c:if>  								
