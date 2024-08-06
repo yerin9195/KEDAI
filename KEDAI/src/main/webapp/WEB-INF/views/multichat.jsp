@@ -421,7 +421,7 @@ body, html {
 </script>    
 </head>
 <body>
-<div style="display: flex; height: 90%;">
+<div style="display: flex; height: 90%; margin-bottom: 3%;">
 	<table style="border:solid 0px black; border-radius: 3px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);" class="chatUser">
 		<thead>
 			<tr>
@@ -451,7 +451,7 @@ body, html {
 
 <div class="container-fluid" style="width: 80%; height:90%; border-radius: 3px;">
    <div class="message_body">
-      <div class="row" id="chatting_box" style="border: 0px solid black; width: 890px; height: 990px; margin-bottom: 15px; border-radius: 3%; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);">
+      <div class="row" id="chatting_box" style="border: 0px solid black; width: 890px; height: 890px; margin-bottom: 15px; border-radius: 3%; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);">
          <div class="col-md-12 offset-md-1" style="overflow:hidden;">
             <div id="chatStatus"></div>
                <div style="width:100%;">
@@ -470,7 +470,7 @@ body, html {
                
                <div id="chatMessage" style="max-height: 500px; overFlow: auto;"></div>
                
-               <div class="message_container" style="border: 0px solid red; position: fixed; bottom: -15%; right: 50px; transform: translateX(-53%);">
+               <div class="message_container" style="border: 0px solid red; position: fixed; bottom: -15%; right: 50px; transform: translateX(-40%);">
                   <input type="text" id="message" class="form-control" width="100px;" placeholder="메시지 내용"/>
                   
                   <div class = "button_group">
