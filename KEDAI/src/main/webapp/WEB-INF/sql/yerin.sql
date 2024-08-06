@@ -375,6 +375,13 @@ select jubun
      , func_age(jubun) AS age
 from tbl_employees;
 
+DROP FUNCTION FUNC_GENDER;
+-- Function FUNC_GENDER이(가) 삭제되었습니다.
+
+select line, text
+from user_source
+where type = 'FUNCTION' and name = 'FUNC_GENDER';
+
 -----------------------------------------------------------------------
 
 -- 카테고리 테이블
@@ -779,6 +786,23 @@ WHERE D.dept_name is null
 GROUP BY gender
 ORDER BY gender;
 
+-- 입사년도별 성별 인원통계
+select hire_date
+from tbl_employees;
+
+select decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2010, 1, 0)
+from tbl_employees;
+
+select func_gender(jubun)
+from dual
+
+select func_gender(jubun) AS gender
+     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2010, 1, 0)) AS Y2010
+     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2011, 1, 0)) AS Y2011
+from tbl_employees
+group by func_gender(jubun)
+order by gender;
+
 -----------------------------------------------------------------------
 
 -- 페이지별 사원 접속통계
@@ -864,3 +888,4 @@ drop table tbl_empManager_accessTime purge;
 drop sequence empManager_accessTime_seq;
 -- Sequence EMPMANAGER_ACCESSTIME_SEQ이(가) 삭제되었습니다.
 
+rollback;

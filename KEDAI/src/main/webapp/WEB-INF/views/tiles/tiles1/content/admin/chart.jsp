@@ -174,7 +174,7 @@
 					 		totalPercentage += parseFloat(item.percentage);
 					 	});
 					 	
-					 	totalPercentage = isNaN(totalPercentage)?'Invalid':totalPercentage.toFixed(2);
+					 	totalPercentage = isNaN(totalPercentage)?'Invalid':totalPercentage.toFixed(1);
 					 	
 					 	v_html += "<tr style='font-weight: bold;'>"+
 					 			  "<td>합계</td>"+
@@ -310,7 +310,7 @@
 				});
 			
 				break;
-				
+			
 			case "deptnameGender": // 부서별 성별 인원통계
 				$.ajax({
 					url:"<%= ctxPath%>/admin/chart/empCntByDeptname.kedai",
@@ -332,7 +332,8 @@
 			    	 		deptnameArr.push(item.dept_name);
 			    	 	}); 
 			    	 	
-			    	 	let genderArr = []; // 특정 부서명에 근무하는 직원들의 성별 인원수 퍼센티지 객체 배열
+			    	 	let malePercentageArr = [];   // 남자 퍼센티지
+	    				let femalePercentageArr = []; // 여자 퍼센티지 
 			    	 	
 			    	 	$.each(json, function(index, item){
 			    	 		$.ajax({
@@ -343,32 +344,33 @@
 				    			//	console.log(JSON.stringify(json2));
 				    				/*
 				    					[{"gender":"남","cnt":"5","percentage":"15.15"},{"gender":"여","cnt":"5","percentage":"15.15"}]
-										[{"gender":"남","cnt":"1","percentage":"3.03"}]
+				    				    [{"gender":"남","cnt":"1","percentage":"3.03"}]
 										[{"gender":"남","cnt":"1","percentage":"3.03"},{"gender":"여","cnt":"1","percentage":"3.03"}]
 										[{"gender":"남","cnt":"5","percentage":"15.15"},{"gender":"여","cnt":"2","percentage":"6.06"}]
 										[{"gender":"남","cnt":"3","percentage":"9.09"},{"gender":"여","cnt":"4","percentage":"12.12"}]
 										[{"gender":"남","cnt":"4","percentage":"12.12"},{"gender":"여","cnt":"2","percentage":"6.06"}]
 				    				*/
 				    				
-				    				let subArr = [];
-				    				
-				    				$.each(json2, function(index2, item2){
-				    					subArr.push([item2.gender, Number(item2.percentage)]);
-				    				});
-				    				
-				    				genderArr.push({
-				    					
-				    				});
-				    				
-				    				
-				    				
+				    				for(let i=0; i<json2.length; i++){
+				    					if( json2[i].gender == "남" ) {
+				    						malePercentageArr.push(Number(json2[i].percentage));
+				    					}
+				    					else {
+				    						femalePercentageArr.push(Number(json2[i].percentage));
+				    					}
+				    				} // end of for ----------
 				    			},
 				    			error: function(request, status, error){
 								   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 								}
 			    	 		});
-			    	 	});
+			    	 	}); // end of $.each(json, function(index, item) ----------
+			    	 /*	
+			    	 	let gender_Arr = []; // 특정 부서명에 근무하는 직원들의 성별 인원수 퍼센티지 객체 배열		
 			    	 	
+			    	 	gender_Arr.push({name: '남', data: malePercentageArr});
+			    	 	gender_Arr.push({name: '여', data: femalePercentageArr});
+			    	 */	
 			    	 	$("div#chart_container").empty();
 						$("div#table_container").empty();
 						$("div#highcharts-data-table").empty();
@@ -394,7 +396,7 @@
 						    yAxis: {
 						        min: 0,
 						        title: {
-						            text: 'Population (millions)',
+						            text: '성별 (%)',
 						            align: 'high'
 						        },
 						        labels: {
@@ -402,7 +404,7 @@
 						        }
 						    },
 						    tooltip: {
-						        valueSuffix: ' millions'
+						        valueSuffix: ' %'
 						    },
 						    plotOptions: {
 						        bar: {
@@ -426,9 +428,53 @@
 						    credits: {
 						        enabled: false
 						    },
-						    series: genderArr
+						//  series: gender_Arr
+						    series: [{name: '남', data: [15.15, 15.15, 9.09, 12.12, 3.03, 3.03]}, {name: '여', data: [15.15, 6.06, 12.12, 6.06, 3.03]}]  
 						});
 						
+						//////////////////////////////////////////////////////////////
+			    	 	
+						let v_html = "<table class='table table-bordered'>";
+						
+						v_html += "<tr>"+
+								  "<th style='width: 30%; vertical-align: middle;' rowspan='2'>부서명</th>"+
+								  "<th style='width: 50%;' colspan='2'>성별</th>"+
+								  "<th style='width: 20%; vertical-align: middle;' rowspan='2'>합계</th>"+
+								  "</tr>";
+								  
+						v_html += "<tr>"+
+								  "<th>남자</th>"+
+				 		          "<th>여자</th>"+
+								  "</tr>";
+					  
+						malePercentageArr = [15.15, 15.15, 9.09, 12.12, 3.03, 3.03];   // 남자 퍼센티지
+				    	femalePercentageArr = [15.15, 6.06, 12.12, 6.06, 3.03]; // 여자 퍼센티지  		  
+	                    let totalPercentage = 0; // 총 퍼센트 변수 초기화
+
+	                    $.each(json, function(index2, item2) {
+	                        const malePercentage = malePercentageArr[index2] !== undefined ? malePercentageArr[index2] : '';
+	                        const femalePercentage = femalePercentageArr[index2] !== undefined ? femalePercentageArr[index2] : '';
+
+	                        v_html += "<tr>"+
+	                                  "<td>"+item2.dept_name+"</td>"+
+	                                  "<td>"+malePercentage+"</td>"+
+	                                  "<td>"+femalePercentage+"</td>"+
+	                                  "<td>"+item2.percentage+"</td>"+
+	                                  "</tr>";
+	                        
+	                        totalPercentage += parseFloat(item2.percentage);
+	                    });
+					 	
+					 	totalPercentage = isNaN(totalPercentage)?'Invalid':totalPercentage.toFixed(1);
+					 	
+					 	v_html += "<tr style='font-weight: bold;'>"+
+					 			  "<td colspan='3'>합계</td>"+
+					 			  "<td>"+totalPercentage+"</td>"+
+					 	          "</tr>";
+					 	
+					 	v_html += "</table>";
+					 	
+					 	$("div#table_container").html(v_html);
 		    		},
 			    	error: function(request, status, error){
 					   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -436,7 +482,7 @@
 				});
 			
 				break;
-		<%--		
+				
 			case "genderHireYear": // 입사년도별 성별 인원통계
 				$.ajax({
 					url:"<%= ctxPath%>/admin/chart/empCntByGenderHireYear.kedai",
@@ -451,7 +497,7 @@
 				});
 			
 				break; 
-		--%>		
+				
 			case "pageurlEmpname": // 페이지별 사원 접속통계
 				$.ajax({
 					url:"<%= ctxPath%>/admin/chart/pageurlEmpname.kedai",

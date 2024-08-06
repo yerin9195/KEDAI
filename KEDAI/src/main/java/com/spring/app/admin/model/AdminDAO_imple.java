@@ -77,6 +77,13 @@ public class AdminDAO_imple implements AdminDAO {
 		return genderPercentageList;
 	}
 		
+	// 입사년도별 성별 인원통계
+	@Override
+	public List<Map<String, String>> empCntByGenderHireYear() {
+		List<Map<String, String>> genderHireYearList = sqlsession.selectList("admin.empCntByGenderHireYear");
+		return genderHireYearList;
+	}
+		
 	// 해당 페이지에 접속한 이후에, 페이지에 접속한 페이지URL, 사용자ID, 접속IP주소, 접속시간을 기록으로 DB에 tbl_empManager_accessTime 테이블에 insert 하기 
 	@Override
 	public void insert_accessTime(Map<String, String> paraMap) {
