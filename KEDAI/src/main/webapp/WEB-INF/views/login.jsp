@@ -113,7 +113,7 @@
             setTimeout(function() {
                 $this.animate({
                     opacity: 1
-                }, 500); // Duration of opacity change
+                }, 300); // Duration of opacity change
                 
                 $this.css({
                     transform: 'scale(1)'
