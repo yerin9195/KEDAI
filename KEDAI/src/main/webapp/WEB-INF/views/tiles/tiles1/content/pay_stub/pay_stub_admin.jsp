@@ -75,8 +75,18 @@
 	$(document).ready(function(){
 		const modalClose = document.querySelector('.close_btn');
 		
-		$("#workdaySmt").click(function(e){	
-			salary_submit();
+		$("#total_bth").click(function(e) {
+		    // 확인 대화상자를 표시
+		    if (confirm("확인 시, 사원들에게 해당 내용이 보여집니다.")) {
+		        // 사용자가 확인을 눌렀을 때만 AJAX 요청을 보냄
+		        salary_submit();  // AJAX 요청 함수 호|
+
+		        // 모달 창 닫기
+		        $('#modal1').modal("hide");
+		    } else {
+		        // 사용자가 취소를 누르면 아무 일도 일어나지 않음
+		        e.preventDefault();
+		    }
 		});
 		
 		$("#workListcom_btn").click(function(e){
@@ -158,6 +168,22 @@
 		   salary_cal();
 	   })
 	    
+	// 삭제 버튼 클릭 시 체크된 행 삭제
+	    $("#deleteRows").click(function() {
+	        // 체크된 체크박스가 있는지 확인
+	        if ($(".checkbox-member:checked").length == 0) {
+	            alert("선택한 사원이 없습니다.");
+	            return;
+	        }
+
+	        // 확인 메시지 표시
+	        if (confirm("선택한 행을 삭제하시겠습니까?")) {
+	            // 체크된 행을 순회하며 삭제
+	            $(".checkbox-member:checked").each(function() {
+	                $(this).closest('tr').remove();
+	            });
+	        }
+	    });
 	});	//	end of $(document).ready(function(){--------
 		
 	//	전체 계산 
@@ -238,8 +264,7 @@
 	    		        newRow += '<td>' + item.name + '</td>'; // 사원명
 	    		        newRow += '<td>' + item.fk_dept_code + '</td>'; // 부서명
 	    		        newRow += '<td><input type="text" class="form-control" id="weekdayCountfi" readonly /></td>'; // 근무일수
-	    		        newRow += '<td><input type="text" class="form-control" readonly /></td>'; // 추가근무일수 (데이터가 없어서 비워둠)
-	    		        newRow += '<input type="text" id="memberSalary" value="' + item.salary + '"/>';
+	    		        newRow += '<td><input type="text" class="form-control" readonly /><input type="hidden" id="memberSalary" value="' + item.salary + '"/></td>'; // 추가근무일수 (데이터가 없어서 비워둠)
 	    		        newRow += '</tr>';
 	    		        
 	    		        // 새로운 행을 tbody에 추가
@@ -437,35 +462,36 @@
 	function salary_submit(){
 		var workdayval = $("#weekdayCount").val();
 		var empidval = [];
-		var memberSalary = $("#memberSalary").val();
+		var memberSalary = [];
 		
 		 $(".checkbox-member:checked").each(function() {
 		        var empid = $(this).closest('tr').find('.empid').text();
+		        var memSal = $(this).closest('tr').find('#memberSalary').val(); 
 		        empidval.push(empid.trim()); // empid 값을 배열에 추가
+		        memberSalary.push(memSal.trim());
 		    });
 		 
 		 console.log(memberSalary);
-		
 		
 		 $.ajax({
 			    url: "<%= ctxPath%>/salaryCal.kedai",
 			    type: "post",
 			    data: { 
-			        "workday": workdayval, 
-			        "empid[]": empidval, 
-			        "memberSalary" : memberSalary
+			        workday: workdayval, 
+			        "empid": empidval,  // empidval은 배열이어야 합니다.
+			        memberSalary: memberSalary
 			    },
-			    
-			    dataType: 'json', // 서버에서 반환되는 데이터 형식을 JSON으로 설정
-			    success: function(json) {
-			        console.log(json); // 서버에서 반환된 데이터를 로그로 출력
+			    traditional: true, // 이 옵션은 배열을 매개변수로 전송할 때 유용합니다.
+			    dataType: 'json',
+			    success: function(response) {
+			        console.log(response);
 			        if (workdayval > 0) {
-			            if (Array.isArray(json)) {
-			                for (var i = 0; i < json.length; i++) {
-			                    console.log("사원번호: " + json[i].empid);
-			                    console.log("성명: " + json[i].name);
-			                    console.log("부서: " + json[i].fk_dept_code);
-			                }
+			            if (Array.isArray(response)) {
+			                response.forEach(function(item) {
+			                    console.log("사원번호: " + item.empid);
+			                    console.log("기본급: " + item.base_salary);
+			                    console.log("근로일: " + item.work_day);
+			                });
 			            } else {
 			                console.error("서버로부터 예상치 못한 데이터를 수신했습니다.");
 			            }
@@ -477,6 +503,8 @@
 			        alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
 			    }
 			});
+
+
 
 		
 	}	//	end of function salary_submit(){---------
@@ -550,9 +578,8 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end mt-3">
-                    <button class="btn mr-2" id="workdaySmt">저장</button>
                     <button class="btn" type="button" data-dismiss="modal">닫기</button>
-                    <button>삭제</button>
+                    <button id="deleteRows">삭제</button>
                 </div>
             </div>
         </div>
