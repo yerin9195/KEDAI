@@ -334,7 +334,7 @@ span.clear{clear: both;}
 	        //  ,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
 	    });
 	     
-	    $("input#findate").datepicker({
+	    $("input#enddate").datepicker({
             dateFormat: 'yy-mm-dd'  //Input Display Format 변경
            ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
            ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
@@ -356,9 +356,9 @@ span.clear{clear: both;}
 	  	
         // input을 datepicker로 선언
         $("input#startdate").datepicker();                    
-        $("input#findate").datepicker();
+        $("input#enddate").datepicker();
 					
-		$("input#startdate, input#findate").keyup(function(e) {
+		$("input#startdate, input#enddate").keyup(function(e) {
 	  		$(e.target).val("");
 	  		$(e.target).datepicker('setDate', 'today');
 	  		alert("기안일자는 마우스로만 클릭하세요.g");
@@ -371,12 +371,12 @@ span.clear{clear: both;}
 	        onSelect: function(selectedDate) {
 	            // 종료일의 최소 날짜를 선택한 시작일로 설정
 	            var minDate = $(this).datepicker('getDate');
-	            $("#findate").datepicker("option", "minDate", minDate);
+	            $("#enddate").datepicker("option", "minDate", minDate);
 	        }
 	    });
 	    
 	    // 종료일 Datepicker
-        $("#findate").datepicker({
+        $("#enddate").datepicker({
             onSelect: function(selectedDate) {
                 // 시작일의 최대 날짜를 선택한 종료일로 설정
                 var maxDate = $(this).datepicker('getDate');
@@ -387,10 +387,10 @@ span.clear{clear: both;}
         
 	     // 초기값을 오늘 날짜로 설정
 	  //   $("input#startdate").datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-	 //    $("input#findate").datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
+	 //    $("input#enddate").datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
 	
 	     $("#startdate").datepicker('setDate', new Date());
-         $("#findate").datepicker('setDate', new Date());
+         $("#enddate").datepicker('setDate', new Date());
 	
 	   
 	     
@@ -733,6 +733,31 @@ span.clear{clear: both;}
 		});	    
 	    <%-- === jQuery 를 사용하여 드래그앤드롭(DragAndDrop)을 통한 파일 업로드 끝 === --%>
 		
+	    
+	    $("input#selectdate").click(function(){
+	    	var startDate = $("#startdate").val();
+            var endDate = $("#enddate").val();
+            
+            $.ajax({
+				url:"${pageContext.request.contextPath}/approval/selectdateJSON.kedai",
+				data:{"startDate":startDate,
+					"endDate":endDate},
+				dataType:"json",
+				type:"post",
+				success:function(json){
+					<%여기여기여기부터!!
+				},
+				error: function(request, status, error){
+		        	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		        }
+			});	
+	    	
+	    	
+	    });
+	    
+	    
+	    
+	    
 		
 	});// end of $(document).ready(function(){})-----------
 	
@@ -822,17 +847,30 @@ span.clear{clear: both;}
 			<tr>
 				<th>날짜</th>
 				<td>
-					<input type="text" name="startdate" id="startdate" maxlength="8" size="8" /> ~ <input type="text" name="findate" id="findate" maxlength="8" size="8" />
+					<input type="text" name="startdate" id="selectdate" maxlength="8" size="8" /> ~ <input type="text" name="enddate" id="selectdate" maxlength="8" size="8" />
 				</td>
 			</tr>
 			<tr>
 				<th>사용 가능 연차</th>
-				<td><span>잔여 연차 : <span style="border: solid 1px black; width:30px;"></span></span>&nbsp; <span>신청 연차 : </span></td>
+				<td>
+					<span>잔여 연차 :</span> <span style="border: solid 0px black; display:inline-block; width:60px; font-weight:bold;">${sessionScope.loginuser.annual_leave}</span>&nbsp; 
+					<span>신청 연차 :</span> <span style="border: solid 0px black; display:inline-block; width:60px; font-weight:bold;"></span>
+				</td>
 			</tr>
 		
 			<tr>
-				<th>반차여부</th>
-				<td></td>
+				<th style = "vertical-align: middle;">반차여부</th>
+				<td>
+					<input type="checkbox" id="start_day" name="start_day"/><label for="start_day">시작일</label>&nbsp;(&nbsp;
+					<input type="checkbox" id="morning_half_day" name="morning_half_day"/><label for="morning_half_day">오전 반차</label>&nbsp;
+					<input type="checkbox" id="afternoon_half_day" name="afternoon_half_day"/><label for="afternoon_half_day">오후 반차</label>&nbsp;
+					)
+					<br>
+					<input type="checkbox" id="fin_day" name="fin_day"/><label for="fin_day">종료일</label>&nbsp;(&nbsp;
+					<input type="checkbox" id="morning_half_day" name="morning_half_day"/><label for="morning_half_day">오전 반차</label>&nbsp;
+					<input type="checkbox" id="afternoon_half_day" name="afternoon_half_day"/><label for="morning_half_day">오후 반차</label>&nbsp;
+					)
+				</td>
 			</tr>
 		</table>
 

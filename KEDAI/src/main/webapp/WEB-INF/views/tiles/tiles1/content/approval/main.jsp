@@ -111,16 +111,13 @@ div.col-md-6 {
 	<button type="button" data-toggle="modal" style="width: 150px; height:43px; margin-right:5%; background-color:white; border : solid 1px black;" data-target="#newDocModal" >결재 작성하기</button>
 	<ul class="nav nav-tabs" style="margin-bottom:0;">
 	    <li class="nav-item">
-	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">팀 문서함</a>
+	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/">팀 문서함</a>
 	    </li>
 	    <li class="nav-item">
 	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/approval/showMyApprovalList.kedai">나의 결재함</a>
 	    </li>
 	    <li class="nav-item">
 	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/approval/showMyDocList.kedai">나의 상신 문서</a>
-	    </li>
-	    <li class="nav-item">
-	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">모든 문서함</a>
 	    </li>
 	</ul>
 </c:if>
@@ -129,10 +126,10 @@ div.col-md-6 {
 <c:if test="${(sessionScope.loginuser).fk_dept_code == null}">
 <ul class="nav nav-tabs" style="margin-bottom:0;">	
 	<li class="nav-item">
-        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Status.kedai">나의 결재함</a>
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/approval/showMyApprovalList.kedai">나의 결재함</a>
     </li>
      <li class="nav-item">
-        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">모든 문서함</a>
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/allDocList.kedai">모든 문서함</a>
     </li>
 </ul>
 </c:if>

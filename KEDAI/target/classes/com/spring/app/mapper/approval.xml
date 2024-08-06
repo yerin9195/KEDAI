@@ -430,7 +430,7 @@
 	</select>
 	
 	
-	<select id="allmyAppListSearch" parameterType="HashMap" resultMap="DocVO">  
+	<select id="allmyAppListSearch" parameterType="HashMap" resultType="DocVO">  
 		SELECT rno, doc_no, fk_empid, doc_status, doc_subject, doc_content, created_date, doctype_name,
        		isAttachment, NAME, dept_name, fk_doctype_code
 		FROM (

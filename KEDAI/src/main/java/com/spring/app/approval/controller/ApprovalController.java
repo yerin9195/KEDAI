@@ -563,7 +563,7 @@ public class ApprovalController {
 	   */
 		
 		String pageBar = "<ul style='list-style:none;'>";
-		String url="list.action";
+		String url="/approval/nowApprovalList.kedai";
 		
 		// === [맨처음][이전]만들기 ===//
 	//	if(pageNo <= totalPage) { // 맨 마지막에는 나오지 않도록!
@@ -807,7 +807,7 @@ public class ApprovalController {
 	   */
 		
 		String pageBar = "<ul style='list-style:none;'>";
-		String url="list.action";
+		String url="/approval/showMyDocList.kedai";
 		
 		// === [맨처음][이전]만들기 ===//
 	//	if(pageNo <= totalPage) { // 맨 마지막에는 나오지 않도록!
@@ -1219,8 +1219,9 @@ public class ApprovalController {
 		
 		return "redirect:/approval/main.kedai"; // 메인 화면으로 돌아가기
 	}
+	
 			
-	@RequestMapping("/approval/showshowMyApprovalList.kedai")
+	@RequestMapping("/approval/showMyApprovalList.kedai")
 	public ModelAndView showMyallApprovalList(ModelAndView mav, HttpServletRequest request) {
 		
 		
@@ -1343,7 +1344,7 @@ public class ApprovalController {
      // 글 목록 가져오기(페이징 처리 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것이다.
 		
 		mav.addObject("loginuser", loginuser); // 모델에 loginuser 객체 추가
-		mav.addObject("allMyDocList", allMyDocList); 
+		mav.addObject("myApprovalList", myApprovalList); 
 		
 		// 검색시 검색조건 및 검색어 값 유지시키기
 		if("subject".equals(searchType) || "content".equals(searchType) 
@@ -1405,13 +1406,13 @@ public class ApprovalController {
 	   */
 		
 		String pageBar = "<ul style='list-style:none;'>";
-		String url="list.action";
+		String url="/approval/showMyApprovalList.kedai";
 		
 		// === [맨처음][이전]만들기 ===//
 	//	if(pageNo <= totalPage) { // 맨 마지막에는 나오지 않도록!
 		if(pageNo != 1) {
-			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'"+pageNo+">[맨처음]</a></li>";	
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo='"+(pageNo-1)+"'>[이전]</a></li>";	
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo=1'style='color: #2c4459;' >[맨처음]</a></li>";	
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo='"+(pageNo-1)+"' style='color: #2c4459;'>[이전]</a></li>";	
 		}
 		
 		
@@ -1421,7 +1422,7 @@ public class ApprovalController {
 				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
 			}
 			else {
-				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"' style='color: #2c4459;'>"+pageNo+"</a></li>"; 
 			}
 			loop++;
 			pageNo++;	
@@ -1429,8 +1430,8 @@ public class ApprovalController {
 		
 		// === [다음][마지막]만들기 ===//
 		if(pageNo <= totalPage) { // 맨 마지막에는 나오지 않도록!
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";	
-			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";	
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"' style='color: #2c4459;' >[다음]</a></li>";	
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"' style='color: #2c4459;' >[마지막]</a></li>";	
 		}		
 		
 		pageBar += "</ul>";
@@ -1458,11 +1459,57 @@ public class ApprovalController {
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		
-		mav.setViewName("tiles1/approval/myDocList.tiles");
+		mav.setViewName("tiles1/approval/myApprovalList.tiles");
 		
 		return mav;
 	}
 	
+	 /*
+    @ResponseBody 란?
+	  메소드에 @ResponseBody Annotation이 되어 있으면 return 되는 값은 View 단 페이지를 통해서 출력되는 것이 아니라 
+	 return 되어지는 값 그 자체를 웹브라우저에 바로 직접 쓰여지게 하는 것이다. 일반적으로 JSON 값을 Return 할때 많이 사용된다.
+	 
+	  >>> 스프링에서 json 또는 gson을 사용한 ajax 구현시 데이터를 화면에 출력해 줄때 한글로 된 데이터가 '?'로 출력되어 한글이 깨지는 현상이 있다. 
+               이것을 해결하는 방법은 @RequestMapping 어노테이션의 속성 중 produces="text/plain;charset=UTF-8" 를 사용하면 
+               응답 페이지에 대한 UTF-8 인코딩이 가능하여 한글 깨짐을 방지 할 수 있다. <<< 
+  */ 
+	@ResponseBody
+	@PostMapping(value="/approval/selectdateJSON.kedai",  produces="text/plain;charset=UTF-8")
+	public String selectdateJSON(HttpServletRequest request ){
+				// @RequestParam은 request.getParameter()와 같은 것이다. defaultValue는 파라미터의 초기값을 설정해 줄 수 있는 것을 말한다. 위의 내용은 null대신 ""을 설정한 것이다. 
+				//  form태그의 name값을 꼭 String 이름 이런 식으로 넣어주어야 한다.
+		
+		String dept_code = request.getParameter("dept_code");
+		String loginuser_id = request.getParameter("loginuser_id");
+		
+		Map<String,String> paraMap = new HashMap<>();
+		paraMap.put("dept_code", dept_code);
+		paraMap.put("loginuser_id", loginuser_id);
+		
+		// 본인을 제외한 모든 사원의 정보 가져오기 - 부서번호가 없는 대표이사가 있기 때문에 dept_code도 같이 paraMap에 담는다.
+		List<Map<String,String>> deptEmpList = service.deptEmpList(paraMap);
+		
+		JSONArray jsonArr = new JSONArray();
+		if(deptEmpList != null) {
+			for(Map<String,String> map : deptEmpList) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("empid", map.get("empid"));
+				jsonObj.put("name", map.get("name"));
+				jsonObj.put("fk_dept_code", map.get("fk_dept_code"));
+				jsonObj.put("dept_name", map.get("dept_name"));
+				jsonObj.put("job_code", map.get("job_code"));
+				jsonObj.put("job_name", map.get("job_name"));
+
+				jsonArr.put(jsonObj);
+			}// end of for---------------
+			
+		//	System.out.println(jsonArr.toString());
+			
+		}
+		
+		return jsonArr.toString();
+		
+	}
 	
 	
 }
