@@ -813,3 +813,25 @@ COMMIT;
 select pf_res_num, pf_empid, share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, getin_time, getout_time, use_time, settled_amount, payment_amount, nonpaymnet_amount
 from tbl_car_share
 where to_date(share_date, 'yyyy-mm-dd') = to_date('24-07-30', 'yyyy-mm-dd')
+
+-- 마이페이지에서 카셰어링현황(차주) 페이지 list 뽑기
+select pf_res_num, pf_empid, share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, getin_time, getout_time, use_time, settled_amount, payment_amount, nonpayment_amount, nickname
+from 
+(
+    select pf_res_num, pf_empid, share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, getin_time, getout_time, use_time, settled_amount, payment_amount, nonpayment_amount
+    from tbl_car_share
+)a cross join
+(
+    select car_seq, fk_empid, car_num, car_type, max_num, nickname
+    from 
+    (
+        select *
+        from tbl_car
+    ) v cross join
+    (
+        select *
+        from tbl_employees
+        where empid = '2010001-001'
+    ) h
+    where fk_empid = h.empid
+)b

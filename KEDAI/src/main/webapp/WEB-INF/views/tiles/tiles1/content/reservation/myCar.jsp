@@ -98,7 +98,7 @@ function goRegister(){
 	                    <br><br><br>
 	                </div>
 	                <div class="col-8" style="border: 0px solid red; padding-top:3%; padding-left: 3%;">
-	                    <h4>차종&nbsp;&nbsp;<input type="text" style="font-size: 15pt; font-weight:bold; border:none;" name="car_type" id="car_type" value="${car.car_type}"/><span>차량번호&nbsp;</span><input type="text" name="car_num" id="car_num" style="font-size: 15pt; font-weight:bold; border:none; width:20%;" value="${car.car_num}"/><span>최대탑승인원&nbsp;</span><input type="text" name="max_num" id="max_num" style="font-size: 15pt; font-weight:bold; border:none; width:10%;" value="${car.max_num}"/></h4>
+	                    <h4>차종&nbsp;&nbsp;<input type="text" style="font-size: 15pt; font-weight:bold; border:none;" name="car_type" id="car_type" value="${car.car_type}"/><span>차량번호&nbsp;</span><input type="text" name="car_num" id="car_num" style="font-size: 15pt; font-weight:bold; border:none; width:20%;" value="${car.car_num}"/><span>최대동승인원&nbsp;</span><input type="text" name="max_num" id="max_num" style="font-size: 15pt; font-weight:bold; border:none; width:10%;" value="${car.max_num}명"/></h4>
 	                    <hr style="color: gray; width: 90%;">
 	                    <div style="display: flex;">
 	                        <div class="col-6" style="border-right: 2px solid lightgray;">

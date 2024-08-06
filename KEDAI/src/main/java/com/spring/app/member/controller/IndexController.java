@@ -55,36 +55,36 @@ public class IndexController {
 	@GetMapping("/index/menuFind.kedai")
 	public ModelAndView menuFind(HttpServletRequest request, ModelAndView mav) {
 		
-		String searchWord = request.getParameter("searchWord");
+		String searchMenu = request.getParameter("searchMenu");
 		
-		if(searchWord.equals("전자결재")) {
+		if(searchMenu.equals("전자결재")) {
 			mav.setViewName("redirect:/approval/main.kedai");
 		}
-		else if(searchWord.equals("급여명세서")) {
+		else if(searchMenu.equals("급여명세서")) {
 			mav.setViewName("redirect:/pay_stub.kedai");
 		}
-		else if(searchWord.equals("회의실예약")) {
+		else if(searchMenu.equals("회의실예약")) {
 			mav.setViewName("redirect:/roomResercation.kedai");
 		}
-		else if(searchWord.equals("게시판")) {
+		else if(searchMenu.equals("게시판")) {
 			mav.setViewName("redirect:/board/list.kedai");
 		}
-		else if(searchWord.equals("커뮤니티")) {
+		else if(searchMenu.equals("커뮤니티")) {
 			mav.setViewName("redirect:/community/list.kedai");
 		}
-		else if(searchWord.equals("카쉐어")) {
+		else if(searchMenu.equals("카쉐어")) {
 			mav.setViewName("redirect:/carShare.kedai");
 		}
-		else if(searchWord.equals("통근버스")) {
+		else if(searchMenu.equals("통근버스")) {
 			mav.setViewName("redirect:/bus.kedai");
 		}
-		else if(searchWord.equals("사내연락망")) {
+		else if(searchMenu.equals("사내연락망")) {
 			mav.setViewName("redirect:/employee.kedai");
 		}
-		else if(searchWord.equals("거래처정보")) {
+		else if(searchMenu.equals("거래처정보")) {
 			mav.setViewName("redirect:/othercom_list.kedai");
 		}
-		else if(searchWord.equals("일정관리")) {
+		else if(searchMenu.equals("일정관리")) {
 			mav.setViewName("redirect:");
 		}
 	

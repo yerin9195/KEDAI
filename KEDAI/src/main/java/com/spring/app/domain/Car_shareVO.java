@@ -5,7 +5,7 @@ public class Car_shareVO {
 	private String pf_empid;
 	private String share_date;
 	private String share_may_time;
-	private int accpet_yon;
+	private int accept_yon;
 	private String reason_nonaccept;
 	private String rdp_name;
 	private String rdp_add;
@@ -21,6 +21,44 @@ public class Car_shareVO {
 	private double settled_amount;
 	private double payment_amount;
 	private double nonpayment_amount;
+	
+	///// == select용 == /////
+	private String nickname;
+	private int rno;
+	private String email;
+	private String nickname_owner;
+	private String nickname_applicant;
+	
+	public String getNickname_owner() {
+		return nickname_owner;
+	}
+	public void setNickname_owner(String nickname_owner) {
+		this.nickname_owner = nickname_owner;
+	}
+	public String getNickname_applicant() {
+		return nickname_applicant;
+	}
+	public void setNickname_applicant(String nickname_applicant) {
+		this.nickname_applicant = nickname_applicant;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public int getRno() {
+		return rno;
+	}
+	public void setRno(int rno) {
+		this.rno = rno;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
 	public int getPf_res_num() {
 		return pf_res_num;
 	}
@@ -45,11 +83,11 @@ public class Car_shareVO {
 	public void setShare_may_time(String share_may_time) {
 		this.share_may_time = share_may_time;
 	}
-	public int getAccpet_yon() {
-		return accpet_yon;
+	public int getAccept_yon() {
+		return accept_yon;
 	}
-	public void setAccpet_yon(int accpet_yon) {
-		this.accpet_yon = accpet_yon;
+	public void setAccept_yon(int accept_yon) {
+		this.accept_yon = accept_yon;
 	}
 	public String getReason_nonaccept() {
 		return reason_nonaccept;

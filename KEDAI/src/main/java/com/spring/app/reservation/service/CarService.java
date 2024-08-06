@@ -43,7 +43,22 @@ public interface CarService {
 
 	int owner_getTotalCount(Map<String, String> paraMap);
 
-	Car_shareVO owner_dateInfo(String date);
+	List<Map<String, Object>> owner_dateInfo(String date);
+
+	List<String> searchShow_owner(Map<String, String> paraMap);
+
+	int getTotalCount_owner_Status_detail(Map<String, Object> paraMap);
+
+	List<Map<String, Object>> owner_Status_detail_withPaging(Map<String, Object> paraMap);
+
+	int updateStatus(Map<String, Object> paraMap);
+
+	List<Map<String, String>> owner_SettlementList(String empid);
+
+	int getTotalcount_owner_SettlementList(Map<String, String> paraMap);
+
+	List<Map<String, String>> owner_SettlementList_withPaging(Map<String, String> paraMap);
+
 
 
 }

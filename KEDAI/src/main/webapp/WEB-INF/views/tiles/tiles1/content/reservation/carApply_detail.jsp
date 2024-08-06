@@ -601,6 +601,8 @@ $(document).ready(function(){
    // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 지도에 표시함.
    // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 RIGHT는 오른쪽을 의미함.    
    mapobj.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+   var startCoords = new kakao.maps.LatLng(${requestScope.day_shareInfo.dp_lng}, ${requestScope.day_shareInfo.dp_lat});
    
    if(navigator.geolocation) {
       // HTML5의 geolocation으로 사용할 수 있는지 확인한다 
@@ -652,7 +654,7 @@ $(document).ready(function(){
          infowindow.open(mapobj, marker);
 
          // == 지도의 센터위치를 locPosition로 변경한다.(사이트에 접속한 클라이언트 컴퓨터의 현재의 위.경도로 변경한다.)
-          mapobj.setCenter(locPosition);
+          mapobj.setCenter(startCoords);
          
        });
    }
@@ -743,6 +745,40 @@ $(document).ready(function(){
    });
    
     
+   var startCoords = new kakao.maps.LatLng(${requestScope.day_shareInfo.dp_lng}, ${requestScope.day_shareInfo.dp_lat});
+   
+   // 출발지와 도착지에 마커를 표시합니다.
+   var startMarker = new kakao.maps.Marker({
+       map: mapobj,
+       position: startCoords,
+       title: '출발지'
+   });
+
+   var startInfoWindow = new kakao.maps.InfoWindow({
+       content: '<div style="padding:5px;">출발지</div>'
+   });
+   startInfoWindow.open(mapobj, startMarker);
+   
+   var endCoords = new kakao.maps.LatLng(${requestScope.day_shareInfo.ds_lng}, ${requestScope.day_shareInfo.ds_lat});
+
+   var endMarker = new kakao.maps.Marker({
+       map: mapobj,
+       position: endCoords,
+       title: '도착지'
+   });
+
+   var endInfoWindow = new kakao.maps.InfoWindow({
+       content: '<div style="padding:5px;">도착지</div>'
+   });
+   endInfoWindow.open(mapobj, endMarker);
+   
+   mapobj.setCenter(startCoords); 
+   // 지도의 경계에 맞게 이동
+   var bounds = new kakao.maps.LatLngBounds();
+   bounds.extend(startCoords);
+   bounds.extend(endCoords);
+   mapobj.setBounds(bounds);
+   
    kakao.maps.event.addListener(mapobj, 'click', function(mouseEvent) {         
           
        // 클릭한 위도, 경도 정보를 가져옵니다 

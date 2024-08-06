@@ -93,6 +93,7 @@
 </style>
 
 <script type="text/javascript">
+    
     $(document).ready(function(){
        
     	/* 날짜 바꾸기 시작 */
@@ -135,125 +136,149 @@
             return new Date(year, month, day);
         }
         
+        
         $('input[type="button"].subject').on('click', function() {
-            // 클릭된 버튼의 부모 <tr> 요소를 찾음
+            
+        	// 클릭된 버튼의 부모 <tr> 요소를 찾음
             var $tr = $(this).closest('tr');
             
             // 해당 <tr> 내의 <input> 요소 중 name이 last_date인 요소를 찾음
             var $lastDateInput = $tr.find('input[name="last_date"]');
             var $startDateInput = $tr.find('input[name="start_date"]');
+            var $res_num = $tr.find('input[name="res_num"]');
             // last_date 입력 요소의 값을 가져옴
-            var startDateValue = $startDateInput.val();
-            var lastDateValue = $lastDateInput.val();
+            let startDateValue = $startDateInput.val();
+            let lastDateValue = $lastDateInput.val();
+            let res_num = $res_num.val();
             // 콘솔에 값 출력 (확인용)
-            console.log('Last Date:', lastDateValue);
             console.log('start Date:', startDateValue);
+            console.log('Last Date:', lastDateValue);
             // 필요시 해당 값을 다른 로직에 사용 가능
             // 예: 모달 창에 날짜 설정 등
         	resetModal(); // Ensure the modal is reset before showing
             modal.show();
-            calendar.render();
+      //    calendar.render();
             
+            //////////////////////////////////////////////
+            func_calendar_call(startDateValue, lastDateValue, res_num);
+            /////////////////////////////////////////////
         });
-        
+  /*      
      var start_date = $("input:hidden[name='start_date']").val();
      var convertedstart_date = parseDate(start_date, 0);
      var last_date = $("input:hidden[name='last_date']").val();
      var convertedlast_date = parseDate(last_date, 1);
+  */ 
+  //////////////////////////////////////////////////////////////////////////////////////////////
+  
+     function func_calendar_call(startDateValue, lastDateValue, res_num){
+	        var start_date = startDateValue;
+	        var convertedstart_date = parseDate(start_date, 0);
+	        var last_date = lastDateValue;
+	        var convertedlast_date = parseDate(last_date, 1);
+	     
+	        alert("시작일자 : " + start_date + ", 종료일자 : " + last_date + ", res_num :" + res_num );
+	       /* 모달 시작 */
+	        var startDate = convertedstart_date;
+	    	var endDate = convertedlast_date;
+	       // Initialize the calendar
+	        var calendarEl = document.getElementById('calendar');
+	        var calendar = new FullCalendar.Calendar(calendarEl, {
+	                initialView: 'dayGridMonth',
+	                height: '100%',
+	                dateClick: function(info) {
+	                    // Remove existing select buttons
+	                    $('.select-button').remove();
+	                    // Remove background color from previously clicked cells
+	                    $('.fc-daygrid-day').removeClass('fc-daygrid-day-clicked');
+	                    // Add background color to clicked cell
+	                    $(info.dayEl).addClass('fc-daygrid-day-clicked');
+
+	                 // 새로운 select 버튼 생성
+	                    var button = $('<button type="button" class="select-button" style="background-color: #2c4459;">선택</button>');
+	                    // 버튼을 클릭된 셀에 추가
+	                    $(info.dayEl).append(button);
+
+	                    // 버튼에 클릭 이벤트 추가
+	                    button.click(function() {
+	                    //  alert('Date selected: ' + info.dateStr);
+	                        $('#myModal').hide(); // 모달 닫기
+	                        resetModal(); // 모달 내용 초기화
+	                        // dateStr 값을 가지고 새로운 페이지로 이동
+	                        goDetail(info.dateStr, res_num);
+	                    });
+
+	                },
+	                validRange: {
+	                    start: startDate, // 가져온 start_date
+	                    end: endDate // 가져온 last_date
+	                }
+	        });
+	        
+	        calendar.render();
+     }// end of func_calendar_call(startDateValue, lastDateValue, res_num)-------------------------
+     ///////////////////////////////////////////////////////////////////////////////////////////////
+
      
-       /* 모달 시작 */
-        var startDate = convertedstart_date;
-    	var endDate = convertedlast_date;
-       // Initialize the calendar
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                height: '100%',
-                dateClick: function(info) {
-                    // Remove existing select buttons
-                    $('.select-button').remove();
-                    // Remove background color from previously clicked cells
-                    $('.fc-daygrid-day').removeClass('fc-daygrid-day-clicked');
-                    // Add background color to clicked cell
-                    $(info.dayEl).addClass('fc-daygrid-day-clicked');
+	            // Get the modal
+	            var modal = $('#myModal');
 
-                 // 새로운 select 버튼 생성
-                    var button = $('<button type="button" class="select-button" style="background-color: #2c4459;">선택</button>');
-                    // 버튼을 클릭된 셀에 추가
-                    $(info.dayEl).append(button);
+	            // Get the button that opens the modal
+	            var btn = $('#openModalBtn');
 
-                    // 버튼에 클릭 이벤트 추가
-                    button.click(function() {
-                    //  alert('Date selected: ' + info.dateStr);
-                        $('#myModal').hide(); // 모달 닫기
-                        resetModal(); // 모달 내용 초기화
-                        // dateStr 값을 가지고 새로운 페이지로 이동
-                        goDetail(info.dateStr);
-                    });
+	            // Get the <span> element that closes the modal
+	            var span = $('.close');
 
-                },
-                validRange: {
-                    start: startDate, // 가져온 start_date
-                    end: endDate // 가져온 last_date
-                }
-            });
+	            // Function to reset the modal content
+	             function resetModal() {
+	                // Remove existing select buttons
+	                $('.select-button').remove();
+	                // Remove background color from previously clicked cells
+	                $('.fc-daygrid-day').removeClass('fc-daygrid-day-clicked');
+	            } 
 
-            // Get the modal
-            var modal = $('#myModal');
+	/*             // 모달창 키기 id은 status.index로 각각 설정해주고 해당 클래스를 불러온다.
+	            $(document).on("click", "input.subject", function(){
+	            	var $td = $(this).parent();
+	            	alert("~~~ 확인용 : " + $td.find($("input:hidden[name='last_date']").val()));
+	            	resetModal(); // Ensure the modal is reset before showing
+	                modal.show();
+	                calendar.render();
+	            }); */
 
-            // Get the button that opens the modal
-            var btn = $('#openModalBtn');
+	/*             $('.subject').click(function(e) {
+	                
+	            	
+	            	resetModal(); // Ensure the modal is reset before showing
+	                modal.show();
+	                calendar.render();
+	                
+	                
+	            }); */
+	            
+				// When the user clicks on <span> (x), close the modal and reset content
+	            span.click(function() {
+	                modal.hide();
+	                resetModal();
+	            });
 
-            // Get the <span> element that closes the modal
-            var span = $('.close');
+	            // When the user clicks anywhere outside of the modal, close it and reset content
+	            $(window).click(function(event) {
+	                if ($(event.target).is(modal)) {
+	                    modal.hide();
+	                    resetModal();
+	                }
+	            });
 
-            // Function to reset the modal content
-            function resetModal() {
-                // Remove existing select buttons
-                $('.select-button').remove();
-                // Remove background color from previously clicked cells
-                $('.fc-daygrid-day').removeClass('fc-daygrid-day-clicked');
-            }
+	            // Ensure reset when the modal is hidden
+	            modal.on('hide', function() {
+	                resetModal();
+	            });
+	       /* 모달 끝  */
 
-/*             // 모달창 키기 id은 status.index로 각각 설정해주고 해당 클래스를 불러온다.
-            $(document).on("click", "input.subject", function(){
-            	var $td = $(this).parent();
-            	alert("~~~ 확인용 : " + $td.find($("input:hidden[name='last_date']").val()));
-            	resetModal(); // Ensure the modal is reset before showing
-                modal.show();
-                calendar.render();
-            }); */
-
-/*             $('.subject').click(function(e) {
-                
-            	
-            	resetModal(); // Ensure the modal is reset before showing
-                modal.show();
-                calendar.render();
-                
-                
-            }); */
-            
-			// When the user clicks on <span> (x), close the modal and reset content
-            span.click(function() {
-                modal.hide();
-                resetModal();
-            });
-
-            // When the user clicks anywhere outside of the modal, close it and reset content
-            $(window).click(function(event) {
-                if ($(event.target).is(modal)) {
-                    modal.hide();
-                    resetModal();
-                }
-            });
-
-            // Ensure reset when the modal is hidden
-            modal.on('hide', function() {
-                resetModal();
-            });
-       /* 모달 끝  */
-       
+	  //////////////////////////////////////////////////////////////////////////////////////////////
+      
+     
        
         $("span.subject").hover(function(e){
             $(e.target).addClass("subjectStyle");
@@ -268,7 +293,7 @@
       });
       
       // 검색 시 검색조건 및 검색어 값 유지시키기
-      if(${not empty requestScope.paraMap}){ // paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다.
+      if(${not empty requestScope.paraMap}){ /*  paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다. */
          $("select[name='searchType']").val("${requestScope.paraMap.searchType}");
          $("input[name='searchWord']").val("${requestScope.paraMap.searchWord}");
       }
@@ -285,10 +310,10 @@
          else {
             if($("select[name='searchType']").val() == "dp_name" ||
                $("select[name='searchType']").val() == "ds_name" ||
-               $("select[name='searchType']").val() == "nickname" ){
+			   $("select[name='searchType']").val() == "share_date" ){
                
                $.ajax({
-                  url: "<%= ctxPath%>/carShare/searchShow.kedai",
+                  url: "<%= ctxPath%>/carShare/searchShow_owner.kedai",
                   type: "get",
                   data: {"searchType":$("select[name='searchType']").val(),
                         "searchWord":$("input[name='searchWord']").val()},
@@ -328,10 +353,10 @@
       
       $('select[name="searchType"]').change(function() {
             var selected = $(this).val();
-            if (selected === 'dp_name' || selected === 'ds_name' || selected === '' ) {
+            if (selected == 'dp_name' || selected == 'ds_name' || selected == '' ) {
                 $('input[name="searchWord"]').show();
                 $('input[name="start"]').hide();
-            } else if (selected === 'share_date') {
+            } else if (selected == 'share_date') {
                 $('input[name="searchWord"]').hide();
                 $('input[name="start"]').show();
             } else {
@@ -398,11 +423,12 @@
     }); // end of $(document).ready(function(){}) ----------
 
     // select 버튼 클릭시 새로운 페이지로 이동하는 함수
-	function goDetail(dateStr) {
+	function goDetail(dateStr, res_num) {
 	    const frm = document.date_frm;
-	    frm.method = "post";
+	    frm.method = "get";
 	    frm.action = "<%= ctxPath %>/owner_Status_detail.kedai";
 	    frm.date.value = dateStr; // 폼의 히든 필드에 날짜 값 설정
+	    frm.res_num.value = res_num;
 	    frm.submit();
 	}
     
@@ -415,18 +441,13 @@
       frm.submit();
       
    } // end of function goSearch(){} ----------
-   
-    function goApply(formName){
-        const frm = document.forms[formName];
-        frm.action = "<%= ctxPath%>/carApply_detail.kedai"; 
-        frm.method = "post";
-        frm.submit();
-    }
+
 </script>
 
 <div style="border: 0px solid red; padding: 2% 0; width: 90%;">
 <form name="date_frm" method="get">
     <input type="hidden" name="date" value="">
+    <input type="hidden" name="res_num" value="">
     <%-- ${requestScope.day_shareInfo.res_num} --%>
     <!-- 다른 필요한 폼 필드들 -->
 </form>
@@ -454,24 +475,22 @@
 
     <div style="margin: auto; width: 100%">
 
-         <div class="row">
-        <form name="member_search_frm" class="col-10">
-            <select name="searchType">
-               <option value="">검색대상</option>
-               <option value="dp_name">출발지</option>
-               <option value="ds_name">도착지</option>
-               <option value="share_date">셰어링 날짜</option>
-            </select>
-            &nbsp;
-            <c:if test=""></c:if>
-            <input type="text" name="searchWord" placeholder = "검색어 입력"/>
-            <input type="text" style="display: none;" /> <%-- 조심할 것은 type="hidden" 이 아니다. --%> 
-            <!--  날짜 선택   -->
-            <input type="text" name="start" id="datepicker_start" maxlength="10" value="" style="padding: 5px; height: 22pt;" placeholder = "날짜선택" readonly/>
-            &nbsp;
-            <button type="button" class="btn btn-secondary" onclick="goSearch()">검색</button>
-            
-        </form>
+        <div class="row">
+	        <form name="member_search_frm" class="col-10">
+	            <select name="searchType">
+	               <option value="">검색대상</option>
+	               <option value="dp_name">출발지</option>
+	               <option value="ds_name">도착지</option>
+	               <option value="share_date">셰어링 날짜</option>
+	            </select>
+	            &nbsp;
+	            <input type="text" name="searchWord" placeholder = "검색어 입력"/>
+	            <input type="text" style="display: none;" /> <%-- 조심할 것은 type="hidden" 이 아니다. --%> 
+	            <!--  날짜 선택   -->
+	            <input type="text" name="start" id="datepicker_start" maxlength="10" value="" style="padding: 5px; height: 22pt;" placeholder = "날짜선택" readonly/>
+	            &nbsp;
+	            <button type="button" class="btn btn-secondary" onclick="goSearch()">검색</button>
+	        </form>
         </div>
         <div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 7.8%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
         </div>
@@ -480,22 +499,24 @@
             <thead>
                 <tr>
                     <th style="width: 70px; text-align: center;">no</th>
-                    <th style="width: 240px; text-align: center;">출발지 -> 도착지</th>
+                    <th style="width: 175px; text-align: center; border:none;">출발지</th>
+                    <th style="width: 10px; text-align: center; border:none;"><i class="fa-solid fa-arrow-right"></i></th>
+                    <th style="width: 175px; text-align: center; border:none;">도착지</th>
                     <th style="width: 200px; text-align: center;">셰어링 날짜</th>
                     <th style="width: 70px; text-align: center;">출발시간</th>
                     <th style="width: 70px; text-align: center;">조회</th>
                 </tr>
             </thead>
             <tbody>
-                         <!-- The Modal -->
-                         <div id="myModal" class="modal">
-                             <!-- Modal content -->
-                             <div class="modal-content">
-                                 <span class="close">&times;</span>
-                                 <span style="text-align:center; font-size: 20pt; font-weight:300;">조회하고 싶은 날짜를 선택하세요</span>
-                                 <div id="calendar"></div>
-                             </div>
-                         </div>
+                <!-- The Modal -->
+                <div id="myModal" class="modal">
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <span style="text-align:center; font-size: 20pt; font-weight:300;">조회하고 싶은 날짜를 선택하세요</span>
+                        <div id="calendar"></div>
+                    </div>
+                </div>
             
                 <c:if test="${not empty requestScope.owner_carShareList}">
                     <c:forEach var="owner_carShare" items="${requestScope.owner_carShareList}" varStatus="status">
@@ -506,7 +527,9 @@
                                 <input type="hidden" name="start_date" value="${owner_carShare.start_date}">
 						    	<input type="hidden" name="last_date" value="${owner_carShare.last_date}">
                             </form> 
-                            <td>${owner_carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${owner_carShare.ds_name}</td>
+                            <td align="center" style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">${owner_carShare.dp_name}</td>
+                            <td align="center" style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;"><i class="fa-solid fa-arrow-right"></i></td>
+                            <td align="center" style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">${owner_carShare.ds_name}</td>
                             <c:set var="startDate" value="${owner_carShare.start_date}" />
                             <c:set var="lastDate" value="${owner_carShare.last_date}" />
                             <td align="center">

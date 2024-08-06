@@ -46,6 +46,7 @@ public class EmployeeController {
 	//////////////////////////////////////////////////////////////////////////
 	// 전체 사원들 정보 조회하기
 	@RequestMapping(value="/employee.kedai") 
+
 	public ModelAndView employee_list(ModelAndView mav) {
 		
 		List<MemberVO> employeeList = service.employee_list();
@@ -206,6 +207,7 @@ public class EmployeeController {
 		
 		/////////////////////////////////////// 여기는 페이져블 
 		// Pageable pageable = PageRequest.of(pageNumber, pageSize); 
+
 		
 		// System.out.println("searchType:" + searchType + ", searchWord: " + searchWord +
 		//", pageNumber: " + pageNumber + ", pageSize:" + pageSize);
