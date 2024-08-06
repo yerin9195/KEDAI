@@ -97,7 +97,6 @@ public class ScheduleController {
 		
 		String empid = request.getParameter("empid");
 	
-		System.out.println("확인용 empid : " + empid);
 		List<CalendarScheduleVO> scheduleList = service.allSchedule(empid);
 		
 		System.out.println("확인용 scheduleList : " + scheduleList);
@@ -135,6 +134,8 @@ public class ScheduleController {
 	public ModelAndView detailSchedule(ModelAndView mav, HttpServletRequest request) {
 		
 		String scheduleno = request.getParameter("scheduleno");
+		
+		System.out.println("확인용 scheduleno" + scheduleno);
 		
 		// 검색하고 나서 취소 버튼 클릭했을 때 필요함
 		String listgobackURL_schedule = request.getParameter("listgobackURL_schedule");
@@ -458,24 +459,24 @@ public class ScheduleController {
 	@PostMapping("/scheduler/registerSchedule_end.kedai")
 	public ModelAndView registerSchedule_end(ModelAndView mav, HttpServletRequest request) throws Throwable {
 		
-		String cal_startdate= request.getParameter("startdate");
+		String cal_startdate= request.getParameter("cal_startdate");
    	//  System.out.println("확인용 startdate => " + startdate);
 	//  확인용 startdate => 20231129140000
    	    
-		String cal_enddate = request.getParameter("enddate");
-		String cal_subject = request.getParameter("subject");
+		String cal_enddate = request.getParameter("cal_enddate");
+		String cal_subject = request.getParameter("cal_subject");
 		String fk_lgcatgono= request.getParameter("fk_lgcatgono");
 		String fk_smcatgono = request.getParameter("fk_smcatgono");
-		String cal_color = request.getParameter("color");
-		String cal_place = request.getParameter("place");
-		String cal_joinuser = request.getParameter("joinuser");
+		String cal_color = request.getParameter("cal_color");
+		String cal_place = request.getParameter("cal_place");
+		String cal_joinuser = request.getParameter("cal_joinuser");
 		
      //	System.out.println("확인용 joinuser => " + joinuser);
 	 // 확인용 joinUser_es =>
 	 // 또는 
 	 // 확인용 joinUser_es => 이순신(leess),아이유1(iyou1),설현(seolh) 	
 		
-		String cal_content = request.getParameter("content");
+		String cal_content = request.getParameter("cal_content");
 		String fk_empid = request.getParameter("fk_empid");
 		
 		Map<String,String> paraMap = new HashMap<String, String>();

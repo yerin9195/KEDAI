@@ -277,14 +277,14 @@ $(document).ready(function(){
 		
 	    // ===================== DB 와 연동하는 법 시작 ===================== //
    		events:function(info, successCallback, failureCallback) {
-	
+
 	    	 $.ajax({
                  url: '<%= ctxPath%>/scheduler/allSchedule.kedai',
                  data:{"empid":$('input#empid').val()},
                  dataType: "json",
                  success:function(json) {
                 	 
-                	 console.log(json);
+                	 //console.log(json);
                 	 /*
                 	    json 의 값 예
                 	    [{"cal_enddate":"2021-11-26 18:00:00.0","fk_lgcatgono":"2","color":"#009900","scheduleno":"1","fk_smcatgono":"4","cal_subject":"파이널 프로젝트 코딩","cal_startdate":"2021-11-08 09:00:00.0","fk_empid":"seoyh"},{"cal_enddate":"2021-11-29 13:50:00.0","fk_lgcatgono":"1","color":"#990008","scheduleno":"2","fk_smcatgono":"7","cal_subject":"팀원들 점심식사","cal_joinuser":"leess,eomjh","cal_startdate":"2021-11-29 12:50:00.0","fk_empid":"seoyh"},{"cal_enddate":"2021-12-02 20:00:00.0","fk_lgcatgono":"1","color":"#300bea","scheduleno":"3","fk_smcatgono":"11","cal_subject":"팀원들 뒤풀이 여행","cal_joinuser":"leess,eomjh","cal_startdate":"2021-12-01 09:00:00.0","fk_empid":"seoyh"}]
@@ -296,15 +296,15 @@ $(document).ready(function(){
                                     var cal_startdate = moment(item.cal_startdate).format('YYYY-MM-DD HH:mm:ss');
                                     var cal_enddate = moment(item.cal_enddate).format('YYYY-MM-DD HH:mm:ss');
                                     var cal_subject = item.cal_subject;
-                              
+                                    console.log("Processing item:", item); // 추가된 로그: 현재 처리 중인 아이템
+                                    
                                    // 사내 캘린더로 등록된 일정을 풀캘린더 달력에 보여주기 
                                    // 일정등록시 사내 캘린더에서 선택한 소분류에 등록된 일정을 풀캘린더 달력 날짜에 나타내어지게 한다.
-                                   if( $("input:checkbox[name=com_smcatgono]:checked").length <= $("input:checkbox[name=com_smcatgono]").length ){
-	                                   
-	                                   for(var i=0; i<$("input:checkbox[name=com_smcatgono]:checked").length; i++){
-	                                	  
-	                                		   if($("input:checkbox[name=com_smcatgono]:checked").eq(i).val() == item.fk_smcatgono){
-	   			                               //  alert("캘린더 소분류 번호 : " + $("input:checkbox[name=com_smcatgono]:checked").eq(i).val());
+                                   	if( $("input:checkbox[name=com_smcatgono]:checked").length <= $("input:checkbox[name=com_smcatgono]").length ){
+                                   		for(var i=0; i<$("input:checkbox[name=com_smcatgono]:checked").length; i++){
+	                                    	if($("input:checkbox[name=com_smcatgono]:checked").eq(i).val() == item.fk_smcatgono){
+	   			                                 alert("캘린더 소분류 번호 : " + $("input:checkbox[name=com_smcatgono]:checked").eq(i).val());
+	   			                      
 	                                			   events.push({
 	   			                                	            id: item.scheduleno,
 	   			                                                title: item.cal_subject,
@@ -323,12 +323,11 @@ $(document).ready(function(){
                                   
                                   // 내 캘린더로 등록된 일정을 풀캘린더 달력에 보여주기
                                   // 일정등록시 내 캘린더에서 선택한 소분류에 등록된 일정을 풀캘린더 달력 날짜에 나타내어지게 한다.
-                                  if( $("input:checkbox[name=my_smcatgono]:checked").length <= $("input:checkbox[name=my_smcatgono]").length ){
-	                                   
-	                                   for(var i=0; i<$("input:checkbox[name=my_smcatgono]:checked").length; i++){
-	                                	  
-	                                		   if($("input:checkbox[name=my_smcatgono]:checked").eq(i).val() == item.fk_smcatgono && item.empid == "${sessionScope.loginuser.empid}" ){
-	   			                               //  alert("캘린더 소분류 번호 : " + $("input:checkbox[name=my_smcatgono]:checked").eq(i).val());
+                                  	if( $("input:checkbox[name=my_smcatgono]:checked").length <= $("input:checkbox[name=my_smcatgono]").length ){
+	                                   	for(var i=0; i<$("input:checkbox[name=my_smcatgono]:checked").length; i++){
+	                                		if($("input:checkbox[name=my_smcatgono]:checked").eq(i).val() == item.fk_smcatgono && item.fk_empid == "${sessionScope.loginuser.empid}" ){
+	                                			   
+	                                			//   alert("캘린더 소분류 번호 : " + $("input:checkbox[name=my_smcatgono]:checked").eq(i).val());
 	                                			   events.push({
 	   			                                	            id: item.scheduleno,
 	   			                                                title: item.cal_subject,
@@ -398,8 +397,8 @@ $(document).ready(function(){
 		            	// 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스중 체크박스에 체크를 한 경우 라면
 		                
 		            	if (arg.event.extendedProps.cid === item.value) { // item.value 가 체크박스의 value 값이다.
-		                	// console.log("일정을 보여주는 cid : "  + arg.event.extendedProps.cid);
-		                	// console.log("일정을 보여주는 체크박스의 value값(item.value) : " + item.value);
+		                	 console.log("일정을 보여주는 cid : "  + arg.event.extendedProps.cid);
+		                	 console.log("일정을 보여주는 체크박스의 value값(item.value) : " + item.value);
 		                    
 		                	arg.el.style.display = "block"; // 풀캘린더에서 일정을 보여준다.
 		                }
@@ -409,8 +408,8 @@ $(document).ready(function(){
 		            	// 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스중 체크박스에 체크를 해제한 경우 라면
 		                
 		            	if (arg.event.extendedProps.cid === item.value) {
-		            		// console.log("일정을 숨기는 cid : "  + arg.event.extendedProps.cid);
-		                	// console.log("일정을 숨기는 체크박스의 value값(item.value) : " + item.value);
+		            		 console.log("일정을 숨기는 cid : "  + arg.event.extendedProps.cid);
+		                	 console.log("일정을 숨기는 체크박스의 value값(item.value) : " + item.value);
 		                	
 		            		arg.el.style.display = "none"; // 풀캘린더에서 일정을  숨긴다.
 		                }

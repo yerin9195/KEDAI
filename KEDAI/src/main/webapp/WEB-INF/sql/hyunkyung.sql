@@ -1385,3 +1385,11 @@ cal_content            VARCHAR2(4000)
 fk_smcatgono           NUMBER(8)      
 fk_lgcatgono           NUMBER(3)      
 fk_empid      NOT NULL VARCHAR2(40)   
+
+select *
+from tbl_calendar_small_category;
+
+insert into tbl_calendar_schedule(scheduleno, cal_startdate, cal_enddate, cal_subject, cal_color, cal_place, cal_joinuser, cal_content, fk_smcatgono, fk_lgcatgono, fk_empid) 
+values(seq_scheduleno.nextval, to_date('20240801100000', 'yyyymmddhh24miss'), to_date('20240801105000', 'yyyymmddhh24miss'), '제목', '#000', '장소', '2015200-002', '내용', '4', '1', '2020200-006')  
+
+rollback;
