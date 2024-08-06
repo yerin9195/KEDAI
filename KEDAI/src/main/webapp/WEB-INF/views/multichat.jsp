@@ -134,12 +134,6 @@ body, html {
 }
 
 
-
-
-
-
-
-
 </style> 
 
 
@@ -175,15 +169,14 @@ body, html {
 */
 
 	$(document).ready(function(){
-		
+
 		// $("div#mycontent").css({"background-color":"#cce0ff"});
 	    // div#mycontent 는  /Board/src/main/webapp/WEB-INF/tiles/layout/layout-tiles1.jsp 파일의 내용에 들어 있는 <div id="mycontent"> 이다.
 			
 	    const url = window.location.host;	// 웹브라우저의 주소창의 포트까지 가져오는 것
-	    // alert("url : " + url);
+	    //alert("url : " + url);
+	    // url : 192.168.10.198:9099
 	    // url : 192.168.0.210:9099
-	    
-	    // const url = "192.168.0.210:9099";
 	    
 	    const pathname = window.location.pathname;	// 최초 '/' 부터 오른쪽에 있는 모든 경로를 알려준다. 
 	    // alert("pathname : " + pathname);
@@ -196,9 +189,15 @@ body, html {
 	    const root = url + appCtx;
 	    // alert("root : " + root);
 	    // root : 192.168.0.210:9099/KEDAI/chatting
-	   
-	    const wsUrl = "ws://"+root+"/multichatstart.kedai";
+		// root : 192.168.10.198:9099/KEDAI/chatting	   
+	    
+	//	const wsUrl = "ws://"+root+"/multichatstart.kedai";
+	    
+		const wsUrl = "ws://"+root+"/multichatstart.kedai";
+	    
 	    // alert("wsUrl : " + wsUrl)
+	    // wsUrl : ws://192.168.10.198:9099/KEDAI/chatting/multichatstart.kedai
+	    // 192.168.10.198:9099/KEDAI/chatting/multichatstart.kedai
 	    // wsUrl : ws://192.168.0.210:9099/KEDAI/chatting/multichatstart.kedai
 	 	// 웹소켓통신을 하기위해서는 http:// 을 사용하는 것이 아니라 ws:// 을 사용해야 한다. 
 	    // "/multichatstart.kedai" 에 대한 것은 /WEB-INF/spring/config/websocketContext.xml 파일에 있는 내용이다. 
@@ -249,16 +248,13 @@ body, html {
 	    
 	    // ==== 메시지 수신시 콜백함수 정의하기 ==== // 
 	    websocket.onmessage = function(event){
-    	
-	      // alert(event.data); 
 	    	
-	    // event.data 는 수신되어진 메시지이다. 즉 지금은 「유선우 」이다. 
-    	// if(event.data.substr(0,1)=="「" && event.data.substr(event.data.length-1)=="」") {
+	    	// event.data 는 수신되어진 메시지이다. 즉 지금은 「유선우 」이다. 
+    		// if(event.data.substr(0,1)=="「" && event.data.substr(event.data.length-1)=="」") {
     	   if(event.data.substr(0,1)=="「") {
     		 //  alert(event.data); 
     		  $("div#connectingUserList").html(event.data);
            }
-    	  
     	   /// ★
     	   else if(event.data.substr(0,1)=="⊇"){
     		  $("tbody#tbody").html(event.data);  
@@ -269,6 +265,7 @@ body, html {
           		$("div#chatMessage").append("<br>");
           		$("div#chatMessage").scrollTop(99999999);
            }
+    	 // } // 이거 추가하면 엔터가 안쳐짐
 	     };
 	    
 		 // === 웹소켓 연결 해제시 콜백함수 정의하기 === //
@@ -307,8 +304,8 @@ body, html {
                // 또는
                messageObj = {}; // 자바스크립트 객체 생성함. 
                messageObj.message = messageVal;
-               messageObj.message = "all";
-               messageObj.message = "all";
+               messageObj.type = "all";
+               messageObj.to = "all";
                
                const to = $("input#to").val();
                if( to != "" ){
@@ -359,6 +356,10 @@ body, html {
                
                $("input#message").val("");
                $("input#message").focus();
+               
+               ///////////// 확인용 ///////////////
+               // alert()
+               //////////////////////////////////////////////
           }
           
        });
@@ -377,12 +378,12 @@ body, html {
           */
           
           const ws_id = $(this).prev().text();
-       // console.log("prev-text : " + ws_id);
-       // alert(ws_id);
+       	  // console.log("prev-text : " + ws_id);
+       	  // alert(ws_id);
           $("input#to").val(ws_id); 
            
-          $("span#privateWho").text($(this).text());
-          $("button#btnAllDialog").show(); // 귀속말대화끊기 버튼 보이기 
+           $("span#privateWho").text($(this).text());
+           $("button#btnAllDialog").show(); // 귀속말대화끊기 버튼 보이기 
            $("input#message").css({'background-color':'black', 'color':'white'});
            $("input#message").attr("placeholder","귀속말 메시지 내용");
            
@@ -404,6 +405,7 @@ body, html {
        
        
        // 메시지 나가기 
+       /*
        $(document).ready(function(){
     	   $(document).keydown(function(event){
     		   if(event.key == "Escape"){
@@ -412,15 +414,15 @@ body, html {
     	   })
     	   
        })
-
+		*/
 	}); // end of $(document).ready(function(){}---------------------------------------
 
 
 </script>    
 </head>
 <body>
-<div>
-	<table style="border:solid 1px black;" class="chatUser">
+<div style="display: flex; height: 90%;">
+	<table style="border:solid 0px black; border-radius: 3px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);" class="chatUser">
 		<thead>
 			<tr>
 				<th colspan="4" style="text-align:center;">[ 접속중인 직원 ]</th>
@@ -445,11 +447,11 @@ body, html {
 			</c:forEach> --%>
 		</tbody> 
 	</table>
-</div>
 
-<div class="container-fluid" style="width: 80%; height:90%; border-radius: 10px;">
+
+<div class="container-fluid" style="width: 80%; height:90%; border-radius: 3px;">
    <div class="message_body">
-      <div class="row" id="chatting_box" style="border: 1px solid black; width: 890px; height: 890px; border-radius: 10px; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);">
+      <div class="row" id="chatting_box" style="border: 0px solid black; width: 890px; height: 990px; margin-bottom: 15px; border-radius: 3%; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);">
          <div class="col-md-12 offset-md-1" style="overflow:hidden;">
             <div id="chatStatus"></div>
                <div style="width:100%;">
@@ -463,12 +465,12 @@ body, html {
                <br>
                   <button type="button" id="btnAllDialog" class="btn btn-secondary btn-sm">귀속말대화끊기</button>
                <br><br>
-             		   ☆현재접속자명단:<br/>
+             		   ☆현재접속자명단:<br>
                <div id="connectingUserList" style="max-height: 100px; overFlow-y: auto; position:fixed;"></div>
                
                <div id="chatMessage" style="max-height: 500px; overFlow: auto;"></div>
                
-               <div class="message_container" style="border: 0px solid red; position: fixed; bottom: -16%; right: 50px; transform: translateX(-40%);">
+               <div class="message_container" style="border: 0px solid red; position: fixed; bottom: -15%; right: 50px; transform: translateX(-53%);">
                   <input type="text" id="message" class="form-control" width="100px;" placeholder="메시지 내용"/>
                   
                   <div class = "button_group">
@@ -479,6 +481,7 @@ body, html {
          </div>
       </div>
    </div>   
+   </div>
    </div>
 </body>
 </html>
