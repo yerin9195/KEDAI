@@ -1393,3 +1393,46 @@ insert into tbl_calendar_schedule(scheduleno, cal_startdate, cal_enddate, cal_su
 values(seq_scheduleno.nextval, to_date('20240801100000', 'yyyymmddhh24miss'), to_date('20240801105000', 'yyyymmddhh24miss'), '제목', '#000', '장소', '2015200-002', '내용', '4', '1', '2020200-006')  
 
 rollback;
+
+
+select *
+from tbl_employees
+
+
+
+SELECT rno, doc_no, fk_empid, doc_status, doc_subject, doc_content, created_date, doctype_name,
+       		isAttachment, NAME, dept_name, fk_doctype_code
+		FROM (
+    		SELECT rownum AS rno,
+           		approval_no, fk_doc_no as doc_no, fk_empid, status, level_no, doc_subject, created_date, doctype_name,
+           		isAttachment, doc_status, NAME, writer, dept_name, doc_content, fk_doctype_code
+    		FROM (
+        		SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+               		D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+               		CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, D.doc_status, NAME, dept_name, D.fk_empid AS writer
+               		, doc_content, fk_doctype_code
+        		FROM tbl_approval A1
+        		JOIN tbl_doc D 
+        		ON D.doc_no = A1.fk_doc_no
+        		JOIN tbl_doctype T 
+        		ON T.doctype_code = D.fk_doctype_code
+        		LEFT JOIN (
+            		SELECT fk_doc_no
+            		FROM tbl_doc_file
+            		GROUP BY fk_doc_no
+        		) F ON F.fk_doc_no = D.doc_no
+        		JOIN tbl_employees E
+        		ON E.empid = D.fk_empid
+        		JOIN tbl_dept DP
+        		ON E.fk_dept_code = DP.dept_code
+        		WHERE A1.FK_EMPID = '2012100-001'
+                
+                	ORDER BY D.created_date DESC, D.doc_no DESC
+			) V
+		)T2
+		WHERE rno between #{startRno} and #{endRno}
+                
+        
+        select *
+        from tbl_approval
+        where fk_empid = '2012100-001'

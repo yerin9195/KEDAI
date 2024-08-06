@@ -53,7 +53,10 @@ public interface ApprovalDAO {
 	// 나의 기안 문서에서 총 페이지 수 가져오기
 	int getTotalMyDocCount(Map<String, String> paraMap);
 	
-	// 나의 결재 문서에서 총 페이지수 가져오기
+	// 나의 결재 예정 문서에서 총 페이지수 가져오기
+	int getTotalMyNowApprovalCount(Map<String, String> paraMap);
+	
+	// 나의 모든 결재 문서 총 페이지수
 	int getTotalMyApprovalCount(Map<String, String> paraMap);
 	
 	// 나의 모든 기안문서 가져오기
@@ -61,6 +64,9 @@ public interface ApprovalDAO {
 	
 	// 나의 모든 결재 대기 문서 가져오기
 	List<Map<String, String>> myNowApprovalListSearch(Map<String, String> paraMap);
+	
+	// 나의 모든 결재 문서 가져오기
+	List<DocVO> allmyAppListSearch(Map<String, String> paraMap);
 
 	// 나의 기안 문서에서 문서 한 개 보기
 	DocVO getOneDocCommon(Map<String, String> paraMap);
@@ -88,6 +94,8 @@ public interface ApprovalDAO {
 
 	// 반려하기 눌렀을 떄 결재 테이블 업데이트 하기
 	void updateApprovalReject(Map<String, String> paraMap);
+
+
 
 
 

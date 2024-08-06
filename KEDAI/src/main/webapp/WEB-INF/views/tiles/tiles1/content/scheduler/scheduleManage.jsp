@@ -284,7 +284,7 @@ $(document).ready(function(){
                  dataType: "json",
                  success:function(json) {
                 	 
-                	 //console.log(json);
+                	 console.log("재확인 :" ,json);
                 	 /*
                 	    json 의 값 예
                 	    [{"cal_enddate":"2021-11-26 18:00:00.0","fk_lgcatgono":"2","color":"#009900","scheduleno":"1","fk_smcatgono":"4","cal_subject":"파이널 프로젝트 코딩","cal_startdate":"2021-11-08 09:00:00.0","fk_empid":"seoyh"},{"cal_enddate":"2021-11-29 13:50:00.0","fk_lgcatgono":"1","color":"#990008","scheduleno":"2","fk_smcatgono":"7","cal_subject":"팀원들 점심식사","cal_joinuser":"leess,eomjh","cal_startdate":"2021-11-29 12:50:00.0","fk_empid":"seoyh"},{"cal_enddate":"2021-12-02 20:00:00.0","fk_lgcatgono":"1","color":"#300bea","scheduleno":"3","fk_smcatgono":"11","cal_subject":"팀원들 뒤풀이 여행","cal_joinuser":"leess,eomjh","cal_startdate":"2021-12-01 09:00:00.0","fk_empid":"seoyh"}]
@@ -324,9 +324,11 @@ $(document).ready(function(){
                                   // 내 캘린더로 등록된 일정을 풀캘린더 달력에 보여주기
                                   // 일정등록시 내 캘린더에서 선택한 소분류에 등록된 일정을 풀캘린더 달력 날짜에 나타내어지게 한다.
                                   	if( $("input:checkbox[name=my_smcatgono]:checked").length <= $("input:checkbox[name=my_smcatgono]").length ){
+                                  		console.log("1");
 	                                   	for(var i=0; i<$("input:checkbox[name=my_smcatgono]:checked").length; i++){
+	                                   		console.log("2");
 	                                		if($("input:checkbox[name=my_smcatgono]:checked").eq(i).val() == item.fk_smcatgono && item.fk_empid == "${sessionScope.loginuser.empid}" ){
-	                                			   
+	                                			console.log("3");
 	                                			//   alert("캘린더 소분류 번호 : " + $("input:checkbox[name=my_smcatgono]:checked").eq(i).val());
 	                                			   events.push({
 	   			                                	            id: item.scheduleno,
@@ -337,14 +339,16 @@ $(document).ready(function(){
 	   			                                                color: item.cal_color,
 	   			                                                cid: item.fk_smcatgono  // 내캘린더 내의 서브캘린더 체크박스의 value값과 일치하도록 만들어야 한다. 그래야만 서브캘린더의 체크박스와 cid 값이 연결되어 체크시 풀캘린더에서 일정이 보여지고 체크해제시 풀캘린더에서 일정이 숨겨져 안보이게 된다. 
 	   			                                   }); // end of events.push({})---------
-	   	                                    }
+	                                			   console.log("4");
+	                                		}
+	                                		console.log("5");
 	                                   }// end of for-------------------------------------
                                    
                                    }// end of if-------------------------------------------
 
                                  
                                   // 공유받은 캘린더(다른 사용자가 내캘린더로 만든 것을 공유받은 경우임)
-                                  if (item.fk_lgcatgono==1 && item.empid != "${sessionScope.loginuser.empid}" && (item.cal_joinuser).indexOf("${sessionScope.loginuser.empid}") != -1 ){  
+                                  if (item.fk_lgcatgono==1 && item.fk_empid != "${sessionScope.loginuser.empid}" && (item.cal_joinuser).indexOf("${sessionScope.loginuser.empid}") != -1 ){  
                                         
   	                                   events.push({
   	                                	   			id: "0",  // "0" 인 이유는  배열 events 에 push 할때 id는 고유해야 하는데 위의 사내캘린더 및 내캘린더에서 push 할때 id값으로 item.scheduleno 을 사용하였다. item.scheduleno 값은 DB에서 1 부터 시작하는 시퀀스로 사용된 값이므로 0 값은 위의 사내캘린더나 내캘린더에서 사용되지 않으므로 여기서 고유한 값을 사용하기 위해 0 값을 준 것이다. 
@@ -603,9 +607,9 @@ function showmyCal(){
 			 
 			 	$.each(json, function(index, item){
 					html += "<tr style='font-size: 11pt;  height:20px; margin-bottom:2px;'>";
-				 	html += "<td style='width:60%;'><input type='checkbox' name='my_smcatgono' class='calendar_checkbox my_smcatgono' style='margin-right: 3px;' value='"+item.smcatgono+"' checked id='my_smcatgono_"+index+"' checked/><label style='margin:0; ' for='my_smcatgono_"+index+"'>"+item.smcatgoname+"</label></td>";   
-				 	html += "<td style='width:20%;'><button class='btn_edit editCal' data-target='editCal' onclick='editMyCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-edit'></i></button></td>"; 
-				 	html += "<td style='width:20%;'><button class='btn_edit delCal' onclick='delCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-trash'></i></button></td>";
+				 	html += "<td style='width:76%;'><input type='checkbox' name='my_smcatgono' class='calendar_checkbox my_smcatgono' style='margin-right: 3px;' value='"+item.smcatgono+"' checked id='my_smcatgono_"+index+"' checked/><label style='margin:0; ' for='my_smcatgono_"+index+"'>"+item.smcatgoname+"</label></td>";   
+				 	html += "<td style='width:12%;'><button class='btn_edit editCal' data-target='editCal' onclick='editMyCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-edit'></i></button></td>"; 
+				 	html += "<td style='width:12%;'><button class='btn_edit delCal' onclick='delCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-trash'></i></button></td>";
 			     	html += "</tr>";
 			 	});
 			 
@@ -710,14 +714,14 @@ function showCompanyCal(){
 					 html += "<table style='width:80%;'>";
 					 
 					 $.each(json, function(index, item){
-						 html += "<tr style='font-size: 11pt;'>";
-						 html += "<td style='width:60%; padding: 3px 0px;'><input type='checkbox' name='com_smcatgono' class='calendar_checkbox com_smcatgono' style='margin-right: 3px;' value='"+item.smcatgono+"' checked id='com_smcatgono_"+index+"'/><label for='com_smcatgono_"+index+"'>"+item.smcatgoname+"</label></td>";  
+						 html += "<tr style='font-size: 11pt; height:20px; margin-bottom:2px;'>";
+						 html += "<td style='width:76%;'><input type='checkbox' name='com_smcatgono' class='calendar_checkbox com_smcatgono' style='margin-right: 3px;' value='"+item.smcatgono+"' checked id='com_smcatgono_"+index+"'/><label for='com_smcatgono_"+index+"' style='margin:0;' >"+item.smcatgoname+"</label></td>";  
 						 
 						 <%-- 사내 캘린더 추가를 할 수 있는 직원은 직위코드가 3 이면서 부서코드가 4 에 근무하는 사원이 로그인 한 경우에만 가능하도록 조건을 걸어둔다. 
 						 if("${sessionScope.loginuser.fk_pcode}" =='3' && "${sessionScope.loginuser.fk_dcode}" == '4') { --%>
 						 if("${sessionScope.loginuser.fk_job_code}" =='1') {
-							 html += "<td style='width:20%; padding: 3px 0px;'><button class='btn_edit' data-target='editCal' onclick='editComCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-edit'></i></button></td>";  
-							 html += "<td style='width:20%; padding: 3px 0px;'><button class='btn_edit delCal' onclick='delCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-trash'></i></button></td>";
+							 html += "<td style='width:12%;'><button class='btn_edit' data-target='editCal' onclick='editComCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-edit'></i></button></td>";  
+							 html += "<td style='width:12%;'><button class='btn_edit delCal' onclick='delCalendar("+item.smcatgono+",\""+item.smcatgoname+"\")'><i class='fas fa-trash'></i></button></td>";
 						 }
 						 
 						 html += "</tr>";
@@ -796,19 +800,19 @@ function goSearch(){
 	<div class="schedulerMain">
 		<div id="calList_left">
 			<input type="hidden" value="${sessionScope.loginuser.empid}" id="loginuser_id"/>
-			<input type="checkbox" id="allComCal" class="calendar_checkbox" checked/>&nbsp;&nbsp;<label for="allComCal">사내 캘린더</label>
+			<input type="checkbox" id="allComCal" class="calendar_checkbox" checked/>&nbsp;&nbsp;<label for="allComCal" style="width:50%; color:#e68c0e; font-weight: bold; text-decoration: underline; text-decoration-color: #2c4459; text-decoration-thickness: 1px; /* 밑줄 두께 */ ">사내 캘린더</label>
 			<c:if test="${sessionScope.loginuser.fk_job_code =='1'}"> 
-				 	<button class="btn_edit" style="float: right;" onclick="addComCalendar()"><i class='fas'>&#xf055;</i></button>
+				 	<button class="btn_edit" onclick="addComCalendar()"><i class="fa-regular fa-calendar-plus"></i></button>
 			</c:if>
 			
 			<%-- 사내 캘린더를 보여주는 곳 --%>
-			<div id="companyCal" style="margin-left: 50px; margin-bottom: 10px;"></div> 
+			<div id="companyCal" style="margin-left: 15px; margin-bottom:10px;"></div> 
 			
-			<input type="checkbox" id="allMyCal" class="calendar_checkbox" checked/>&nbsp;&nbsp;<label for="allMyCal">내 캘린더</label>
-			<button class="btn_edit" style="margin-left:10%;" onclick="addMyCalendar()"><i class="fa-regular fa-calendar-plus"></i></button>
+			<input type="checkbox" id="allMyCal" class="calendar_checkbox" checked/>&nbsp;&nbsp;<label for="allMyCal" style="width:50%">내 캘린더</label>
+			<button class="btn_edit" onclick="addMyCalendar()"><i class="fa-regular fa-calendar-plus"></i></button>
 				
 			<%-- 내 캘린더를 보여주는 곳 --%>
-			<div id="myCal" style="margin-left: 20px; margin-bottom:10px;"></div>
+			<div id="myCal" style="margin-left: 15px; margin-bottom:10px;"></div>
 			
 			<input type="checkbox" id="sharedCal" class="calendar_checkbox" value="0" checked/>&nbsp;&nbsp;<label for="sharedCal">공유받은 캘린더</label> 
 		</div>

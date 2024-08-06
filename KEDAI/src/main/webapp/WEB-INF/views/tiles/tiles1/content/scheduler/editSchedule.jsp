@@ -466,7 +466,7 @@
 			</tr>
 			<tr>
 				<th>제목</th>
-				<td><input type="text" id="subject" name="cal_subject" class="form-control" value="${requestScope.map.SUBJECT}"/></td> 
+				<td><input type="text" id="subject" name="cal_subject" class="form-control" value="${requestScope.map.CAL_SUBJECT}"/></td> 
 			</tr>
 			
 			<tr>

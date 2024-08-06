@@ -42,11 +42,11 @@
 		<result property="CAL_PLACE" 		column="cal_place" 			javaType="String" />
 		<result property="CAL_JOINUSER" 	column="cal_joinuser" 		javaType="String" />
 		<result property="CAL_CONTENT" 		column="cal_content" 		javaType="String" />
-		<result property="FK_SMCATGONO" column="fk_smcatgono" 	javaType="String" />
-		<result property="FK_LGCATGONO" column="fk_lgcatgono" 	javaType="String" />
-		<result property="FK_EMPID" 	column="fk_empid" 		javaType="String" />
-		<result property="NAME" 		column="name" 			javaType="String" />
-		<result property="SMCATGONAME" 	column="smcatgoname" 	javaType="String" />
+		<result property="FK_SMCATGONO" 	column="fk_smcatgono" 		javaType="String" />
+		<result property="FK_LGCATGONO" 	column="fk_lgcatgono" 		javaType="String" />
+		<result property="FK_EMPID" 		column="fk_empid" 			javaType="String" />
+		<result property="NAME" 			column="name" 				javaType="String" />
+		<result property="SMCATGONAME" 		column="smcatgoname" 		javaType="String" />
 	</resultMap>
 	<select id="detailSchedule" parameterType="String" resultMap="detailSchedule_Map">
 		select SD.scheduleno
