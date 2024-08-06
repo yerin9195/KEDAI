@@ -147,24 +147,24 @@
 
 <%-- header start --%>
 <div class="container-fluid">
-	<nav class="navbar navbar-expand-lg pl-3 pr-3 pt-0 pb-0">
-		<a class="navbar-brand" href="<%= ctxPath%>/index.kedai"><img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver2.png" width="30%" /></a>
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+	<nav class="row navbar navbar-expand-lg pl-3 pr-3 pt-0 pb-0">
+		<a class="col-md-6 navbar-brand" href="<%= ctxPath%>/index.kedai"><img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver2.png" width="25%" /></a>
+		<div class="col-md-6 d-md-flex justify-content-md-end" id="navbarSupportedContent" style="display: flex;">
 			<form class="form-inline ml-auto my-2 mr-3 my-lg-0" style="position: relative;" autocomplete="off" name="menuFindFrm">
 	      		<input class="mr-sm-2 mb-0 search_input autocomplete" id="myInput" type="text" placeholder="Search" name="searchMenu">
 	      		<button class="btn my-2 my-sm-0 word_search_btn" type="submit" style="position: absolute; right: -5%;"><img alt="btn_search" src="<%= ctxPath%>/resources/images/common/btn_search.png" width="80%" /></button>
 	    	</form>
 	    	&nbsp;&nbsp;&nbsp;
-	    	<ul class="navbar-nav">
-		    	<li class="nav-item justify-content-end tooltipbottom">
+	    	<ul class="navbar-nav" style="display: contents;">
+		    	<li class="nav-item tooltipbottom">
 		        	<span class="tooltiptext">로그아웃</span>
 		        	<a class="nav-link" href="<%= ctxPath%>/logout.kedai" style="text-align: center;"><img alt="login" src="<%= ctxPath%>/resources/images/common/login.png" width="60%" /></a>
 		      	</li>
-		      	<li class="nav-item justify-content-end tooltipbottom">
+		      	<li class="nav-item tooltipbottom">
 		      		<span class="tooltiptext">알림</span>
 		        	<a class="nav-link" href="#" style="text-align: center;"><img alt="alarm" src="<%= ctxPath%>/resources/images/common/alarm.png" width="60%" /></a>
 		      	</li>
-		      	<li class="nav-item justify-content-end tooltipbottom">
+		      	<li class="nav-item tooltipbottom">
 		      		<span class="tooltiptext">웹채팅</span>
 		        	<a class="nav-link" href="<%= serverName%><%= ctxPath%>/chatting/multichat.kedai" style="text-align: center;"><img alt="alarm" src="<%= ctxPath%>/resources/images/common/chat.png" width="60%" /></a>
 		      	</li>
