@@ -626,7 +626,7 @@
 				<div class="row pl-5 pr-5">
 					<div class="myPageList col-6">
 						<button class="dropdown-toggle" type="button" data-toggle="dropdown">마이페이지&nbsp;&nbsp;</button>
-						<ul class="dropdown-menu" style="padding-left: 3%;">
+						<ul class="dropdown-menu" style="width: 180px; padding: 3%;">
 							<li><a href="<%= ctxPath%>/member/memberEdit.kedai">나의 정보 수정</a></li>
 							<li><a href="<%= ctxPath%>/myCar.kedai">나의 카셰어링</a></li>
 							<li><a href="#">나의 결재 문서 내역</a></li>
