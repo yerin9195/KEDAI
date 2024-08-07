@@ -22,7 +22,7 @@
 <%-- Optional JavaScript --%>
 <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
 <style type="text/css">
-	.form-group input{
+	.form-group input {
 		width: 400px;
 		height: 60px;
 		padding: 0 10px;
@@ -31,7 +31,7 @@
 		box-sizing: border-box;
 		color: #363636;
 	}
-	.login_btn{
+	.login_btn {
 		width: 100%;
 		height: 60px;
 		font-size: 18px;
@@ -76,9 +76,11 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
+		
+		$("input:text[name='empid']").focus();
 	  	
 		$("button#btnSubmit").click(function(){
-	    	goLogin(); 
+	    	goLogin();
 	    }); 
 		
 		$("input:password[id='pwd']").keydown(function(e){
@@ -113,7 +115,7 @@
             setTimeout(function() {
                 $this.animate({
                     opacity: 1
-                }, 500); // Duration of opacity change
+                }, 300); // Duration of opacity change
                 
                 $this.css({
                     transform: 'scale(1)'
@@ -129,7 +131,7 @@
                 // Animate to initial state
                 $this.animate({
                     opacity: 0
-                }, 500); // Duration of opacity change
+                }, 300); // Duration of opacity change
                 
                 $this.css({
                     transform: 'scale(0.8)'
@@ -139,7 +141,7 @@
                 setTimeout(function() {
                     $this.animate({
                         opacity: 1
-                    }, 500); // Duration of opacity change
+                    }, 300); // Duration of opacity change
                     
                     $this.css({
                         transform: 'scale(1)'
@@ -149,6 +151,25 @@
         }, $('.letter').length * delay * 2 + 1000); // Adjust interval as needed
       
 	}); // end of $(document).ready(function(){}) ----------
+	
+	// 로그인 시 기기 정보 확인하기 시작 //
+    function detectDevice() {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+        if (/android/i.test(userAgent)) {
+            return "Android";
+        }
+
+        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            return "iOS";
+        }
+
+        if (/Windows|Macintosh|Linux/.test(userAgent)) {
+            return "PC";
+        }
+
+        return "Unknown";
+    }
 	
 	function goLogin(){
 		
@@ -171,10 +192,19 @@
 	        localStorage.removeItem('idSave');
 	    }
 		
-		const frm = document.loginFrm;
-     	frm.action = "<%= ctxPath%>/loginEnd.kedai";
-     	frm.method = "post";
-     	frm.submit();
+		const deviceType = detectDevice();
+        console.log("Detected device:", deviceType); // 콘솔에 기기 정보 출력
+		
+        const form = document.getElementById('loginForm');
+		const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'deviceType';
+        hiddenInput.value = deviceType;
+        form.appendChild(hiddenInput);
+        
+        form.action = "<%= ctxPath%>/loginEnd.kedai";
+        form.method = "post";
+     	form.submit();
 	}
 </script>	
 </head>
@@ -184,14 +214,14 @@
 			<img alt="logo" src="<%= ctxPath%>/resources/images/common/logo_ver1.png" width="60%" class="img-fluid" />
 		</div>
 		<br>
-		<form name="loginFrm" style="width: 400px; margin: 0 auto;">
+		<form name="loginFrm" id="loginForm" style="width: 400px; margin: 0 auto;">
         	<div class="form-row mx-0">    
             	<div class="form-group" style="margin-bottom: 3%;">
-               		<input type="text" class="form-control" name="empid" id="empid" value="" placeholder="사원아이디" />
+               		<input type="text" class="form-control" name="empid" id="empid" placeholder="사원아이디" />
                	</div>
    
             	<div class="form-group" style="margin-bottom: 3%;">
-               		<input type="password" class="form-control" name="pwd" id="pwd" value="" placeholder="비밀번호" /> 
+               		<input type="password" class="form-control" name="pwd" id="pwd" placeholder="비밀번호" /> 
             	</div>
          	</div>
        	</form>
