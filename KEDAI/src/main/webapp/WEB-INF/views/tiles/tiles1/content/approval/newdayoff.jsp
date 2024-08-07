@@ -118,6 +118,11 @@ div.fileDrop > div.fileList > span.fileName{padding-left: 10px;}
 /* div.fileDrop > div.fileList > span.fileSize{padding-right: 20px; float:right;}  */
 span.clear{clear: both;} 
                   
+                  
+.changeCSSblod {
+	font-weight: bold;
+}                  
+
 </style>
 
 
@@ -127,6 +132,9 @@ span.clear{clear: both;}
 <script type="text/javascript">
 	
 	$(document).ready(function(){
+		
+		$("input:checkbox[class='end_day']").prop("disabled", true);
+        
 	<%-- === #166.-2 스마트 에디터 구현 시작 === --%>
   //전역변수
 		var obj = [];
@@ -392,7 +400,7 @@ span.clear{clear: both;}
 	     $("#startdate").datepicker('setDate', new Date());
          $("#enddate").datepicker('setDate', new Date());
 	
-	   
+         $("input:checkbox[class='start_day']").prop("checked", true);
 	     
 	     
  	     
@@ -734,26 +742,83 @@ span.clear{clear: both;}
 	    <%-- === jQuery 를 사용하여 드래그앤드롭(DragAndDrop)을 통한 파일 업로드 끝 === --%>
 		
 	    
-	    $("input#selectdate").click(function(){
-	    	var startDate = $("#startdate").val();
-            var endDate = $("#enddate").val();
-            
-            $.ajax({
-				url:"${pageContext.request.contextPath}/approval/selectdateJSON.kedai",
-				data:{"startDate":startDate,
-					"endDate":endDate},
-				dataType:"json",
-				type:"post",
-				success:function(json){
-					<%여기여기여기부터!!
-				},
-				error: function(request, status, error){
-		        	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		        }
-			});	
-	    	
-	    	
+	    $("input#startdate, input#enddate").on("change", function() {
+			
+			var startDate = $("#startdate").val();
+	        var endDate = $("#enddate").val();
+	        
+            if(startDate != null && endDate != null){
+           		var start = new Date(startDate);
+                var end = new Date(endDate);
+                
+                if (end < start) {
+                	 // endDate가 startDate보다 이전 날짜인 경우
+                    alert("종료 날짜는 시작 날짜보다 이후여야 합니다.");
+                    // Optional: endDate를 startDate와 동일하게 설정
+                    $("#enddate").val(startDate);
+                    $("input:checkbox[class='end_day']").prop("checked", false);
+                    $("input:checkbox[class='end_day']").prop("disabled", true);
+                    $("input:checkbox[class='start_day']").prop("checked", true);
+                    $("input#request_annual_leave").val(1);
+                    return; // 이 시점에서 함수 종료
+                }
+            	
+                const diffTime = end.getTime() - start.getTime();// 문자열(날짜형식의 문자열이어야 함)을 날짜로 변경하기 
+                // 날짜형식의 문자열은 2023-09-05 또는 2023/09/05 또는 2023.09.05 이다.
+                const diffDay = Math.floor(diffTime / (1000 * 3600 * 24));
+                
+                if (diffDay === 0) {
+                    // diffDay가 0일 때
+                    $("input:checkbox[class='start_day']").prop("checked", true);
+                    $("input:checkbox[class='end_day']").prop("disabled", true);
+                } else {
+                    // diffDay가 0이 아닐 때
+                    $("input:checkbox[class='end_day']").prop("disabled", false);
+                    $("input:checkbox[class='start_day']").prop("checked", true);
+                    $("input:checkbox[class='end_day']").prop("checked", true);
+                }
+                
+                $("input#request_annual_leave").val(diffDay+1);
+            	
+            }
 	    });
+	    
+	    
+		
+	   
+	    
+	  //시작일 안에 있는 체크박스들을 선택했을 경우 
+	    $("input:checkbox[class='start_day']").click( (e) => {
+	        const bool = $(e.target).prop("checked");
+	        // 클릭한 체크박스의 체크유무를 알아온다.
+	        if(bool){
+	        	let annual_leave_get = parseFloat($("#request_annual_leave").val());
+	            let annual_leave_new = annual_leave_get+0.5;
+	            $("#request_annual_leave").val(annual_leave_new);
+	        }
+	        else{
+	            let annual_leave_get = parseFloat($("#request_annual_leave").val());
+	            let annual_leave_new = annual_leave_get-0.5;
+	            $("#request_annual_leave").val(annual_leave_new);
+	        }
+	    });// end of  $("input:checkbox[class='start_day']").click( (e) => {})----------------------------------
+	    
+		//종료일 안에 있는 체크박스들을 선택했을 경우 
+	    $("input:checkbox[class='end_day']").click( (e) => {
+	        const bool = $(e.target).prop("checked");
+	        // 클릭한 체크박스의 체크유무를 알아온다.
+	        if(bool){
+	        	let annual_leave_get = parseFloat($("#request_annual_leave").val());
+	            let annual_leave_new = annual_leave_get+0.5;
+	            $("#request_annual_leave").val(annual_leave_new);
+	        }
+	        else{
+		        let annual_leave_get = parseFloat($("#request_annual_leave").val());
+		        let annual_leave_new = annual_leave_get-0.5;
+		        $("#request_annual_leave").val(annual_leave_new);
+	        }
+	    });// end of  $("input:checkbox[class='start_day']").click( (e) => {})----------------------------------
+	    
 	    
 	    
 	    
@@ -847,28 +912,28 @@ span.clear{clear: both;}
 			<tr>
 				<th>날짜</th>
 				<td>
-					<input type="text" name="startdate" id="selectdate" maxlength="8" size="8" /> ~ <input type="text" name="enddate" id="selectdate" maxlength="8" size="8" />
+					<input type="text" name="startdate" id="startdate" maxlength="8" size="8" /> ~ <input type="text" name="enddate" id="enddate" maxlength="8" size="8" />
 				</td>
 			</tr>
 			<tr>
 				<th>사용 가능 연차</th>
 				<td>
-					<span>잔여 연차 :</span> <span style="border: solid 0px black; display:inline-block; width:60px; font-weight:bold;">${sessionScope.loginuser.annual_leave}</span>&nbsp; 
-					<span>신청 연차 :</span> <span style="border: solid 0px black; display:inline-block; width:60px; font-weight:bold;"></span>
+					<span>잔여 연차 :</span> <input type="text" style="font-weight:bold; width: 30px; text-align:center;" value="${sessionScope.loginuser.annual_leave}" readonly/>&nbsp; 
+					<span>신청 연차 :</span> <input type="text" name="request_annual_leave" id="request_annual_leave" style="font-weight:bold; width: 30px; text-align:center;" value="1" readonly/>
 				</td>
 			</tr>
 		
 			<tr>
 				<th style = "vertical-align: middle;">반차여부</th>
-				<td>
-					<input type="checkbox" id="start_day" name="start_day"/><label for="start_day">시작일</label>&nbsp;(&nbsp;
-					<input type="checkbox" id="morning_half_day" name="morning_half_day"/><label for="morning_half_day">오전 반차</label>&nbsp;
-					<input type="checkbox" id="afternoon_half_day" name="afternoon_half_day"/><label for="afternoon_half_day">오후 반차</label>&nbsp;
+				<td id = "half_day">
+					시작일&nbsp;(&nbsp;
+					<input type="checkbox" id="morning_half_day" name="morning_half_day" class="start_day" /><label for="morning_half_day">오전 반차</label>&nbsp;
+					<input type="checkbox" id="afternoon_half_day" name="afternoon_half_day" class="start_day"/><label for="afternoon_half_day">오후 반차</label>&nbsp;
 					)
 					<br>
-					<input type="checkbox" id="fin_day" name="fin_day"/><label for="fin_day">종료일</label>&nbsp;(&nbsp;
-					<input type="checkbox" id="morning_half_day" name="morning_half_day"/><label for="morning_half_day">오전 반차</label>&nbsp;
-					<input type="checkbox" id="afternoon_half_day" name="afternoon_half_day"/><label for="morning_half_day">오후 반차</label>&nbsp;
+					종료일&nbsp;(&nbsp;
+					<input type="checkbox" id="morning_half_day" name="morning_half_day" class="end_day"/><label for="morning_half_day">오전 반차</label>&nbsp;
+					<input type="checkbox" id="afternoon_half_day" name="afternoon_half_day" class="end_day"/><label for="morning_half_day">오후 반차</label>&nbsp;
 					)
 				</td>
 			</tr>

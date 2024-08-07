@@ -1473,19 +1473,17 @@ public class ApprovalController {
                이것을 해결하는 방법은 @RequestMapping 어노테이션의 속성 중 produces="text/plain;charset=UTF-8" 를 사용하면 
                응답 페이지에 대한 UTF-8 인코딩이 가능하여 한글 깨짐을 방지 할 수 있다. <<< 
   */ 
-	@ResponseBody
+	
+	/*@ResponseBody
 	@PostMapping(value="/approval/selectdateJSON.kedai",  produces="text/plain;charset=UTF-8")
 	public String selectdateJSON(HttpServletRequest request ){
 				// @RequestParam은 request.getParameter()와 같은 것이다. defaultValue는 파라미터의 초기값을 설정해 줄 수 있는 것을 말한다. 위의 내용은 null대신 ""을 설정한 것이다. 
 				//  form태그의 name값을 꼭 String 이름 이런 식으로 넣어주어야 한다.
 		
-		String dept_code = request.getParameter("dept_code");
-		String loginuser_id = request.getParameter("loginuser_id");
-		
-		Map<String,String> paraMap = new HashMap<>();
-		paraMap.put("dept_code", dept_code);
-		paraMap.put("loginuser_id", loginuser_id);
-		
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+	
+
 		// 본인을 제외한 모든 사원의 정보 가져오기 - 부서번호가 없는 대표이사가 있기 때문에 dept_code도 같이 paraMap에 담는다.
 		List<Map<String,String>> deptEmpList = service.deptEmpList(paraMap);
 		
@@ -1509,7 +1507,7 @@ public class ApprovalController {
 		
 		return jsonArr.toString();
 		
-	}
+	}*/
 	
 	
 }
