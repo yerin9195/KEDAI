@@ -1,10 +1,35 @@
 package com.spring.app.schedule.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.spring.app.common.MyUtil;
+import com.spring.app.domain.CalendarScheduleVO;
+import com.spring.app.domain.CalendarSmallCategoryVO;
+import com.spring.app.domain.MemberVO;
+import com.spring.app.schedule.service.ScheduleService;
 
 @Controller
 public class ScheduleController {
-
+	
+	// Type에 따라 알아서 Bean 을 주입해준다.
+	@Autowired
+	private ScheduleService service;
 
 	// == 일정관리 메인 페이지 == 
 	@GetMapping("/scheduler.kedai")
@@ -563,5 +588,4 @@ public class ScheduleController {
 		return mav;
 	}
 		
-
 }
