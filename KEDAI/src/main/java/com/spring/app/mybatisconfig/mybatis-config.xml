@@ -2,7 +2,7 @@
 
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-	
+
 	<!-- domain(VO) package 선언 -->
 	<typeAliases>
 		<typeAlias type="com.spring.app.domain.MemberVO" alias="MemberVO" />
@@ -12,6 +12,7 @@
 		<typeAlias type="com.spring.app.domain.SalaryVO" alias="SalaryVO" />
 		<typeAlias type="com.spring.app.domain.RoomMainVO" alias="RoomMainVO" />
 		<typeAlias type="com.spring.app.domain.RoomSubVO" alias="RoomSubVO" />
+		<typeAlias type="com.spring.app.domain.RoomVO" alias="RoomVO" />
 		<typeAlias type="com.spring.app.domain.CarVO" alias="CarVO" />
 		<typeAlias type="com.spring.app.domain.Car_shareVO" alias="Car_shareVO" />
 		<typeAlias type="com.spring.app.domain.Day_shareVO" alias="Day_shareVO" />
@@ -23,7 +24,6 @@
 		<typeAlias type="com.spring.app.domain.DocfileVO" alias="DocfileVO" /> 
 		<typeAlias type="com.spring.app.domain.CalendarScheduleVO" alias="CalendarScheduleVO" /> 
 		<typeAlias type="com.spring.app.domain.CalendarSmallCategoryVO" alias="CalendarSmallCategoryVO" /> 
-		
-	</typeAliases>	
-	
+	</typeAliases>		
+
 </configuration>
