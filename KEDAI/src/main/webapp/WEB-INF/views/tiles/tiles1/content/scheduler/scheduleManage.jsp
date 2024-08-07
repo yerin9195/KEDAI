@@ -303,7 +303,7 @@ $(document).ready(function(){
                                    	if( $("input:checkbox[name=com_smcatgono]:checked").length <= $("input:checkbox[name=com_smcatgono]").length ){
                                    		for(var i=0; i<$("input:checkbox[name=com_smcatgono]:checked").length; i++){
 	                                    	if($("input:checkbox[name=com_smcatgono]:checked").eq(i).val() == item.fk_smcatgono){
-	   			                                 alert("캘린더 소분류 번호 : " + $("input:checkbox[name=com_smcatgono]:checked").eq(i).val());
+	   			                                 //alert("캘린더 소분류 번호 : " + $("input:checkbox[name=com_smcatgono]:checked").eq(i).val());
 	   			                      
 	                                			   events.push({
 	   			                                	            id: item.scheduleno,

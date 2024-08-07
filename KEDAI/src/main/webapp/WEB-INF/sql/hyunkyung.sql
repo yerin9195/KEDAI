@@ -1270,6 +1270,8 @@ create table tbl_calendar_small_category
 );
 -- Table TBL_CALENDAR_SMALL_CATEGORY이(가) 생성되었습니다.
 
+insert 
+
 create sequence seq_smcatgono
 start with 1
 increment by 1
@@ -1338,11 +1340,6 @@ ON SD.fk_empid = E.empid
 JOIN tbl_calendar_small_category SC
 ON SD.fk_smcatgono = SC.smcatgono
 where SD.scheduleno = 21;
-
--- 'leess' 은 휴면계정이기 때문에 동명이인인 'leesunsin' 추가하기
-insert into tbl_member(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday, coin, point, registerday, lastpwdchangedate, status, idle, gradelevel)  
-values('leesunsin', '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382', '이순신', '2IjrnBPpI++CfWQ7CQhjIw==', 'fCQoIgca24/q72dIoEVMzw==', '15864', '경기 군포시 오금로 15-17', '101동 202호', ' (금정동)', '1', '1995-10-04', 0, 0, default, default, default, default, default);
--- 1 행 이(가) 삽입되었습니다.
 
 commit;
 -- 커밋 완료.
@@ -1436,3 +1433,33 @@ SELECT rno, doc_no, fk_empid, doc_status, doc_subject, doc_content, created_date
         select *
         from tbl_approval
         where fk_empid = '2012100-001'
+        
+        
+
+    
+DECLARE
+    v_smcatgono NUMBER;  -- 소분류 번호를 저장할 변수
+BEGIN
+    FOR emp_rec IN (
+        SELECT empid
+        FROM tbl_employees
+    ) LOOP
+        -- 새로운 smcatgono 값을 생성
+        SELECT SEQ_SMCATGONO.NEXTVAL INTO v_smcatgono FROM dual;
+        
+        -- 각 empid에 대해 데이터 삽입
+        INSERT INTO tbl_calendar_small_category (
+            smcatgono,
+            fk_lgcatgono,
+            smcatgoname,
+            fk_empid
+        ) VALUES (
+            v_smcatgono,      -- 생성된 소분류 번호
+            1,                -- 대분류 번호 (고정값)
+            '예약',           -- 소분류 명 (고정값)
+            emp_rec.empid     -- 현재 직원의 empid
+        );
+    END LOOP;
+END;
+
+commit;
