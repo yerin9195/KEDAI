@@ -88,16 +88,8 @@
 		
 		$("#total_bth").click(function(e) {
 		    // 확인 대화상자를 표시
-		    if (confirm("확인 시, 사원들에게 해당 내용이 보여집니다.")) {
-		        // 사용자가 확인을 눌렀을 때만 AJAX 요청을 보냄
-		        salary_submit();  // AJAX 요청 함수 호|
-
-		        // 모달 창 닫기
-		        $('#modal1').modal("hide");
-		    } else {
-		        // 사용자가 취소를 누르면 아무 일도 일어나지 않음
-		        e.preventDefault();
-		    }
+			$('#modal3').modal("show");
+	        loadSalaryData();
 		});
 		
 		$("#workListcom_btn").click(function(e){
@@ -522,6 +514,40 @@
         });
     }
 
+    function loadSalaryData() {
+        $.ajax({
+            url: "<%= ctxPath%>/salaryData.kedai",
+            type: "GET",
+            dataType: "json",
+            success: function(salaries) {
+                var tbody = $('#modal3 table tbody');
+                tbody.empty();
+                
+                $.each(salaries, function(index, salary) {
+                    var newRow = '<tr>';
+                    newRow += '<td>' + salary.basicSalary + '</td>';
+                    newRow += '<td>' + salary.mealAllowance + '</td>';
+                    newRow += '<td>' + salary.annualBonus + '</td>';
+                    newRow += '<td>' + salary.overtimePay + '</td>';
+                    newRow += '<td>' + salary.totalIncome + '</td>';
+                    newRow += '<td>' + salary.incomeTax + '</td>';
+                    newRow += '<td>' + salary.localTax + '</td>';
+                    newRow += '<td>' + salary.nationalPension + '</td>';
+                    newRow += '<td>' + salary.healthInsurance + '</td>';
+                    newRow += '<td>' + salary.employmentInsurance + '</td>';
+                    newRow += '<td>' + salary.totalDeductions + '</td>';
+                    newRow += '<td>' + salary.netPayment + '</td>';
+                    newRow += '</tr>';
+                    
+                    tbody.append(newRow);
+                });
+            },
+            error: function(xhr, status, error) {
+                alert("데이터를 불러오지 못했습니다.");
+            }
+        });
+    }
+});
 		
 		
 </script>

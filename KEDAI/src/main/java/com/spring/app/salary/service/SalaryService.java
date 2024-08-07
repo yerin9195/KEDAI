@@ -18,6 +18,7 @@ public interface SalaryService {
 
 	List<SalaryVO> getSalaryDetailsById(String yearMonth, String empid);
 
+
 	
 
 	
