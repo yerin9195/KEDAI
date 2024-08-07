@@ -8,6 +8,10 @@
 %>
 
 <style type="text/css">
+     a{
+        	color: #fff !important;
+        }
+        
       table {
             width: 100%;
             border-collapse: collapse;
@@ -68,6 +72,8 @@
         .input-field:focus {
             outline: none;
         }
+        
+   
      
 </style>
 

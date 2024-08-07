@@ -28,7 +28,8 @@
         background-color: #f2f2f2;
     }
     button {
-        padding: 5px 10px;
+        padding: 1px 20px;
+        margin: 0 1px;
     }
     .header {
         display: flex;
@@ -74,6 +75,16 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		const modalClose = document.querySelector('.close_btn');
+		
+		$("#workdaySmt").click(function(e){	
+			if (confirm("저장하시겠습니까?")) {
+				salary_submit();
+				$('#modal1').modal("hide");
+			}
+			else{
+				 e.preventDefault();
+			}
+		});
 		
 		$("#total_bth").click(function(e) {
 		    // 확인 대화상자를 표시
@@ -422,11 +433,10 @@
         monthSelect.value = currentMonth < 10 ? '0' + currentMonth : currentMonth.toString();
 
         const cellsContent = [
-            '', // This will be replaced with the select elements for year and month
             '급여',
+            '', // This will be replaced with the select elements for year and month
             '<button id="workListcom_btn">근무기록확정</button>',
             '<button id="total_bth">전체계산</button>',
-            '인원수',
             '<button>조회</button>',
             '<button>조회</button>',
             '지급총액'
@@ -435,7 +445,7 @@
         // Append cells to the new row
         for (let i = 0; i < cellsContent.length; i++) {
             const newCell = newRow.insertCell(i);
-            if (i === 0) {
+            if (i === 1) {
                 newCell.appendChild(yearSelect);
                 newCell.appendChild(document.createTextNode('년 '));
                 newCell.appendChild(monthSelect);
@@ -458,56 +468,60 @@
     }
 
 	
-	//	근로 일수 저장에 따른 급여명세서 계산
-	function salary_submit(){
-		var workdayval = $("#weekdayCount").val();
-		var empidval = [];
-		var memberSalary = [];
-		
-		 $(".checkbox-member:checked").each(function() {
-		        var empid = $(this).closest('tr').find('.empid').text();
-		        var memSal = $(this).closest('tr').find('#memberSalary').val(); 
-		        empidval.push(empid.trim()); // empid 값을 배열에 추가
-		        memberSalary.push(memSal.trim());
-		    });
-		 
-		 console.log(memberSalary);
-		
-		 $.ajax({
-			    url: "<%= ctxPath%>/salaryCal.kedai",
-			    type: "post",
-			    data: { 
-			        workday: workdayval, 
-			        "empid": empidval,  // empidval은 배열이어야 합니다.
-			        memberSalary: memberSalary
-			    },
-			    traditional: true, // 이 옵션은 배열을 매개변수로 전송할 때 유용합니다.
-			    dataType: 'json',
-			    success: function(response) {
-			        console.log(response);
-			        if (workdayval > 0) {
-			            if (Array.isArray(response)) {
-			                response.forEach(function(item) {
-			                    console.log("사원번호: " + item.empid);
-			                    console.log("기본급: " + item.base_salary);
-			                    console.log("근로일: " + item.work_day);
-			                });
-			            } else {
-			                console.error("서버로부터 예상치 못한 데이터를 수신했습니다.");
-			            }
-			        } else {
-			            alert("근로 일자를 확정하여 주시기 바랍니다.");
-			        }
-			    },
-			    error: function(request, status, error){
-			        alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-			    }
-			});
+    function salary_submit() {
+        var workdayval = $("#weekdayCount").val();
+        var empidval = [];
+        var memberSalary = [];
 
+        $(".checkbox-member:checked").each(function() {
+            var empid = $(this).closest('tr').find('.empid').text();
+            var memSal = $(this).closest('tr').find('#memberSalary').val();
+            empidval.push(empid.trim());
+            memberSalary.push(memSal.trim());
+        });
 
+        // 유효성 검사: workdayval이 유효한지 확인
+        if (workdayval <= 0 || isNaN(workdayval)) {
+            alert("근로 일자를 올바르게 입력해 주세요.");
+            return;
+        }
 
-		
-	}	//	end of function salary_submit(){---------
+        // 유효성 검사: empidval 및 memberSalary 배열 확인
+        if (empidval.length === 0 || memberSalary.length === 0) {
+            alert("선택된 직원이 없습니다.");
+            return;
+        }
+
+        console.log(memberSalary);
+
+        $.ajax({
+            url: "<%= ctxPath%>/salaryCal.kedai",
+            type: "post",
+            data: {
+                workday: workdayval,
+                "empid": empidval,
+                memberSalary: memberSalary
+            },
+            traditional: true,
+            dataType: 'json',
+            success: function(response) {
+                console.log(response);
+                if (Array.isArray(response)) {
+                    response.forEach(function(item) {
+                        console.log("사원번호: " + item.empid);
+                        console.log("기본급: " + item.base_salary);
+                        console.log("근로일: " + item.work_day);
+                    });
+                } else {
+                    console.error("서버로부터 예상치 못한 데이터를 수신했습니다.");
+                }
+            },
+            error: function(request, status, error) {
+                alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+            }
+        });
+    }
+
 		
 		
 </script>
@@ -523,11 +537,10 @@
     <table>
         <thead>
             <tr>
+            	<th>급여구분</th> 
             	<th>대장명칭</th>
-                <th>급여구분</th>                
                 <th>사전작업</th>
                 <th>급여계산</th>
-                <th>인원수</th>
                 <th>급여대장</th>
                 <th>명세서</th>
                 <th>지급총액</th>
@@ -578,7 +591,8 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end mt-3">
-                    <button class="btn" type="button" data-dismiss="modal">닫기</button>
+                <button id="workdaySmt">저장</button>
+                    <button data-dismiss="modal">닫기</button>
                     <button id="deleteRows">삭제</button>
                 </div>
             </div>
@@ -617,67 +631,39 @@
     </div>
 </div>
 
-<!--  계산 모달 -->>
-<div id="modal3" class="modal fade" tabindex="-1" role="dialog" style="width: 80;">
+<!-- 모달 3: 총급여 계산 -->
+<div id="modal3" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-			<h5>2023년 07월 급여 명세서</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                 <span aria-hidden="true">&times;</span>
-             </button>
+            <div class="modal-header">
+                <h4 class="modal-title">총급여 계산</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-				<table>
-			    	<thead>
-			        <tr>
-			            <th colspan="4">사원정보</th>
-			            <th colspan="5">급여 항목</th>
-			            <th colspan="7">공제 항목</th>
-			        </tr>
-			        <tr>
-			            <th>사원번호</th>
-			            <th>성명</th>
-			            <th>부서</th>
-			            <th>직위</th>
-			            <th>기본급</th>
-			            <th>식대</th>
-			            <th>연차수당</th>
-			            <th>초과근무수당</th>
-			            <th class="bold-line">지급총액</th>
-			            <th>소득세</th>
-			            <th>지방소득세</th>
-			            <th>국민연금</th>
-			            <th>건강보험</th>
-			            <th>고용보험</th>
-			            <th class="bold-line">공제총액</th>
-			            <th class="bold-line">실지급액</th>
-			        </tr>
-			    </thead>
-			    <tbody>
-			        <tr>
-			            <td>2010001</td>
-			            <td>홍길동</td>
-			            <td>영업부</td>
-			            <td>사원</td>
-			            <td>3000000</td>
-			            <td>500000</td>
-			            <td>100000</td>
-			            <td>50000</td>
-			            <td>3650000</td>
-			            <td>500000</td>
-			            <td>100000</td>
-			            <td>150000</td>
-			            <td>100000</td>
-			            <td>50000</td>
-			            <td>300000</td>
-			            <td>3350000</td>
-			        </tr>
-				    </tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>기본급</th>
+                            <th>식대 보조금</th>
+                            <th>연차 수당</th>
+                            <th>초과근무 수당</th>
+                            <th>총 수익</th>
+                            <th>소득세</th>
+                            <th>지방 소득세</th>
+                            <th>국민연금</th>
+                            <th>건강보험</th>
+                            <th>고용보험</th>
+                            <th>총 공제액</th>
+                            <th>실 지급액</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 계산된 급여 정보가 여기에 추가됩니다 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 	   
