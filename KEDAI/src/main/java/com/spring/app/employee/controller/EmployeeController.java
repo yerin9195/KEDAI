@@ -41,7 +41,8 @@ public class EmployeeController {
 	//////////////////////////////////////////////////////////////////////////
 	// 사원리스트  
 	@RequestMapping(value="/employee.kedai") 
-	public ModelAndView employeelist_select(
+	public ModelAndView empmanager_employeelist_select(
+			HttpServletRequest request,
 			@RequestParam(required = false) String searchType, 
 			@RequestParam(required = false) String searchWord, 
 			@RequestParam(required = false, defaultValue="0") Integer pageNumber, 

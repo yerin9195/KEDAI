@@ -101,6 +101,7 @@
    			<mvc:exclude-mapping path="/login/pwdFind.kedai" />
    			<mvc:exclude-mapping path="/login/verifyCertification.kedai" />
    			<mvc:exclude-mapping path="/login/pwdUpdateEnd.kedai" />
+   			<mvc:exclude-mapping path="/chatting/multichat.kedai" />
    			<beans:ref bean="loginCheckInterceptor" />
    		</mvc:interceptor>
    		

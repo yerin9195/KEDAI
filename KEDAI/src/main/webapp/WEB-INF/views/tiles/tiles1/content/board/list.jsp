@@ -164,7 +164,7 @@
 
 	<section>
 		<div class="d-md-flex justify-content-md-end">
-			<form name="searchFrm" style="width: 34%;  min-width: 576px; position: relative;">
+			<form name="searchFrm" style="min-width: 576px; position: relative;">
 		   		<select name="searchType" style="height: 30px;">
 		      		<option value="subject">글제목</option>
 		      		<option value="content">글내용</option>
@@ -172,11 +172,11 @@
 		      		<option value="name">작성자</option>
 		   		</select>
 		   		
-		   		<input type="text" name="searchWord" size="40" autocomplete="off" style="width: 350px; height: 30px;" /> 
-		   		<input type="text" style="display: none;"/> 
+		   		<input type="text" name="searchWord" size="40" autocomplete="off" style="height: 30px;" /> 
+		   		<input type="text" style="display: none;" /> 
 		   		<button type="button" class="search_btn" onclick="goSearch()">검색</button>
 		   		
-		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 24.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
+		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 24.0%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
 				</div>
 			</form>
 			
@@ -217,7 +217,7 @@
 		      						</c:if>
 		      						<%-- 답변글인 경우  --%>
 		      						<c:if test="${bvo.depthno > 0}">
-		      							<span class="subject" onclick="goView('${bvo.board_seq}')"><span style="color: #2c4459; font-style: italic; padding-left: ${bvo.depthno*20}px;">└Re&nbsp;</span>${bvo.subject}</span>
+		      							<span class="subject" onclick="goView('${bvo.board_seq}')"><span style="color: #e68c0e; font-style: italic; padding-left: ${bvo.depthno*20}px;">└Re&nbsp;&nbsp;</span>${bvo.subject}</span>
 		      						</c:if>
 			      				</c:if>
 			      				
@@ -229,7 +229,7 @@
 		      						</c:if>
 		      						<%-- 답변글인 경우  --%>
 		      						<c:if test="${bvo.depthno > 0}">
-		      							<span class="subject" onclick="goView('${bvo.board_seq}')"><span style="color: #2c4459; font-style: italic; padding-left: ${bvo.depthno*20}px;">└Re&nbsp;</span>${bvo.subject}&nbsp;<i class="fa-solid fa-paperclip"></i></span>
+		      							<span class="subject" onclick="goView('${bvo.board_seq}')"><span style="color: #e68c0e; font-style: italic; padding-left: ${bvo.depthno*20}px;">└Re&nbsp;&nbsp;</span>${bvo.subject}&nbsp;<i class="fa-solid fa-paperclip"></i></span>
 		      						</c:if>
 			      				</c:if>
 	      						<%-- === 댓글쓰기 및 답변형 및 파일첨부가 있는 게시판 끝 === --%>

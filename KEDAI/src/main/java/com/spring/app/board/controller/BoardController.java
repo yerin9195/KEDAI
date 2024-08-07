@@ -136,10 +136,14 @@ public class BoardController {
 		}
 		
 		if(n == 1) {
-			mav.setViewName("redirect:/board/list.kedai");
+			mav.addObject("message", "글 등록이 성공되었습니다.");
+			mav.addObject("loc", mrequest.getContextPath()+"/board/list.kedai"); 
+			
+			mav.setViewName("msg");
 		}
 		else {
 			mav.setViewName("tiles1/error.tiles"); 
+			return mav;
 		}
 		
 		paraMap.put("empid", bvo.getFk_empid());
@@ -193,7 +197,7 @@ public class BoardController {
 	
 	// 게시판 목록 보여주기
 	@GetMapping("/board/list.kedai")
-	public ModelAndView list(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView empmanager_list(HttpServletRequest request, ModelAndView mav) {
 		
 		List<BoardVO> boardList = null;
 		

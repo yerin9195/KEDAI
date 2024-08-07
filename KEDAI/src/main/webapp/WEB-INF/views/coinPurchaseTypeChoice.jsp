@@ -32,7 +32,7 @@
 		width: 120px;
 		height: 40px;
 	}
-	.purchase {
+	.purchase_btn:hover {
 		color: #fff;
 		border: none;
 		background: #e68c0e;

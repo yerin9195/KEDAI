@@ -1,20 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="java.text.SimpleDateFormat" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ page import="java.util.Date"%>
+<%@ page import="java.text.SimpleDateFormat"%>
 
 <%
-   String ctxPath = request.getContextPath();
-%>   
+	String ctxPath = request.getContextPath();
+%>
 
 <style type="text/css">
-    th {background-color: #e68c0e;}
-    .subjectStyle {font-weight: bold; color: navy; cursor: pointer; }
-    a {text-decoration: none !important;} /* 페이지바의 a 태그에 밑줄 없애기 */
+th {
+	background-color: #e68c0e;
+}
 
+.subjectStyle {
+	font-weight: bold;
+	color: navy;
+	cursor: pointer;
+}
 
+a {
+	text-decoration: none !important;
+} /* 페이지바의 a 태그에 밑줄 없애기 */
 </style>
 
 <script type="text/javascript">
@@ -52,7 +60,7 @@
 				   $("select[name='searchType']").val() == "share_date" ){
 					
 					$.ajax({
-						url: "<%= ctxPath%>/carShare/searchShow.kedai",
+						url: "<%=ctxPath%>/carShare/searchShow.kedai",
 						type: "get",
 						data: {"searchType":$("select[name='searchType']").val(),
 							   "searchWord":$("input[name='searchWord']").val()},
@@ -166,115 +174,120 @@
 		const frm = document.member_search_frm;
 		
 		frm.method = "get";
-		frm.action = "<%= ctxPath%>/carShare.kedai";
+		frm.action = "<%=ctxPath%>/carShare.kedai";
 		frm.submit();
 		
 	} // end of function goSearch(){} ----------
 	
 	
     function goRegister(){
-        location.href=`<%= ctxPath%>/carRegister.kedai`;
+        location.href=`<%=ctxPath%>/carRegister.kedai`;
     }
 
     function goApply(formName){
         const frm = document.forms[formName];
-        frm.action = "<%= ctxPath%>/carApply_detail.kedai"; 
+        frm.action = "<%=ctxPath%>/carApply_detail.kedai"; 
         frm.method = "post";
         frm.submit();
     }
 </script>
-    
+
 <div style="display: flex; width: 100%;">
-    <div style="margin: auto; padding: 3%; width: 100%">
+	<div style="margin: auto; padding: 3%; width: 100%">
 
-        <h2 style="margin-bottom: 30px; border-bottom: 1px solid orange; border-top: 1px solid orange;width:14%;">CAR SHARING</h2>
-   		<div class="row">
-        <form name="member_search_frm" class="col-10">
-            <select name="searchType">
-               <option value="">검색대상</option>
-               <option value="dp_name">출발지</option>
-               <option value="ds_name">도착지</option>
-               <option value="share_date">셰어링 날짜</option>
-            </select>
-            &nbsp;
-            <c:if test=""></c:if>
-            <input type="text" name="searchWord" placeholder = "검색어 입력"/>
-            <input type="text" style="display: none;" /> <%-- 조심할 것은 type="hidden" 이 아니다. --%> 
-            <!--  날짜 선택   -->
-            <input type="text" name="start" id="datepicker_start" maxlength="10" value="" style="padding: 5px; height: 22pt;" placeholder = "날짜선택" readonly/>
-            &nbsp;
-            <button type="button" class="btn btn-secondary" onclick="goSearch()">검색</button>
-            
-        </form>
-        	<div class="col-2 d-md-flex justify-content-md-end">
-        		<button class="btn btn-secondary btn-sm btnUpdateComment" onclick="goRegister()">등록하기</button>
-        	</div>
-        </div>
-        <div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 10.8%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
-        </div>
-        
-        <table style="width: 100%; margin-top: 1%;" class="table table-bordered">
-            <thead>
-                <tr>
-                    <th style="width: 70px; text-align: center;">no</th>
-                    <th style="width: 240px; text-align: center;">출발지 -> 도착지</th>
-                    <th style="width: 70px; text-align: center;">차주 닉네임</th>
-                    <th style="width: 200px; text-align: center;">셰어링 날짜</th>
-                    <th style="width: 70px; text-align: center;">출발시간</th>
-                    <th style="width: 70px; text-align: center;">신청가능여부</th>
-                    <th style="width: 70px; text-align: center;">조회수</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:if test="${not empty requestScope.carShareList}">
-                    <c:forEach var="carShare" items="${requestScope.carShareList}" varStatus="status">
-                        <tr>
-                        	<td align="center">${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
-                            <form name="carShareFrm${status.index}">
-                                <input type="hidden" name="res_num" value="${carShare.res_num}"/>
-                            </form> 
-                            <td align="center">${carShare.dp_name} &nbsp;&nbsp;->&nbsp;&nbsp;${carShare.ds_name}</td>
-                            <td align="center">${carShare.nickname}</td>
-                            <c:set var="startDate" value="${carShare.start_date}" />
-                            <c:set var="lastDate" value="${carShare.last_date}" />
-                            <td align="center">
-                                <fmt:parseDate value="${startDate}" var="parsedStartDate" pattern="yyyy-MM-dd HH:mm:ss" />
-                                <fmt:formatDate value="${parsedStartDate}" pattern="yyyy-MM-dd" />
-                                ~
-                                <fmt:parseDate value="${lastDate}" var="parsedLastDate" pattern="yyyy-MM-dd HH:mm:ss" />
-                                <fmt:formatDate value="${parsedLastDate}" pattern="yyyy-MM-dd" />
-                            </td>
-                            <td align="center">${carShare.start_time}</td>
-                            <c:if test="${carShare.end_status == 1 && carShare.cancel_status == 1 && (carShare.start_date le requestScope.todayStr && carShare.last_date ge requestScope.todayStr) || carShare.start_date > requestScope.todayStr}">
-                                <td align="center" style="background-color:#2c4459;">
-                                    <input type="button" style="border:none; background-color: #2c4459; color: white;" value="신청가능" class="subject" onclick="goApply('carShareFrm${status.index}')" />
-                                </td>
-                            </c:if>
-                            <c:if test="${carShare.end_status == 0 || carShare.cancel_status == 0 || !(carShare.start_date le requestScope.todayStr && carShare.last_date ge requestScope.todayStr) && carShare.start_date <= requestScope.todayStr}">
-                                <td align="center" style="color: #e68c0e;">신청불가능</td>
-                            </c:if>
-                            <td align="center">${carShare.readCount}</td>
-                        </tr>
-                    </c:forEach>
-                </c:if>
-                <c:if test="${empty requestScope.carShareList}">
-                    <tr>
-                        <td colspan="7">데이터가 존재하지 않습니다.</td>
-                    </tr>
-                </c:if>
-            </tbody>
-        </table>
+		<h2 style="margin-bottom: 30px; border-bottom: 1px solid orange; border-top: 1px solid orange; width: 14%;">CAR SHARING</h2>
+		<div class="row">
+			<form name="member_search_frm" class="col-10">
+				<select name="searchType">
+					<option value="">검색대상</option>
+					<option value="dp_name">출발지</option>
+					<option value="ds_name">도착지</option>
+					<option value="share_date">셰어링 날짜</option>
+				</select> &nbsp;
+				<input type="text" name="searchWord" placeholder="검색어 입력" /> 
+				<input type="text" style="display: none;" /> <%-- 조심할 것은 type="hidden" 이 아니다. --%>
+				<!--  날짜 선택   -->
+				<input type="text" name="start" id="datepicker_start" maxlength="10" value="" style="padding: 5px; height: 22pt;" placeholder="날짜선택" readonly /> &nbsp;
+				<button type="button" class="btn btn-secondary" onclick="goSearch()">검색</button>
+			</form>
+			<div class="col-2 d-md-flex justify-content-md-end">
+				<button class="btn btn-secondary btn-sm btnUpdateComment" onclick="goRegister()">등록하기</button>
+			</div>
+		</div>
+		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 10.8%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
+		</div>
 
-        <div id="pageBar" align="center" style="border: solid 0px gray; width: 50%; margin: 3% auto;">
-                ${requestScope.pageBar}
-        </div>
-    </div>
+		<table style="width: 100%; margin-top: 1%;" class="table table-bordered">
+			<thead>
+				<tr>
+					<th style="width: 10px; text-align: center;">no</th>
+					<th style="width: 175px; text-align: center; border: none;">출발지</th>
+					<th style="width: 10px; text-align: center; border: none;"><i class="fa-solid fa-arrow-right"></i></th>
+					<th style="width: 175px; text-align: center; border: none;">도착지</th>
+					<th style="width: 70px; text-align: center;">차주 닉네임</th>
+					<th style="width: 150px; text-align: center;">셰어링 날짜</th>
+					<th style="width: 70px; text-align: center;">출발시간</th>
+					<th style="width: 70px; text-align: center;">신청가능여부</th>
+					<th style="width: 70px; text-align: center;">조회수</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:if test="${not empty requestScope.carShareList}">
+					<c:forEach var="carShare" items="${requestScope.carShareList}"
+						varStatus="status">
+						<tr>
+							<td align="center">${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
+							<form name="carShareFrm${status.index}">
+								<input type="hidden" name="res_num" value="${carShare.res_num}" />
+							</form>
+							<td align="center"
+								style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">${carShare.dp_name}</td>
+							<td align="center"
+								style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;"><i
+								class="fa-solid fa-arrow-right"></i></td>
+							<td align="center"
+								style="border-left: none; border-right: none; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">${carShare.ds_name}</td>
+							<td align="center">${carShare.nickname}</td>
+							<c:set var="startDate" value="${carShare.start_date}" />
+							<c:set var="lastDate" value="${carShare.last_date}" />
+							<td align="center">
+								<fmt:parseDate value="${startDate}" var="parsedStartDate" pattern="yyyy-MM-dd HH:mm:ss" /> 
+								<fmt:formatDate	value="${parsedStartDate}" pattern="yyyy-MM-dd" /> 
+								~ 
+								<fmt:parseDate value="${lastDate}" var="parsedLastDate" pattern="yyyy-MM-dd HH:mm:ss" /> 
+								<fmt:formatDate value="${parsedLastDate}" pattern="yyyy-MM-dd" />
+							</td>
+							<td align="center">${carShare.start_time}</td>
+							<c:if test="${carShare.end_status == 1 && carShare.cancel_status == 1 && (carShare.start_date le requestScope.todayStr && carShare.last_date ge requestScope.todayStr) || carShare.start_date > requestScope.todayStr}">
+								<td align="center" style="background-color: #2c4459;">
+									<input type="button" style="border: none; background-color: #2c4459; color: white;" value="신청가능" class="subject" onclick="goApply('carShareFrm${status.index}')" />
+								</td>
+							</c:if>
+							<c:if test="${carShare.end_status == 0 || carShare.cancel_status == 0 || !(carShare.start_date le requestScope.todayStr && carShare.last_date ge requestScope.todayStr) && carShare.start_date <= requestScope.todayStr}">
+								<td align="center" style="color: #e68c0e;">신청불가능</td>
+							</c:if>
+							<td align="center">${carShare.readCount}</td>
+						</tr>
+					</c:forEach>
+				</c:if>
+				<c:if test="${empty requestScope.carShareList}">
+					<tr>
+						<td colspan="7">데이터가 존재하지 않습니다.</td>
+					</tr>
+				</c:if>
+			</tbody>
+		</table>
+
+		<div id="pageBar" align="center" style="border: solid 0px gray; width: 50%; margin: 3% auto;">
+			${requestScope.pageBar}
+		</div>
+	</div>
 </div>
 
 <form name="goViewFrm">
-	<input type="hidden" name="board_seq" />
-	<input type="hidden" name="goBackURL" />
-	<input type="hidden" name="searchType" />
+	<input type="hidden" name="board_seq" /> 
+	<input type="hidden" name="goBackURL" /> 
+	<input type="hidden" name="searchType" /> 
 	<input type="hidden" name="searchWord" />
-</form> 
+</form>
 <!--  검색대상이 셰어링 날짜일 경우 textform 이 아닌 datepicker 폼으로 변경하기 -->
