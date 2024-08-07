@@ -119,14 +119,6 @@
         padding: 5px 10px;
         border-radius: 5px;
     }
-        .form-group input, .form-group textarea, .form-group select {
-            padding: 8px;
-            
-        }
-        
-        .reserveBtn {
-            padding: 22px;
-        }
 
     .change-btn {
         margin-left: 10px;
@@ -174,88 +166,7 @@
     // 시간과 분 선택 옵션을 초기화
     populateTimeSelect();
     
-    function fetchReservations() {
-        var selectedDate = $("#currentDate").text().split(' ')[0];
-
-        $.ajax({
-            url: "<%= request.getContextPath() %>/getReservations.kedai",
-            type: "GET",
-            data: { date: selectedDate },
-            dataType: "json",
-            success: function(reservations) {
-                // 기존 강조 표시를 제거
-                $("td.time-slot").removeClass("highlighted");
-
-                reservations.forEach(function(reservation) {
-                    var startTime = parseTime(reservation.startTime);
-                    var endTime = parseTime(reservation.endTime);
-                    var reservationRoomName = reservation.roomName;
-                    var reservationId = reservation.id;
-
-                    $("td.time-slot").each(function() {
-                        var self = this;
-                        var cellHour = $(this).data('hour');
-                        var cellMinute = $(this).data('minute');
-                        var cellRoomName = $(this).data('roomname');
-                        var cellTime = formatTime(cellHour, cellMinute);
-
-                        $.ajax({
-                            url: '<%= ctxPath %>/getRoomData.kedai',
-                            method: 'GET',
-                            data: { subroom: cellRoomName },
-                            success: function(response) {
-                                if (Array.isArray(response) && response.length > 0) {
-                                    var data = response[0] || {};
-                                    var roomMainName = data.ROOMMAINNAME || '';
-                                    var roomSubName = data.ROOMSUBNAME || '';
-                                    var cellRoomFullName = roomMainName + roomSubName;
-
-                                    if (cellRoomFullName === reservationRoomName && cellTime >= startTime && cellTime < endTime) {
-                                        $(self).addClass("highlighted");
-                                        $(self).off('click').on('click', function() {
-                                            window.location.href = "<%= request.getContextPath() %>/reservation_detail.kedail?id=" + reservationId;
-                                        });
-                                    }
-                                } else {
-                                    console.warn("유효한 데이터가 없습니다.");
-                                }
-                            },
-                            error: function(request, status, error) {
-                                console.error("예약 정보 가져오기 오류:", {
-                                    readyState: request.readyState,
-                                    status: request.status,
-                                    statusText: request.statusText,
-                                    responseText: request.responseText
-                                });
-                            }
-                        });
-                    });
-                });
-            },
-            error: function(request, status, error) {
-                console.error("예약 정보 가져오기 오류:", {
-                    readyState: request.readyState,
-                    status: request.status,
-                    statusText: request.statusText,
-                    responseText: request.responseText
-                });
-            }
-        });
-    }
-
-
-
-
-
-    // 페이지 로드 시 예약 정보 가져오기
-    fetchReservations();
-
- // 날짜 변경 시 예약 정보 가져오기
-    $(document).on("click", "[data-change-date]", function() {
-        changeDate(parseInt($(this).attr("data-change-date")));
-        fetchReservations();
-    });
-
+   
     // 모달 표시 시 날짜와 시간을 설정
     $(document).on("click", ".reserveBtn", function() {
     	  var btn = $(this);
@@ -279,8 +190,6 @@
     	        $("#reservationModal").modal("show");
     	    } 
     });
-
-
 
     
     // 시간과 분 옵션 생성 함수
@@ -357,11 +266,6 @@
 
      // 페이지 로드 시 드롭다운 초기화
      populateTimeSelect();
-
-     // 시작 시간이 변경될 때 종료 시간 옵션 업데이트
-     $("#startTime").on("change", function() {
-         updateEndTimeOptions();
-     });
 
      // 모달 표시 시 날짜와 시간을 설정
      $(document).on("click", ".reserveBtn", function() {
@@ -514,6 +418,7 @@
                          if (response.success) {
                              alert("예약이 완료되었습니다.");
                              $("#reservationModal").modal("hide");
+                             window.location.href = response.redirectUrl;
                          } else {
                              alert("예약에 실패하였습니다.");
                          }
@@ -660,22 +565,6 @@
 	        
 	  
 
-
-	 function changeDate(days) {
-	        const currentDateElement = $("#currentDate");
-	        const currentDateText = currentDateElement.text().split(' ')[0];
-	        const currentDate = new Date(currentDateText);
-	        currentDate.setDate(currentDate.getDate() + days);
-
-	        const formattedDate = formatDate(currentDate);
-	        currentDateElement.text(formattedDate);
-
-	        // startDate와 endDate도 현재 날짜로 업데이트
-	        $("#startDate").val(formattedDate);
-	        $("#endDate").val(formattedDate);
-	    }
-	 
-
 	// 날짜 포맷팅 함수
 	function formatDate(date) {
 	        const year = date.getFullYear();
@@ -705,6 +594,8 @@
 	        $("#currentDate").text(formattedToday);
 	        $("#startDate").val(formattedToday);
 	        $("#endDate").val(formattedToday);
+	        
+	        fetchReservations();
 	    }
 
 
@@ -720,6 +611,8 @@
 	        // startDate와 endDate도 현재 날짜로 업데이트
 	        $("#startDate").val(formattedDate);
 	        $("#endDate").val(formattedDate);
+	        
+	        fetchReservations();
 	    }
 
 	    // 날짜 변경 버튼 클릭 핸들러
@@ -862,36 +755,6 @@
 
 
 
-
-	 // 예약된 시간 슬롯에 배경색을 적용하는 함수
-	    function highlightReservedSlots(reservations) {
-	        reservations.forEach(reservation => {
-	            let startHour = new Date(reservation.startTime).getHours();
-	            let startMinute = new Date(reservation.startTime).getMinutes();
-	            let endHour = new Date(reservation.endTime).getHours();
-	            let endMinute = new Date(reservation.endTime).getMinutes();
-	            let roomName = reservation.roomName;
-
-	            // 모든 td 요소를 검사
-	            document.querySelectorAll('.time-slot').forEach(td => {
-	                let hour = parseInt(td.getAttribute('data-hour'), 10);
-	                let minute = parseInt(td.getAttribute('data-minute'), 10);
-	                let room = td.getAttribute('data-roomname');
-
-	                // 예약 시간 내의 셀을 찾기
-	                if (
-	                    hour >= startHour && minute >= startMinute &&
-	                    room === roomName &&
-	                    (hour < endHour || (hour === endHour && minute < endMinute))
-	                ) {
-	                    td.style.backgroundColor = 'blue';
-	                    td.setAttribute('data-reservation-id', reservation.id); // 예약 ID 설정
-	                }
-	            });
-	        });
-	    }
- 	
- 
  </script>
 
  <div class="header">

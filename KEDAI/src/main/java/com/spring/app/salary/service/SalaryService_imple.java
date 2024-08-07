@@ -32,6 +32,19 @@ public class SalaryService_imple implements SalaryService{
 		return n;
 	}
 
+	@Override
+	public MemberVO getEmployeeById(String employeeId) {
+		MemberVO getEmployeeById = dao.getEmployeeById(employeeId);
+		return getEmployeeById;
+	}
+
+
+	@Override
+	public List<SalaryVO> getSalaryDetailsById(String yearMonth, String empid) {
+		List<SalaryVO> getSalaryDetailsById = dao.getSalaryDetailsById(empid, yearMonth);
+		return getSalaryDetailsById;
+	}
+
 
 
 	

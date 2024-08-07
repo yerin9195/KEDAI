@@ -135,39 +135,42 @@ table {
 </style>
 
 <script type="text/javascript">
+$(document).ready(function() {
+    $("tr").each(function(index, element) {
+        const getinTimeInput = $(element).find("input[name^='getin_time_']");
+        const getoutTimeInput = $(element).find("input[name^='getout_time_']");
+        const getinTime = getinTimeInput.val();
+        const getoutTime = getoutTimeInput.val();
 
-function request_payment(index, pf_empid, pf_res_num, nickname_applicant, email_applicant, nonpayment_amount) {
+        // 값 확인용 콘솔 출력
+        console.log("Row index: " + index);
+        console.log("getinTime: " + getinTime);
+        console.log("getoutTime: " + getoutTime);
 
-    console.log("pf_empid: ", pf_empid);
-    console.log("pf_res_num: ", pf_res_num);
-    console.log("nickname_applicant: ", nickname_applicant);
-    console.log("email_applicant: ", email_applicant);
-    console.log("nonpayment_amount: ", nonpayment_amount);
-    //var formattedEmailApplicant = parseInt(email_applicant);
-    
-    $.ajax({
-        url: "<%=ctxPath%>/request_payment_owner.kedai",
-        type: 'GET',
-        data: {
-            pf_empid: pf_empid,
-            pf_res_num: pf_res_num,
-            nickname_applicant: nickname_applicant,
-            email_applicant: email_applicant,
-            nonpayment_amount: nonpayment_amount
-        },
-        success: function(response) {
-            // 메일 전송이 성공한 경우 사용자에게 알림을 표시합니다.
-            alert('메일이 성공적으로 전송되었습니다.');
-        },
-        error: function(xhr, status, error) {
-            console.error('메일 전송 중 오류 발생:', error);
-            console.log('상태 코드:', status);
-            console.log('응답 텍스트:', xhr.responseText);
-            alert('메일 전송 중 오류가 발생했습니다. 다시 시도해 주세요.');
+        if (getinTime && getoutTime) {
+            const rowElement = $(element);
+
+            // AJAX 호출을 통해 서버에 값을 전달하고, 응답을 처리합니다.
+            $.ajax({
+                url: '<%= ctxPath %>/calculateUseTime.kedai',
+                type: 'GET',
+                data: {
+                    getin_time: getinTime,
+                    getout_time: getoutTime
+                },
+                success: function(response) {
+                    console.log("Use time calculated: " + response.use_time);
+                    // 응답으로 받은 use_time 값을 해당 행에 표시합니다.
+                    rowElement.find("td.use_time").text(response.use_time+ " 분");
+                    rowElement.find("td.settled_amount").text(response.settled_amount+ " point");
+                },
+                error: function(error) {
+                    console.error("Error calculating use time:", error);
+                }
+            });
         }
     });
-}
-
+});
 </script>
 
 <div style="border: 0px solid red; padding: 2% 0; width: 90%;">
@@ -231,58 +234,25 @@ function request_payment(index, pf_empid, pf_res_num, nickname_applicant, email_
                                     <td align="center" class="rds_name">${owner_carShare.rds_name}</td>
                                     <td align="center"><input type="text" style="border: none; font-size: 15pt;" name="getout_time_${status.index}" value="${owner_carShare.getout_time}" readonly/></td>
                                     <c:if test="${not empty owner_carShare.getin_time and not empty owner_carShare.getout_time }">
-                                        <td align="center" style="color: red;">${owner_carShare.use_time}분</td>
+                                        <td align="center" class="use_time" style="color: red;">${requestScope.use_time}</td>
                                     </c:if>
                                     <c:if test="${empty owner_carShare.getin_time or empty owner_carShare.getout_time }">
                                         <td align="center"><i class="fa-solid fa-xmark"></i></td>
                                     </c:if>
-									<td align="center">
-									    <c:choose>
-									        <c:when test="${owner_carShare.settled_amount ne 0}">
-									            <fmt:formatNumber value="${owner_carShare.settled_amount}" type="number" /><span>point</span>
-									        </c:when>
-									        <c:otherwise>
-									            <i class="fa-solid fa-xmark"></i>
-									        </c:otherwise>
-									    </c:choose>
-									</td>
-									
-									<td align="center">
-									    <c:choose>
-									        <c:when test="${owner_carShare.payment_amount ne 0}">
-									            <fmt:formatNumber value="${owner_carShare.payment_amount}" type="number" /><span>point</span>
-									        </c:when>
-									        <c:otherwise>
-									            <i class="fa-solid fa-xmark"></i>
-									        </c:otherwise>
-									    </c:choose>
-									</td>
-									
-									<td align="center">
-									    <c:choose>
-									        <c:when test="${owner_carShare.settled_amount eq 0}">
-									           	 이용전
-									        </c:when>
-									        <c:when test="${owner_carShare.nonpayment_amount ne 0.0}">
-									            <fmt:formatNumber value="${owner_carShare.nonpayment_amount}" type="number" /><span>point</span>
-									        </c:when>
-									        <c:otherwise>
-									            <i class="fa-solid fa-xmark"></i>
-									        </c:otherwise>
-									    </c:choose>
-									</td>
-									<c:if test="${owner_carShare.settled_amount eq 0}">
-									    <td align="center"> </td>
-									</c:if>
-									<c:if test="${owner_carShare.settled_amount ne 0 && owner_carShare.payment_amount eq 0}">
-									    <td align="center">
-										    <button type="button" style="background-color:white;" 
-										        onclick="request_payment('${status.index}', '${owner_carShare.pf_empid}', '${owner_carShare.pf_res_num}', '${owner_carShare.nickname_applicant}', '${owner_carShare.email_applicant}', '${owner_carShare.nonpayment_amount}')">
-										        <i class="fa-solid fa-comments"></i>
-										    </button>
-										</td>
-									</c:if>
-                                
+                                    <td align="center" class="settled_amount">${requestScope.settled_amount}</td>
+                                    <c:if test="${owner_carShare.payment_amount ne 0.0}">
+                                    	<td align="center">${owner_carShare.payment_amount}</td>
+                                    </c:if>
+                                    <c:if test="${owner_carShare.payment_amount eq 0.0 }">
+                                    	<td align="center">결제전</td>
+                                    </c:if>
+                                    <c:if test="${owner_carShare.payment_amount ne 0.0 }">
+                                    	<td align="center">결제완료</td>
+                                    </c:if>
+                                    <c:if test="${owner_carShare.payment_amount eq 0.0}">
+                                    	<td align="center" class="settled_amount">${requestScope.settled_amount}</td>
+                                    </c:if>
+                                    <td align="center"><button type="button" style="background-color:white;"><i class="fa-solid fa-comments"></i></button></td>
                                 </tr>
                             </c:forEach>
                         </c:if>
