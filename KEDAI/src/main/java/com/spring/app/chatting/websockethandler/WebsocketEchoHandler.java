@@ -25,9 +25,6 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 	// === 웹소켓서버에 연결한 클라이언트 사용자들을 저장하는 리스트 ===
 	private List<WebSocketSession> connectedUsers = new ArrayList<>();
 	
-	/// ★
-	private List<MemberVO> connected_list = new ArrayList<>();
-	
 	// ====== 몽고 DB 시작 ========= //
 	// =======#234. 웹채팅관련16 ====//
 	@Autowired
@@ -35,9 +32,9 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 	
 	@Autowired
 	private Mongo_messageVO dto;
-	// ========== 몽고 DB 끝 ============================//
 	
-		
+	
+	// ========== 몽고 DB 끝 ============================//
 	public void init() throws Exception {}
 	
 	// === 클라이언트가 웹소켓서버에 연결했을때의 작업 처리하기 ===
@@ -46,6 +43,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
               클라이언트가 웹소켓서버에 연결이 되어지면 자동으로 실행되는 메소드로서
        WebSocket 연결이 열리고 사용이 준비될 때 호출되어지는(실행되어지는) 메소드이다.
     */
+	
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession wsession) throws Exception { 
@@ -93,61 +91,25 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
                           리턴값은  "키",오브젝트로 이루어진 Map<String, Object> 으로 받아온다.
          */
 			
-		    MemberVO loginuser = (MemberVO)map.get("loginuser");	
+		  MemberVO loginuser = (MemberVO)map.get("loginuser");	
 		  // "loginuser" 은 HttpSession에 저장된 키 값으로 로그인 되어진 사용자이다.
+			
+		  connectingUserName += loginuser.getName()+" ";
 		  
-		    connectingUserName += loginuser.getName()+" ";
-		    
-		    /// ★
-		    boolean isExists = false;
-			if(connected_list.size() == 0) {
-				connected_list.add(loginuser);
-			}
-			else {
-				for(MemberVO mbvo : connected_list) {
-					if(mbvo.getEmpid().equals(loginuser.getEmpid()) ) {
-						isExists = true;
-						break;
-					}
-				}// end of for--------------
-				
-                if(!isExists) {
-                	connected_list.add(loginuser);
-                }
-			}
-		    
+			
+			
 		}// end of for()----------------------------------------------------
 		
 		connectingUserName += "」 ";
 		// System.out.println("확인용 connectingUserName : " + connectingUserName);
 		// 확인용 connectingUserName : 「관리자 」
 		
+		
 		for(WebSocketSession webSocketSession : connectedUsers) {
 			webSocketSession.sendMessage(new TextMessage(connectingUserName));
+			
 		}// end of for()----------------------------------------
 		
-		
-		/// ★
-		String v_html = "⊇";
-		
-		if(connected_list.size() > 0) {
-			for(MemberVO mbvo : connected_list) {
-				
-				v_html += "<tr>"
-						+ "<td style='width: 70px; text-align: center;'>"
-						+ "<img src='/KEDAI/resources/files/employees/"+ mbvo.getImgfilename() +"' width=50px; height=50px;>"
-						+ "</td>"
-						+ "<td style='width: 70px; text-align: center;'>"+ mbvo.getName() +"</td>"
-						+ "<td style='width: 70px; text-align: center;'>"+ mbvo.getDept_name() +"</td>"
-						+ "<td style='width: 70px; text-align: center;'>"+ mbvo.getJob_name() +"</td>"
-						+ "</tr>";
-						
-			}// end of for-------------------
-			
-			for(WebSocketSession webSocketSession : connectedUsers) {
-				webSocketSession.sendMessage(new TextMessage(v_html));
-			}// end of for()----------------------------------------
-		}
 		
 		///// ===== 웹소켓 서버에 접속시 접속자명단을 알려주기 위한 것 끝 ===== /////
 		
@@ -164,7 +126,6 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
               
               String str_created = sdfrmt.format(list.get(i).getCreated());  // 대화내용을 나누었던 날짜를 읽어온다. 2024년 05월 09일 목요일
               
-             /* 
               System.out.println(list.get(i).getEmpid() + "\n"
                                    + list.get(i).getName() + "\n"
                                    + list.get(i).getCurrentTime() + "\n"
@@ -172,8 +133,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
                                    + list.get(i).getCreated() + "\n"
                                    + str_created + "\n"
                                    + list.get(i).getCurrentTime() + "\n" );
-	         
-	         */     
+	              
 	     // }// end of for-----------------------------------
 		
          //   System.out.println("=================================\n");
@@ -203,7 +163,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
               if(loginuser.getEmpid().equals(list.get(i).getEmpid())) { // 본인이 작성한 채팅메시지일 경우라면.. 작성자명 없이 노랑배경색에 오른쪽 정렬로 보이게 한다.
                  if("all".equals(list.get(i).getType())) { // 귀속말이 아닌 경우
                     wsession.sendMessage(
-                    	new TextMessage("<div style='background-color: #ffff80; color: #2c4459; display: inline-block; max-width: 60%; float: right; padding: 7px; border-radius: 15%; word-break: break-all;'>" + list.get(i).getMessage() + "</div> <div style='display: inline-block; float: right; padding: 20px 5px 0 0; font-size: 7pt;'>"+list.get(i).getCurrentTime()+"</div> <div style='clear: both;'>&nbsp;</div>")  
+                    	new TextMessage("<div style='background-color: #ffff80; display: inline-block; max-width: 60%; float: right; padding: 7px; border-radius: 15%; word-break: break-all;' id='speechbubble;'>" + list.get(i).getMessage() + "</div> <div style='display: inline-block; float: right; padding: 20px 5px 0 0; font-size: 7pt;'>"+list.get(i).getCurrentTime()+"</div> <div style='clear: both;'>&nbsp;</div>")  
                     ); 
                  }
                  else { // 귀속말인 경우. 글자색을 빨강색으로 함.
@@ -216,13 +176,12 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
               else { // 다른 사람이 작성한 채팅메시지일 경우라면.. 작성자명이 나오고 흰배경색으로 보이게 한다.
                   if("all".equals(list.get(i).getType())) { // 귀속말이 아닌 경우
                      wsession.sendMessage(
-                     	new TextMessage("<div style='display: flex;'><div style='width: 80px; height: 80px; overflow: hidden; border-radius:50%;'><img src='/KEDAI/resources/files/employees/"+ list.get(i).getImgfilename() +"' width='100%' height='100%' style='border-radius: 50%;'/></div><span style='align-content: end; font-weight:bold; cursor:pointer;' class='loginuserName'>[" +list.get(i).getName()+ "]</span></div><br><div style='background-color: #c2dcf2; color: #2c4459; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all;'>"+ list.get(i).getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+list.get(i).getCurrentTime()+"</div> <div>&nbsp;</div>" ) 
-                    	
-                    );
+                     	new TextMessage("[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +list.get(i).getName()+ "</span>]<br><div style='background-color: white; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all;'>"+ list.get(i).getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+list.get(i).getCurrentTime()+"</div> <div>&nbsp;</div>" ) 
+                     );
                   }
                   else { // 귀속말인 경우. 글자색을 빨강색으로 함.
                      wsession.sendMessage(
-                     	new TextMessage("<div style='display: flex;'><div style='width: 80px; height: 80px; overflow: hidden; border-radius:50%;'><img src='/KEDAI/resources/files/employees/"+ list.get(i).getImgfilename() +"' width='100%' height='100%' style='border-radius: 50%;'/>/div><span style='align-content: end; font-weight:bold; cursor:pointer;' class='loginuserName'>[" +list.get(i).getName()+ "</span>]<br><div style='background-color: #80ecff; color: #2c4459; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all; color: red;'>"+ list.get(i).getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+list.get(i).getCurrentTime()+"</div> <div>&nbsp;</div>" ) 
+                     	new TextMessage("[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +list.get(i).getName()+ "</span>]<br><div style='background-color: white; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all; color: red;'>"+ list.get(i).getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+list.get(i).getCurrentTime()+"</div> <div>&nbsp;</div>" ) 
                      );
                   }
                }
@@ -281,7 +240,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
      // System.out.println("~~~ 확인용 messageVO.getType() => " + messageVO.getType() );
      // ~~~ 확인용 messageVO.getType() => all
      
-     //  System.out.println("~~~ 확인용 messageVO.getTo() => " + messageVO.getTo() );
+     // System.out.println("~~~ 확인용 messageVO.getTo() => " + messageVO.getTo() );
      // ~~~ 확인용 messageVO.getTo() => all
 	
      Date now = new Date(); // 현재시각 
@@ -292,42 +251,35 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
      // %tl              시간을 1~12 으로 출력
      // %tM              분을 00~59 으로 출력
      
-
-	//  System.out.println("message.type:" + messageVO.getType() + ", to: " + messageVO.getTo());
-
      	for(WebSocketSession webSocketSession : connectedUsers) { 
+    	 
     	 	if("all".equals(messageVO.getType())) {
              // 채팅할 대상이 "전체" 일 경우
              // 메시지를 자기자신을 뺀 나머지 모든 사용들에게 메시지를 보냄.
              
-             if( !wsession.getId().equals(webSocketSession.getId()) ) { 
-              // wsession 은 메시지를 보낸 클라이언트임.
-              // webSocketSession 은 웹소켓서버에 연결된 모든 클라이언트중 하나임.
-              // wsession.getId() 와  webSocketSession.getId() 는 자동증가되는 고유한 값으로 나옴 
-              // System.out.println("1111all - webSocketSession.getId():" + webSocketSession.getId());
+	             if( !wsession.getId().equals(webSocketSession.getId()) ) { 
+	                // wsession 은 메시지를 보낸 클라이언트임.
+	                // webSocketSession 은 웹소켓서버에 연결된 모든 클라이언트중 하나임.
+	                // wsession.getId() 와  webSocketSession.getId() 는 자동증가되는 고유한 값으로 나옴 
 	                
 	                webSocketSession.sendMessage(   
-	                      new TextMessage("<img src='/KEDAI/resources/files/employees/"+loginuser.getImgfilename()+"' width='80px' height='80px'/><span id='secretId' style='display: none;'>"+ loginuser.getEmpid() +"</span>&nbsp;[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +loginuser.getName()+ "</span>]<br><div style='background-color: white; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all;'>"+ messageVO.getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+currentTime+"</div> <div>&nbsp;</div>" )); 
+	                      new TextMessage("<span style='display:none'>"+wsession.getId()+"</span>&nbsp;[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +loginuser.getName()+ "</span>]<br><div style='background-color: white; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all;'>"+ messageVO.getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+currentTime+"</div> <div>&nbsp;</div>" )); 
 	                                                                                                                                                                                                                                                                                                                            /* word-break: break-all; 은 공백없이 영어로만 되어질 경우 해당구역을 빠져나가므로 이것을 막기위해서 사용한다. */
-	                // new TextMessage("<img src='/KEDAI/resources/files/employees/"+loginuser.getImgfilename()+"' width='80px' height='80px'/><span id='secretId' style='border: solid 1px red;'>"+ wsession.getId() +"</span>&nbsp;[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +loginuser.getName()+ "</span>]<br><div style='background-color: white; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all;'>"+ messageVO.getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+currentTime+"</div> <div>&nbsp;</div>" )); 
-             }
+	             	}
              
     	 	}
     	 	else { // 채팅할 대상이 "전체"가 아닌 특정대상(귀속말대상웹소켓.getId()임) 일 경우  
              
     	 		String ws_id = webSocketSession.getId();
     	 		// webSocketSession 은 웹소켓서버에 연결한 모든 클라이언트중 하나이며, 그 클라이언트의 웹소켓의 고유한 id 값을 알아오는 것임. 
-    	 		// System.out.println("one - webSocketSession.getId():" + webSocketSession.getId());
-    	 		// one - webSocketSession.getId():89ed66ac-726b-43e2-013b-ad84096be096
-    	 		// System.out.println("2222messageVO.getTo() : " + messageVO.getTo());
+             
     	 		if(messageVO.getTo().equals(ws_id)) { 
-
     	 			// messageVO.getTo() 는 클라이언트가 보내온 귓속말대상웹소켓.getId() 임. 
     	 			webSocketSession.sendMessage(
-    	 					new TextMessage("<img src='/KEDAI/resources/files/employees/"+loginuser.getImgfilename()+"' width='80px' height='80px'/><span id='secretId' style='display: none;'>"+ loginuser.getEmpid() +"</span>&nbsp;[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +loginuser.getName()+ "</span>]<br><div style='background-color: white; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all; color: red;'>"+ messageVO.getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+currentTime+"</div> <div>&nbsp;</div>" )); 
-    	 																																					/* word-break: break-all; 은 공백없이 영어로만 되어질 경우 해당구역을 빠져나가므로 이것을 막기위해서 사용한다. */ 
-    	 					// new TextMessage("<img src='/KEDAI/resources/files/employees/"+loginuser.getImgfilename()+"' width='80px' height='80px'/><span id='secretId' style='border: solid 1px red;'>"+ wsession.getId() +"</span>&nbsp;[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +loginuser.getName()+ "</span>]<br><div style='background-color: white; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all; color: red;'>"+ messageVO.getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+currentTime+"</div> <div>&nbsp;</div>" )); 
-    	 			break; // 지금의 특정대상(지금은 귓속말대상 웹소켓id)은 1개이므로 
+               		
+    	 				new TextMessage("<span style='display:none'>"+wsession.getId()+"</span>&nbsp;[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +loginuser.getName()+ "</span>]<br><div style='background-color: white; display: inline-block; max-width: 60%; padding: 7px; border-radius: 15%; word-break: break-all; color: red;'>"+ messageVO.getMessage() +"</div> <div style='display: inline-block; padding: 20px 0 0 5px; font-size: 7pt;'>"+currentTime+"</div> <div>&nbsp;</div>" )); 
+                                                                                                                                                                                                                                                                                                                            /* word-break: break-all; 은 공백없이 영어로만 되어질 경우 해당구역을 빠져나가므로 이것을 막기위해서 사용한다. */ 
+    	 				break; // 지금의 특정대상(지금은 귓속말대상 웹소켓id)은 1개이므로 
                           	   // 특정대상(지금은 귓속말대상 웹소켓id 임)에게만 메시지를 보내고  break;를 한다.
     	 		}
              
@@ -349,9 +301,6 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
          dto.setName(loginuser.getName());
          dto.setCurrentTime(currentTime);
          dto.setCreated(new Date());
-         
-         ///////////////////////////////////////////////
-         dto.setImgfilename(loginuser.getImgfilename());
          
          chattingMongo.insertMessage(dto);
          // ================== 몽고DB 끝 ============================== //
@@ -397,7 +346,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
             MemberVO loginuser2 = (MemberVO)map2.get("loginuser");  
           // "loginuser" 은 HttpSession에 저장된 키 값으로 로그인 되어진 사용자이다.
   
-            connectingUserName += loginuser2.getName()+" "; 
+           connectingUserName += loginuser2.getName()+" "; 
        }// end of for------------------------------------------
         
         connectingUserName += "」";
@@ -406,37 +355,5 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
             webSocketSession.sendMessage(new TextMessage(connectingUserName));
         }// end of for------------------------------------------
         ///// ===== 접속을 끊을시 접속자명단을 알려주기 위한 것 끝 ===== ///// 
-        
-        
-        /// ★
-        if(connected_list.size() > 0) {
-        	
-        	for(MemberVO mbvo : connected_list) {
-        		if(mbvo.getEmpid().equals(loginuser.getEmpid())) {
-        			connected_list.remove(mbvo);
-        			break;
-        		}
-        	}// end of for---------------------
-        	
-        	String v_html = "⊇";
-        	
-        	for(MemberVO mbvo : connected_list) {
-				
-				v_html += "<tr>"
-						+ "<td style='width: 70px; text-align: center;'>"
-						+ "<img src='/KEDAI/resources/files/employees/"+ mbvo.getImgfilename() +"' width=50px; height=50px;>"
-						+ "</td>"
-						+ "<td style='width: 70px; text-align: center;'>"+ mbvo.getName() +"</td>"
-						+ "<td style='width: 70px; text-align: center;'>"+ mbvo.getDept_name() +"</td>"
-						+ "<td style='width: 70px; text-align: center;'>"+ mbvo.getJob_name() +"</td>"
-						+ "</tr>";
-						
-			}// end of for-------------------
-			
-			for(WebSocketSession webSocketSession : connectedUsers) {
-				webSocketSession.sendMessage(new TextMessage(v_html));
-			}// end of for()----------------------------------------
-        }
-        
 	}
 }

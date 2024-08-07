@@ -145,7 +145,7 @@ public class CommonAop {
 			
 			if(n == 1) {
 				message = "포인트 결제가 정상적으로 처리되었습니다.";
-				loginuser.setPoint(loginuser.getPoint()-100);
+				loginuser.setPoint(loginuser.getPoint());
 			}
 		}
 		
@@ -179,7 +179,7 @@ public class CommonAop {
         HttpSession session = request.getSession();
         MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
         
-        if (loginuser == null || Integer.parseInt(loginuser.getFk_job_code()) > 8) { // 권한 설정 => 대표이사, 전무, 상무, 부장
+        if (loginuser == null || Integer.parseInt(loginuser.getFk_job_code()) > 5) { // 권한 설정 => 대표이사, 전무, 상무, 부장
             // 권한이 없는 경우
             String message = "접근할 수 있는 권한이 없습니다.";
             String loc;
