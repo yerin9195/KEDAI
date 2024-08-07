@@ -7,6 +7,9 @@
 	//     /KEDAI
 %>
 <style type="text/css">
+	.subject:hover {
+		color: #e68c0e;
+	}
 	.subject div {
 		height: 30px;
 		white-space: nowrap;
