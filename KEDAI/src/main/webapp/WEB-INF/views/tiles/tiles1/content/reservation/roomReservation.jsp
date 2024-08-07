@@ -538,19 +538,24 @@
             });
 
             // 돋보기 버튼 클릭 이벤트
+         // 돋보기 버튼 클릭 이벤트
             $('#searchButton').click(function() {
-                var selectedValue = $('#assetSelect').val();
-                if (selectedValue) {
-                    if (selectedValue === '') {
+                var assetSelectValue = $('#assetSelect option:selected').val();
+                var assetSelectText = $('#assetSelect option:selected').text().trim();
+                
+                // assetSelectValue를 사용하여 층 선택 여부를 판단
+                if (assetSelectValue !== undefined && assetSelectValue !== null) {
+                    if (assetSelectValue === '') {
                         alert("층을 선택해 주세요."); // 전체가 선택된 경우 경고 메시지
                     } else {
-                        var imagePath = '<%= ctxPath %>/resources/images/room/' + selectedValue + '층 도면도.jpg';
+                        var imagePath = '<%= ctxPath %>/resources/images/room/' + assetSelectText + ' 도면도.jpg';
                         window.open(imagePath, '_blank'); // 새 탭에서 이미지 열기
                     }
                 } else {
                     alert("층을 선택해 주세요."); // 전체가 선택된 경우 경고 메시지
                 }
             });
+
 	    
         },
         error: function(request, status, error) {
@@ -685,6 +690,7 @@
 
 	                    // 예약 날짜가 현재 날짜와 일치하는 경우에만 처리
 	                    if (startReservationDate === selectedDate) {
+	                    	$("#reservationModal").hide();
 	                        $("td.time-slot").each(function() {
 	                            var self = this;
 	                            var cellHour = $(this).data('hour');
@@ -700,9 +706,7 @@
 	                            }
 	                            */
 	                            var cellTime = formatTime(cellHour, cellMinute);
- 
-	                            console.log(cellRoomName)
-	                            
+ 	                            
 	                            $.ajax({
 	                                url: '<%= request.getContextPath() %>/getRoomData.kedai',
 	                                method: 'GET',
