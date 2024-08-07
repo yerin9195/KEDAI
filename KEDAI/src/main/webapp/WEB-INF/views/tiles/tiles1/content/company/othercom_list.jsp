@@ -50,13 +50,13 @@ div#cover_all{
 
 
 div#othercom_list .artWrap article {
-	width: calc(33.33% - 20px);
+	width: 300px;
 
   background-color: #fff;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
   padding-bottom: 20px;
   border-radius: 10px;
-  flex: 1 1 calc(33.33% - 20px);
+  flex: 1 1 calc(33.33333% - 20px);
 }
 
 div#othercom_list .artWrap article:nth-of-type(3) ~ article {
@@ -371,7 +371,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 			
 	function goSearch(){
 		
-		const frm = document.employee_search_frm;
+		const frm = document.company_search_frm;
 		// console.log(frm);
 		frm.method = "get";
 		frm.action = "<%= ctxPath%>/othercom_list.kedai";
@@ -506,9 +506,8 @@ text-decoration: none; / 링크 밑줄 제거 */
 </div>
 <div class="reg-search row">
 	
-    <form name="employee_search_frm" style="position:relative;" class="col-10">
+    <form name="company_search_frm" style="position:relative;" class="col-10">
 		<select name ="searchType" style="margin-right:10px;">
-			<option value="">검색대상</option>
 			<option value="partner_name">거래처명</option>
 			<option value="partner_type">업종</option>
 			<option value="part_emp_name">담당자명</option>
@@ -572,7 +571,7 @@ text-decoration: none; / 링크 밑줄 제거 */
 	    </c:forEach>
     </c:if>
     <c:if test="${empty requestScope.partnerList}">
-    	<div>거래처가 존재하지 않습니다.</div>
+    	<div>데이터가 존재하지 않습니다.</div>
     </c:if>
   </div>
  

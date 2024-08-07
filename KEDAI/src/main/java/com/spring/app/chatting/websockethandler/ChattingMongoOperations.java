@@ -27,7 +27,8 @@ public class ChattingMongoOperations {
         		         + "to : " + dto.getTo() + "\n"
         		         + "type : " + dto.getType() + "\n"
         		         + "Empid : " + dto.getEmpid() + "\n"
-        		         + "currentTime : " + dto.getCurrentTime() ); 
+        		         + "currentTime : " + dto.getCurrentTime() + "\n"
+        		         + "imgfilename : " + dto.getImgfilename() + "\n" ); 
         	
 			*/
 		  // >>> 데이터 추가 <<< 

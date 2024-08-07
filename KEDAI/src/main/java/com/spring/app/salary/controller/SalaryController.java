@@ -1,11 +1,6 @@
 package com.spring.app.salary.controller;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServlet;
 
 //import java.util.List;
 
@@ -134,9 +129,42 @@ public class SalaryController {
 	        }
 	    } else {
 	        jsonObj.put("error", "Employee ID is missing");
+	public String salaryCal(@RequestParam("workday") int workday, @RequestParam("empid[]") List<String> empidList, HttpSession session) {
+	    if (empidList.isEmpty()) {
+	        return "{\"error\": \"No member found in session\"}";
 	    }
 	    
-	    return jsonObj.toString(); // JSON 형식의 문자열 반환
+	    String empid = empidList.get(0); // 여기서는 첫 번째 사원의 empid만 사용하는 예시
+	    
+	    MemberVO membervo = (MemberVO) session.getAttribute("memberVO_" + empid);
+	   
+	    SalaryVO salaryvo = new SalaryVO();
+	    salaryvo.setFk_empid(membervo.getEmpid());
+	    salaryvo.setWork_day(workday);
+	    salaryvo.setWork_day_plus(workday);  // 예시로 동일하게 설정
+	    salaryvo.setBase_salary(membervo.getSalary());
+	    
+	    
+	    int n = 0;
+	    try {
+
+		    System.out.println("Workday: " + salaryvo.getWork_day());
+		    System.out.println("EmpID: " + salaryvo.getFk_empid());
+		    System.out.println("Salary: " + salaryvo.getBase_salary());
+	        n = service.salaryCal(salaryvo);
+	    } catch(Throwable e) {
+	        e.printStackTrace();
+	    }
+	    
+	    JSONObject jsonObj = new JSONObject(); 
+	    jsonObj.put("n", n);
+	    jsonObj.put("empid", membervo.getEmpid());
+	    jsonObj.put("base_salary", membervo.getSalary());
+	    jsonObj.put("work_day", workday);
+	    
+	    System.out.println(jsonObj.toString());
+	    
+	    return jsonObj.toString(); 
 	}
 	
 	 @PostMapping(value = "/getSalaryDetails.kedai", produces = "application/json;charset=UTF-8")
@@ -277,4 +305,6 @@ public class SalaryController {
 	     return jsonObj.toString(); // JSON 형식의 문자열 반환
 	 }
 
+}
+	
 }

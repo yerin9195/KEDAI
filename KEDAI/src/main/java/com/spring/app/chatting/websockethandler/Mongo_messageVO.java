@@ -28,6 +28,9 @@ public class Mongo_messageVO {
 	private String name;        // 사용자명
 	private String currentTime; // 채팅한 시간 (오후 5:05) 
 	
+	/////////////////////////////
+	private String imgfilename; // 채팅한 시간 (오후 5:05) 
+	
 	/*
 	  Date 타입의 변수를 사용하기 위해서 
 	  @DateTimeFormat(iso = ISO.DATE_TIME) 어노테이션을 부여해 준 것이다.
@@ -101,5 +104,14 @@ public class Mongo_messageVO {
 	
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+	
+	///////////////////////////////////////////
+	public String getImgfilename() {
+		return imgfilename;
+	}
+
+	public void setImgfilename(String imgfilename) {
+		this.imgfilename = imgfilename;
 	}
 }
