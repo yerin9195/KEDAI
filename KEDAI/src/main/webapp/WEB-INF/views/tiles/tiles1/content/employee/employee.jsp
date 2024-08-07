@@ -152,7 +152,7 @@ color:#2c4459;
 }
 .popup-overlay-tree .popup{
 	width: 70%;
-	outline: 2px solid red;
+	outline: 0px solid red;
 	padding: 20px 60px;
 	border-radius: 20px;
 	position: relative;
