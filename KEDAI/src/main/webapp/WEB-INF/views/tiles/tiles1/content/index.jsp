@@ -6,6 +6,7 @@
 	String ctxPath = request.getContextPath();
 	//     /KEDAI
 %>
+<link href='<%=ctxPath %>/resources/fullcalendar_5.10.1/main.min.css' rel='stylesheet' />
 <style type="text/css">
 	/* highchart */
 	.highcharts-figure,
@@ -96,7 +97,32 @@
 		background: #e68c0e;
 		color: #fff;
 	}
+	/* full calendar */
+	.fc-header-toolbar {
+		height: 40px;
+	}
+	.fc .fc-toolbar-title {
+		font-size: 14pt;
+	}
+	.fc-scrollgrid-sync-inner a,
+	.fc-scrollgrid-sync-inner a:hover,
+	.fc-daygrid-day-top a, 
+	.fc-daygrid-day-top a:hover,
+	.fc-daygrid {
+	    color: #000;
+	    text-decoration: none;
+	    background-color: transparent;
+	    cursor: pointer;
+	} 
+	.fc-sat { color: #0000FF; } /* 토요일 */
+	.fc-sun { color: #FF0000; } /* 일요일 */
 </style>
+
+<%-- full calendar 에 관련된 script --%>
+<script src='<%=ctxPath %>/resources/fullcalendar_5.10.1/main.min.js'></script>
+<script src='<%=ctxPath %>/resources/fullcalendar_5.10.1/ko.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -189,6 +215,127 @@
 			if(confirm("*** 식권 결제하기 ***\n\n"+strNow+"\n100point 를 결제하시겠습니까?")){
 				location.href="<%= ctxPath%>/index/payment.kedai"; 
 			}
+		});
+		
+		// full calendar
+		var calendarEl = document.getElementById('calendar');
+		
+		var calendar = new FullCalendar.Calendar(calendarEl, {
+			
+			googleCalendarApiKey : "AIzaSyASM5hq3PTF2dNRmliR_rXpjqNqC-6aPbQ",
+			eventSources :[ 
+	            {
+	                googleCalendarId : 'ko.south_korea#holiday@group.v.calendar.google.com'
+	              , color: 'white'   
+	              , textColor: 'red' 
+	            } 
+	        ],
+	        
+	        initialView: 'dayGridMonth',
+	        locale: 'ko',
+	        selectable: true,
+		    editable: false,
+		    headerToolbar: {
+		    	  left: 'prev,next today',
+		          center: 'title',
+		          right: 'dayGridMonth dayGridWeek dayGridDay'
+		    },
+		    dayMaxEventRows: true, // for all non-TimeGrid views
+		    views: {
+		      timeGrid: {
+		        dayMaxEventRows: 3 // adjust to 6 only for timeGridWeek/timeGridDay
+		      }
+		    }
+	    <%--
+		    events:function(info, successCallback, failureCallback) {
+		    	 $.ajax({
+	                 url: '<%= ctxPath%>/scheduler/allSchedule.kedai',
+	                 data:{"empid":$("input:hidden[name='empid']").val()},
+	                 dataType: "json",
+	                 success:function(json) {
+	                	 var events = [];
+	                     if(json.length > 0){
+                         	$.each(json, function(index, item) {
+                          		var cal_startdate = moment(item.cal_startdate).format('YYYY-MM-DD HH:mm:ss');
+                                var cal_enddate = moment(item.cal_enddate).format('YYYY-MM-DD HH:mm:ss');
+                                var cal_subject = item.cal_subject;
+                                    
+                                // 사내 캘린더로 등록된 일정을 풀캘린더 달력에 보여주기 
+                               	// 일정등록시 사내 캘린더에서 선택한 소분류에 등록된 일정을 풀캘린더 달력 날짜에 나타내어지게 한다.
+                               	if( $("input:checkbox[name=com_smcatgono]:checked").length <= $("input:checkbox[name=com_smcatgono]").length ){
+                               		for(var i=0; i<$("input:checkbox[name=com_smcatgono]:checked").length; i++){
+	                                   	if($("input:checkbox[name=com_smcatgono]:checked").eq(i).val() == item.fk_smcatgono){
+		                                 	//alert("캘린더 소분류 번호 : " + $("input:checkbox[name=com_smcatgono]:checked").eq(i).val());
+	  			                      
+	                           			   	events.push({
+	 			                            	id: item.scheduleno,
+	 			                                title: item.cal_subject,
+	 			                                start: cal_startdate,
+	 			                                end: cal_enddate,
+	 			                                url: "<%= ctxPath%>/scheduler/detailSchedule.kedai?scheduleno="+item.scheduleno,
+	 			                                color: item.cal_color,
+	 			                                cid: item.fk_smcatgono  // 사내캘린더 내의 서브캘린더 체크박스의 value값과 일치하도록 만들어야 한다. 그래야만 서브캘린더의 체크박스와 cid 값이 연결되어 체크시 풀캘린더에서 일정이 보여지고 체크해제시 풀캘린더에서 일정이 숨겨져 안보이게 된다. 
+	 			                            }); // end of events.push({})---------
+	 		                            }
+                               	   
+                                  	} // end of for ----------
+	                                 
+                               	} // end of if ----------
+                                  
+                                // 내 캘린더로 등록된 일정을 풀캘린더 달력에 보여주기
+                                // 일정등록시 내 캘린더에서 선택한 소분류에 등록된 일정을 풀캘린더 달력 날짜에 나타내어지게 한다.
+                              	if( $("input:checkbox[name=my_smcatgono]:checked").length <= $("input:checkbox[name=my_smcatgono]").length ){
+                                  	for(var i=0; i<$("input:checkbox[name=my_smcatgono]:checked").length; i++){
+                                  		if($("input:checkbox[name=my_smcatgono]:checked").eq(i).val() == item.fk_smcatgono && item.fk_empid == "${sessionScope.loginuser.empid}" ){
+                               				events.push({
+  			                                	id: item.scheduleno,
+  			                                    title: item.cal_subject,
+  			                                    start: cal_startdate,
+  			                                    end: cal_enddate,
+  			                                    url: "<%= ctxPath%>/scheduler/detailSchedule.kedai?scheduleno="+item.scheduleno,
+  			                                    color: item.cal_color,
+  			                                    cid: item.fk_smcatgono  // 내캘린더 내의 서브캘린더 체크박스의 value값과 일치하도록 만들어야 한다. 그래야만 서브캘린더의 체크박스와 cid 값이 연결되어 체크시 풀캘린더에서 일정이 보여지고 체크해제시 풀캘린더에서 일정이 숨겨져 안보이게 된다. 
+  			                                }); // end of events.push({}) ----------
+                               			   
+	                                	}
+	                                		
+                                   	} // end of for ----------
+                                   
+                                } // end of if ----------
+                                 
+                                // 공유받은 캘린더(다른 사용자가 내캘린더로 만든 것을 공유받은 경우임)
+                                if (item.fk_lgcatgono==1 && item.fk_empid != "${sessionScope.loginuser.empid}" && (item.cal_joinuser).indexOf("${sessionScope.loginuser.empid}") != -1 ){  
+                                	events.push({
+  	                                	id: "0",  // "0" 인 이유는  배열 events 에 push 할때 id는 고유해야 하는데 위의 사내캘린더 및 내캘린더에서 push 할때 id값으로 item.scheduleno 을 사용하였다. item.scheduleno 값은 DB에서 1 부터 시작하는 시퀀스로 사용된 값이므로 0 값은 위의 사내캘린더나 내캘린더에서 사용되지 않으므로 여기서 고유한 값을 사용하기 위해 0 값을 준 것이다. 
+  	                                    title: item.cal_subject,
+  	                                    start: cal_startdate,
+  	                                    end: cal_enddate,
+  	                                    url: "<%= ctxPath%>/scheduler/detailSchedule.kedai?scheduleno="+item.scheduleno,
+  	                                    color: item.cal_color,
+  	                                    cid: "0"  // "0" 인 이유는  공유받은캘린더 에서의 체크박스의 value 를 "0" 으로 주었기 때문이다.
+  	                                }); // end of events.push({}) ---------- 
+  	                                   
+  	                           	} // end of if ----------
+                              
+                             }); // end of $.each(json, function(index, item) {}) ----------
+                         }                             
+                                               
+                         successCallback(events);                               
+                  	},
+				  	error: function(request, status, error){
+			            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			      	}	
+	                                            
+	          }); // end of $.ajax() ----------
+	        
+	        } // end of events:function(info, successCallback, failureCallback) {} ----------
+       	--%>
+		});
+		
+		calendar.render();  // 풀캘린더 보여주기
+		
+		$("div#calendar").click(function(){
+			location.href="<%= ctxPath%>/scheduler.kedai";
 		});
 		
 	}); // end of $(document).ready(function(){}) ----------
@@ -608,8 +755,8 @@
 			  		</div>
 				</div>
 				
-				<div class="col-6 pl-0" style="border: 1px solid red;">
-					달력
+				<div class="col-6 pl-0" style="border: 0px solid red; height: 300px; overflow-y: scroll;">
+					<div id="calendar"></div>
 				</div>
 			</div>
 		</div>
@@ -687,4 +834,6 @@
 		</div>
 	</section>
 </div>
+
+<input type="hidden" name="empid" value="${(sessionScope.loginuser).empid}" />
 <%-- content end --%>
