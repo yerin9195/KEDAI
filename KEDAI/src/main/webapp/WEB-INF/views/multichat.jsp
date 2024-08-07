@@ -132,7 +132,11 @@ body, html {
 	height: 890px;
 	
 }
-
+#secretId{
+	display: inline-block;
+	width: 500px;
+	height: 500px;
+}
 
 </style> 
 
@@ -284,9 +288,9 @@ body, html {
         let isOnlyOneDialog = false; // 귀속말 여부. true 이면 귀속말, false 이면 모두에게 공개되는 말 
        
         $("input#btnSendMessage").click(function(){
-        	
+        	console.log("1");
           if( $("input#message").val().trim() != "" ) {
-             
+        	  console.log("2");
           	// ==== 자바스크립트에서 replace를 replaceAll 처럼 사용하기 ====
             // 자바스크립트에서 replaceAll 은 없다.
             // 정규식을 이용하여 대상 문자열에서 모든 부분을 수정해 줄 수 있다.
@@ -308,9 +312,15 @@ body, html {
                messageObj.to = "all";
                
                const to = $("input#to").val();
+               
+               // console.log("3" + );
+               
                if( to != "" ){
+            	   console.log("4");
                   	messageObj.type = "one";
                   	messageObj.to = to;
+                  	console.log("type" + messageObj.type);
+                  	console.log("to" + messageObj.to );
                }
                
                websocket.send(JSON.stringify(messageObj));
@@ -378,8 +388,8 @@ body, html {
           */
           
           const ws_id = $(this).prev().text();
-       	  // console.log("prev-text : " + ws_id);
-       	  // alert(ws_id);
+       	 // console.log("prev-text : " + ws_id);
+       	  alert(ws_id);
           $("input#to").val(ws_id); 
            
            $("span#privateWho").text($(this).text());
@@ -388,6 +398,7 @@ body, html {
            $("input#message").attr("placeholder","귀속말 메시지 내용");
            
            isOnlyOneDialog = true; // 귀속말 대화임을 지정 
+     
        });  
        
        

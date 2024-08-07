@@ -668,7 +668,9 @@ select *
 from tbl_member;
 
 
-
+select *
+from tbl_employees
+where email = 'Pgi/iloKL5vm3RYKplsYSDOaV1KAk0T0UC+OUmsxUo8='
 
 
 
