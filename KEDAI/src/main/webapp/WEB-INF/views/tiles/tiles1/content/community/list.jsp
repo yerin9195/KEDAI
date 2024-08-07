@@ -7,7 +7,8 @@
 	//     /KEDAI
 %>
 <style type="text/css">
-	.content {
+	.subject div {
+		height: 30px;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -174,7 +175,7 @@
 		   		<input type="text" style="display: none;" /> 
 		   		<button type="button" class="search_btn" onclick="goSearch()">검색</button>
 		   		
-		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 24.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
+		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 24.0%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
 				</div>
 			</form>
 			&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%= ctxPath%>/community/add.kedai" class="btn add_btn">등록하기</a>
@@ -200,33 +201,33 @@
 		      					데이터개수-(페이지번호-1)*1페이지당보여줄개수-인덱스번호 => 순번
 		      				--%>
 		      				<td align="center" width="10%" style="vertical-align: middle; align-items: center;"><span style="display: inline-block; width: 60px; height: 60px; border-radius: 50%; overflow: hidden;"><img style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/files/employees/${cvo.imgfilename}" /></span><span style="display: block;">${cvo.nickname}</span></td>
-		      				<td style="vertical-align: middle;">
+		      				<td style="vertical-align: middle;" width="50%">
 		      					<%-- === 댓글쓰기 및 파일첨부가 있는 게시판 시작 === --%>
 		      					<%-- 첨부파일이 없는 경우 --%>
 		      					<c:if test="${empty cvo.fk_community_seq}">
 		      						<c:if test="${cvo.comment_count > 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<span style="color: #e68c0e; font-size: 12pt; font-weight: bold;"><i class="fa-regular fa-comment-dots fa-flip-horizontal" style="color: #e68c0e;"></i>&nbsp;${cvo.comment_count}</span>
-		      								<br><span class="content">${cvo.content}</span> 
-		      							</span>
+		      							<div class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<span style="color: #e68c0e; font-size: 12pt; font-weight: bold;"><i class="fa-regular fa-comment-dots fa-flip-horizontal" style="color: #e68c0e;"></i>&nbsp;${cvo.comment_count}</span>
+		      								<br><br><div><span class="content">${cvo.content}</span></div>
+		      							</div>
 		      						</c:if>
 		      						<c:if test="${cvo.comment_count == 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}
-		      								<br><span class="content">${cvo.content}</span>
-		      							</span>
+		      							<div class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}
+		      								<br><br><div><span class="content">${cvo.content}</span></div>
+		      							</div>
 		      						</c:if>
 		      					</c:if>
 		      					
 		      					<%-- 첨부파일이 있는 경우 --%>
 		      					<c:if test="${not empty cvo.fk_community_seq}">
 		      						<c:if test="${cvo.comment_count > 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<i class="fa-solid fa-paperclip"></i>&nbsp;&nbsp;<span style="color: #e68c0e; font-size: 12pt; font-weight: bold;"><i class="fa-regular fa-comment-dots fa-flip-horizontal" style="color: #e68c0e;"></i>&nbsp;${cvo.comment_count}</span>
-		      								<br><span class="content">${cvo.content}</span>
-		      							</span>
+		      							<div class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<i class="fa-solid fa-paperclip"></i>&nbsp;&nbsp;<span style="color: #e68c0e; font-size: 12pt; font-weight: bold;"><i class="fa-regular fa-comment-dots fa-flip-horizontal" style="color: #e68c0e;"></i>&nbsp;${cvo.comment_count}</span>
+		      								<br><br><div><span class="content">${cvo.content}</span></div>
+		      							</div>
 		      						</c:if>
 		      						<c:if test="${cvo.comment_count == 0}">
-		      							<span class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<i class="fa-solid fa-paperclip"></i>
-	      									<br><span class="content">${cvo.content}</span>
-		      							</span>
+		      							<div class="subject" onclick="goView('${cvo.community_seq}')">[ ${cvo.category_name} ]&nbsp;&nbsp;${cvo.subject}&nbsp;&nbsp;<i class="fa-solid fa-paperclip"></i>
+	      									<br><br><div><span class="content">${cvo.content}</span></div>
+		      							</div>
 		      						</c:if>
 		      					</c:if>
 		      				</td>

@@ -216,7 +216,7 @@
             	//	console.log("~~~ 확인용 : " + JSON.stringify(json));
                 	
                 	if(json.result == 1) { // insert 가 성공되어진 경우
-                		alert("글 등록이 성공했습니다.");
+                		alert("글 등록이 성공되었습니다.");
                 		location.href="<%= ctxPath%>/community/addEnd.kedai?fk_empid="+json.fk_empid;
                 	}
                 	else{
