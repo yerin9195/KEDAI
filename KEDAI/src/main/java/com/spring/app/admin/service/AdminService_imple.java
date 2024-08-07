@@ -102,23 +102,7 @@ public class AdminService_imple implements AdminService {
 		
 		for(Map<String, String> map : genderHireYearList) {
 			JsonObject jsonObj = new JsonObject(); // {}
-			jsonObj.addProperty("gender", map.get("gender"));
-			jsonObj.addProperty("Y2010", map.get("Y2010"));
-			jsonObj.addProperty("Y2011", map.get("Y2011"));
-			jsonObj.addProperty("Y2012", map.get("Y2012"));
-			jsonObj.addProperty("Y2013", map.get("Y2013"));
-			jsonObj.addProperty("Y2014", map.get("Y2014"));
-			jsonObj.addProperty("Y2015", map.get("Y2015"));
-			jsonObj.addProperty("Y2016", map.get("Y2016"));
-			jsonObj.addProperty("Y2017", map.get("Y2017"));
-			jsonObj.addProperty("Y2018", map.get("Y2018"));
-			jsonObj.addProperty("Y2019", map.get("Y2019"));
-			jsonObj.addProperty("Y2020", map.get("Y2020"));
-			jsonObj.addProperty("Y2021", map.get("Y2021"));
-			jsonObj.addProperty("Y2022", map.get("Y2022"));
-			jsonObj.addProperty("Y2023", map.get("Y2023"));
-			jsonObj.addProperty("Y2024", map.get("Y2024"));
-			jsonObj.addProperty("totalCount", map.get("totalCount"));
+			
 			
 			jsonArr.add(jsonObj); 
 		} // end of for ----------

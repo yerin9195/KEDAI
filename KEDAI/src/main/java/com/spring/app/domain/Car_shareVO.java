@@ -28,15 +28,7 @@ public class Car_shareVO {
 	private String email;
 	private String nickname_owner;
 	private String nickname_applicant;
-	private String email_applicant;
 	
-	
-	public String getEmail_applicant() {
-		return email_applicant;
-	}
-	public void setEmail_applicant(String email_applicant) {
-		this.email_applicant = email_applicant;
-	}
 	public String getNickname_owner() {
 		return nickname_owner;
 	}

@@ -112,18 +112,6 @@ $(document).ready(function(){
 		goViewApprovalInfo();
 	}
 	
-	
-	$(document).on("click", "button.btn_ok_outside", function(){
-		$('#commentModal').find('button.btn_reject_Modal').hide();
-    	$('button.btn_ok_Modal').show();
-    });
-	
-	$(document).on("click", "button.btn_reject_outside", function(){
-    	$('button.btn_ok_Modal').hide();
-    	$('button.btn_reject_Modal').show();
-    });
-
-	
 }); // end of $(document).ready(function())-----------------------------------
 
 
@@ -159,7 +147,7 @@ function goViewApprovalInfo(){
 	});// end of $.ajax---------------------
 }
 
-function btnOk(doc_no, level_no){
+function btnOk(doc_no){
 	
 	<%--location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;--%>
 	<%-- 또는 location.href=`<%= ctxPath%>/view.action?seq=+seq`; --%>
@@ -188,12 +176,7 @@ function btnOk(doc_no, level_no){
 }
 
 function btnReject(doc_no){
-	const frm = document.appfrm;
-	// hidden 필드에 doc_no 값을 설정
-    frm.doc_no.value = doc_no;
-	frm.method = "post";
-	frm.action = "<%= ctxPath%>/approval/appReject.kedai";
-	frm.submit();
+	
 }
 
 function formatNumber(number) {
@@ -303,12 +286,10 @@ function formatFileSize(size) {
 			
 			<div style="text-align: right; margin: 18px 0 18px 0;">
 				<c:if test="${isNowApproval == true}">
-					<button type="button" class="btn btn-dark btn-sm mr-4 btn_ok_outside" data-toggle="modal" data-target="#commentModal" data-action="approve">
+					<button type="button" class="btn btn-dark btn-sm mr-4" data-toggle="modal" data-target="#commentModal">
 						결재하기
 					</button>
-					<button type="button" class="btn btn-primary btn-sm btn_reject_outside" data-toggle="modal" data-target="#commentModal" data-action="reject">
-						반려하기
-					</button>
+					<button type="button" class="btn btn-primary btn-sm" onclick="btnReject('${docvo.doc_no}')">반려하기</button>
 				</c:if>
 			</div>
 			
@@ -371,8 +352,7 @@ function formatFileSize(size) {
 				<!-- Modal footer -->
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger my_close" data-dismiss="modal">취소</button>
-						<button type="button" class="btn btn-primary btn_ok_Modal" style="display:none;" onclick="btnOk('${dvo.doc_no}', '${requestScope.level_no_str}')">결재하기</button>
-                		<button type="button" class="btn btn-primary btn_reject_Modal" style="display:none;"  onclick="btnReject('${dvo.doc_no}')">반려하기</button>
+						<button type="button" class="btn btn-primary" onclick="btnOk('${docvo.doc_no}')">결재하기</button>
 					</div>
 				</div>
 			</div>

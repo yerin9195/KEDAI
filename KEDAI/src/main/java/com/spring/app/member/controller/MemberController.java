@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -55,8 +56,6 @@ public class MemberController {
 		return "login";
 	}
 	
-	// 로그인시 기기 정보 파악하기
-	
 	@GetMapping("/index.kedai")
 	public ModelAndView index(ModelAndView mav) {
 
@@ -65,72 +64,60 @@ public class MemberController {
 		return mav;
 	}
 
+	// 로그인 처리하기
 	@PostMapping("/loginEnd.kedai")
-    public ModelAndView loginEnd(ModelAndView mav, HttpServletRequest request) { 
+	public ModelAndView loginEnd(ModelAndView mav, HttpServletRequest request) { 
 
-        String empid = request.getParameter("empid");
-        String pwd = request.getParameter("pwd");
-        String deviceType = request.getParameter("deviceType");
+		String empid = request.getParameter("empid");
+		String pwd = request.getParameter("pwd");
 
-        String clientip = request.getRemoteAddr();
+		String clientip = request.getRemoteAddr();
 
-        Map<String, String> paraMap = new HashMap<>();
-        paraMap.put("empid", empid);
-        paraMap.put("pwd", Sha256.encrypt(pwd));
-        paraMap.put("clientip", clientip);
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("empid", empid);
+		paraMap.put("pwd", Sha256.encrypt(pwd));
+		paraMap.put("clientip", clientip);
+		
+		MemberVO loginuser = service.getLoginMember(paraMap);
+		
+		if(loginuser == null) { // 로그인이 실패한 경우
+			String message = "아이디 또는 암호가 일치하지 않습니다.\\n다시 시도해주세요.";
+			String loc = "javascript:history.back()";
+			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			
+			mav.setViewName("msg");
+		}
+		else { // 로그인이 성공한 경우
+			HttpSession session = request.getSession();
+			session.setAttribute("loginuser", loginuser);
+			
+			if(loginuser.isRequirePwdChange() == true) {
+				String message = "비밀번호를 변경하신지 3개월이 지났습니다.\\n비밀번호를 변경하는 페이지로 이동합니다.";
+				String loc = request.getContextPath()+"/login/pwdUpdateEnd.kedai?empid="+empid;
+               
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+               
+				mav.setViewName("msg");
+			}
+			else {
+				String goBackURL = (String)session.getAttribute("goBackURL");
+				
+				if(goBackURL != null) {
+					mav.setViewName("redirect:"+goBackURL);
+					session.removeAttribute("goBackURL");
+				}
+				else {
+					mav.setViewName("redirect:/index.kedai"); 
+				}
+			}
+		}
 
-        MemberVO loginuser = service.getLoginMember(paraMap);
-
-        if (loginuser == null) { // 로그인이 실패한 경우
-            String message = "아이디 또는 암호가 일치하지 않습니다.\\n다시 시도해주세요.";
-            String loc = "javascript:history.back()";
-
-            mav.addObject("message", message);
-            mav.addObject("loc", loc);
-
-            mav.setViewName("msg");
-        } else { // 로그인이 성공한 경우
-            HttpSession session = request.getSession();
-            session.setAttribute("loginuser", loginuser);
-
-            if (loginuser.isRequirePwdChange()) {
-                String message = "비밀번호를 변경하신지 3개월이 지났습니다.\\n비밀번호를 변경하는 페이지로 이동합니다.";
-                String loc = request.getContextPath() + "/login/pwdUpdateEnd.kedai?empid=" + empid;
-
-                mav.addObject("message", message);
-                mav.addObject("loc", loc);
-
-                mav.setViewName("msg");
-            } else {
-                String goBackURL = (String) session.getAttribute("goBackURL");
-
-                if (goBackURL != null) {
-                    mav.setViewName("redirect:" + goBackURL);
-                    session.removeAttribute("goBackURL");
-                } else {
-                    if ("Android".equals(deviceType) || "iOS".equals(deviceType)) {
-                        mav.setViewName("redirect:/mobile.kedai"); 
-                    } else if ("PC".equals(deviceType)) {
-                    	mav.setViewName("redirect:/index.kedai"); 
-                    } else {
-                        mav.setViewName("unknown-device");
-                    }
-                }
-            }
-        }
-
-        return mav;
-    }
-    @RequestMapping("/unknown-device")
-    public ModelAndView showUnknownDevicePage(ModelAndView mav) {
-    	
-    	mav.setViewName("msg");
-    	
-        return mav; // Unknown Device 페이지
-    }
-    
-
-    
+		return mav;
+	}	
+	
 	// 로그아웃 처리하기
 	@GetMapping("/logout.kedai")
 	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {
