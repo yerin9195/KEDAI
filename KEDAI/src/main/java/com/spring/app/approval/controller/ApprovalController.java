@@ -80,7 +80,7 @@ public class ApprovalController {
 		List<DocVO> myDocList = null;
 		
 		myDocList = service.docListNoSearch(loginEmpId);
-		System.out.println("확인용 myDocList" + myDocList);
+	//	System.out.println("확인용 myDocList" + myDocList);
 
 //		System.out.println("확인용 laterApproval" + laterApproval);
 		
@@ -295,7 +295,7 @@ public class ApprovalController {
 			
 				int attach_insert_result = service.withFile_doc(docFileMap);
 				
-				System.out.println("~~!확인용 : "+ arr_attachFilename[i].substring(0, arr_attachFilename[i].lastIndexOf("_")));
+				//System.out.println("~~!확인용 : "+ arr_attachFilename[i].substring(0, arr_attachFilename[i].lastIndexOf("_")));
 
 				if(attach_insert_result == 1) {
         			cnt++;
@@ -377,8 +377,8 @@ public class ApprovalController {
 	@RequestMapping("/approval/nowApprovalList.kedai")
 	public ModelAndView nowApprovalList(ModelAndView mav, HttpServletRequest request) {
 	
-		System.out.println("확인용 searchWord" + request.getParameter("searchWord"));
-		System.out.println("확인용 searchType" + request.getParameter("searchType"));
+		//System.out.println("확인용 searchWord" + request.getParameter("searchWord"));
+		//System.out.println("확인용 searchType" + request.getParameter("searchType"));
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		
@@ -498,7 +498,6 @@ public class ApprovalController {
 		mav.addObject("loginuser", loginuser); // 모델에 loginuser 객체 추가
 		mav.addObject("allNowApprovalList", allNowApprovalList); 
 		
-		System.out.println("!!!확인확인 확인용!!!!");
 		for(Map<String, String> map : allNowApprovalList) {
 			System.out.println(map);
 		}
