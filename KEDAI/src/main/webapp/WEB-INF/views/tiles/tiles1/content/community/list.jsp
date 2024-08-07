@@ -98,10 +98,10 @@
 								}); // end of $.each(json, function(index, item) ----------
 								
 								// 검색어 input 태그의 width 값 알아오기
-								const input_width = $("input[name='searchWord']").css("width"); 
-										
-								// 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
-								$("div#displayList").css({"width":input_width}); 
+								const input_width = $("input:text[name='searchWord']").css("width"); 
+
+								// 검색결과 div의 width 크기를 검색어 입력 input 태그의 width와 일치시키기
+								$("div#displayList").css({"width": input_width});
 								
 								$("div#displayList").html(v_html);
 								$("div#displayList").show();
@@ -162,7 +162,7 @@
 
 	<section>
 		<div class="d-md-flex justify-content-md-end">
-			<form name="searchFrm" style="width: 34%; min-width: 576px; position: relative;">
+			<form name="searchFrm" style="min-width: 576px; position: relative;">
 		   		<select name="searchType" style="height: 30px;">
 		      		<option value="subject">글제목</option>
 		      		<option value="content">글내용</option>
@@ -170,11 +170,11 @@
 		      		<option value="name">작성자</option>
 		   		</select>
 		   		
-		   		<input type="text" name="searchWord" size="40" autocomplete="off" style="width: 350px; height: 30px;" /> 
-		   		<input type="text" style="display: none;"/> 
+		   		<input type="text" name="searchWord" size="40" autocomplete="off" style="height: 30px;" /> 
+		   		<input type="text" style="display: none;" /> 
 		   		<button type="button" class="search_btn" onclick="goSearch()">검색</button>
 		   		
-		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 25.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
+		   		<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 24.5%; margin-top: 1px; background: #fff; overflow: hidden; overflow-y: scroll;">
 				</div>
 			</form>
 			&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%= ctxPath%>/community/add.kedai" class="btn add_btn">등록하기</a>
@@ -184,7 +184,6 @@
 			<thead>
 	       		<tr>
 	       			<th style="width: 5%; text-align: center;">순번</th>
-	          		<th style="width: 5%; text-align: center;">글번호</th>
 	         		<th style="width: 60%; text-align: center;" colspan="3">글제목</th>
 	         		<th style="width: 20%; text-align: center;">작성일자</th>
 	         		<th style="width: 10%; text-align: center;">조회수</th>
@@ -200,8 +199,7 @@
 		      					>>> 페이징 처리시 보여주는 순번 공식 <<<
 		      					데이터개수-(페이지번호-1)*1페이지당보여줄개수-인덱스번호 => 순번
 		      				--%>
-		      				<td align="center" style="vertical-align: middle;">${cvo.community_seq}</td>
-		      				<td align="center" width="10%" style="vertical-align: middle; align-items: center;"><span style="display: inline-block; width: 50px; height: 50px; border-radius: 50%; overflow: hidden;"><img style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/files/employees/${cvo.imgfilename}" /></span><span style="display: block;">${cvo.nickname}</span></td>
+		      				<td align="center" width="10%" style="vertical-align: middle; align-items: center;"><span style="display: inline-block; width: 60px; height: 60px; border-radius: 50%; overflow: hidden;"><img style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/files/employees/${cvo.imgfilename}" /></span><span style="display: block;">${cvo.nickname}</span></td>
 		      				<td style="vertical-align: middle;">
 		      					<%-- === 댓글쓰기 및 파일첨부가 있는 게시판 시작 === --%>
 		      					<%-- 첨부파일이 없는 경우 --%>

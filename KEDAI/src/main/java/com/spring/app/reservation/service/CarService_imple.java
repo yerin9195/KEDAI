@@ -107,6 +107,12 @@ public class CarService_imple implements CarService {
 	}
 
 	@Override
+	public List<String> searchShow_owner(Map<String, String> paraMap) {
+		List<String> wordList_owner = dao.searchShow_owner(paraMap);
+		return wordList_owner;
+	}
+	
+	@Override
 	public List<Map<String, String>> owner_carShareList(String empid) {
 		List<Map<String, String>> owner_carShareList = dao.getowner_carShareList(empid);
 		return owner_carShareList;
@@ -126,10 +132,48 @@ public class CarService_imple implements CarService {
 
 	// 선택한 날짜에 해당하는 카셰어링 정보를 가져오기
 	@Override
-	public Car_shareVO owner_dateInfo(String date) {
-		Car_shareVO owner_dateInfo = dao.getowner_dateInfo(date);
+	public List<Map<String, Object>> owner_dateInfo(String date) {
+		List<Map<String, Object>> owner_dateInfo = dao.getowner_dateInfo(date);
 		return owner_dateInfo;
 	}
+
+	@Override
+	public int getTotalCount_owner_Status_detail(Map<String, Object> paraMap) {
+		int totalCount_owner_Status_detail = dao.getTotalCount_owner_Status_detail(paraMap);
+		return totalCount_owner_Status_detail;
+	}
+
+	@Override
+	public List<Map<String, Object>> owner_Status_detail_withPaging(Map<String, Object> paraMap) {
+		List<Map<String, Object>> owner_carShareList_detail = dao.owner_Status_detail_withPaging(paraMap);
+		return owner_carShareList_detail;
+	}
+
+	@Override
+	public int updateStatus(Map<String, Object> paraMap) {
+		int n = dao.updateStatus(paraMap);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> owner_SettlementList(String empid) {
+		List<Map<String, String>> owner_SettlementList = dao.getowner_SettlementList(empid);
+		return owner_SettlementList;
+	}
+
+	@Override
+	public int getTotalcount_owner_SettlementList(Map<String, String> paraMap) {
+		int totalCount_owner_SettlementList = dao.getTotalcount_owner_SettlementList(paraMap);
+		return totalCount_owner_SettlementList;
+	}
+
+	@Override
+	public List<Map<String, String>> owner_SettlementList_withPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> owner_SettlementList_withPaging = dao.owner_SettlementList_withPaging(paraMap);
+		return owner_SettlementList_withPaging;
+	}
+
+
 
 
 

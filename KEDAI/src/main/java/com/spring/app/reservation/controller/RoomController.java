@@ -100,7 +100,7 @@ public class RoomController {
 	 }
 	 
 	 @GetMapping(value = "/roomResercation.kedai")  // http://localhost:8090/board/pay_stub.action
-	 public String roomResercation(HttpServletRequest request) {
+	 public String empmanager_roomResercation(HttpServletRequest request) {
 		
 		 return "tiles1/reservation/roomReservation.tiles";
 	 }

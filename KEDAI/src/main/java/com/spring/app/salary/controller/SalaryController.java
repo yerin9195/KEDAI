@@ -33,7 +33,7 @@ public class SalaryController {
 	private SalaryService service;
 	
 	@GetMapping(value = "/pay_stub.kedai")
-	public String pay_stub(HttpServletRequest request) {
+	public String empmanager_pay_stub(HttpServletRequest request) {
 		
 		return "tiles1/pay_stub/pay_stub.tiles";
 	}

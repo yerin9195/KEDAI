@@ -193,7 +193,7 @@ public class BoardController {
 	
 	// 게시판 목록 보여주기
 	@GetMapping("/board/list.kedai")
-	public ModelAndView list(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView empmanager_list(HttpServletRequest request, ModelAndView mav) {
 		
 		List<BoardVO> boardList = null;
 		
