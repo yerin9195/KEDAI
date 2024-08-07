@@ -131,13 +131,20 @@ public class ApprovalService_imple implements ApprovalService {
 		return n;
 	}
 
-	// 나의 결재 문서에서 총 페이지수 가져오기
+	// 나의 결재 예정 문서에서 총 페이지수 가져오기
+	@Override
+	public int getTotalMyNowApprovalCount(Map<String, String> paraMap) {
+		int n = dao.getTotalMyNowApprovalCount(paraMap);
+		return n;
+	}
+	
+	// 나의 모든 결재 문서 총 페이지수
 	@Override
 	public int getTotalMyApprovalCount(Map<String, String> paraMap) {
 		int n = dao.getTotalMyApprovalCount(paraMap);
 		return n;
 	}
-
+	
 	// 나의 모든 기안문서 가져오기
 	@Override
 	public List<Map<String, String>> myDocListSearch(Map<String, String> paraMap) {
@@ -145,12 +152,21 @@ public class ApprovalService_imple implements ApprovalService {
 		return myDocListSearch;
 	}
 	
-	// 나의 모든 결재문서 가져오기
+	// 나의 모든 결재 예정 문서 가져오기
 	@Override
 	public List<Map<String, String>> myNowApprovalListSearch(Map<String, String> paraMap) {
 		List<Map<String, String>> myNowApprovalListSearch = dao.myNowApprovalListSearch(paraMap);
 		return myNowApprovalListSearch;
 	}
+	
+	// 나의 모든 결재 문서 가져오기
+	@Override
+	public List<DocVO> allmyAppListSearch(Map<String, String> paraMap) {
+		List<DocVO> allmyAppListSearch = dao.allmyAppListSearch(paraMap);
+		return allmyAppListSearch;
+	}
+
+
 
 	// 나의 기안 문서에서 문서 한 개 보기(공통부분 + 결재라인 + 문서종류별 내용)
 	@Override
@@ -198,6 +214,18 @@ public class ApprovalService_imple implements ApprovalService {
 		return getDocfileOne;
 	}
 
+	// 결재하기 눌렀을 떄 결재, doc테이블 업데이트 하기
+	@Override
+	public void updateDocApprovalOk(Map<String, String> paraMap) {
+		dao.updateApprovalOk(paraMap); // tbl_approval업데이트
+		dao.updateDocOk(paraMap); // tbl_doc업데이트		
+	}
 
+	// 반려하기 눌렀을 떄 결재, doc테이블 업데이트 하기
+	@Override
+	public void updateDocApprovalReject(Map<String, String> paraMap) {
+		dao.updateApprovalReject(paraMap); // tbl_approval업데이트
+		dao.updateDocReject(paraMap); // tbl_doc업데이트
+	}
 
 }
