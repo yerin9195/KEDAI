@@ -228,7 +228,6 @@ a {
 					<th style="width: 150px; text-align: center;">셰어링 날짜</th>
 					<th style="width: 70px; text-align: center;">출발시간</th>
 					<th style="width: 70px; text-align: center;">신청가능여부</th>
-					<th style="width: 70px; text-align: center;">조회수</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -266,7 +265,6 @@ a {
 							<c:if test="${carShare.end_status == 0 || carShare.cancel_status == 0 || !(carShare.start_date le requestScope.todayStr && carShare.last_date ge requestScope.todayStr) && carShare.start_date <= requestScope.todayStr}">
 								<td align="center" style="color: #e68c0e;">신청불가능</td>
 							</c:if>
-							<td align="center">${carShare.readCount}</td>
 						</tr>
 					</c:forEach>
 				</c:if>

@@ -96,7 +96,7 @@ public class CompanyController {
 	public ModelAndView othercomRegister_submit(PartnerVO partvo, @RequestParam("is_modify") Boolean isModify,
 			ModelAndView mav, MultipartHttpServletRequest mrequest) {
 
-		// 이미 파 업로드
+		// 이미지파일 업로드
 		imageFileUpload(partvo, mrequest);
 
 		try {
@@ -177,7 +177,7 @@ public class CompanyController {
 	public ModelAndView otherCom_list_select(ModelAndView mav, HttpServletRequest request) {
 
 		List<PartnerVO> partnervoList = service.otherCom_list_select();
-
+		System.out.println("partnervoList : " + partnervoList);
 		/*
 		 * for(PartnerVO partvo : partnervoList) { System.out.println("partner_No : " +
 		 * partvo.getPartner_no()); System.out.println("PARTNER_TYPE : " +
@@ -445,7 +445,6 @@ public class CompanyController {
 		}
 		
 		return jsonArr.toString();
-		
 		
 	}
 	
