@@ -857,9 +857,6 @@ $(document).ready(function(){
 		 frm.submit();
 	   }
    }
-   function goTest() {
-	   location.href=`<%= ctxPath%>/test.kedai`;
-   }
    function goBack() {
 	   location.href="javascript:history.back();"
    }
@@ -936,7 +933,6 @@ $(document).ready(function(){
 			<div class="btnRegister">
 		        <button type="button" onclick="goRegister()">신청하기</button>
 		        <button type="reset" onclick="goBack()">뒤로가기</button>
-		        <button type="button" onclick="goTest()">테스트하기</button>
 	    	</div>
 	   </div>
     </div>
