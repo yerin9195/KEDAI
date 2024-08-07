@@ -150,11 +150,19 @@
 
  <script type="text/javascript">
  $(document).ready(function(){
-	showallsub();
-	setToday();
-	fetchReservations();
-	
-	 
+	 // 페이지 로드 시 초기화
+	    showallsub();
+	    setToday();
+	    fetchReservations();
+
+	    // 시간과 분 선택 옵션을 초기화
+	    populateTimeSelect();
+	   
+	    // 전체 버튼 클릭 시 `showallsub()` 호출
+	    $("#showAllButton").click(function() {
+	        showallsub();
+	    });
+	    
     // 시간과 분 선택 옵션을 초기화
     populateTimeSelect();
     
@@ -358,78 +366,7 @@
     $("#endDate").val(formattedToday);
 	
      
-     $("#assetSelect").change(function() {
-         var selectedRoomMainSeq = $(this).val(); // 선택된 roomMainSeq 값 가져오기
-		//	console.log(selectedRoomMainSeq);
-         
-         
-         // 선택된 값이 존재할 때만 AJAX 요청 보내기
-         if(selectedRoomMainSeq == '전사 자산 목록'){
-        	 selectedRoomMainSeq = '0';
-        	showallsub();
-        	fetchReservations();
-         }
-         
-         if (selectedRoomMainSeq > 1) {
-        	 var subroom = "";
-        	 $("td.time-slot").each(function() {
-	        	 var row = $(this).closest("tr"); // 현재 셀이 포함된 행 찾기
-	        	 var leftCell = row.find("td:first-child"); // 첫 번째 셀 찾기
-	        	 subroom = leftCell.text().trim();
-        	 });
-        	 
-        	 
-        	 $.ajax({
-        	        url: "<%= request.getContextPath() %>/roommain.kedai?roomMainSeq=" + selectedRoomMainSeq,
-        	        type: "GET",
-        	        dataType: "json",
-        	        success: function(json) {
-        	        	 var tableBody = $("#assetTableBody");
-        	                tableBody.empty(); // 기존 테이블 내용 초기화
 
-        	                json.forEach(function(item) {
-        	                    var roomSubSeq = item.roomSubSeq;
-        	                    var roomSubName = item.roomSubName;
-
-        	                    // 방 이름과 관련된 데이터가 있는 경우, 각 방 이름별로 시간 슬롯을 생성
-        	                    var row = $("<tr></tr>");
-        	                    var roomCell = $("<td>").text(roomSubName).addClass("room-name-cell");
-        	                    row.append(roomCell);
-
-        	                    for (var hour = 9; hour <= 21; hour++) {
-        	                        var cell1 = $("<td>")
-        	                            .addClass("time-slot")
-        	                            .data("hour", hour)
-        	                            .data("minute", "00")
-        	                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='00'></button>");
-
-        	                        var cell2 = $("<td>")
-        	                            .addClass("time-slot")
-        	                            .data("hour", hour)
-        	                            .data("minute", "30")
-        	                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='30'></button>");
-
-        	                        row.append(cell1);
-        	                        row.append(cell2);
-        	                    }
-
-        	                    tableBody.append(row); // 시간 슬롯이 포함된 행을 추가
-        	                    
-        	                    
-        	                });
-        	                
-        	                fetchReservations(subroom);
-                        
-        	        },
-        	        error: function(request, status, error) {
-        	            alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-        	        }
-        	    });
-         } else {
-             // 선택이 해제된 경우, 두 번째 선택 박스 초기화
-             $("#additionalSelect").html("");
-         }
-     });
      
      // 예약 버튼 클릭 시 모달 내 날짜 및 시간 초기화
      $("#reserve_submit").on("click", function() {
@@ -531,9 +468,69 @@
             // 자산 선택 드롭다운 변화 이벤트
             $('#assetSelect').change(function() {
                 var selectedValue = $(this).val();
+                
+                if(!selectedValue){
+                	 selectedRoomMainSeq = '0';
+                     showallsub();
+                     fetchReservations();
+                }
                 if (selectedValue) {
                     $("#buttonContainer").show(); // 선택된 값이 있으면 버튼 보이기
-                    fetchReservations();
+                    
+                    var selectedRoomMainSeq = $(this).val(); // 선택된 roomMainSeq 값 가져오기
+
+                    if (selectedRoomMainSeq > 1) {
+                        $.ajax({
+                            url: "<%= request.getContextPath() %>/roommain.kedai",
+                            type: "GET",
+                            dataType: "json",
+                            data: {
+                                roomMainSeq: selectedRoomMainSeq
+                            },
+                            success: function(json) {
+                                var tableBody = $("#assetTableBody");
+                                tableBody.empty(); // 기존 테이블 내용 초기화
+
+                                json.forEach(function(item) {
+                                    var roomSubSeq = item.roomSubSeq;
+                                    var roomSubName = item.roomSubName;
+
+                                    // 방 이름과 관련된 데이터가 있는 경우, 각 방 이름별로 시간 슬롯을 생성
+                                    var row = $("<tr></tr>");
+                                    var roomCell = $("<td>").text(roomSubName).addClass("room-name-cell");
+                                    row.append(roomCell);
+
+                                    for (var hour = 9; hour <= 21; hour++) {
+                                        var cell1 = $("<td>")
+                                            .addClass("time-slot")
+                                            .data("hour", hour)
+                                            .data("minute", "00")
+                                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='00'></button>");
+
+                                        var cell2 = $("<td>")
+                                            .addClass("time-slot")
+                                            .data("hour", hour)
+                                            .data("minute", "30")
+                                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='30'></button>");
+
+                                        row.append(cell1);
+                                        row.append(cell2);
+                                    }
+
+                                    tableBody.append(row); // 시간 슬롯이 포함된 행을 추가
+                                });
+                                fetchReservations();
+                            },
+                            error: function(request, status, error) {
+                                alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+                            }
+                        });
+                    } else {
+                        // 선택이 해제된 경우, 두 번째 선택 박스 초기화
+                        $("#additionalSelect").html("");
+                    }
+                    
+                    
                 } else {
                     $("#buttonContainer").hide(); // 전체가 선택되면 버튼 숨기기
                 }
@@ -666,20 +663,20 @@
 	    }
 
 	    function fetchReservations() {
-	    	var selectedDate = $("#currentDate").text().substr(0, 10);  // 현재 날짜 가져오기
+	        var selectedDate = $("#currentDate").text().substr(0, 10); // 현재 날짜 가져오기
 
 	        $.ajax({
 	            url: "<%= request.getContextPath() %>/getReservations.kedai",
 	            type: "GET",
-	            data: { date: selectedDate },  // 선택한 날짜로 요청
+	            data: { date: selectedDate }, // 선택한 날짜로 요청
 	            dataType: "json",
 	            success: function(reservations) {
 	                // 기존 강조 표시 제거
 	                $("td.time-slot").removeClass("highlighted");
 
 	                reservations.forEach(function(reservation) {
-	                    var startReservationDate = reservation.startTime.substr(0, 10);  // 예약 날짜
-	                    var endReservationDate = reservation.endTime.substr(0, 10);  // 예약 날짜
+	                    var startReservationDate = reservation.startTime.substr(0, 10); // 예약 날짜
+	                    var endReservationDate = reservation.endTime.substr(0, 10); // 예약 날짜
 	                    var startTime = parseTime(reservation.startTime);
 	                    var endTime = parseTime(reservation.endTime);
 	                    var reservationRoomName = reservation.roomName;
@@ -692,11 +689,22 @@
 	                            var self = this;
 	                            var cellHour = $(this).data('hour');
 	                            var cellMinute = $(this).data('minute');
-	                            var cellRoomName = $(this).data('roomname');
+	                            
+	                            var $row = $(this).closest('tr');
+	                            cellRoomName = $row.find('td.room-name-cell').text().trim();
+	                            
+	                            /* // assetSelect 요소의 값 가져오기
+	                            var assetSelectValue = $('#assetSelect option:selected').text();
+	                            if (assetSelectValue != "전체") {
+	                                cellRoomName = assetSelectValue + cellRoomName;
+	                            }
+	                            */
 	                            var cellTime = formatTime(cellHour, cellMinute);
-
+ 
+	                            console.log(cellRoomName)
+	                            
 	                            $.ajax({
-	                                url: '<%= ctxPath %>/getRoomData.kedai',
+	                                url: '<%= request.getContextPath() %>/getRoomData.kedai',
 	                                method: 'GET',
 	                                data: { subroom: cellRoomName },
 	                                success: function(response) {
@@ -705,7 +713,7 @@
 	                                        var roomMainName = data.ROOMMAINNAME || '';
 	                                        var roomSubName = data.ROOMSUBNAME || '';
 	                                        var cellRoomFullName = roomMainName + roomSubName;
-
+	                                        
 	                                        if (cellRoomFullName === reservationRoomName && cellTime >= startTime && cellTime < endTime) {
 	                                            $(self).addClass("highlighted");
 
@@ -740,6 +748,7 @@
 	            }
 	        });
 	    }
+
 
 
  </script>
