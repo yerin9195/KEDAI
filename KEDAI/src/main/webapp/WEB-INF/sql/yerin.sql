@@ -281,8 +281,12 @@ commit;
 
 select *
 from tbl_employees
-where fk_dept_code = '200'
-order by fk_job_code asc;   
+where fk_dept_code = '100'
+order by fk_job_code asc;  
+
+select *
+from tbl_employees
+where email = 'NH6B6sIcB8KyRPYzQRdTgmHS0x9w3e1n5Ylt7gbIJ/s=';
 
 delete from tbl_employees
 where empid = '2010001-001'

@@ -66,8 +66,6 @@
 		                       , address = #{address}
 		                       , detailaddress = #{detailaddress}
 		                       , extraaddress = #{extraaddress}
-		                       , imgfilename = #{imgfilename}
-		                       , orgimgfilename = #{orgimgfilename}
 		where empid = #{empid}
 	</update>
 	

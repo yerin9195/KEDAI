@@ -44,7 +44,7 @@
 		background: #e68c0e;
 		color: #fff;
 	}
-	a{
+	a {
 		text-decoration: none;
 		color: #363636;
 	}
@@ -77,6 +77,8 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 	  	
+		$("input:text[name='empid']").val("").focus();
+		
 		$("button#btnSubmit").click(function(){
 	    	goLogin(); 
 	    }); 
@@ -113,7 +115,7 @@
             setTimeout(function() {
                 $this.animate({
                     opacity: 1
-                }, 300); // Duration of opacity change
+                }, 100); // Duration of opacity change
                 
                 $this.css({
                     transform: 'scale(1)'
@@ -129,7 +131,7 @@
                 // Animate to initial state
                 $this.animate({
                     opacity: 0
-                }, 500); // Duration of opacity change
+                }, 100); // Duration of opacity change
                 
                 $this.css({
                     transform: 'scale(0.8)'
@@ -139,7 +141,7 @@
                 setTimeout(function() {
                     $this.animate({
                         opacity: 1
-                    }, 500); // Duration of opacity change
+                    }, 100); // Duration of opacity change
                     
                     $this.css({
                         transform: 'scale(1)'
@@ -187,11 +189,11 @@
 		<form name="loginFrm" style="width: 400px; margin: 0 auto;">
         	<div class="form-row mx-0">    
             	<div class="form-group" style="margin-bottom: 3%;">
-               		<input type="text" class="form-control" name="empid" id="empid" value="" placeholder="사원아이디" />
+               		<input type="text" class="form-control" name="empid" id="empid" placeholder="사원아이디" />
                	</div>
    
             	<div class="form-group" style="margin-bottom: 3%;">
-               		<input type="password" class="form-control" name="pwd" id="pwd" value="" placeholder="비밀번호" /> 
+               		<input type="password" class="form-control" name="pwd" id="pwd" placeholder="비밀번호" /> 
             	</div>
          	</div>
        	</form>
