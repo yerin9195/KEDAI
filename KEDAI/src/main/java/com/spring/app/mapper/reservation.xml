@@ -520,7 +520,7 @@
 	    <result property="email" column="email" javaType="String"/>
 	    <result property="settled_amount" column="settled_amount"	javaType="int"/>
 	    <result property="payment_amount" column="payment_amount"	javaType="int"/>
-	    <result property="nonpaymnet_amount" column="nonpayment_amount"	javaType="int"/>
+	    <result property="nonpayment_amount" column="nonpayment_amount"	javaType="int"/>
 	</resultMap>
 	<select id="getowner_dateInfo" parameterType="String" resultMap="owner_dateDetail">
 		select nickname, pf_res_num, pf_empid, share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, getin_time, getout_time, use_time, settled_amount, payment_amount, nonpayment_amount, email
@@ -623,11 +623,12 @@
 	    <result property="nonpayment_amount" column="nonpayment_amount" javaType="int"/>
 	    <result property="nickname_owner" column="nickname_owner" javaType="String"/>
 	    <result property="nickname_applicant" column="nickname_applicant" javaType="String"/>
+	    <result property="email_applicant" column="email_applicant" javaType="String"/>
 	</resultMap>
 
 	<select id="getowner_SettlementList" resultMap="owner_SettlementList" parameterType="String">
 		SELECT pf_res_num, pf_empid, to_char(share_date, 'yyyy-mm-dd') as share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, TO_CHAR(getin_time, 'YYYY-MM-DD HH24:MI:SS') AS getin_time, TO_CHAR(getout_time, 'YYYY-MM-DD HH24:MI:SS') AS getout_time, use_time, settled_amount, payment_amount, nonpayment_amount,
-		       d.nickname as nickname_owner, e.nickname as nickname_applicant
+		       d.nickname as nickname_owner, e.nickname as nickname_applicant, e.email as email_applicant
 		FROM 
 		    tbl_car_share a
 		JOIN 
@@ -685,35 +686,125 @@
 	    <result property="nonpayment_amount" column="nonpayment_amount" javaType="int"/>
 	    <result property="nickname_owner" column="nickname_owner" javaType="String"/>
 	    <result property="nickname_applicant" column="nickname_applicant" javaType="String"/>
+	    <result property="email_applicant" column="email_applicant" javaType="String"/>
 	</resultMap>
 	<select id="owner_SettlementList_withPaging" parameterType="HashMap" resultMap="owner_SettlementList_withPaging_rm">
-		SELECT rno, pf_res_num, pf_empid, share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, getin_time, getout_time, use_time, settled_amount, payment_amount, nonpayment_amount, nickname_owner, nickname_applicant
+        SELECT rno, pf_res_num, pf_empid, share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, getin_time, getout_time, use_time, settled_amount, payment_amount, nonpayment_amount, nickname_owner, nickname_applicant ,email_applicant
 		FROM
-		(
-		    SELECT 
-		        ROW_NUMBER() OVER(ORDER BY pf_res_num DESC) AS rno, 
-		        pf_res_num, 
-		        pf_empid, 
-		        to_char(share_date, 'yyyy-mm-dd') as share_date, 
-		        share_may_time, 
-		        accept_yon, 
-		        reason_nonaccept, 
-		        rdp_name, 
-		        rdp_add, 
-		        rdp_lat, 
-		        rdp_lng, 
-		        rds_name, 
-		        rds_add, 
-		        rds_lat, 
-		        rds_lng, 
-		        TO_CHAR(getin_time, 'YYYY-MM-DD HH24:MI:SS') AS getin_time, 
-		        TO_CHAR(getout_time, 'YYYY-MM-DD HH24:MI:SS') AS getout_time, 
-		        use_time, 
-		        settled_amount, 
-		        payment_amount, 
-		        nonpayment_amount, 
-		        d.nickname as nickname_owner, 
-		        e.nickname as nickname_applicant
+		(    
+            SELECT ROW_NUMBER() OVER(ORDER BY pf_res_num DESC) AS rno, pf_res_num, pf_empid, to_char(share_date, 'yyyy-mm-dd') as share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, TO_CHAR(getin_time, 'YYYY-MM-DD HH24:MI:SS') AS getin_time, TO_CHAR(getout_time, 'YYYY-MM-DD HH24:MI:SS') AS getout_time, use_time, settled_amount, payment_amount, nonpayment_amount,
+                   d.nickname as nickname_owner, e.nickname as nickname_applicant, e.email as email_applicant
+            FROM 
+                tbl_car_share a
+            JOIN 
+                tbl_day_share b ON a.pf_res_num = b.res_num
+            JOIN 
+                tbl_car c ON b.fk_car_seq = c.car_seq
+            JOIN 
+                tbl_employees d ON c.fk_empid = d.empid
+            JOIN
+                tbl_employees e ON a.pf_empid = e.empid
+            WHERE
+                c.fk_empid = #{empid}
+        )h
+        WHERE h.rno between #{startRno} and #{endRno}
+
+	</select>
+	
+	
+	<resultMap id="owner_SettlementList_mobile" type="HashMap">
+	    <result property="pf_res_num" column="pf_res_num" javaType="int"/>
+	    <result property="pf_empid" column="pf_empid" javaType="String"/>
+	    <result property="share_date" column="share_date" javaType="String"/>
+	    <result property="share_may_time" column="share_may_time" javaType="String"/>
+	    <result property="accept_yon" column="accept_yon" javaType="int"/>
+	    <result property="reason_nonaccept" column="reason_nonaccept" javaType="String"/>
+	    <result property="rdp_name" column="rdp_name" javaType="String"/>
+	    <result property="rdp_add" column="rdp_add" javaType="String"/>
+	    <result property="rdp_lat" column="rdp_lat" javaType="double"/>
+	    <result property="rdp_lng" column="rdp_lng" javaType="double"/>
+	    <result property="rds_name" column="rds_name" javaType="String"/>
+	    <result property="rds_add" column="rds_add" javaType="String"/>
+	    <result property="rds_lat" column="rds_lat" javaType="double"/>
+	    <result property="rds_lng" column="rds_lng" javaType="double"/>
+	    <result property="getin_time" column="getin_time" javaType="String"/>
+	    <result property="getout_time" column="getout_time" javaType="String"/>
+	    <result property="use_time" column="use_time" javaType="String"/>
+	    <result property="settled_amount" column="settled_amount" javaType="int"/>
+	    <result property="payment_amount" column="payment_amount" javaType="int"/>
+	    <result property="nonpayment_amount" column="nonpayment_amount" javaType="int"/>
+	    <result property="nickname_owner" column="nickname_owner" javaType="String"/>
+	    <result property="nickname_applicant" column="nickname_applicant" javaType="String"/>
+	</resultMap>
+
+	<select id="getowner_SettlementList_mobile" resultMap="owner_SettlementList_mobile" parameterType="HashMap">
+        SELECT pf_res_num, pf_empid, to_char(share_date, 'yyyy-mm-dd') as share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, TO_CHAR(getin_time, 'YYYY-MM-DD HH24:MI:SS') AS getin_time, TO_CHAR(getout_time, 'YYYY-MM-DD HH24:MI:SS') AS getout_time, use_time, settled_amount, payment_amount, nonpayment_amount,
+		       d.nickname as nickname_owner, e.nickname as nickname_applicant
+		FROM 
+		    tbl_car_share a
+		JOIN 
+		    tbl_day_share b ON a.pf_res_num = b.res_num
+		JOIN 
+		    tbl_car c ON b.fk_car_seq = c.car_seq
+		JOIN 
+		    tbl_employees d ON c.fk_empid = d.empid
+		JOIN
+		    tbl_employees e ON a.pf_empid = e.empid
+		WHERE
+		    c.fk_empid = #{empid} and '2024-11-21' = to_char(share_date, 'yyyy-mm-dd')
+	</select>
+	
+
+	<!-- // === #125.총게시물 건수(totalCount) 구하기 (경우의 수 2가지 1.검색어가 있을때 2.검색어가 없을때) ==// -->
+	<select id="getTotalcount_owner_SettlementList_mobile" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM 
+		    tbl_car_share a
+		JOIN 
+		    tbl_day_share b ON a.pf_res_num = b.res_num
+		JOIN 
+		    tbl_car c ON b.fk_car_seq = c.car_seq
+		JOIN 
+		    tbl_employees d ON c.fk_empid = d.empid
+		JOIN
+		    tbl_employees e ON a.pf_empid = e.empid
+		WHERE
+		    c.fk_empid = #{empid} AND '2024-11-21' = to_char(share_date, 'yyyy-mm-dd')
+
+	</select>
+	
+	
+	<resultMap id="owner_SettlementList_withPaging_rm_mobile" type="Car_shareVO">
+	    <result property="rno" column="rno" javaType="int"/>
+	    <result property="pf_res_num" column="pf_res_num" javaType="int"/>
+	    <result property="pf_empid" column="pf_empid" javaType="String"/>
+	    <result property="share_date" column="share_date" javaType="String"/>
+	    <result property="share_may_time" column="share_may_time" javaType="String"/>
+	    <result property="accept_yon" column="accept_yon" javaType="int"/>
+	    <result property="reason_nonaccept" column="reason_nonaccept" javaType="String"/>
+	    <result property="rdp_name" column="rdp_name" javaType="String"/>
+	    <result property="rdp_add" column="rdp_add" javaType="String"/>
+	    <result property="rdp_lat" column="rdp_lat" javaType="double"/>
+	    <result property="rdp_lng" column="rdp_lng" javaType="double"/>
+	    <result property="rds_name" column="rds_name" javaType="String"/>
+	    <result property="rds_add" column="rds_add" javaType="String"/>
+	    <result property="rds_lat" column="rds_lat" javaType="double"/>
+	    <result property="rds_lng" column="rds_lng" javaType="double"/>
+	    <result property="getin_time" column="getin_time" javaType="String"/>
+	    <result property="getout_time" column="getout_time" javaType="String"/>
+	    <result property="use_time" column="use_time" javaType="String"/>
+	    <result property="settled_amount" column="settled_amount" javaType="int"/>
+	    <result property="payment_amount" column="payment_amount" javaType="int"/>
+	    <result property="nonpayment_amount" column="nonpayment_amount" javaType="int"/>
+	    <result property="nickname_owner" column="nickname_owner" javaType="String"/>
+	    <result property="nickname_applicant" column="nickname_applicant" javaType="String"/>
+	</resultMap>
+	<select id="getowner_SettlementList_withPaging_mobile" parameterType="HashMap" resultMap="owner_SettlementList_withPaging_rm_mobile">
+		SELECT rno, pf_res_num, pf_empid, share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, getin_time, getout_time, use_time, settled_amount, payment_amount, nonpayment_amount, nickname_owner, nickname_applicant 
+		FROM
+		(    
+		    SELECT ROW_NUMBER() OVER(ORDER BY pf_res_num DESC) AS rno, pf_res_num, pf_empid, to_char(share_date, 'yyyy-mm-dd') as share_date, share_may_time, accept_yon, reason_nonaccept, rdp_name, rdp_add, rdp_lat, rdp_lng, rds_name, rds_add, rds_lat, rds_lng, TO_CHAR(getin_time, 'YYYY-MM-DD HH24:MI:SS') AS getin_time, TO_CHAR(getout_time, 'YYYY-MM-DD HH24:MI:SS') AS getout_time, use_time, settled_amount, payment_amount, nonpayment_amount,
+		               d.nickname as nickname_owner, e.nickname as nickname_applicant
 		    FROM 
 		        tbl_car_share a
 		    JOIN 
@@ -725,10 +816,26 @@
 		    JOIN
 		        tbl_employees e ON a.pf_empid = e.empid
 		    WHERE
-		        c.fk_empid = #{empid}
-		) C
-		WHERE rno BETWEEN #{startRno} AND #{endRno}
-		ORDER BY share_may_time ASC
-
+		        c.fk_empid = #{empid} AND '2024-11-21' = to_char(share_date, 'yyyy-mm-dd')
+		) h
+		WHERE h.rno BETWEEN #{startRno} AND #{endRno}
 	</select>
+	
+	<update id="update_drive_in_time" parameterType="HashMap">
+		update tbl_car_share set getin_time = to_date(#{getin_time}, 'yyyy-mm-dd hh24:mi:ss')
+        where pf_res_num = #{pf_res_num} and pf_empid=#{pf_empid}
+	</update>
+	<update id="update_drive_out_time" parameterType="HashMap">
+		UPDATE tbl_car_share 
+		SET 
+		    getout_time = TO_DATE(#{getout_time}, 'yyyy-mm-dd hh24:mi:ss'),
+		    use_time = CEIL((TO_DATE(#{getout_time}, 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(#{getin_time}, 'yyyy-mm-dd hh24:mi:ss')) * 24 * 60),
+		    settled_amount = CEIL((TO_DATE(#{getout_time}, 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(#{getin_time}, 'yyyy-mm-dd hh24:mi:ss')) * 24 * 60) * 10,
+		    nonpayment_amount = CEIL((TO_DATE(#{getout_time}, 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(#{getin_time}, 'yyyy-mm-dd hh24:mi:ss')) * 24 * 60) * 10
+		WHERE 
+		    pf_res_num = #{pf_res_num} 
+		    AND pf_empid = #{pf_empid}
+
+	</update>
+
 </mapper>

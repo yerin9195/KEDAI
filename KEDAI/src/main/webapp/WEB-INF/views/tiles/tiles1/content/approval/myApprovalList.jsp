@@ -102,7 +102,7 @@ function goSearch(){
 
 
 <div id="around_docList">    
-<div id="title" style="margin: 6px; font-size: 15pt;"> 나의 기안 문서</div>
+<div id="title" style="margin: 6px; font-size: 15pt;">나의 결재함</div>
 
 	<form name="searchFrm" style="margin-top: 20px;">
     	<select name="searchType" style="height: 26px;">
@@ -131,8 +131,8 @@ function goSearch(){
 			</tr>
 		</thead>
 		<tbody>
-  			<c:if test="${not empty requestScope.allMyDocList}">
-  				<c:forEach var="allMyDocList" items="${requestScope.allMyDocList}" varStatus="status">
+  			<c:if test="${not empty requestScope.myApprovalList}">
+  				<c:forEach var="myApprovalList" items="${requestScope.myApprovalList}" varStatus="status">
   					<c:if test="${status.index <= 9}"> <!-- 10개까지만 보이도록 설정 -->
    						<tr>
    							<td align="center">
@@ -165,11 +165,11 @@ function goSearch(){
                  		--%>
                  		
                  		
-   							<td>${allMyDocList.created_date}</td>
-   							<td>${allMyDocList.doctype_name}</td>
-   							<td>${allMyDocList.doc_no}</td>
-   							<td><span class="subject" onclick="goView('${allMyDocList.doc_no}', '${allMyDocList.fk_doctype_code}')">${allMyDocList.doc_subject}</span>
-   								<c:if test="${allMyDocList.isAttachment eq 1}">
+   							<td>${myApprovalList.created_date}</td>
+   							<td>${myApprovalList.doctype_name}</td>
+   							<td>${myApprovalList.doc_no}</td>
+   							<td><span class="subject" onclick="goView('${myApprovalList.doc_no}', '${myApprovalList.fk_doctype_code}')">${myApprovalList.doc_subject}</span>
+   								<c:if test="${myApprovalList.isAttachment eq 1}">
    									&nbsp;<i class="fa-solid fa-paperclip"></i>
    								</c:if>  								
    							</td>
@@ -180,17 +180,18 @@ function goSearch(){
    									<td><span style="border : solid 0px green; background-color:#e68c0e; color:white; margin-top:10%;">결재중</span></td>
    								</c:if>
    								--%>
-   							<td>${allMyDocList.name}</td>					
-   							<c:if test="${allMyDocList.doc_status eq 0}"><td>미처리</td></c:if>
-							<c:if test="${allMyDocList.doc_status eq 1}"><td>진행중</td></c:if>
-							<c:if test="${allMyDocList.doc_status eq 2}"><td>반려</td></c:if>
+   							<td>${myApprovalList.name}</td>					
+   							<c:if test="${myApprovalList.doc_status eq 0}"><td>미처리</td></c:if>
+							<c:if test="${myApprovalList.doc_status eq 1}"><td>진행중</td></c:if>
+							<c:if test="${myApprovalList.doc_status eq 2}"><td>반려</td></c:if>
+							<c:if test="${myApprovalList.doc_status eq 3}"><td>완료</td></c:if>
    						</tr>
    					</c:if>
   				</c:forEach>
   			</c:if>
-  			<c:if test="${empty requestScope.allMyDocList}">
+  			<c:if test="${empty requestScope.myApprovalList}">
   				<tr>
-  					<td colspan="6" align="center"> 나의 기안 문서가 없습니다. </td>
+  					<td colspan="6" align="center"> 나의 결재 문서가 없습니다. </td>
   				</tr>
   			</c:if>
   		</tbody>

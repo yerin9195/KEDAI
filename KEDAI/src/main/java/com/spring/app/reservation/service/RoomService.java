@@ -23,7 +23,12 @@ public interface RoomService {
 
 	List<RoomVO> getAllReservations();
 
-	RoomVO getReservationById(int reservationId);
+	RoomVO getReservations(String reservation_seq);
+
+	int updateReservation(RoomVO roomVO);
+
+	int deleteReservation(int reservationSeq);
+
 
 	
 

@@ -173,6 +173,37 @@ public class CarService_imple implements CarService {
 		return owner_SettlementList_withPaging;
 	}
 
+	@Override
+	public List<Map<String, String>> owner_SettlementList_mobile(Map<String, String> paraMap) {
+		List<Map<String, String>> owner_SettlementList_mobile = dao.getowner_SettlementList_mobile(paraMap);
+		return owner_SettlementList_mobile;
+	}
+
+	@Override
+	public int getTotalcount_owner_SettlementList_mobile(Map<String, String> paraMap) {
+		int totalCount_owner_SettlementList_mobile = dao.getTotalcount_owner_SettlementList_mobile(paraMap);
+		return totalCount_owner_SettlementList_mobile;
+	}
+
+	@Override
+	public List<Map<String, String>> owner_SettlementList_withPaging_mobile(Map<String, String> paraMap) {
+		List<Map<String, String>> owner_SettlementList_withPaging_mobile = dao.getowner_SettlementList_withPaging_mobile(paraMap);
+		return owner_SettlementList_withPaging_mobile;
+	}
+
+	@Override
+	public int update_drive_in_time(Map<String, String> paraMap) {
+		int n = dao.update_drive_in_time(paraMap);
+		return n;
+	}
+
+	@Override
+	public int update_drive_out_time(Map<String, String> paraMap) {
+		System.out.println("넘어왔니?");
+		int n = dao.update_drive_out_time(paraMap);
+		return n;
+	}
+
 
 
 

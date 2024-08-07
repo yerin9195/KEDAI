@@ -60,6 +60,27 @@
         e.empid = #{fk_empid}
 </insert>
     
+      <select id="getEmployeeById" parameterType="string" resultType="MemberVO">
+        SELECT
+		    e.name AS name,
+		    j.job_name AS job_name,
+		    d.dept_name AS dept_name,
+		    TO_CHAR(e.hire_date, 'YYYY-MM-DD') AS hire_date
+		FROM
+		    tbl_employees e
+		JOIN
+		    tbl_job j ON e.fk_job_code = j.job_code
+		JOIN
+		    tbl_dept d ON e.fk_dept_code = d.dept_code
+		WHERE
+		    e.empid =  #{employeeId}
+    </select>
     
+    <select id="getSalaryDetailsById" parameterType="map" resultType="SalaryVO">
+	     SELECT *
+		FROM tbl_sal
+		WHERE to_char(payment_date, 'YYYY-MM') = #{yearMonth}
+		and fk_empid = #{empid}
+	</select>
 	
 </mapper>

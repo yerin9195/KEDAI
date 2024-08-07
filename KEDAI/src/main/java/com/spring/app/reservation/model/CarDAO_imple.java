@@ -135,7 +135,6 @@ public class CarDAO_imple implements CarDAO {
 	@Override
 	public List<Map<String, Object>> getowner_dateInfo(String date) {
 		List<Map<String, Object>> owner_dateInfo = sqlsession.selectList("reservation.getowner_dateInfo", date);
-		System.out.println("~~~~~~ 도현아~!! 울지마라 ㅎㅎㅎ  " + date);
 		return owner_dateInfo;
 	}
 
@@ -173,6 +172,40 @@ public class CarDAO_imple implements CarDAO {
 	public List<Map<String, String>> owner_SettlementList_withPaging(Map<String, String> paraMap) {
 		List<Map<String, String>> owner_SettlementList_withPaging = sqlsession.selectList("reservation.owner_SettlementList_withPaging", paraMap);
 		return owner_SettlementList_withPaging;
+	}
+
+	@Override
+	public List<Map<String, String>> getowner_SettlementList_mobile(Map<String, String> paraMap) {
+		List<Map<String, String>> owner_SettlementList_mobile = sqlsession.selectList("reservation.getowner_SettlementList_mobile", paraMap);
+		return owner_SettlementList_mobile;
+	}
+
+	@Override
+	public int getTotalcount_owner_SettlementList_mobile(Map<String, String> paraMap) {
+		int totalCount_owner_SettlementList_mobile = sqlsession.selectOne("reservation.getTotalcount_owner_SettlementList_mobile", paraMap);
+		return totalCount_owner_SettlementList_mobile;
+	}
+
+	@Override
+	public List<Map<String, String>> getowner_SettlementList_withPaging_mobile(Map<String, String> paraMap) {
+		List<Map<String, String>> owner_SettlementList_withPaging_mobile = sqlsession.selectList("reservation.getowner_SettlementList_withPaging_mobile", paraMap);
+		return owner_SettlementList_withPaging_mobile;
+	}
+
+	@Override
+	public int update_drive_in_time(Map<String, String> paraMap) {
+		int n = sqlsession.update("reservation.update_drive_in_time", paraMap);
+		System.out.println("~~~~확인용  getin_time :" + paraMap.get("getin_time"));
+		return n;
+	}
+
+	@Override
+	public int update_drive_out_time(Map<String, String> paraMap) {
+		System.out.println("왜?? 여기는 왔니?");
+		int n = sqlsession.update("reservation.update_drive_out_time", paraMap);
+		System.out.println("~~~~확인용  getout_time :" + paraMap.get("getout_time"));
+		System.out.println("~~~~확인용  getin_time :" + paraMap.get("getin_time"));
+		return n;
 	}
 
 
