@@ -7,6 +7,9 @@
 	//     /KEDAI
 %>
 <style type="text/css">
+th {background-color: #e68c0e;}
+.subjectStyle {font-weight: bold; color: navy; cursor: pointer; }
+a {text-decoration: none !important;} /* 페이지바의 a 태그에 밑줄 없애기 */
 .nav-tabs .nav-link.active {
     background-color: #2c4459; /* 활성화된 탭의 배경색 변경 */
     color: white; /* 활성화된 탭의 글자색 변경 */
@@ -56,94 +59,44 @@
                             <th style="text-align: center;">no</th>
                             <th style="text-align: center;">일자</th>
                             <th style="text-align: center;">출발예정시각</th>
-                            <th style="text-align: center;">탑승자</th>
-                            <th style="text-align: center;">탑승여부</th>
-                            <th style="text-align: center;">탑승위치</th>
-                            <th style="text-align: center;">탑승시간</th>
-                            <th style="text-align: center;">하차위치</th>
-                            <th style="text-align: center;">하차시간</th>
-                            <th style="text-align: center;">이용시간</th>
-                            <th style="text-align: center;">정산금액</th>
-                            <th style="text-align: center;">결제금액</th>
-                            <th style="text-align: center;">미결제금액</th>
-                            <th style="text-align: center;">메일보내기</th>
+                            <th style="text-align: center;">차주</th>
+                            <th style="text-align: center;">출발지</th>
+                            <th style="text-align: center;">도착지</th>
+                            <th style="text-align: center;">진행여부</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <c:if test="${not empty requestScope.owner_SettlementList}">
-                            <c:forEach var="owner_carShare" items="${requestScope.owner_SettlementList}" varStatus="status">
+                        <c:if test="${not empty requestScope.customer_applyStatusList}">
+                            <c:forEach var="customer_applyStatus" items="${requestScope.customer_applyStatusList}" varStatus="status">
                                 <tr>
                                     <td align="center">${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
-                                    <td align="center">${owner_carShare.share_date}</td>
-                                    <td align="center">${owner_carShare.share_may_time}</td>
-                                    <td align="center">${owner_carShare.nickname_applicant}</td>
-                                    <c:if test="${not empty owner_carShare.getin_time and not empty owner_carShare.getout_time }">
-                                        <td align="center"><i class="fa-solid fa-circle"></i></td>
-                                    </c:if>
-                                    <c:if test="${empty owner_carShare.getin_time or empty owner_carShare.getout_time }">
-                                        <td align="center"><i class="fa-solid fa-xmark"></i></td>
-                                    </c:if>
-                                    <td align="center" class="rdp_name">${owner_carShare.rdp_name} </td>
-                                    <td align="center"><input type="text" style="border: none; font-size: 15pt;" name="getin_time_${status.index}" value="${owner_carShare.getin_time}" readonly/></td>
-                                    <td align="center" class="rds_name">${owner_carShare.rds_name}</td>
-                                    <td align="center"><input type="text" style="border: none; font-size: 15pt;" name="getout_time_${status.index}" value="${owner_carShare.getout_time}" readonly/></td>
-                                    <c:if test="${not empty owner_carShare.getin_time and not empty owner_carShare.getout_time }">
-                                        <td align="center" style="color: red;">${owner_carShare.use_time}분</td>
-                                    </c:if>
-                                    <c:if test="${empty owner_carShare.getin_time or empty owner_carShare.getout_time }">
-                                        <td align="center"><i class="fa-solid fa-xmark"></i></td>
-                                    </c:if>
-									<td align="center">
-									    <c:choose>
-									        <c:when test="${owner_carShare.settled_amount ne 0}">
-									            <fmt:formatNumber value="${owner_carShare.settled_amount}" type="number" /><span>point</span>
-									        </c:when>
-									        <c:otherwise>
-									            <i class="fa-solid fa-xmark"></i>
-									        </c:otherwise>
-									    </c:choose>
-									</td>
-									
-									<td align="center">
-									    <c:choose>
-									        <c:when test="${owner_carShare.payment_amount ne 0}">
-									            <fmt:formatNumber value="${owner_carShare.payment_amount}" type="number" /><span>point</span>
-									        </c:when>
-									        <c:otherwise>
-									            <i class="fa-solid fa-xmark"></i>
-									        </c:otherwise>
-									    </c:choose>
-									</td>
-									
-									<td align="center">
-									    <c:choose>
-									        <c:when test="${owner_carShare.settled_amount eq 0}">
-									           	 이용전
-									        </c:when>
-									        <c:when test="${owner_carShare.nonpayment_amount ne 0.0}">
-									            <fmt:formatNumber value="${owner_carShare.nonpayment_amount}" type="number" /><span>point</span>
-									        </c:when>
-									        <c:otherwise>
-									            <i class="fa-solid fa-xmark"></i>
-									        </c:otherwise>
-									    </c:choose>
-									</td>
-									<c:if test="${owner_carShare.settled_amount eq 0}">
-									    <td align="center"> </td>
+                                    <td align="center">${customer_applyStatus.share_date}</td>
+                                    <td align="center">${customer_applyStatus.share_may_time}</td>
+                                    <td align="center">${customer_applyStatus.nickname_owner}</td>
+                                    <td align="center" class="rdp_name">${customer_applyStatus.rdp_name} </td>
+                                    <td align="center" class="rds_name">${customer_applyStatus.rds_name}</td>
+									<c:if test="${customer_applyStatus.accept_yon eq 0 && empty customer_applyStatus.getin_time && empty customer_applyStatus.getout_time }">
+										<td align="center">확인중</td>
 									</c:if>
-									<c:if test="${owner_carShare.settled_amount ne 0}">
-									    <td align="center">
-										    <button type="button" style="background-color:white;" 
-										        onclick="request_payment('${status.index}', '${owner_carShare.pf_empid}', '${owner_carShare.pf_res_num}', '${owner_carShare.nickname_applicant}', '${owner_carShare.email_applicant}', '${owner_carShare.nonpayment_amount}')">
-										        <i class="fa-solid fa-comments"></i>
-										    </button>
-										</td>
+									<c:if test="${customer_applyStatus.accept_yon eq 1 && empty customer_applyStatus.getin_time && empty customer_applyStatus.getout_time }">
+										<td align="center">탑승전</td>
 									</c:if>
-                                
+									<c:if test="${customer_applyStatus.accept_yon eq 2 }">
+										<td align="center">탑승거부</td>
+									</c:if>
+									<c:if test="${customer_applyStatus.accept_yon eq 1 && not empty customer_applyStatus.getin_time && empty customer_applyStatus.getout_time }">
+										<td align="center">탑승중</td>
+									</c:if>
+									<c:if test="${customer_applyStatus.accept_yon eq 1 && not empty customer_applyStatus.getin_time && not empty customer_applyStatus.getout_time && not empty customer_applyStatus.nonpayment_amount}">
+										<td align="center">결제전</td>
+									</c:if>
+									<c:if test="${customer_applyStatus.accept_yon eq 1 && not empty customer_applyStatus.getin_time && not empty customer_applyStatus.getout_time && empty customer_applyStatus.nonpayment_amount && not empty customer_applyStatus.payment_amount}">
+										<td align="center">결제완료</td>
+									</c:if>
                                 </tr>
                             </c:forEach>
                         </c:if>
-                        <c:if test="${empty requestScope.owner_SettlementList}">
+                        <c:if test="${empty requestScope.customer_applyStatusList}">
                             <tr>
                                 <td colspan="13">데이터가 존재하지 않습니다.</td>
                             </tr>
@@ -157,10 +110,4 @@
         </div>
     </div>
 </div>
-<form name="goViewFrm">
-   <input type="hidden" name="board_seq" />
-   <input type="hidden" name="goBackURL" />
-   <input type="hidden" name="searchType" />
-   <input type="hidden" name="searchWord" />
-</form>
 

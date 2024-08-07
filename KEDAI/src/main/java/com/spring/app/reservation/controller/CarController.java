@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.app.board.service.BoardService;
 import com.spring.app.common.AES256;
 import com.spring.app.common.FileManager;
 import com.spring.app.common.GoogleMail_owner;
@@ -36,6 +37,7 @@ import com.spring.app.domain.BusVO;
 import com.spring.app.domain.CarVO;
 import com.spring.app.domain.Day_shareVO;
 import com.spring.app.domain.MemberVO;
+import com.spring.app.member.service.IndexService;
 import com.spring.app.reservation.service.CarService;
 
 @Controller
@@ -50,6 +52,12 @@ public class CarController {
 	@Autowired
 	private FileManager fileManager;
 
+    @Autowired
+    private BoardService boardService;
+    
+    @Autowired
+    private IndexService indexService;
+    
 	// sidebar에서 통근버스 클릭시 이동하는 페이지 만들기
 	@GetMapping("/bus.kedai")
 	public ModelAndView empmanager_bus(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
@@ -784,8 +792,8 @@ public class CarController {
 			}
 
 		} catch (Exception e) {
-			String message = "카셰어링 신청 등록을 실패했습니다.";
-			String loc = "javascript:history.back()";
+			String message = "동일한 신청내역이 존재합니다. 카셰어링신청현황에서 확인가능합니다.";
+			String loc = request.getContextPath() + "/customer_applyStatus.kedai";
 
 			mav.addObject("message", message);
 			mav.addObject("loc", loc);
@@ -1214,7 +1222,7 @@ public class CarController {
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		String empid = loginuser.getEmpid();
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
-
+		System.out.println("~~~ 확인용 str_currentShowPageNo : " + str_currentShowPageNo);
 		// car테이블에서 mycar정보 가져오기
 		List<Map<String, String>> owner_SettlementList = service.owner_SettlementList(empid);
 		
@@ -1231,12 +1239,9 @@ public class CarController {
 //		System.out.println("~~~ 확인용 : " + totalCount);
 		totalPage = (int) Math.ceil((double) totalCount / sizePerPage);
 		// (double)124/10 => 12.4 ==> Math.ceil(12.4) => 13.0 ==> (int)13.0 ==> 13
-
-
-		// 가져올 게시글의 범위 => 공식 적용하기
-		int startRno = ((currentShowPageNo - 1) * sizePerPage) + 1; // 시작 행번호
-		int endRno = startRno + sizePerPage - 1; // 끝 행번호
-
+		System.out.println("~~~ 확인용 totalPage : " + totalPage);
+		System.out.println("~~~ 확인용 totalCount : " + totalCount);
+		
 		if (str_currentShowPageNo == null) {
 			currentShowPageNo = 1; // 게시판에 보여지는 초기화면
 		} else {
@@ -1251,6 +1256,14 @@ public class CarController {
 				currentShowPageNo = 1;
 			}
 		}
+
+		// 가져올 게시글의 범위 => 공식 적용하기
+		int startRno = ((currentShowPageNo - 1) * sizePerPage) + 1; // 시작 행번호
+		int endRno = startRno + sizePerPage - 1; // 끝 행번호
+
+		System.out.println("~~~ 확인용 startRno :" + startRno);
+		System.out.println("~~~ 확인용 endRno :" + endRno);
+		
 		
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));
@@ -1424,6 +1437,7 @@ public class CarController {
 
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 		
+		System.out.println("~~~ 확인용 str_currentShowPageNo : " + str_currentShowPageNo);
 		// sysdate
 		Date today = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -1439,23 +1453,20 @@ public class CarController {
 		int currentShowPageNo = 1; // 현재 보여주는 페이지 번호, 초기값는 1페이지로 설정
 		int totalPage = 0; // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
 
+
 		// 총 게시물 건수(totalCount)
 		totalCount = service.getTotalcount_owner_SettlementList_mobile(paraMap);
 //		System.out.println("~~~ 확인용 : " + totalCount);
 		totalPage = (int) Math.ceil((double) totalCount / sizePerPage);
-		// (double)124/10 => 12.4 ==> Math.ceil(12.4) => 13.0 ==> (int)13.0 ==> 13
-
-
-		// 가져올 게시글의 범위 => 공식 적용하기
-		int startRno = ((currentShowPageNo - 1) * sizePerPage) + 1; // 시작 행번호
-		int endRno = startRno + sizePerPage - 1; // 끝 행번호
-
+		// (double)124/10 => 12.4 ==> Math.ceil(12.4) => 13.0 ==> (int)13.0 ==> 13		
 		if (str_currentShowPageNo == null) {
 			currentShowPageNo = 1; // 게시판에 보여지는 초기화면
 		} else {
 			try {
 				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
-
+				System.out.println("~~~ 확인용 currentShowPageNo :" + currentShowPageNo);
+				System.out.println("~~~ 확인용 totalPage :" + totalPage);
+				
 				if (currentShowPageNo < 1 || currentShowPageNo > totalPage) { // "GET" 방식이므로 0 또는 음수나 실제 데이터베이스에 존재하는
 																				// 페이지수 보다 더 큰값을 입력하여 장난친 경우
 					currentShowPageNo = 1;
@@ -1464,6 +1475,12 @@ public class CarController {
 				currentShowPageNo = 1;
 			}
 		}
+		
+		
+		// 가져올 게시글의 범위 => 공식 적용하기
+		int startRno = ((currentShowPageNo - 1) * sizePerPage) + 1; // 시작 행번호
+		int endRno = startRno + sizePerPage - 1; // 끝 행번호
+
 		
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));
@@ -1488,7 +1505,12 @@ public class CarController {
 
 		String pageBar = "<ul style='list-style: none;'>";
 		String url = "mobile.kedai";
-
+		System.out.println("~~~ 확인용 pageno : " + pageNo);
+		System.out.println("~~~ 확인용 totalPage : " + totalPage);
+		System.out.println("~~~ 확인용 blockSize : " + blockSize);
+		System.out.println("~~~ 확인용 currentShowPageNo : " + currentShowPageNo);
+		
+		
 		// [맨처음][이전] 만들기
 		if (pageNo != 1) { // 맨처음 페이지일 때는 보이지 않도록 한다.
 			pageBar += "<li style='display: inline-block; width: 70px; font-size: 12pt;'><a href='" + url
@@ -1524,7 +1546,7 @@ public class CarController {
 		}
 
 		pageBar += "</ul>";
-
+		System.out.println("~~~ 확인용 pageBar : " + pageBar);
 		mav.addObject("pageBar", pageBar);
 		// 페이징처리 시 순번을 나타내기 위한 것
 		mav.addObject("totalCount", totalCount);
@@ -1594,12 +1616,10 @@ public class CarController {
             System.out.println("~~~getin_time : " + paraMap.get("getin_time"));
             
             try {
-            	System.out.println("왜 service로 안넘어가?");
                 int n = service.update_drive_out_time(paraMap);
                 if (n == 1) {
                     String message = "업데이트를 성공했습니다.";
                     String loc = request.getContextPath() + "/mobile.kedai";
-                    System.out.println("성공!");
                     mav.addObject("message", message);
                     mav.addObject("loc", loc);
                     mav.setViewName("msg");
@@ -1607,16 +1627,11 @@ public class CarController {
             } catch (Exception e) {
                 String message = "업데이트를 실패했습니다.";
                 String loc = "javascript:history.back()";
-                System.out.println("실패");
                 mav.addObject("message", message);
                 mav.addObject("loc", loc);
                 mav.setViewName("msg");
             }
-            
-
         }
-        
-
 
         return mav;
     }
@@ -1629,6 +1644,14 @@ public class CarController {
 	public ModelAndView customer_applyStatus(HttpServletRequest request, HttpServletResponse response,
 			ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
 
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		String empid = loginuser.getEmpid();
+		
+		List<Map<String,String>> customer_applyStatusList = service.getcustomer_applyStatusList(empid);
+		
+		
+		mav.addObject("customer_applyStatusList", customer_applyStatusList);
 		mav.setViewName("tiles1/reservation/customer_applyStatus.tiles");
 		return mav;
 
@@ -1639,19 +1662,72 @@ public class CarController {
 	public ModelAndView customer_Settlement(HttpServletRequest request, HttpServletResponse response,
 			ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
 
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		String empid = loginuser.getEmpid();
+		
+		List<Map<String,String>> customer_SettlementList = service.getcustomer_SettlementList(empid);
+		
+		
+		mav.addObject("customer_SettlementList", customer_SettlementList);
 		mav.setViewName("tiles1/reservation/customer_Settlement.tiles");
 		return mav;
 
 	}
 
-	// test 페이지
-	@GetMapping("/test.kedai")
-	public ModelAndView test(ModelAndView mav) { // http://localhost:9099/final_project/bus.kedai
+    @GetMapping("/payment.kedai")
+    public ModelAndView point_payment(@RequestParam Map<String, String> paraMap, HttpServletRequest request, ModelAndView mav) {
+        
+    	int point = Integer.parseInt(request.getParameter("nonpayment_amount"));
+        // 포인트 감소에 필요한 파라미터 설정
+        Map<String, String> minusParaMap = new HashMap<>(paraMap);
+        minusParaMap.put("point", paraMap.get("nonpayment_amount"));
+        minusParaMap.put("empid", paraMap.get("pf_empid"));
+        
+        // 포인트 증가에 필요한 파라미터 설정
+        Map<String, String> plusParaMap = new HashMap<>(paraMap);
+        plusParaMap.put("point", paraMap.get("nonpayment_amount"));
+        plusParaMap.put("empid", paraMap.get("empid_owner"));
 
-		mav.setViewName("tiles1/reservation/test.tiles");
+		HttpSession session = request.getSession();
+		MemberVO pf_empid = (MemberVO)session.getAttribute("loginuser"); 
+		
+		String message = "";
+		if(pf_empid.getPoint() <= point) {
+			message = "포인트 잔액이 부족합니다.\n포인트 충전 후 다시 시도해주세요.";
+			String loc = request.getContextPath()+"/customer_Settlement.kedai"; 
+			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+			
+		}
+		else {
+	        // 포인트 감소 로직
+			int n = service.pointMinus_applicant(minusParaMap);
+			
+			// tbl_car_share의 nonpayment_amount을 null 처리하고 payment_amount 를 point 로 업데이트 시켜줘야함.
+			int n1 = service.payment_settled(minusParaMap);
+			
+			if(n == 1 && n1 == 1) {
+				message = "포인트 결제가 정상적으로 처리되었습니다.";
+				pf_empid.setPoint(pf_empid.getPoint());
+			}
+		}
+		
+        // 포인트 증가 로직
+		service.pointPlus_owner(plusParaMap);
+		
+		String loc = request.getContextPath()+"/customer_Settlement.kedai"; 
+		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+
+		mav.setViewName("tiles1/reservation/customer_Settlement.tiles");
+		
 		return mav;
-
-	}
-	
+		
+    }
 
 }

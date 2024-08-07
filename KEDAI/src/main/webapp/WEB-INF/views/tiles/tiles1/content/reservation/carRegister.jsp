@@ -464,6 +464,9 @@ function goRegister() {
 
 }// end of function goRegister()---------------------
 
+function goBack(){
+	location.href="javascript:history.back();"
+}
 
 </script>
 <div align="center" style="margin-bottom: 20px;">
@@ -574,7 +577,7 @@ function goRegister() {
          <tr style="height: 70px;">
             <td colspan="2" align="center" style="border-left: hidden; border-bottom: hidden; border-right: hidden; padding: 1%;">
                 <input type="button" value="등록하기" id="btnRegister" onclick = "goRegister()" style="width: 120px; background-color:#2c4459; color: white;" class="btn btn-lg mr-5" /> 
-                <input type="button" value="뒤로가기" onclick="cancel()" style="width: 120px; background-color: #2c4459; color: white;" class="btn btn-lg" />   
+                <input type="button" value="뒤로가기" onclick="goBack()" style="width: 120px; background-color: #2c4459; color: white;" class="btn btn-lg" />   
             </td>
          </tr>
       </tbody>

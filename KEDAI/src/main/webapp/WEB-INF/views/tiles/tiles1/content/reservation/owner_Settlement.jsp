@@ -143,7 +143,7 @@ function request_payment(index, pf_empid, pf_res_num, nickname_applicant, email_
     console.log("nickname_applicant: ", nickname_applicant);
     console.log("email_applicant: ", email_applicant);
     console.log("nonpayment_amount: ", nonpayment_amount);
-    var formattedEmailApplicant = parseInt(email_applicant);
+    //var formattedEmailApplicant = parseInt(email_applicant);
     
     $.ajax({
         url: "<%=ctxPath%>/request_payment_owner.kedai",
@@ -152,7 +152,7 @@ function request_payment(index, pf_empid, pf_res_num, nickname_applicant, email_
             pf_empid: pf_empid,
             pf_res_num: pf_res_num,
             nickname_applicant: nickname_applicant,
-            email_applicant: formattedEmailApplicant,
+            email_applicant: email_applicant,
             nonpayment_amount: nonpayment_amount
         },
         success: function(response) {
@@ -274,7 +274,7 @@ function request_payment(index, pf_empid, pf_res_num, nickname_applicant, email_
 									<c:if test="${owner_carShare.settled_amount eq 0}">
 									    <td align="center"> </td>
 									</c:if>
-									<c:if test="${owner_carShare.settled_amount ne 0}">
+									<c:if test="${owner_carShare.settled_amount ne 0 && owner_carShare.payment_amount eq 0}">
 									    <td align="center">
 										    <button type="button" style="background-color:white;" 
 										        onclick="request_payment('${status.index}', '${owner_carShare.pf_empid}', '${owner_carShare.pf_res_num}', '${owner_carShare.nickname_applicant}', '${owner_carShare.email_applicant}', '${owner_carShare.nonpayment_amount}')">
