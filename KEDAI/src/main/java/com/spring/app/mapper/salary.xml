@@ -42,7 +42,7 @@
     SELECT 
         salary_seq.nextval,
         e.empid, 
-        SYSDATE, 
+        #{payment_date}, 
         #{work_day},  
         5, 
         e.salary AS base_salary, 

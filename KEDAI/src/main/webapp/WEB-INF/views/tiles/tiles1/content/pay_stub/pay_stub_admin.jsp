@@ -86,12 +86,7 @@
 			}
 		});
 		
-		$("#total_bth").click(function(e) {
-		    // 확인 대화상자를 표시
-			$('#modal3').modal("show");
-	        loadSalaryData();
-		});
-		
+
 		$("#workListcom_btn").click(function(e){
 			 $('#modal1').modal("show");
 			 Memberview();
@@ -166,11 +161,7 @@
 		    initializeDatepickers();
 	    });
 	    
-	   $('#total_bth').click(function(e){
-		   $('#modal3').modal("show");
-		   salary_cal();
-	   })
-	    
+
 	// 삭제 버튼 클릭 시 체크된 행 삭제
 	    $("#deleteRows").click(function() {
 	        // 체크된 체크박스가 있는지 확인
@@ -189,40 +180,6 @@
 	    });
 	});	//	end of $(document).ready(function(){--------
 		
-	//	전체 계산 
-	function salary_cal(){
-		 const basicSalary = annualSalary * 0.0833;  // 기본급은 연봉의 8.33%
-	    const mealAllowance = 100;  // 예: 식대는 고정 100원
-	    const annualLeaveAllowance = 50;  // 예: 연차수당 고정 50원
-	    const overtimeAllowance = 70;  // 예: 초과근무수당 고정 70원
-
-	    const totalEarnings = basicSalary + mealAllowance + annualLeaveAllowance + overtimeAllowance;
-
-	    const incomeTax = totalEarnings * 0.1;  // 예: 소득세는 총지급액의 10%
-	    const localIncomeTax = incomeTax * 0.1;  // 예: 지방소득세는 소득세의 10%
-	    const nationalPension = totalEarnings * 0.045;  // 예: 국민연금은 총지급액의 4.5%
-	    const healthInsurance = totalEarnings * 0.035;  // 예: 건강보험은 총지급액의 3.5%
-	    const employmentInsurance = totalEarnings * 0.01;  // 예: 고용보험은 총지급액의 1%
-
-	    const totalDeductions = incomeTax + localIncomeTax + nationalPension + healthInsurance + employmentInsurance;
-
-	    const netSalary = totalEarnings - totalDeductions;
-
-	    return {
-	        basicSalary,
-	        mealAllowance,
-	        annualLeaveAllowance,
-	        overtimeAllowance,
-	        totalEarnings,
-	        incomeTax,
-	        localIncomeTax,
-	        nationalPension,
-	        healthInsurance,
-	        employmentInsurance,
-	        totalDeductions,
-	        netSalary
-	    };	
-	}	//	end of function salary_cal(){----------------------
 	
 		
 	//	근무기록 확정 시 회원목록 조회하기
@@ -455,7 +412,9 @@
 
         // 전체계산 버튼 클릭 이벤트 바인딩
         newRow.querySelector('#total_bth').addEventListener('click', function() {
-            $('#modal3').modal("show");
+        	 console.log("????")
+ 		    loadSalaryData();
+ 			$('#modal3').modal("show");
         });
     }
 
@@ -464,7 +423,8 @@
         var workdayval = $("#weekdayCount").val();
         var empidval = [];
         var memberSalary = [];
-
+        var payment_date = $(".yearSelect").val() +"/"+ $(".monthSelect").val();
+        
         $(".checkbox-member:checked").each(function() {
             var empid = $(this).closest('tr').find('.empid').text();
             var memSal = $(this).closest('tr').find('#memberSalary').val();
@@ -484,7 +444,6 @@
             return;
         }
 
-        console.log(memberSalary);
 
         $.ajax({
             url: "<%= ctxPath%>/salaryCal.kedai",
@@ -493,6 +452,7 @@
                 workday: workdayval,
                 "empid": empidval,
                 memberSalary: memberSalary
+                payment_date: payment_date
             },
             traditional: true,
             dataType: 'json',
@@ -513,41 +473,56 @@
             }
         });
     }
+    
+    console.log($('#yearMonth').val())
 
     function loadSalaryData() {
         $.ajax({
-            url: "<%= ctxPath%>/salaryData.kedai",
+            url: "<%= ctxPath %>/salaryData.kedai",
             type: "GET",
+            data: {
+                yearMonth: $('#yearMonth').val(), // 파라미터 값을 가져옵니다
+                empid: $('#empid').val()           // 파라미터 값을 가져옵니다
+            },
+
             dataType: "json",
-            success: function(salaries) {
+            success: function(response) {
                 var tbody = $('#modal3 table tbody');
                 tbody.empty();
                 
-                $.each(salaries, function(index, salary) {
-                    var newRow = '<tr>';
-                    newRow += '<td>' + salary.basicSalary + '</td>';
-                    newRow += '<td>' + salary.mealAllowance + '</td>';
-                    newRow += '<td>' + salary.annualBonus + '</td>';
-                    newRow += '<td>' + salary.overtimePay + '</td>';
-                    newRow += '<td>' + salary.totalIncome + '</td>';
-                    newRow += '<td>' + salary.incomeTax + '</td>';
-                    newRow += '<td>' + salary.localTax + '</td>';
-                    newRow += '<td>' + salary.nationalPension + '</td>';
-                    newRow += '<td>' + salary.healthInsurance + '</td>';
-                    newRow += '<td>' + salary.employmentInsurance + '</td>';
-                    newRow += '<td>' + salary.totalDeductions + '</td>';
-                    newRow += '<td>' + salary.netPayment + '</td>';
-                    newRow += '</tr>';
-                    
-                    tbody.append(newRow);
-                });
+                // 서버에서 반환하는 JSON 데이터가 배열 형태인지 확인
+                if (Array.isArray(response)) {
+                    $.each(response, function(index, salary) {
+                        // 데이터 필드 이름이 서버에서 반환하는 것과 일치하는지 확인
+                        var newRow = '<tr>';
+                        newRow += '<td>' + (salary.base_salary || '') + '</td>';
+                        newRow += '<td>' + (salary.meal_allowance || '') + '</td>';
+                        newRow += '<td>' + (salary.annual_allowance || '') + '</td>';
+                        newRow += '<td>' + (salary.overtime_allowance || '') + '</td>';
+                        newRow += '<td>' + (salary.total_income || '') + '</td>';
+                        newRow += '<td>' + (salary.income_tax || '') + '</td>';
+                        newRow += '<td>' + (salary.local_income_tax || '') + '</td>';
+                        newRow += '<td>' + (salary.pension || '') + '</td>';
+                        newRow += '<td>' + (salary.health_insurance || '') + '</td>';
+                        newRow += '<td>' + (salary.employment_insurance || '') + '</td>';
+                        newRow += '<td>' + (salary.total_deduction || '') + '</td>';
+                        newRow += '<td>' + (salary.net_pay || '') + '</td>';
+                        newRow += '</tr>';
+                        
+                        tbody.append(newRow);
+                    });
+                } else {
+                    alert("서버에서 반환된 데이터 형식이 올바르지 않습니다.");
+                }
             },
             error: function(xhr, status, error) {
+                console.error("데이터를 불러오지 못했습니다:", status, error);
                 alert("데이터를 불러오지 못했습니다.");
             }
         });
     }
-});
+
+
 		
 		
 </script>
