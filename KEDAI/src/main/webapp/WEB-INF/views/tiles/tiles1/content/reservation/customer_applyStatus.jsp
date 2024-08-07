@@ -87,10 +87,10 @@ a {text-decoration: none !important;} /* 페이지바의 a 태그에 밑줄 없�
 									<c:if test="${customer_applyStatus.accept_yon eq 1 && not empty customer_applyStatus.getin_time && empty customer_applyStatus.getout_time }">
 										<td align="center">탑승중</td>
 									</c:if>
-									<c:if test="${customer_applyStatus.accept_yon eq 1 && not empty customer_applyStatus.getin_time && not empty customer_applyStatus.getout_time && not empty customer_applyStatus.nonpayment_amount}">
+									<c:if test="${customer_applyStatus.accept_yon eq 1 && not empty customer_applyStatus.getin_time && not empty customer_applyStatus.getout_time && customer_applyStatus.nonpayment_amount ne 0}">
 										<td align="center">결제전</td>
 									</c:if>
-									<c:if test="${customer_applyStatus.accept_yon eq 1 && not empty customer_applyStatus.getin_time && not empty customer_applyStatus.getout_time && empty customer_applyStatus.nonpayment_amount && not empty customer_applyStatus.payment_amount}">
+									<c:if test="${customer_applyStatus.accept_yon eq 1 && not empty customer_applyStatus.getin_time && not empty customer_applyStatus.getout_time && customer_applyStatus.nonpayment_amount eq 0 && customer_applyStatus.payment_amount ne 0}">
 										<td align="center">결제완료</td>
 									</c:if>
                                 </tr>
