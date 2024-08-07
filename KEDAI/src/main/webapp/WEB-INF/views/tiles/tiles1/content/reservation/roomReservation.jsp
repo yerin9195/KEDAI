@@ -5,137 +5,149 @@
    String ctxPath = request.getContextPath();
 %>
 
- <style type="text/css">
-      .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-right: 15%;
-        }
+<style type="text/css">
+    .header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-right: 15%;
+    }
+    
+    .date-navigation { 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        padding-left: 45%;
+        font-size: 35px;
+    }
+    
+    .date-navigation button {
+        margin: 0 10px;
+        background-color: transparent;
+        border: none;
+        font-size: 35px;
+        cursor: pointer;
+    }
+    
+    table {         
+        border-collapse: collapse; 
+        width: 80%;
+    }
+    
+    th, td { 
+        border: 1px solid #ddd; 
+        text-align: center;
+    }
+    
+    .time-slot:hover {
+        background-color: yellow;
+        cursor: pointer;
+    }
 
-        .date-navigation { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            padding-left: 45%;
-            font-size: 35px;
-        }
+    .modal-dialog {
+        max-width: 800px;
+    }
+    
+    .modal-header, .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        .date-navigation button {
-            margin: 0 10px; /* 버튼과 텍스트 사이의 간격 추가 */
-            background-color: transparent; /* 배경색 제거 */
-            border: none; /* 버튼의 기본 테두리 제거 */
-            font-size: 35px; /* 버튼의 글자 크기 조정 */
-            cursor: pointer; /* 버튼에 커서 포인터 표시 */
-        }
+    .modal-body {
+        display: flex;
+        flex-direction: column;
+        width: auto;
+    }
 
-        table {         
-            border-collapse: collapse; 
-            width: 80%;
-        }
+    .form-group {
+        margin-bottom: 1rem;
+    }
 
-        th, td { 
-            border: 1px solid #ddd; 
-            text-align: center;
-        }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
 
-        th { background-color: #f2f2f2; }
-        
-        .time-slot:hover {
-            background-color: yellow;
-            cursor: pointer;
-        }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
 
-        /* 모달 스타일 */
-        .modal-dialog {
-            max-width: 800px; /* 원하는 너비로 설정 */
-        }
-        
-        .modal-header, .modal-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
 
-        .modal-body {
-            display: flex;
-            flex-direction: column;
-            width: auto;
-        }
+    .form-group input, .form-group textarea, .form-group select {
+        padding: 8px;
+    }
+    
+    .reserveBtn {
+        padding: 22px;
+        background-color: transparent;
+    }
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
+    .date-time-group {
+        display: flex;
+        align-items: center;
+    }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
+    .date-input {
+        margin-right: 10px;
+        flex: 1;
+    }
 
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+    .time-input {
+        margin-right: 10px;
+        width: 80px;
+        text-align: center;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
+    .checkbox-label {
+        display: inline-block;
+        margin-left: 10px;
+    }
 
-        .form-group input, .form-group textarea, .form-group select {
-            padding: 8px;
-            
-        }
-        
-        .reserveBtn {
-            padding: 22px;
-            background-color: transparent;
-        }
+    .reservee {
+        display: inline-block;
+        background-color: #e0e0e0;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
 
-        .date-time-group {
-            display: flex;
-            align-items: center;
-        }
+    .change-btn {
+        margin-left: 10px;
+        cursor: pointer;
+    }
+    
+    .highlighted {
+        background-color: blue !important;
+        color: white;
+    }
+    
+    #floorSelect {
+        margin-right: 10px;
+    }
 
-        .date-input {
-            margin-right: 10px;
-            flex: 1;
-        }
+    .search-button {
+        cursor: pointer;
+        font-size: 20px;
+        border: none;
+        background: none;
+        color: #007bff;
+    }
 
-        .time-input {
-            margin-right: 10px;
-            width: 80px; /* 시간 입력 필드의 크기 조정 */
-            text-align: center;
-        }
+    #buttonContainer {
+        display: none;
+        margin-left: 10px;
+    }
+</style>
 
-        .checkbox-label {
-            display: inline-block;
-            margin-left: 10px;
-        }
-
-        .reservee {
-            display: inline-block;
-            background-color: #e0e0e0;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-
-        .change-btn {
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        
-        .highlighted {
-		    background-color: blue !important;
-		    color: white; /* 텍스트 색상도 변경하여 가독성 향상 */
-		}
-
-    </style>
- 
  <script type="text/javascript">
  $(document).ready(function(){
 	showallsub();
@@ -366,7 +378,7 @@
 	        	 subroom = leftCell.text().trim();
         	 });
         	 
-        	 fetchReservations(subroom);
+        	 
         	 $.ajax({
         	        url: "<%= request.getContextPath() %>/roommain.kedai?roomMainSeq=" + selectedRoomMainSeq,
         	        type: "GET",
@@ -402,7 +414,11 @@
         	                    }
 
         	                    tableBody.append(row); // 시간 슬롯이 포함된 행을 추가
+        	                    
+        	                    
         	                });
+        	                
+        	                fetchReservations(subroom);
                         
         	        },
         	        error: function(request, status, error) {
@@ -502,20 +518,50 @@
 	    type: "GET",
 	    dataType: "json", // 반환되는 데이터 타입 (JSON 형식)
 	    success: function(json) {
-	        var options = "<option>전사 자산 목록</option>";
-	        for (var i = 0; i < json.length; i++) {
-	            options += "<option value='" + json[i].roomMainSeq + "'>" + json[i].roomMainName + "</option>";
-	        }
-	        $("#assetSelect").html(options); // id가 assetSelect인 select 태그에 옵션들을 추가
-	        
-	        
-	    },
-	    error: function(request, status, error) {
-	        alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-	    }
-	});
+	    	var assetOptions = "<option value=''>전체</option>";
+            for (var i = 0; i < json.length; i++) {
+                assetOptions += "<option value='" + json[i].roomMainSeq + "'>" + json[i].roomMainName + "</option>";
+            }
+            $("#assetSelect").html(assetOptions); // 자산 선택 드롭다운 업데이트
 
+            // 돋보기 버튼 동적으로 추가
+            var searchButtonHtml = '<button id="searchButton" class="search-button"><i class="fas fa-search"></i></button>';
+            $("#buttonContainer").html(searchButtonHtml);
 
+            // 자산 선택 드롭다운 변화 이벤트
+            $('#assetSelect').change(function() {
+                var selectedValue = $(this).val();
+                if (selectedValue) {
+                    $("#buttonContainer").show(); // 선택된 값이 있으면 버튼 보이기
+                    fetchReservations();
+                } else {
+                    $("#buttonContainer").hide(); // 전체가 선택되면 버튼 숨기기
+                }
+                
+            });
+
+            // 돋보기 버튼 클릭 이벤트
+            $('#searchButton').click(function() {
+                var selectedValue = $('#assetSelect').val();
+                if (selectedValue) {
+                    if (selectedValue === '') {
+                        alert("층을 선택해 주세요."); // 전체가 선택된 경우 경고 메시지
+                    } else {
+                        var imagePath = '<%= ctxPath %>/resources/images/room/' + selectedValue + '층 도면도.jpg';
+                        window.open(imagePath, '_blank'); // 새 탭에서 이미지 열기
+                    }
+                } else {
+                    alert("층을 선택해 주세요."); // 전체가 선택된 경우 경고 메시지
+                }
+            });
+	    
+        },
+        error: function(request, status, error) {
+            alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+        }
+    });
+	        
+	  
 
 	// 날짜 포맷팅 함수
 	function formatDate(date) {
@@ -705,9 +751,13 @@
 </div>
 <div style="width: 85%; background-color:grey;">
     <div class="assets">
+       <!-- 자산 선택 드롭다운 -->
         <select id="assetSelect">
-            <option>전사 자산 목록</option>
+            <!-- Ajax 호출 후 동적으로 추가됩니다 -->
         </select>
+        
+        <!-- 버튼을 동적으로 추가할 컨테이너 -->
+        <div id="buttonContainer"></div>
         <hr />
     </div>
 </div>
