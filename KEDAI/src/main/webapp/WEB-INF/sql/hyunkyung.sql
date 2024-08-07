@@ -1231,4 +1231,208 @@ SET approval_date = TO_DATE('2024-07-23', 'YYYY-MM-DD')
 WHERE approval_no = 1 AND level_no = 2;
 
 
+-----------------------------------------------------------------------
 
+------------- >>>>>>>> 일정관리(풀캘린더) 시작 <<<<<<<< -------------
+
+-- *** 캘린더 대분류(내캘린더, 사내캘린더  분류) ***
+create table tbl_calendar_large_category 
+(lgcatgono   number(3) not null      -- 캘린더 대분류 번호
+,lgcatgoname varchar2(50) not null   -- 캘린더 대분류 명
+,constraint PK_tbl_calendar_large_category primary key(lgcatgono)
+);
+-- Table TBL_CALENDAR_LARGE_CATEGORY이(가) 생성되었습니다.
+
+insert into tbl_calendar_large_category(lgcatgono, lgcatgoname)
+values(1, '내캘린더');
+
+insert into tbl_calendar_large_category(lgcatgono, lgcatgoname)
+values(2, '사내캘린더');
+
+commit;
+-- 커밋 완료.
+
+select * 
+from tbl_calendar_large_category;
+
+-- *** 캘린더 소분류 *** 
+-- (예: 내캘린더 중 점심약속, 내캘린더 중 저녁약속, 내캘린더 중 운동, 내캘린더 중 휴가, 내캘린더 중 여행, 내캘린더 중 출장 등등) 
+-- (예: 사내캘린더 중 플젝주제선정, 사내캘린더 중 플젝요구사항, 사내캘린더 중 DB모델링, 사내캘린더 중 플젝코딩, 사내캘린더 중 PPT작성, 사내캘린더 중 플젝발표 등등) 
+create table tbl_calendar_small_category 
+(smcatgono    number(8) not null      -- 캘린더 소분류 번호
+,fk_lgcatgono number(3) not null      -- 캘린더 대분류 번호
+,smcatgoname  varchar2(400) not null  -- 캘린더 소분류 명
+,fk_empid    varchar2(40) not null   -- 캘린더 소분류 작성자 유저아이디
+,constraint PK_tbl_calendar_small_category primary key(smcatgono)
+,constraint FK_small_category_fk_lgcatgono foreign key(fk_lgcatgono) 
+            references tbl_calendar_large_category(lgcatgono) on delete cascade
+,constraint FK_small_category_fk_userid foreign key(fk_empid) references tbl_employees(empid)            
+);
+-- Table TBL_CALENDAR_SMALL_CATEGORY이(가) 생성되었습니다.
+
+create sequence seq_smcatgono
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence SEQ_SMCATGONO이(가) 생성되었습니다.
+
+select *
+from tbl_calendar_small_category
+order by smcatgono desc;
+
+-- *** 캘린더 상세일정 *** 
+create table tbl_calendar_schedule 
+(scheduleno    number                 -- 일정관리 번호
+,cal_startdate     date                   -- 시작일자
+,cal_enddate       date                   -- 종료일자
+,cal_subject       varchar2(400)          -- 제목
+,cal_color         varchar2(50)           -- 색상
+,cal_place         varchar2(200)          -- 장소
+,cal_joinuser      varchar2(4000)         -- 공유자   
+,cal_content       varchar2(4000)         -- 내용   
+,fk_smcatgono  number(8)              -- 캘린더 소분류 번호
+,fk_lgcatgono  number(3)              -- 캘린더 대분류 번호
+,fk_empid     varchar2(40) not null  -- 캘린더 일정 작성자 유저아이디
+,constraint PK_schedule_scheduleno primary key(scheduleno)
+,constraint FK_schedule_fk_smcatgono foreign key(fk_smcatgono) 
+            references tbl_calendar_small_category(smcatgono) on delete cascade
+,constraint FK_schedule_fk_lgcatgono foreign key(fk_lgcatgono) 
+            references tbl_calendar_large_category(lgcatgono) on delete cascade   
+,constraint FK_schedule_fk_userid foreign key(fk_empid) references tbl_employees(empid) 
+);
+-- Table TBL_CALENDAR_SCHEDULE이(가) 생성되었습니다.
+
+create sequence seq_scheduleno
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence SEQ_SCHEDULENO이(가) 생성되었습니다.
+
+select *
+from tbl_calendar_schedule 
+order by scheduleno desc;
+
+-- 일정 상세 보기
+select SD.scheduleno
+     , to_char(SD.cal_startdate,'yyyy-mm-dd hh24:mi') as cal_startdate
+     , to_char(SD.cal_enddate,'yyyy-mm-dd hh24:mi') as cal_enddate  
+     , SD.cal_subject
+     , SD.cal_color
+     , nvl(SD.cal_place,'-') as cal_place
+     , nvl(SD.cal_joinuser,'공유자가 없습니다.') as cal_joinuser
+     , nvl(SD.cal_content,'') as cal_content
+     , SD.fk_smcatgono
+     , SD.fk_lgcatgono
+     , SD.fk_empid
+     , E.name
+     , SC.smcatgoname
+from tbl_calendar_schedule SD 
+JOIN tbl_employees E
+ON SD.fk_empid = E.empid
+JOIN tbl_calendar_small_category SC
+ON SD.fk_smcatgono = SC.smcatgono
+where SD.scheduleno = 21;
+
+-- 'leess' 은 휴면계정이기 때문에 동명이인인 'leesunsin' 추가하기
+insert into tbl_member(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday, coin, point, registerday, lastpwdchangedate, status, idle, gradelevel)  
+values('leesunsin', '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382', '이순신', '2IjrnBPpI++CfWQ7CQhjIw==', 'fCQoIgca24/q72dIoEVMzw==', '15864', '경기 군포시 오금로 15-17', '101동 202호', ' (금정동)', '1', '1995-10-04', 0, 0, default, default, default, default, default);
+-- 1 행 이(가) 삽입되었습니다.
+
+commit;
+-- 커밋 완료.
+
+select *
+from tbl_member
+where name = '이순신';
+
+------------- >>>>>>>> 일정관리(풀캘린더) 끝 <<<<<<<< -------------
+
+-----------------------------------------------------------------------
+
+select *
+from tbl_employees
+
+select scheduleno, cal_startdate, cal_enddate, cal_subject, cal_color, cal_place, cal_joinuser, cal_content, fk_smcatgono, fk_lgcatgono, fk_empid 
+		from tbl_calendar_schedule
+		where fk_empid = '2' OR
+		fk_lgcatgono = 2 OR
+		(fk_lgcatgono != 2 AND lower(cal_joinuser) like '%'|| lower('2') ||'%')
+		order by scheduleno asc
+        
+select smcatgono, fk_lgcatgono, smcatgoname
+		from tbl_calendar_small_category
+		where fk_lgcatgono = 1
+		and fk_empid = '2011300-001'
+		order by smcatgono asc
+
+
+desc tbl_calendar_schedule;
+
+scheduleno    NOT NULL NUMBER         
+cal_startdate          DATE           
+cal_enddate            DATE           
+cal_subject            VARCHAR2(400)  
+cal_color              VARCHAR2(50)   
+cal_place              VARCHAR2(200)  
+cal_joinuser           VARCHAR2(4000) 
+cal_content            VARCHAR2(4000) 
+fk_smcatgono           NUMBER(8)      
+fk_lgcatgono           NUMBER(3)      
+fk_empid      NOT NULL VARCHAR2(40)   
+
+select *
+from tbl_calendar_small_category;
+
+insert into tbl_calendar_schedule(scheduleno, cal_startdate, cal_enddate, cal_subject, cal_color, cal_place, cal_joinuser, cal_content, fk_smcatgono, fk_lgcatgono, fk_empid) 
+values(seq_scheduleno.nextval, to_date('20240801100000', 'yyyymmddhh24miss'), to_date('20240801105000', 'yyyymmddhh24miss'), '제목', '#000', '장소', '2015200-002', '내용', '4', '1', '2020200-006')  
+
+rollback;
+
+
+select *
+from tbl_employees
+
+
+
+SELECT rno, doc_no, fk_empid, doc_status, doc_subject, doc_content, created_date, doctype_name,
+       		isAttachment, NAME, dept_name, fk_doctype_code
+		FROM (
+    		SELECT rownum AS rno,
+           		approval_no, fk_doc_no as doc_no, fk_empid, status, level_no, doc_subject, created_date, doctype_name,
+           		isAttachment, doc_status, NAME, writer, dept_name, doc_content, fk_doctype_code
+    		FROM (
+        		SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+               		D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+               		CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, D.doc_status, NAME, dept_name, D.fk_empid AS writer
+               		, doc_content, fk_doctype_code
+        		FROM tbl_approval A1
+        		JOIN tbl_doc D 
+        		ON D.doc_no = A1.fk_doc_no
+        		JOIN tbl_doctype T 
+        		ON T.doctype_code = D.fk_doctype_code
+        		LEFT JOIN (
+            		SELECT fk_doc_no
+            		FROM tbl_doc_file
+            		GROUP BY fk_doc_no
+        		) F ON F.fk_doc_no = D.doc_no
+        		JOIN tbl_employees E
+        		ON E.empid = D.fk_empid
+        		JOIN tbl_dept DP
+        		ON E.fk_dept_code = DP.dept_code
+        		WHERE A1.FK_EMPID = '2012100-001'
+                
+                	ORDER BY D.created_date DESC, D.doc_no DESC
+			) V
+		)T2
+		WHERE rno between #{startRno} and #{endRno}
+                
+        
+        select *
+        from tbl_approval
+        where fk_empid = '2012100-001'

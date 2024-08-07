@@ -7,6 +7,15 @@
 
 <style type="text/css">
 
+.nav-tabs .nav-link.active {
+    background-color: #2c4459; /* 활성화된 탭의 배경색 변경 */
+    color: white; /* 활성화된 탭의 글자색 변경 */
+    border-bottom-color: transparent; /* 활성화된 탭의 하단 선 제거 */
+}
+.nav-tabs .nav-item {
+    text-align: center;
+}
+
 </style>
 
 
@@ -72,10 +81,28 @@ function goSearch(){
 </script>
 
 
+<div style="border : 1px red solid;  padding: 2% 0; display:flex;">
+	<c:if test="${(sessionScope.loginuser).fk_dept_code != null}">
+		<ul class="nav nav-tabs" style="margin-bottom:0;">
+		    <li class="nav-item">
+		        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">팀 문서함</a>
+		    </li>
+		    <li class="nav-item">
+		        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Status.kedai">나의 결재함</a>
+		    </li>
+		    <li class="nav-item">
+		        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/approval/showMyDocList.kedai">나의 상신 문서</a>
+		    </li>
+		    <li class="nav-item">
+		        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">모든 문서함</a>
+		    </li>
+		</ul>
+	</c:if>
+</div>
 
 
 <div id="around_docList">    
-<div id="title" style="margin: 1.5% 1%; font-size: 15pt;"> 나의 기안 문서</div>
+<div id="title" style="margin: 6px; font-size: 15pt;"> 나의 기안 문서</div>
 
 	<form name="searchFrm" style="margin-top: 20px;">
     	<select name="searchType" style="height: 26px;">
