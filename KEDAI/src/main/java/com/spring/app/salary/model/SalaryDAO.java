@@ -14,4 +14,8 @@ public interface SalaryDAO {
 	//	급여 전체 계산
 	int salaryCal(SalaryVO salaryvo);
 
+	MemberVO getEmployeeById(String employeeId);
+
+	List<SalaryVO> getSalaryDetailsById(String empid, String yearMonth);
+
 }

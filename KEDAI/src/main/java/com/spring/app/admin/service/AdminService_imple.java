@@ -76,18 +76,52 @@ public class AdminService_imple implements AdminService {
 	public String genderCntSpecialDeptname(String dept_name) {
 		List<Map<String, String>> genderPercentageList = dao.genderCntSpecialDeptname(dept_name);
 		
-		JsonArray jsonArr = new JsonArray();
+		JsonArray jsonArr = new JsonArray(); // []
 		
 		if(genderPercentageList != null && genderPercentageList.size() > 0) {
 			for(Map<String, String> map : genderPercentageList) {
-				JsonObject jsonObj = new JsonObject();
+				JsonObject jsonObj = new JsonObject(); // {}
 				jsonObj.addProperty("gender", map.get("gender"));
 				jsonObj.addProperty("cnt", map.get("cnt"));
 				jsonObj.addProperty("percentage", map.get("percentage"));
 			
-				jsonArr.add(jsonObj);
+				jsonArr.add(jsonObj); 
 			}  // end of for ----------
 		}
+		
+		Gson gson = new Gson();
+		return gson.toJson(jsonArr);
+	}
+	
+	// 입사년도별 성별 인원통계
+	@Override
+	public String empCntByGenderHireYear() {
+		List<Map<String, String>> genderHireYearList = dao.empCntByGenderHireYear();
+		
+		JsonArray jsonArr = new JsonArray(); // []
+		
+		for(Map<String, String> map : genderHireYearList) {
+			JsonObject jsonObj = new JsonObject(); // {}
+			jsonObj.addProperty("gender", map.get("gender"));
+			jsonObj.addProperty("Y2010", map.get("Y2010"));
+			jsonObj.addProperty("Y2011", map.get("Y2011"));
+			jsonObj.addProperty("Y2012", map.get("Y2012"));
+			jsonObj.addProperty("Y2013", map.get("Y2013"));
+			jsonObj.addProperty("Y2014", map.get("Y2014"));
+			jsonObj.addProperty("Y2015", map.get("Y2015"));
+			jsonObj.addProperty("Y2016", map.get("Y2016"));
+			jsonObj.addProperty("Y2017", map.get("Y2017"));
+			jsonObj.addProperty("Y2018", map.get("Y2018"));
+			jsonObj.addProperty("Y2019", map.get("Y2019"));
+			jsonObj.addProperty("Y2020", map.get("Y2020"));
+			jsonObj.addProperty("Y2021", map.get("Y2021"));
+			jsonObj.addProperty("Y2022", map.get("Y2022"));
+			jsonObj.addProperty("Y2023", map.get("Y2023"));
+			jsonObj.addProperty("Y2024", map.get("Y2024"));
+			jsonObj.addProperty("totalCount", map.get("totalCount"));
+			
+			jsonArr.add(jsonObj); 
+		} // end of for ----------
 		
 		Gson gson = new Gson();
 		return gson.toJson(jsonArr);
