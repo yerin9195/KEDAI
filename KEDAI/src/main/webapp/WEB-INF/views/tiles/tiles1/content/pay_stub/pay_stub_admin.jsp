@@ -777,7 +777,6 @@
 <div class="header">
         <h1>급여명세서</h1>
         <div class="search-bar">
-            <input type="text" id="search" placeholder="내용 검색">
             <button onclick="searchTable()">검색</button>
         </div>
     </div>
@@ -799,7 +798,7 @@
     </table>
     <br>
     <button onclick="addNewRow()">신규</button>
-    <input type="text" id="yearMonth" name="yearMonth">
+    <input type="hidden" id="yearMonth" name="yearMonth">
 	
 	<!-- 모달1 -->
 <div id="modal1" class="modal fade" tabindex="-1" role="dialog">
