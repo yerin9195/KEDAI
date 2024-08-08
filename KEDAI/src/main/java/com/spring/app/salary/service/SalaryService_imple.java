@@ -12,7 +12,7 @@ import com.spring.app.domain.SalaryVO;
 
 import com.spring.app.salary.model.SalaryDAO;
 @Service
-public class SalaryService_imple implements SalaryService{
+public abstract class SalaryService_imple implements SalaryService{
 	
 	@Autowired			
 	private SalaryDAO dao;	
