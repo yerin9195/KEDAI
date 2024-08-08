@@ -205,7 +205,7 @@
         form.action = "<%= ctxPath%>/loginEnd.kedai";
         form.method = "post";
         form.submit();
-   }
+   } // ------
 </script>   
 </head>
 <body>
