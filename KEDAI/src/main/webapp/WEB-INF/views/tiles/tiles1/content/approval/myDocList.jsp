@@ -136,7 +136,7 @@ function goSearch(){
   					<c:if test="${status.index <= 9}"> <!-- 10개까지만 보이도록 설정 -->
    						<tr>
    							<td align="center">
-							${(requestScope.totalCount) - (requestScope.currentShowPageNo - 1 ) * (requestScope.sizePerPage) - (status.index)}</td>
+							${(requestScope.totalCount)-(requestScope.currentShowPageNo-1)*(requestScope.sizePerPage)-(status.index)}</td>
 													
 						<%-- >>> 페이징 처리시 보여주는 순번 공식 <<<
 					                     데이터개수 - (페이지번호 - 1) * 1페이지당보여줄개수 - 인덱스번호 => 순번 

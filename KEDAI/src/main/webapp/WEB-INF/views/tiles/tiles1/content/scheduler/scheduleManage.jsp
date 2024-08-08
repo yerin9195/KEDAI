@@ -40,10 +40,20 @@ div#calInfo_right{
     cursor: pointer;
 } 
 
-div.fc-scrollgrid-sync-inner a {
-	color: #000;
-}
 
+
+.fc-scrollgrid-sync-inner a,
+	.fc-scrollgrid-sync-inner a:hover,
+	.fc-daygrid-day-top a, 
+	.fc-daygrid-day-top a:hover,
+	.fc-daygrid ,
+	.fc-daygrid-event-harness a,
+	a.fc-daygrid-event{
+	    color: #000;
+	    text-decoration: none;
+	    background-color: transparent;
+	    cursor: pointer;
+	} 
 
 .fc-sat { color: #0000FF; }    /* 토요일 */
 .fc-sun { color: #FF0000; }    /* 일요일 */
@@ -78,6 +88,7 @@ div.fc-button-group button{
 	padding:0;
 	margin:0;
 }
+
 
 </style>
 
@@ -774,6 +785,7 @@ function goSearch(){
 		<h3>일정 관리</h3>
 		
 		<form id="searchScheduleFrm" name="searchScheduleFrm">
+		<%-- 
 			<div>
 				<input type="text" id="fromDate" name="cal_startdate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp;-&nbsp;&nbsp; 
 				<input type="text" id="toDate" name="cal_enddate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp;
@@ -793,6 +805,8 @@ function goSearch(){
 				<input type="hidden" name="empid" value="${sessionScope.loginuser.empid}"/>
 				<button type="button" class="btn_normal" style="display: inline-block;" onclick="goSearch()">검색</button>
 			</div>
+			--%>
+			<input type="hidden" name="empid" value="${sessionScope.loginuser.empid}"/>
 		</form>
 	</div>
 	

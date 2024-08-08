@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.spring.app.domain.ApprovalVO;
+import com.spring.app.domain.DayoffVO;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
 import com.spring.app.domain.DocfileVO;
@@ -130,6 +131,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		int n = sqlsession.selectOne("approval.getTotalMyDocCount", paraMap);
 		return n;
 	}
+	
+	// 나의 결재 예정 문서에서 총 페이지수 가져오기
+	@Override
+	public int getTotalMyNowApprovalCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("approval.getTotalMyNowApprovalCount", paraMap);
+		return n;
+	}
 
 	// 나의 결재 문서에서 총 페이지수 가져오기
 	@Override
@@ -142,6 +150,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	@Override
 	public int getTotalTeamCount(Map<String, String> paraMap) {
 		int n = sqlsession.selectOne("approval.getTotalTeamCount", paraMap);
+		return n;
+	}
+
+	// 전체 문서 총 페이지수
+	@Override
+	public int getTotalAllCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("approval.getTotalAllCount", paraMap);
 		return n;
 	}
 
@@ -159,12 +174,25 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return myApprovalListSearch;
 	}
 
+	// 나의 모든 결재 문서 가져오기
+	@Override
+	public List<DocVO> allmyAppListSearch(Map<String, String> paraMap) {
+		List<DocVO> allmyAppListSearch = sqlsession.selectList("approval.allmyAppListSearch", paraMap);
+		return allmyAppListSearch;
+	}
 
 	// 모든 팀 문서 가져오기
 	@Override
 	public List<DocVO> allteamDocListSearch(Map<String, String> paraMap) {
 		List<DocVO> allteamDocListSearch = sqlsession.selectList("approval.allteamDocListSearch", paraMap);
 		return allteamDocListSearch;
+	}
+	
+	// 관리자가 모든 서류 보기
+	@Override
+	public List<DocVO> allDocListSearch(Map<String, String> paraMap) {
+		List<DocVO> allDocListSearch = sqlsession.selectList("approval.allDocListSearch", paraMap);
+		return allDocListSearch;
 	}
 	
 	// 나의 기안 문서에서 문서 한 개 보기
@@ -179,6 +207,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	public MinutesVO getOneMinutes(Map<String, String> paraMap) {
 		MinutesVO getOneMinutes = sqlsession.selectOne("approval.getOneMinutes", paraMap);
 		return getOneMinutes;
+	}
+	
+	// 연차신청 서류 정보 가져오기
+	@Override
+	public DayoffVO getOneDayoff(Map<String, String> paraMap) {
+		DayoffVO getOneDayoff = sqlsession.selectOne("approval.getOneDayoff", paraMap);
+		return getOneDayoff;
 	}
 
 	// 결재라인 정보 가져오기
@@ -201,6 +236,33 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		DocfileVO getDocfileOne = sqlsession.selectOne("approval.getDocfileOne", fileNo);
 		return getDocfileOne;
 	}
+
+
+	// 결재하기 눌렀을 떄 doc테이블 업데이트 하기
+	@Override
+	public void updateDocOk(Map<String, String> paraMap) {
+		sqlsession.update("approval.updateDocOk", paraMap);
+	}
+
+	// 결재하기 눌렀을 떄 결재 테이블 업데이트 하기
+	@Override
+	public void updateApprovalOk(Map<String, String> paraMap) {
+		sqlsession.update("approval.updateApprovalOk", paraMap);
+	}
+
+	// 반려하기 눌렀을 떄 doc테이블 업데이트 하기
+	@Override
+	public void updateDocReject(Map<String, String> paraMap) {
+		sqlsession.update("approval.updateDocReject", paraMap);
+	}
+
+	// 반려하기 눌렀을 떄 결재 테이블 업데이트 하기
+	@Override
+	public void updateApprovalReject(Map<String, String> paraMap) {
+		sqlsession.update("approval.updateApprovalReject", paraMap);
+	}
+
+
 
 
 

@@ -16,6 +16,10 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <style type="text/css">
+a{
+	color:#fff;
+}
+
 div#title {
 	font-size: 27px;
 	margin: 3% 0 1% 0;
@@ -897,7 +901,7 @@ span.clear{clear: both;}
 			if(isOk){
 				$("table#approval").append(v_html);
 				$("#selectLineModal").modal("hide"); // 모달 닫기
-				let lineNumHtml = `<input type="hidden" name="lineNumber" value="\${isChecked}">`;
+				let lineNumHtml = `<input type="text" name="lineNumber" value="\${isChecked}">`;
 				$(".htmlAdd").html(lineNumHtml);
 			}		
 		}
@@ -1050,7 +1054,7 @@ span.clear{clear: both;}
 		</table>
 		
 		<div class="htmlAdd">
-			<input type="hidden" name="fk_doctype_code" value="101"/>
+			
 		</div>
 		
 	</div>
@@ -1089,7 +1093,7 @@ span.clear{clear: both;}
 				<button type="button" class="btn btn-primary btn-sm"
 					onclick="javascript:history.back()">취소</button>
 			</div>
-			<input type="hidden" name="fk_doctype_code" value="101"/>
+			<input type="hidden" name="fk_doctype_code" value="100"/>
 		
 		</div>
 </form>

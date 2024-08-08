@@ -199,26 +199,45 @@ COMMENT ON COLUMN tbl_doc.doc_org_filename IS '기안자가 올린 첨부 파일
 COMMENT ON COLUMN tbl_doc.doc_filename IS 'WAS에 저장하는 첨부 파일명';
 COMMENT ON COLUMN tbl_doc.doc_filesize IS '파일 사이즈';
 
+select *
+from tbl_dayoff
+
 --연차 신청서
 create table tbl_dayoff
 (dayoff_no        NUMBER         not null    -- 신청서시퀀스
 ,fk_doc_no        VARCHAR2(30)   not null    -- 기안문서번호
-,dayoff_type      NUMBER         not null    -- 연차종류 
+,dayoff_type      NUMBER         not null    -- 연차종류(반차휴가)
 ,startdate        DATE           not null    -- 휴가시작일
-,findate          DATE           not null    -- 휴가종료일
+,enddate          DATE           not null    -- 휴가종료일
+,start_half       NUMBER                     -- 휴가시작일반차(만약하루만연차일경우여기에반차가생김)0미해당1오전2오후
+,end_half         NUMBER                     -- 휴가종료일반차0미해당1오전2오후
 ,reason           VARCHAR2(50)   not null    -- 연차사유
 
-,constraint PK_tbl_dayoff_dayoff_no primary key(doc_no)
+,constraint PK_tbl_dayoff_dayoff_no primary key(dayoff_no)
 ,constraint FK_tbl_dayoff_fk_doc_no foreign key(fk_doc_no) references tbl_doc(doc_no)
 );
 
+ALTER TABLE tbl_dayoff DROP COLUMN reason;
 -- 연차 신청서 코멘트
 COMMENT ON COLUMN tbl_dayoff.dayoff_no IS '연차 신청서 시퀀스(primary key)'; --Comment이(가) 생성되었습니다.
-COMMENT ON COLUMN tbl_doc.fk_doc_no IS '기안 문서 번호  references tbl_doc(doc_no)';
-COMMENT ON COLUMN tbl_doc.dayoff_type IS '연차종류 '; -- 번호는 아직 미정..
-COMMENT ON COLUMN tbl_doc.startdate IS '휴가시작일 '; 
-COMMENT ON COLUMN tbl_doc.findate IS '휴가종료일 '; 
-COMMENT ON COLUMN tbl_doc.reason IS '연차사유 '; 
+COMMENT ON COLUMN tbl_dayoff.fk_doc_no IS '기안 문서 번호  references tbl_doc(doc_no)';
+COMMENT ON COLUMN tbl_dayoff.dayoff_type IS '연차종류 '; -- 번호는 아직 미정..
+COMMENT ON COLUMN tbl_dayoff.startdate IS '휴가시작일 '; 
+COMMENT ON COLUMN tbl_dayoff.enddate IS '휴가종료일 '; 
+COMMENT ON COLUMN tbl_dayoff.reason IS '연차사유 '; 
+
+create sequence dayoff_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+commit;
+
+insert into tbl_dayoff(dayoff_no, fk_doc_no, startdate, enddate, start_half, end_half)
+values( dayoff_noSeq.nextval, #{fk_doc_no}, #{startdate}, #{enddate}, #{start_am_half_day}, #{end_half})
 
 --회의록(24.07.03 생성완료)
 create table tbl_minutes
@@ -1463,4 +1482,7 @@ BEGIN
 END;
 
 commit;
+
+
+
 

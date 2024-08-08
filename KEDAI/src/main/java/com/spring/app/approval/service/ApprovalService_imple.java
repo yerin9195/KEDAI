@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.app.approval.model.ApprovalDAO;
 import com.spring.app.domain.ApprovalVO;
+import com.spring.app.domain.DayoffVO;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
 import com.spring.app.domain.DocfileVO;
@@ -158,6 +159,13 @@ public class ApprovalService_imple implements ApprovalService {
 		int n = dao.getTotalTeamCount(paraMap);
 		return n;
 	}
+
+	// 전체 문서 총 페이지수
+	@Override
+	public int getTotalAllCount(Map<String, String> paraMap) {
+		int n = dao.getTotalAllCount(paraMap);
+		return n;
+	}
 	
 	// 나의 모든 기안문서 가져오기
 	@Override
@@ -187,6 +195,13 @@ public class ApprovalService_imple implements ApprovalService {
 		return allteamDocListSearch;
 	}
 
+	// 관리자가 모든 서류 보기
+	@Override
+	public List<DocVO> allDocListSearch(Map<String, String> paraMap) {
+		List<DocVO> allDocListSearch = dao.allDocListSearch(paraMap);
+		return allDocListSearch;
+	}
+
 	// 나의 기안 문서에서 문서 한 개 보기(공통부분 + 결재라인 + 문서종류별 내용)
 	@Override
 	public DocVO getOneDoc(Map<String, String> paraMap) {
@@ -199,7 +214,10 @@ public class ApprovalService_imple implements ApprovalService {
 				if(("fk_doctype_code") != null) {
 					// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
 					if("100".equals(paraMap.get("fk_doctype_code"))) {
-						
+						DayoffVO dayoffvo = dao.getOneDayoff(paraMap);
+						if(dayoffvo != null) {
+							docvo.setDayoffvo(dayoffvo);
+						}
 					}
 					else if("101".equals(paraMap.get("fk_doctype_code"))) {
 						MinutesVO minutesvo = dao.getOneMinutes(paraMap);
@@ -246,7 +264,5 @@ public class ApprovalService_imple implements ApprovalService {
 		dao.updateApprovalReject(paraMap); // tbl_approval업데이트
 		dao.updateDocReject(paraMap); // tbl_doc업데이트
 	}
-
-
 
 }

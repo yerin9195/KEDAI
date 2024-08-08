@@ -131,7 +131,7 @@ div.col-md-6 {
         <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/approval/showMyApprovalList.kedai">나의 결재함</a>
     </li>
      <li class="nav-item">
-        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/allDocList.kedai">모든 문서함</a>
+        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/approval/allDocList.kedai">모든 문서함</a>
     </li>
 </ul>
 </c:if>

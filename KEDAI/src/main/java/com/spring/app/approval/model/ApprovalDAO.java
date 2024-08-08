@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.spring.app.domain.ApprovalVO;
+import com.spring.app.domain.DayoffVO;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
 import com.spring.app.domain.DocfileVO;
@@ -65,6 +66,9 @@ public interface ApprovalDAO {
 	// 팀 문서 총 페이지수
 	int getTotalTeamCount(Map<String, String> paraMap);
 	
+	// 전체 문서 총 페이지수
+	int getTotalAllCount(Map<String, String> paraMap);
+	
 	// 나의 모든 기안문서 가져오기
 	List<Map<String, String>> myDocListSearch(Map<String, String> paraMap);
 	
@@ -77,11 +81,17 @@ public interface ApprovalDAO {
 	// 모든 팀 문서 가져오기
 	List<DocVO> allteamDocListSearch(Map<String, String> paraMap);
 	
+	// 관리자가 모든 서류 보기
+	List<DocVO> allDocListSearch(Map<String, String> paraMap);
+	
 	// 나의 기안 문서에서 문서 한 개 보기
 	DocVO getOneDocCommon(Map<String, String> paraMap);
 
 	// 회의록 문서 한 개 보기
 	MinutesVO getOneMinutes(Map<String, String> paraMap);
+	
+	// 연차신청서 문서 한 개 보기
+	DayoffVO getOneDayoff(Map<String, String> paraMap);
 	
 	// 결재라인 정보 가져오기
 	List<ApprovalVO> getApprovalList(Map<String, String> paraMap);
@@ -103,6 +113,9 @@ public interface ApprovalDAO {
 
 	// 반려하기 눌렀을 떄 결재 테이블 업데이트 하기
 	void updateApprovalReject(Map<String, String> paraMap);
+
+
+
 
 
 

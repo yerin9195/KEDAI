@@ -50,6 +50,9 @@ public interface ApprovalService {
 	
 	// 팀 문서 총 페이지수
 	int getTotalTeamCount(Map<String, String> paraMap);
+	
+	// 팀 문서 총 페이지수
+	int getTotalAllCount(Map<String, String> paraMap);
 
 	// 나의 모든 기안문서 가져오기
 	List<Map<String, String>> myDocListSearch(Map<String, String> paraMap);
@@ -62,6 +65,9 @@ public interface ApprovalService {
 	
 	// 모든 팀 문서 가져오기
 	List<DocVO> allteamDocListSearch(Map<String, String> paraMap);
+	
+	// 관리자가 모든 서류 보기
+	List<DocVO> allDocListSearch(Map<String, String> paraMap);
 
 	// 나의 기안 문서에서 문서 한 개 보기
 	DocVO getOneDoc(Map<String, String> paraMap);
@@ -77,6 +83,8 @@ public interface ApprovalService {
 
 	// 반려하기 눌렀을 떄 결재, doc테이블 업데이트 하기
 	void updateDocApprovalReject(Map<String, String> paraMap);
+
+
 
 
 
