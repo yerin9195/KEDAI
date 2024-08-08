@@ -353,7 +353,7 @@ public class CompanyController {
 		
 		
         mav.addObject("partnerList", partnerList);
-		System.out.println("");
+		// System.out.println("");
         // 검색 시 검색조건 및 검색어 값 유지시키기	
 		if("partner_name".equals(searchType) ||
 		   "partner_type".equals(searchType) ||
