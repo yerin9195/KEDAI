@@ -143,8 +143,8 @@ function request_payment(index, pf_empid, pf_res_num, nickname_applicant, email_
     console.log("nickname_applicant: ", nickname_applicant);
     console.log("email_applicant: ", email_applicant);
     console.log("nonpayment_amount: ", nonpayment_amount);
-    var formattedEmailApplicant = parseInt(email_applicant);
-    
+    //var formattedEmailApplicant = parseInt(email_applicant);
+    frmnonpayment_amount = Math.floor(nonpayment_amount);
     $.ajax({
         url: "<%=ctxPath%>/request_payment_owner.kedai",
         type: 'GET',
@@ -152,8 +152,8 @@ function request_payment(index, pf_empid, pf_res_num, nickname_applicant, email_
             pf_empid: pf_empid,
             pf_res_num: pf_res_num,
             nickname_applicant: nickname_applicant,
-            email_applicant: formattedEmailApplicant,
-            nonpayment_amount: nonpayment_amount
+            email_applicant: email_applicant,
+            nonpayment_amount: frmnonpayment_amount
         },
         success: function(response) {
             // 메일 전송이 성공한 경우 사용자에게 알림을 표시합니다.
@@ -274,7 +274,7 @@ function request_payment(index, pf_empid, pf_res_num, nickname_applicant, email_
 									<c:if test="${owner_carShare.settled_amount eq 0}">
 									    <td align="center"> </td>
 									</c:if>
-									<c:if test="${owner_carShare.settled_amount ne 0}">
+									<c:if test="${owner_carShare.settled_amount ne 0 && owner_carShare.payment_amount eq 0}">
 									    <td align="center">
 										    <button type="button" style="background-color:white;" 
 										        onclick="request_payment('${status.index}', '${owner_carShare.pf_empid}', '${owner_carShare.pf_res_num}', '${owner_carShare.nickname_applicant}', '${owner_carShare.email_applicant}', '${owner_carShare.nonpayment_amount}')">
@@ -282,7 +282,11 @@ function request_payment(index, pf_empid, pf_res_num, nickname_applicant, email_
 										    </button>
 										</td>
 									</c:if>
-                                
+                                	<c:if test="${owner_carShare.settled_amount ne 0 && owner_carShare.payment_amount ne 0}">
+									    <td align="center">
+										    결제완료
+										</td>
+									</c:if>
                                 </tr>
                             </c:forEach>
                         </c:if>

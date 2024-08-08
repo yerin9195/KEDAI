@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -54,8 +55,6 @@ public class MemberController {
 
 		return "login";
 	}
-	
-	// 로그인시 기기 정보 파악하기
 	
 	@GetMapping("/index.kedai")
 	public ModelAndView index(ModelAndView mav) {
@@ -129,8 +128,7 @@ public class MemberController {
         return mav; // Unknown Device 페이지
     }
     
-
-    
+	
 	// 로그아웃 처리하기
 	@GetMapping("/logout.kedai")
 	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {

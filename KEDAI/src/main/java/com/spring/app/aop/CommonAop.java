@@ -145,7 +145,7 @@ public class CommonAop {
 			
 			if(n == 1) {
 				message = "포인트 결제가 정상적으로 처리되었습니다.";
-				loginuser.setPoint(loginuser.getPoint());
+				loginuser.setPoint(loginuser.getPoint()-100);
 			}
 		}
 		

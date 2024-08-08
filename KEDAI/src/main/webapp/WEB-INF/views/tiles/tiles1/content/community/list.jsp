@@ -7,6 +7,9 @@
 	//     /KEDAI
 %>
 <style type="text/css">
+	.subject:hover {
+		color: #e68c0e;
+	}
 	.subject div {
 		height: 30px;
 		white-space: nowrap;
@@ -201,7 +204,7 @@
 		      					데이터개수-(페이지번호-1)*1페이지당보여줄개수-인덱스번호 => 순번
 		      				--%>
 		      				<td align="center" width="10%" style="vertical-align: middle; align-items: center;"><span style="display: inline-block; width: 60px; height: 60px; border-radius: 50%; overflow: hidden;"><img style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/files/employees/${cvo.imgfilename}" /></span><span style="display: block;">${cvo.nickname}</span></td>
-		      				<td style="vertical-align: middle;" width="50%">
+		      				<td style="vertical-align: middle;">
 		      					<%-- === 댓글쓰기 및 파일첨부가 있는 게시판 시작 === --%>
 		      					<%-- 첨부파일이 없는 경우 --%>
 		      					<c:if test="${empty cvo.fk_community_seq}">

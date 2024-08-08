@@ -225,7 +225,7 @@ public class GoogleMail_owner {
 					   "        <div>" + 
 					   "            <div style='color: #2c4459; font-size: 50px; font-weight: bold;'>KEDAI</div>" + 
 					   "            <div style='border-top: 3px solid #2c4459; text-align: center; padding-top: 5%;'>" + 
-					   "                <h2 style='color: #e68c0e;'>이용금액 :" + nonpayment_amount + "</h2>" + 
+					   "                <h2 style='color: #e68c0e;'>이용금액 :" + nonpayment_amount + "point</h2>" + 
 					   "                <h4 style='font-weight: 100;'>" + 
 					   "                    안녕하세요 <span style='font-weight: bold;'>"+nickname+"</span> 님,<br>" + owner_nickname +"님이 미결제된 '"+ nonpayment_amount + "' point 정산을 요청하셨습니다. <br> 빠른 시일내에 정산 부탁드립니다. 감사합니다."+
 					   "                </h4>" + 

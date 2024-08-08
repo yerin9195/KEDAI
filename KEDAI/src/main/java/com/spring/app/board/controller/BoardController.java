@@ -136,14 +136,10 @@ public class BoardController {
 		}
 		
 		if(n == 1) {
-			mav.addObject("message", "글 등록이 성공되었습니다.");
-			mav.addObject("loc", mrequest.getContextPath()+"/board/list.kedai"); 
-			
-			mav.setViewName("msg");
+			mav.setViewName("redirect:/board/list.kedai");
 		}
 		else {
 			mav.setViewName("tiles1/error.tiles"); 
-			return mav;
 		}
 		
 		paraMap.put("empid", bvo.getFk_empid());

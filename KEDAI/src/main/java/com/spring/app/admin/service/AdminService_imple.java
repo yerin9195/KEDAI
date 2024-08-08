@@ -102,6 +102,7 @@ public class AdminService_imple implements AdminService {
 		
 		for(Map<String, String> map : genderHireYearList) {
 			JsonObject jsonObj = new JsonObject(); // {}
+			
 			jsonObj.addProperty("gender", map.get("gender"));
 			jsonObj.addProperty("Y2010", map.get("Y2010"));
 			jsonObj.addProperty("Y2011", map.get("Y2011"));

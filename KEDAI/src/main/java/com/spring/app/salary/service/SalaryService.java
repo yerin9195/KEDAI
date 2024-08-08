@@ -14,13 +14,5 @@ public interface SalaryService {
 	//	급여명세서 계산
 	int salaryCal(SalaryVO salaryvo);
 
-	MemberVO getEmployeeById(String employeeId);
-
-	List<SalaryVO> getSalaryDetailsById(String yearMonth, String empid);
-
-	
-
-	
-
 
 }

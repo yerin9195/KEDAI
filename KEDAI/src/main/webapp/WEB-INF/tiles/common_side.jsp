@@ -66,18 +66,18 @@
 	  	color: #fff;
 	}
 	.menu,
-	.menu a.side_color,
-	.menu a.side_color:visited {
+	.menu a,
+	.menu a:visited {
 	  	text-decoration: none !important;
 		position: relative;
 	}
-	.menu a.side_color {
+	.menu a {
 	  	display: block;
 	  	white-space: nowrap;
 	  	padding: 1em;
 	  	font-size: 16px;
 	}
-	.menu a.side_color:hover {
+	.menu a:hover {
 		color: #e68c0e;
 	}
 	.menu-dropdown li .icon {
@@ -167,54 +167,54 @@
 		<div class="overflow-container">
 			<ul class="menu-dropdown">
 				<li>
-					<a class="side_color" href="<%=ctxPath%>/approval/main.kedai">전자결재</a>
+					<a href="<%=ctxPath%>/approval/main.kedai">전자결재</a>
 					<span class="icon"><i class="fa-regular fa-pen-to-square"></i></span>
 				</li>
 				<li>
 					<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
-						<a class="side_color" href="<%=ctxPath%>/pay_stub_admin.kedai">급여명세서</a>
+						<a href="<%=ctxPath%>/pay_stub_admin.kedai">급여명세서</a>
 						<span class="icon"><i class="fa-solid fa-comment-dollar"></i></span>
 					</c:if>
 					<c:if test="${(sessionScope.loginuser).fk_job_code ne '1'}">
-						<a class="side_color" href="<%=ctxPath%>/pay_stub.kedai">급여명세서</a>
+						<a href="<%=ctxPath%>/pay_stub.kedai">급여명세서</a>
 						<span class="icon"><i class="fa-solid fa-comment-dollar"></i></span>
 					</c:if>
 				</li>
 				<li>
-					<a class="side_color" href="<%=ctxPath%>/roomResercation.kedai">회의실예약</a>
+					<a href="<%=ctxPath%>/roomResercation.kedai">회의실예약</a>
 					<span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
 				</li>
 				<li>
-					<a class="side_color" href="<%= ctxPath%>/board/list.kedai">게시판</a>
+					<a href="<%= ctxPath%>/board/list.kedai">게시판</a>
 					<span class="icon"><i class="fa-solid fa-chalkboard-user"></i></span>
 				</li>
 				<li>
-					<a class="side_color" href="<%= ctxPath%>/community/list.kedai">커뮤니티</a>
+					<a href="<%= ctxPath%>/community/list.kedai">커뮤니티</a>
 					<span class="icon"><i class="fa-regular fa-comments"></i></span>
 				</li>
 				<li>
-					<a class="side_color" href="<%=ctxPath%>/carShare.kedai">카쉐어</a>
+					<a href="<%=ctxPath%>/carShare.kedai">카쉐어</a>
 					<span class="icon"><i class="fa-solid fa-car"></i></span>
 				</li>
 				<li>
-					<a class="side_color" href="<%=ctxPath%>/bus.kedai">통근버스</a>
+					<a href="<%=ctxPath%>/bus.kedai">통근버스</a>
 					<span class="icon"><i class="fa-solid fa-bus-simple"></i></span>
 				</li>
 				<li>
-					<a class="side_color" href="<%=ctxPath%>/employee.kedai">사내연락망</a>
+					<a href="<%=ctxPath%>/employee.kedai">사내연락망</a>
 					<span class="icon"><i class="fa-solid fa-address-book"></i></span>
 				</li>
 				<li>
-					<a class="side_color" href="<%=ctxPath%>/othercom_list.kedai">거래처정보</a>
+					<a href="<%=ctxPath%>/othercom_list.kedai">거래처정보</a>
 					<span class="icon"><i class="fa-solid fa-store"></i></span>
 				</li>
 				<li>
-					<a class="side_color" href="<%=ctxPath%>/scheduler.kedai">일정관리</a>
+					<a href="#">일정관리</a>
 					<span class="icon"><i class="fa-regular fa-calendar-check"></i></span>
 				</li>
 				<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
 					<li>
-						<a class="side_color" href="<%= ctxPath%>/admin/register.kedai">사원정보등록</a>
+						<a href="<%= ctxPath%>/admin/register.kedai">사원정보등록</a>
 						<span class="icon"><i class="fa-solid fa-user-plus"></i></span>
 					</li>
 				</c:if>

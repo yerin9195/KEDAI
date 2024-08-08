@@ -133,13 +133,6 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 
 	// 나의 결재 문서에서 총 페이지수 가져오기
 	@Override
-	public int getTotalMyNowApprovalCount(Map<String, String> paraMap) {
-		int n = sqlsession.selectOne("approval.getTotalMyNowApprovalCount", paraMap);
-		return n;
-	}
-	
-	// 나의 모든 결재 문서 총 페이지수
-	@Override
 	public int getTotalMyApprovalCount(Map<String, String> paraMap) {
 		int n = sqlsession.selectOne("approval.getTotalMyApprovalCount", paraMap);
 		return n;
@@ -152,7 +145,6 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return n;
 	}
 
-
 	// 나의 모든 기안문서 가져오기
 	@Override
 	public List<Map<String, String>> myDocListSearch(Map<String, String> paraMap) {
@@ -163,16 +155,10 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	// 나의 모든 결재 대기 문서 가져오기
 	@Override
 	public List<Map<String, String>> myNowApprovalListSearch(Map<String, String> paraMap) {
-		List<Map<String, String>> myNowApprovalListSearch = sqlsession.selectList("approval.myNowApprovalListSearch", paraMap);
-		return myNowApprovalListSearch;
+		List<Map<String, String>> myApprovalListSearch = sqlsession.selectList("approval.myNowApprovalListSearch", paraMap);
+		return myApprovalListSearch;
 	}
 
-	// 나의 모든 결재 문서 가져오기
-	@Override
-	public List<DocVO> allmyAppListSearch(Map<String, String> paraMap) {
-		List<DocVO> allmyAppListSearch = sqlsession.selectList("approval.allmyAppListSearch", paraMap);
-		return allmyAppListSearch;
-	}
 
 	// 모든 팀 문서 가져오기
 	@Override
@@ -214,30 +200,6 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	public DocfileVO getDocfileOne(String fileNo) {
 		DocfileVO getDocfileOne = sqlsession.selectOne("approval.getDocfileOne", fileNo);
 		return getDocfileOne;
-	}
-
-	// 결재하기 눌렀을 떄 doc테이블 업데이트 하기
-	@Override
-	public void updateDocOk(Map<String, String> paraMap) {
-		sqlsession.update("approval.updateDocOk", paraMap);
-	}
-
-	// 결재하기 눌렀을 떄 결재 테이블 업데이트 하기
-	@Override
-	public void updateApprovalOk(Map<String, String> paraMap) {
-		sqlsession.update("approval.updateApprovalOk", paraMap);
-	}
-
-	// 반려하기 눌렀을 떄 doc테이블 업데이트 하기
-	@Override
-	public void updateDocReject(Map<String, String> paraMap) {
-		sqlsession.update("approval.updateDocReject", paraMap);
-	}
-
-	// 반려하기 눌렀을 떄 결재 테이블 업데이트 하기
-	@Override
-	public void updateApprovalReject(Map<String, String> paraMap) {
-		sqlsession.update("approval.updateApprovalReject", paraMap);
 	}
 
 
