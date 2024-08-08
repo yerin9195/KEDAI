@@ -133,8 +133,9 @@ function goViewApprovalInfo(){
 			$("#fileList").text();
 			let v_html = ``;
 			$.each(json, function(index, item){	
+				fileSize = item.filesize < 1 ? item.filesize.toFixed(3) : item.filesize.toFixed(1);
 				v_html += "<a href='<%= ctxPath %>/approval/downloadDocfile.kedai?seq=" + item.file_no + "'>"
-               			 + item.org_filename + "(" + formatNumber(item.filesize)  + "bytes)</a>&nbsp;";
+               			 + item.org_filename + "("+fileSize+" MB)</a>&nbsp;";
 			});
 			
 		//	const input_width = $("input[name='searchWord']").css("width");// 검색어 input태그 width값 알아오기			
@@ -204,7 +205,13 @@ function formatFileSize(size) {
 
 
 <div id="total_contatiner">
-	<c:set var="mvo" value="${requestScope.docvo.minutesvo}" />
+
+	<c:if test="${requestScope.docvo.fk_doctype_code eq '100'}">
+		<c:set var="offvo" value="${requestScope.docvo.dayoffvo}" />
+	</c:if>
+	<c:if test="${requestScope.docvo.fk_doctype_code eq '101'}">
+		<c:set var="mvo" value="${requestScope.docvo.minutesvo}" />
+	</c:if>
 	<c:set var="avo" value="${requestScope.docvo.approvalvoList}" />
 	<c:set var="dvo" value="${requestScope.docvo}" />
 	<div style="display: flex;">
@@ -225,6 +232,7 @@ function formatFileSize(size) {
 				</tr>
 			</table>
 			<table class="table left_table" id="docInfo">
+			<c:if test="${requestScope.docvo.fk_doctype_code eq '101'}">
 				<tr>
 					<th>회의일자</th>
 					<td>${mvo.meeting_date}</td>
@@ -237,7 +245,43 @@ function formatFileSize(size) {
 					<th>회의 참석자</th>
 					<td>${mvo.attendees}</td>
 				</tr>
+			</c:if>
+			<c:if test="${requestScope.docvo.fk_doctype_code eq '100'}">
+				<tr>
+					<th>날짜</th>
+					<td>${offvo.startdate}&nbsp;~&nbsp;${offvo.enddate}</td>
+				</tr>
+				<tr>
+					<th>반차여부</th>
+					<td>시작일 ( 
+						<c:choose>
+							 <c:when test="${offvo.start_half eq 0}">
+							 	해당없음
+							 </c:when>
+							 <c:when test="${offvo.start_half eq 1}">
+							 	오전
+							 </c:when>
+							 <c:when test="${offvo.start_half eq 2}">
+							 	오후
+							 </c:when>
+						</c:choose>
+						)<br>종료일(
+						<c:choose>
+							<c:when test="${offvo.end_half eq 0}">
+							 	해당없음
+							 </c:when>
+							 <c:when test="${offvo.end_half eq 1}">
+							 	오전
+							 </c:when>
+							 <c:when test="${offvo.end_half eq 2}">
+							 	오후
+							 </c:when>
+						</c:choose>)
+					</td>
+				</tr>
+			</c:if>
 			</table>
+			
 			<div id="title2">
 				결재라인
 			</div>

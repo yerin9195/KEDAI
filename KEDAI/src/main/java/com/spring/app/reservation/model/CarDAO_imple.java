@@ -175,65 +175,6 @@ public class CarDAO_imple implements CarDAO {
 		return owner_SettlementList_withPaging;
 	}
 
-	@Override
-	public List<Map<String, String>> getowner_SettlementList_mobile(Map<String, String> paraMap) {
-		List<Map<String, String>> owner_SettlementList_mobile = sqlsession.selectList("reservation.getowner_SettlementList_mobile", paraMap);
-		return owner_SettlementList_mobile;
-	}
-
-	@Override
-	public int getTotalcount_owner_SettlementList_mobile(Map<String, String> paraMap) {
-		int totalCount_owner_SettlementList_mobile = sqlsession.selectOne("reservation.getTotalcount_owner_SettlementList_mobile", paraMap);
-		return totalCount_owner_SettlementList_mobile;
-	}
-
-	@Override
-	public List<Map<String, String>> getowner_SettlementList_withPaging_mobile(Map<String, String> paraMap) {
-		List<Map<String, String>> owner_SettlementList_withPaging_mobile = sqlsession.selectList("reservation.getowner_SettlementList_withPaging_mobile", paraMap);
-		return owner_SettlementList_withPaging_mobile;
-	}
-
-	@Override
-	public int update_drive_in_time(Map<String, String> paraMap) {
-		int n = sqlsession.update("reservation.update_drive_in_time", paraMap);
-		return n;
-	}
-
-	@Override
-	public int update_drive_out_time(Map<String, String> paraMap) {
-		int n = sqlsession.update("reservation.update_drive_out_time", paraMap);
-		return n;
-	}
-
-	@Override
-	public List<Map<String, String>> getcustomer_applyStatusList(String empid) {
-		List<Map<String, String>> customer_applyStatusList = sqlsession.selectList("reservation.getcustomer_applyStatusList", empid);
-		return customer_applyStatusList;
-	}
-
-	@Override
-	public List<Map<String, String>> getcustomer_SettlementList(String empid) {
-		List<Map<String, String>> customer_SettlementList = sqlsession.selectList("reservation.getcustomer_SettlementList", empid);
-		return customer_SettlementList;
-	}
-
-	@Override
-	public int pointMinus_applicant(Map<String, String> minusParaMap) {
-		int n = sqlsession.update("reservation.pointMinus_applicant", minusParaMap);
-		return n;
-	}
-
-	@Override
-	public void pointPlus_owner(Map<String, String> plusParaMap) {
-		sqlsession.update("reservation.pointPlus_owner", plusParaMap);
-		
-	}
-
-	@Override
-	public int payment_settled(Map<String, String> minusParaMap) {
-		int n1 = sqlsession.update("reservation.payment_settled", minusParaMap);
-		return n1;
-	}
 
 
 

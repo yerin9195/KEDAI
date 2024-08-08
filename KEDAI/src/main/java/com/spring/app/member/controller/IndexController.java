@@ -85,7 +85,7 @@ public class IndexController {
 			mav.setViewName("redirect:/othercom_list.kedai");
 		}
 		else if(searchMenu.equals("일정관리")) {
-			mav.setViewName("redirect:/scheduler.kedai");
+			mav.setViewName("redirect:");
 		}
 	
 		return mav;
