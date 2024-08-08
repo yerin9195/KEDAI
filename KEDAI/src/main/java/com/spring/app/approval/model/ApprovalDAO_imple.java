@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.spring.app.domain.ApprovalVO;
+import com.spring.app.domain.DayoffVO;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
 import com.spring.app.domain.DocfileVO;
@@ -67,12 +68,20 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return n;
 	}
 
+	// 첨부파일이 없는 서류 작성하기(tbl_dayoff)
+	@Override
+	public int noFile_dayoff(Map<String, Object> paraMap) {
+		int n = sqlsession.insert("approval.noFile_dayoff", paraMap);
+		return n;
+	}
+
 	// 첨부파일이 없는 서류 작성하기(tbl_approval)
 	@Override
 	public int noFile_approval(Map<String, Object> paraMap) {
 		int n = sqlsession.insert("approval.noFile_approval", paraMap);
 		return n;
 	}
+	
 	
 	// 첨부파일이 있을 때 첨부파일 insert하기
 	@Override
@@ -122,21 +131,34 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		int n = sqlsession.selectOne("approval.getTotalMyDocCount", paraMap);
 		return n;
 	}
-
-	// 나의 결재 문서에서 총 페이지수 가져오기
+	
+	// 나의 결재 예정 문서에서 총 페이지수 가져오기
 	@Override
 	public int getTotalMyNowApprovalCount(Map<String, String> paraMap) {
 		int n = sqlsession.selectOne("approval.getTotalMyNowApprovalCount", paraMap);
 		return n;
 	}
-	
-	// 나의 모든 결재 문서 총 페이지수
+
+	// 나의 결재 문서에서 총 페이지수 가져오기
 	@Override
 	public int getTotalMyApprovalCount(Map<String, String> paraMap) {
 		int n = sqlsession.selectOne("approval.getTotalMyApprovalCount", paraMap);
 		return n;
 	}
+	
+	// 팀 문서 총 페이지수
+	@Override
+	public int getTotalTeamCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("approval.getTotalTeamCount", paraMap);
+		return n;
+	}
 
+	// 전체 문서 총 페이지수
+	@Override
+	public int getTotalAllCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("approval.getTotalAllCount", paraMap);
+		return n;
+	}
 
 	// 나의 모든 기안문서 가져오기
 	@Override
@@ -148,8 +170,8 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	// 나의 모든 결재 대기 문서 가져오기
 	@Override
 	public List<Map<String, String>> myNowApprovalListSearch(Map<String, String> paraMap) {
-		List<Map<String, String>> myNowApprovalListSearch = sqlsession.selectList("approval.myNowApprovalListSearch", paraMap);
-		return myNowApprovalListSearch;
+		List<Map<String, String>> myApprovalListSearch = sqlsession.selectList("approval.myNowApprovalListSearch", paraMap);
+		return myApprovalListSearch;
 	}
 
 	// 나의 모든 결재 문서 가져오기
@@ -159,17 +181,39 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return allmyAppListSearch;
 	}
 
+	// 모든 팀 문서 가져오기
+	@Override
+	public List<DocVO> allteamDocListSearch(Map<String, String> paraMap) {
+		List<DocVO> allteamDocListSearch = sqlsession.selectList("approval.allteamDocListSearch", paraMap);
+		return allteamDocListSearch;
+	}
+	
+	// 관리자가 모든 서류 보기
+	@Override
+	public List<DocVO> allDocListSearch(Map<String, String> paraMap) {
+		List<DocVO> allDocListSearch = sqlsession.selectList("approval.allDocListSearch", paraMap);
+		return allDocListSearch;
+	}
+	
 	// 나의 기안 문서에서 문서 한 개 보기
 	@Override
 	public DocVO getOneDocCommon(Map<String, String> paraMap) {
 		DocVO getOneDocCommon = sqlsession.selectOne("approval.getOneDocCommon", paraMap);
 		return getOneDocCommon;
 	}
+	
 	// 회의록 서류 정보 가져오기
 	@Override
 	public MinutesVO getOneMinutes(Map<String, String> paraMap) {
 		MinutesVO getOneMinutes = sqlsession.selectOne("approval.getOneMinutes", paraMap);
 		return getOneMinutes;
+	}
+	
+	// 연차신청 서류 정보 가져오기
+	@Override
+	public DayoffVO getOneDayoff(Map<String, String> paraMap) {
+		DayoffVO getOneDayoff = sqlsession.selectOne("approval.getOneDayoff", paraMap);
+		return getOneDayoff;
 	}
 
 	// 결재라인 정보 가져오기
@@ -192,6 +236,7 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		DocfileVO getDocfileOne = sqlsession.selectOne("approval.getDocfileOne", fileNo);
 		return getDocfileOne;
 	}
+
 
 	// 결재하기 눌렀을 떄 doc테이블 업데이트 하기
 	@Override
@@ -216,6 +261,11 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	public void updateApprovalReject(Map<String, String> paraMap) {
 		sqlsession.update("approval.updateApprovalReject", paraMap);
 	}
+
+
+
+
+
 
 
 

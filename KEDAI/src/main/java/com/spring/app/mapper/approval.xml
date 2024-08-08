@@ -92,6 +92,11 @@
 		values( minutes_noSeq.nextval, #{fk_doc_no}, #{meeting_date}, #{attendees}, #{host_dept})
 	</insert>
  	
+ 	<!-- 첨부파일이 없는 서류 작성하기(noFile_dayoff) -->
+ 	<insert id="noFile_dayoff" parameterType="HashMap">
+		insert into tbl_dayoff(dayoff_no, fk_doc_no, startdate, enddate, start_half, end_half)
+		values( dayoff_noSeq.nextval, #{fk_doc_no}, #{startdate}, #{enddate}, #{start_half}, #{end_half})
+	</insert>
  	
  	<!-- 첨부파일이 없는 서류 작성하기(tbl_approval) -->
  	<insert id="noFile_approval" parameterType="HashMap">
@@ -210,7 +215,7 @@
 				and lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
 			</when>
 			<when test='searchType == "doc_no" and searchWord != ""'>
-				and lower(D.doc_no) like '%'|| lower(#{searchWord}) || '%'
+				and lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
 			</when>
 			<when test='searchType == "doc_subject_content" and searchWord != ""'>
 				and (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
@@ -247,7 +252,7 @@
 				and lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
 			</when>
 			<when test='searchType == "doc_no" and searchWord != ""'>
-				and lower(D.doc_no) like '%'|| lower(#{searchWord}) || '%'
+				and lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
 			</when>
 			<when test='searchType == "doc_subject_content" and searchWord != ""'>
 				and (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
@@ -283,7 +288,7 @@
 				and lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
 			</when>
 			<when test='searchType == "doc_no" and searchWord != ""'>
-				and lower(D.doc_no) like '%'|| lower(#{searchWord}) || '%'
+				and lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
 			</when>
 			<when test='searchType == "doc_subject_content" and searchWord != ""'>
 				and (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
@@ -292,6 +297,65 @@
 		</choose>
  	</select>
  	
+ 	<!-- 팀문서 총 수 구하기 -->
+ 	<select id="getTotalTeamCount" parameterType="HashMap" resultType="int">
+ 		SELECT count(*)
+		FROM tbl_doc D 
+		JOIN tbl_approval A1
+		ON D.doc_no = A1.fk_doc_no
+		JOIN tbl_doctype T 
+        ON T.doctype_code = D.fk_doctype_code
+        JOIN tbl_employees E
+        ON E.empid = D.fk_empid
+        WHERE FK_DEPT_CODE= #{loginDeptCode}   
+		<choose>
+			<when test='searchType == "doctype_name" and searchWord != "" '>
+				and lower(doctype_name) like '%'|| lower(#{searchWord}) || '%'
+			</when>
+			<when test='searchType == "doc_subject" and searchWord != ""'>
+				and lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' 
+			</when>
+			<when test='searchType == "doc_content" and searchWord != ""'>
+				and lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
+			</when>
+			<when test='searchType == "doc_no" and searchWord != ""'>
+				and lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
+			</when>
+			<when test='searchType == "doc_subject_content" and searchWord != ""'>
+				and (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
+			</when>
+			<otherwise></otherwise>
+		</choose>
+ 	</select>
+ 	
+ 	<select id="getTotalAllCount" parameterType="HashMap" resultType="int">
+ 		SELECT count(*)
+		FROM tbl_doc D 
+		JOIN tbl_approval A1
+		ON D.doc_no = A1.fk_doc_no
+		JOIN tbl_doctype T 
+        ON T.doctype_code = D.fk_doctype_code
+        JOIN tbl_employees E
+        ON E.empid = D.fk_empid
+		<choose>
+			<when test='searchType == "doctype_name" and searchWord != "" '>
+				and lower(doctype_name) like '%'|| lower(#{searchWord}) || '%'
+			</when>
+			<when test='searchType == "doc_subject" and searchWord != ""'>
+				and lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' 
+			</when>
+			<when test='searchType == "doc_content" and searchWord != ""'>
+				and lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
+			</when>
+			<when test='searchType == "doc_no" and searchWord != ""'>
+				and lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
+			</when>
+			<when test='searchType == "doc_subject_content" and searchWord != ""'>
+				and (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
+			</when>
+			<otherwise></otherwise>
+		</choose>
+ 	</select>
  	
  	
  	<!--  
@@ -410,16 +474,16 @@
                 		and lower(doctype_name) like '%'|| lower(#{searchWord}) || '%'
 		            </when>
 		            <when test='searchType == "doc_subject" and searchWord != ""'>
-		                and lower(D.doc_subject) like '%'|| lower(#{searchWord}) || '%' 
+		                and lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' 
 		            </when>
 		            <when test='searchType == "doc_content" and searchWord != ""'>
-		                and lower(D.doc_content) like '%'|| lower(#{searchWord}) || '%'
+		                and lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
 		            </when>
 		            <when test='searchType == "doc_no" and searchWord != ""'>
-		                and lower(D.doc_no) like '%'|| lower(#{searchWord}) || '%'
+		                and lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
 		            </when>
 		            <when test='searchType == "doc_subject_content" and searchWord != ""'>
-		                and (lower(D.doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
+		                and (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
 		            </when>
 		            <otherwise></otherwise>
 		     	</choose> 
@@ -462,16 +526,16 @@
                 		and lower(doctype_name) like '%'|| lower(#{searchWord}) || '%'
 		            </when>
 		            <when test='searchType == "doc_subject" and searchWord != ""'>
-		                and lower(D.doc_subject) like '%'|| lower(#{searchWord}) || '%' 
+		                and lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' 
 		            </when>
 		            <when test='searchType == "doc_content" and searchWord != ""'>
-		                and lower(D.doc_content) like '%'|| lower(#{searchWord}) || '%'
+		                and lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
 		            </when>
 		            <when test='searchType == "doc_no" and searchWord != ""'>
-		                and lower(D.doc_no) like '%'|| lower(#{searchWord}) || '%'
+		                and lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
 		            </when>
 		            <when test='searchType == "doc_subject_content" and searchWord != ""'>
-		                and (lower(D.doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
+		                and (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
 		            </when>
 		            <otherwise></otherwise>
 		     	</choose> 
@@ -481,6 +545,111 @@
 		WHERE rno between #{startRno} and #{endRno}
 	</select>
 	
+	
+	<!-- 모든 팀문서 가져오기 -->
+	<select id="allteamDocListSearch" parameterType="HashMap" resultType="DocVO">  
+		SELECT rno, doc_no, fk_empid, doc_status, doc_subject, doc_content, created_date, doctype_name,
+       		isAttachment, NAME, dept_name, fk_doctype_code
+		FROM (
+    		SELECT rownum AS rno,
+           		approval_no, fk_doc_no as doc_no, fk_empid, status, level_no, doc_subject, created_date, doctype_name,
+           		isAttachment, doc_status, NAME, writer, dept_name, doc_content, fk_doctype_code
+    		FROM (
+        		SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+               		D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+               		CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, D.doc_status, NAME, dept_name, D.fk_empid AS writer
+               		, doc_content, fk_doctype_code
+        		FROM tbl_approval A1
+        		JOIN tbl_doc D 
+        		ON D.doc_no = A1.fk_doc_no
+        		JOIN tbl_doctype T 
+        		ON T.doctype_code = D.fk_doctype_code
+        		LEFT JOIN (
+            		SELECT fk_doc_no
+            		FROM tbl_doc_file
+            		GROUP BY fk_doc_no
+        		) F ON F.fk_doc_no = D.doc_no
+        		JOIN tbl_employees E
+        		ON E.empid = D.fk_empid
+        		JOIN tbl_dept DP
+        		ON E.fk_dept_code = DP.dept_code
+        		WHERE FK_DEPT_CODE = #{loginDeptCode}
+          		<choose>
+            		<when test='searchType == "doctype_name" and searchWord != "" '>
+                		and lower(doctype_name) like '%'|| lower(#{searchWord}) || '%'
+		            </when>
+		            <when test='searchType == "doc_subject" and searchWord != ""'>
+		                and lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' 
+		            </when>
+		            <when test='searchType == "doc_content" and searchWord != ""'>
+		                and lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
+		            </when>
+		            <when test='searchType == "doc_no" and searchWord != ""'>
+		                and lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
+		            </when>
+		            <when test='searchType == "doc_subject_content" and searchWord != ""'>
+		                and (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
+		            </when>
+		            <otherwise></otherwise>
+		     	</choose> 
+        		ORDER BY D.created_date DESC, D.doc_no DESC
+			) V
+		)T2
+		WHERE rno between #{startRno} and #{endRno}
+	</select>
+	
+	
+	<!-- 모든 문서 가져오기 -->
+	<select id="allDocListSearch" parameterType="HashMap" resultType="DocVO">  
+		SELECT rno, doc_no, fk_empid, doc_status, doc_subject, doc_content, created_date, doctype_name,
+       		isAttachment, NAME, dept_name, fk_doctype_code
+		FROM (
+    		SELECT rownum AS rno,
+           		approval_no, fk_doc_no as doc_no, fk_empid, status, level_no, doc_subject, created_date, doctype_name,
+           		isAttachment, doc_status, NAME, writer, dept_name, doc_content, fk_doctype_code
+    		FROM (
+        		SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+               		D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+               		CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, D.doc_status, NAME, dept_name, D.fk_empid AS writer
+               		, doc_content, fk_doctype_code
+        		FROM tbl_approval A1
+        		JOIN tbl_doc D 
+        		ON D.doc_no = A1.fk_doc_no
+        		JOIN tbl_doctype T 
+        		ON T.doctype_code = D.fk_doctype_code
+        		LEFT JOIN (
+            		SELECT fk_doc_no
+            		FROM tbl_doc_file
+            		GROUP BY fk_doc_no
+        		) F ON F.fk_doc_no = D.doc_no
+        		JOIN tbl_employees E
+        		ON E.empid = D.fk_empid
+        		JOIN tbl_dept DP
+        		ON E.fk_dept_code = DP.dept_code
+
+          		<choose>
+            		<when test='searchType == "doctype_name" and searchWord != "" '>
+                		and lower(doctype_name) like '%'|| lower(#{searchWord}) || '%'
+		            </when>
+		            <when test='searchType == "doc_subject" and searchWord != ""'>
+		                and lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' 
+		            </when>
+		            <when test='searchType == "doc_content" and searchWord != ""'>
+		                and lower(doc_content) like '%'|| lower(#{searchWord}) || '%'
+		            </when>
+		            <when test='searchType == "doc_no" and searchWord != ""'>
+		                and lower(doc_no) like '%'|| lower(#{searchWord}) || '%'
+		            </when>
+		            <when test='searchType == "doc_subject_content" and searchWord != ""'>
+		                and (lower(doc_subject) like '%'|| lower(#{searchWord}) || '%' or lower(doc_content) like '%'|| lower(#{searchWord}) || '%')
+		            </when>
+		            <otherwise></otherwise>
+		     	</choose> 
+        		ORDER BY D.created_date DESC, D.doc_no DESC
+			) V
+		)T2
+		WHERE rno between #{startRno} and #{endRno}
+	</select>
 
 	<select id="getOneDocCommon" parameterType="HashMap" resultType="DocVO">
 		SELECT doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, to_char(created_date, 'yyyy-mm-dd') as created_date, doc_comment, doc_status, doctype_name, name, dept_name
@@ -508,6 +677,13 @@
  	<select id="getOneMinutes" parameterType="HashMap" resultType="MinutesVO">
  		select MINUTES_NO, FK_DOC_NO, to_char(MEETING_DATE, 'yyyy-mm-dd') as MEETING_DATE, ATTENDEES, HOST_DEPT
 		from tbl_minutes
+		where fk_doc_no = #{doc_no}
+ 	</select>
+ 	
+ 	<!-- 하나의 연차신청서 불러오기  -->
+ 	<select id="getOneDayoff" parameterType="HashMap" resultType="com.spring.app.domain.DayoffVO">
+ 		select dayoff_no, fk_doc_no, to_char(startdate, 'yyyy-mm-dd') as startdate, to_char(enddate, 'yyyy-mm-dd') as enddate, start_half, end_half
+		from tbl_dayoff
 		where fk_doc_no = #{doc_no}
  	</select>
  	

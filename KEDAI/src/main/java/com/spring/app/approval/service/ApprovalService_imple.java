@@ -145,6 +145,20 @@ public class ApprovalService_imple implements ApprovalService {
 		return n;
 	}
 	
+	// 팀 문서 총 페이지수
+	@Override
+	public int getTotalTeamCount(Map<String, String> paraMap) {
+		int n = dao.getTotalTeamCount(paraMap);
+		return n;
+	}
+
+	// 전체 문서 총 페이지수
+	@Override
+	public int getTotalAllCount(Map<String, String> paraMap) {
+		int n = dao.getTotalAllCount(paraMap);
+		return n;
+	}
+	
 	// 나의 모든 기안문서 가져오기
 	@Override
 	public List<Map<String, String>> myDocListSearch(Map<String, String> paraMap) {
@@ -166,7 +180,19 @@ public class ApprovalService_imple implements ApprovalService {
 		return allmyAppListSearch;
 	}
 
+	// 모든 팀 문서 가져오기
+	@Override
+	public List<DocVO> allteamDocListSearch(Map<String, String> paraMap) {
+		List<DocVO> allteamDocListSearch = dao.allteamDocListSearch(paraMap);
+		return allteamDocListSearch;
+	}
 
+	// 관리자가 모든 서류 보기
+	@Override
+	public List<DocVO> allDocListSearch(Map<String, String> paraMap) {
+		List<DocVO> allDocListSearch = dao.allDocListSearch(paraMap);
+		return allDocListSearch;
+	}
 
 	// 나의 기안 문서에서 문서 한 개 보기(공통부분 + 결재라인 + 문서종류별 내용)
 	@Override

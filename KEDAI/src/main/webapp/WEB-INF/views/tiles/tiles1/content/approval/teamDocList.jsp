@@ -7,7 +7,6 @@
 
 <style type="text/css">
 
-
 .nav-item {
     text-align: center;
     font-size:12pt;
@@ -19,8 +18,6 @@
     border-bottom-color: transparent; /* 활성화된 탭의 하단 선 제거 */
     text-align: center;
 }
-
-
 
 </style>
 
@@ -76,11 +73,11 @@ function goView(doc_no, fk_doctype_code){
 }//end of goView(doc_no, fk_doctype_code)---------------------------
 
 function goSearch(){
-	const frm = document.searchFrm;
-<%--	frm.method = "get"; //안쓰면 get방식
-//	frm.action = "<%= ctxPath%>/list.action"; // 쓰나 안 쓰나 똑같음. --%>
 
-	console.log(frm);
+	const frm = document.searchFrm;
+	
+	frm.method = "get";
+	frm.action = "<%= ctxPath%>/approval/teamDocList.kedai";
 	frm.submit();
 }// end of function goSearch()--------------
 
@@ -91,13 +88,13 @@ function goSearch(){
 	<c:if test="${(sessionScope.loginuser).fk_dept_code != null}">
 		<ul class="nav nav-tabs" style="margin-bottom:0;">
 		    <li class="nav-item">
-		        <a class="nav-link" style="color: black;" href="<%= ctxPath %>/approval/teamDocList.kedai">팀 문서함</a>
+		        <a class="nav-link active" href="<%= ctxPath %>/approval/teamDocList.kedai">팀 문서함</a>
 		    </li>
 		    <li class="nav-item">
 		        <a class="nav-link" style="color: black;" href="<%= ctxPath %>/approval/nowApprovalList.kedai">결재 예정 문서</a>
 		    </li>
-		    <li class="nav-item ">
-		        <a class="nav-link active" href="<%= ctxPath %>/approval/showMyApprovalList.kedai">나의 결재함</a>
+		    <li class="nav-item">
+		        <a class="nav-link" style="color: black;"  href="<%= ctxPath %>/approval/showMyApprovalList.kedai">나의 결재함</a>
 		    </li>
 		    <li class="nav-item">
 		        <a class="nav-link" style="color: black;" href="<%= ctxPath %>/approval/showMyDocList.kedai">나의 상신 문서</a>
@@ -110,19 +107,19 @@ function goSearch(){
         		<a class="nav-link" style="color: black;" href="<%= ctxPath %>/approval/nowApprovalList.kedai">결재 예정 문서</a>
     		</li>
 			<li class="nav-item">
-        		<a class="nav-link active" href="<%= ctxPath %>/approval/showMyApprovalList.kedai">나의 결재함</a>
+        		<a class="nav-link" style="color: black;" href="<%= ctxPath %>/approval/showMyApprovalList.kedai">나의 결재함</a>
     		</li>
      		<li class="nav-item">
-        		<a class="nav-link" style="color: black;" href="<%= ctxPath %>/approval/allDocList.kedai">모든 문서함</a>
+        		<a class="nav-link"  href="<%= ctxPath %>/approval/allDocList.kedai">모든 문서함</a>
     		</li>
 		</ul>
 	</c:if>
-	
 </div>
+
 
 <div id="around_docList">    
 	<div id="title_arr" style="display:flex; margin-bottom:10px;">    
-		<div id="title" style="margin: 0; font-size: 15pt;"> 나의 결재함 </div>
+		<div id="title" style="margin: 0; font-size: 15pt;"> 팀 문서함</div>
 	
 		<form name="searchFrm" style="margin-left: 700px;">
 	    	<select name="searchType" style="height: 26px;">
@@ -152,8 +149,8 @@ function goSearch(){
 			</tr>
 		</thead>
 		<tbody>
-  			<c:if test="${not empty requestScope.myApprovalList}">
-  				<c:forEach var="myApprovalList" items="${requestScope.myApprovalList}" varStatus="status">
+  			<c:if test="${not empty requestScope.teamDocList}">
+  				<c:forEach var="teamDocList" items="${requestScope.teamDocList}" varStatus="status">
   					<c:if test="${status.index <= 9}"> <!-- 10개까지만 보이도록 설정 -->
    						<tr>
    							<td align="center">
@@ -186,11 +183,11 @@ function goSearch(){
                  		--%>
                  		
                  		
-   							<td>${myApprovalList.created_date}</td>
-   							<td>${myApprovalList.doctype_name}</td>
-   							<td>${myApprovalList.doc_no}</td>
-   							<td><span class="subject" onclick="goView('${myApprovalList.doc_no}', '${myApprovalList.fk_doctype_code}')">${myApprovalList.doc_subject}</span>
-   								<c:if test="${myApprovalList.isAttachment eq 1}">
+   							<td>${teamDocList.created_date}</td>
+   							<td>${teamDocList.doctype_name}</td>
+   							<td>${teamDocList.doc_no}</td>
+   							<td><span class="subject" onclick="goView('${teamDocList.doc_no}', '${teamDocList.fk_doctype_code}')">${teamDocList.doc_subject}</span>
+   								<c:if test="${teamDocList.isAttachment eq 1}">
    									&nbsp;<i class="fa-solid fa-paperclip"></i>
    								</c:if>  								
    							</td>
@@ -201,18 +198,18 @@ function goSearch(){
    									<td><span style="border : solid 0px green; background-color:#e68c0e; color:white; margin-top:10%;">결재중</span></td>
    								</c:if>
    								--%>
-   							<td>${myApprovalList.name}</td>					
-   							<c:if test="${myApprovalList.doc_status eq 0}"><td>미처리</td></c:if>
-							<c:if test="${myApprovalList.doc_status eq 1}"><td>진행중</td></c:if>
-							<c:if test="${myApprovalList.doc_status eq 2}"><td>반려</td></c:if>
-							<c:if test="${myApprovalList.doc_status eq 3}"><td>완료</td></c:if>
+   							<td>${teamDocList.name}</td>					
+   							<c:if test="${teamDocList.doc_status eq 0}"><td>미처리</td></c:if>
+							<c:if test="${teamDocList.doc_status eq 1}"><td>진행중</td></c:if>
+							<c:if test="${teamDocList.doc_status eq 2}"><td>결재완료</td></c:if>
+							<c:if test="${teamDocList.doc_status eq 3}"><td>반려</td></c:if>
    						</tr>
    					</c:if>
   				</c:forEach>
   			</c:if>
-  			<c:if test="${empty requestScope.myApprovalList}">
+  			<c:if test="${empty requestScope.teamDocList}">
   				<tr>
-  					<td colspan="6" align="center"> 나의 결재 문서가 없습니다. </td>
+  					<td colspan="6" align="center"> 팀 문서가 없습니다. </td>
   				</tr>
   			</c:if>
   		</tbody>
