@@ -16,6 +16,8 @@ public interface SalaryDAO {
 
 	MemberVO getEmployeeById(String employeeId);
 
-	List<SalaryVO> getSalaryDetailsById(String empid, String yearMonth);
+	List<SalaryVO> getSalaryDetailsById(String yearMonth);
+
+	List<SalaryVO> getAllSalaryData();
 
 }
