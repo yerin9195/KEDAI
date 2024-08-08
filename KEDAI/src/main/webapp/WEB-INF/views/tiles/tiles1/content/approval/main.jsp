@@ -36,6 +36,8 @@ div.col-md-6 {
 	margin-left:0;
 	margin-top:0;
 }
+
+
 </style>
 
 
@@ -106,12 +108,12 @@ div.col-md-6 {
 	
 </script>
 
-<div style="border : 1px red solid;  padding: 2% 0; display:flex;">
+<div style="border : 0px red solid;  padding: 2% 0; display:flex;">
 <c:if test="${(sessionScope.loginuser).fk_dept_code != null}">
 	<button type="button" data-toggle="modal" style="width: 150px; height:43px; margin-right:5%; background-color:white; border : solid 1px black;" data-target="#newDocModal" >결재 작성하기</button>
 	<ul class="nav nav-tabs" style="margin-bottom:0;">
 	    <li class="nav-item">
-	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/">팀 문서함</a>
+	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/approval/teamDocList.kedai">팀 문서함</a>
 	    </li>
 	    <li class="nav-item">
 	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/approval/showMyApprovalList.kedai">나의 결재함</a>

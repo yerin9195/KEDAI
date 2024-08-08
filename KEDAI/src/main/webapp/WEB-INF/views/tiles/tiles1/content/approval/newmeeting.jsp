@@ -755,7 +755,7 @@ span.clear{clear: both;}
 			if(isOk){
 				$("table#approval").append(v_html);
 				$("#selectLineModal").modal("hide"); // 모달 닫기
-				let lineNumHtml = `<input type="text" name="lineNumber" value="\${isChecked}">`;
+				let lineNumHtml = `<input type="hidden" name="lineNumber" value="\${isChecked}">`;
 				$(".htmlAdd").html(lineNumHtml);
 			}		
 		}

@@ -67,12 +67,20 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return n;
 	}
 
+	// 첨부파일이 없는 서류 작성하기(tbl_dayoff)
+	@Override
+	public int noFile_dayoff(Map<String, Object> paraMap) {
+		int n = sqlsession.insert("approval.noFile_dayoff", paraMap);
+		return n;
+	}
+
 	// 첨부파일이 없는 서류 작성하기(tbl_approval)
 	@Override
 	public int noFile_approval(Map<String, Object> paraMap) {
 		int n = sqlsession.insert("approval.noFile_approval", paraMap);
 		return n;
 	}
+	
 	
 	// 첨부파일이 있을 때 첨부파일 insert하기
 	@Override
@@ -136,6 +144,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		int n = sqlsession.selectOne("approval.getTotalMyApprovalCount", paraMap);
 		return n;
 	}
+	
+	// 팀 문서 총 페이지수
+	@Override
+	public int getTotalTeamCount(Map<String, String> paraMap) {
+		int n = sqlsession.selectOne("approval.getTotalTeamCount", paraMap);
+		return n;
+	}
 
 
 	// 나의 모든 기안문서 가져오기
@@ -159,12 +174,20 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 		return allmyAppListSearch;
 	}
 
+	// 모든 팀 문서 가져오기
+	@Override
+	public List<DocVO> allteamDocListSearch(Map<String, String> paraMap) {
+		List<DocVO> allteamDocListSearch = sqlsession.selectList("approval.allteamDocListSearch", paraMap);
+		return allteamDocListSearch;
+	}
+	
 	// 나의 기안 문서에서 문서 한 개 보기
 	@Override
 	public DocVO getOneDocCommon(Map<String, String> paraMap) {
 		DocVO getOneDocCommon = sqlsession.selectOne("approval.getOneDocCommon", paraMap);
 		return getOneDocCommon;
 	}
+	
 	// 회의록 서류 정보 가져오기
 	@Override
 	public MinutesVO getOneMinutes(Map<String, String> paraMap) {
@@ -216,6 +239,9 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	public void updateApprovalReject(Map<String, String> paraMap) {
 		sqlsession.update("approval.updateApprovalReject", paraMap);
 	}
+
+
+
 
 
 

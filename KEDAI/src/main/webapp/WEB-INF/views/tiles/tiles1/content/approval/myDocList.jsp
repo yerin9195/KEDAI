@@ -7,12 +7,15 @@
 
 <style type="text/css">
 
+.nav-item {
+    text-align: center;
+    font-size:12pt;
+}
+
 .nav-tabs .nav-link.active {
     background-color: #2c4459; /* 활성화된 탭의 배경색 변경 */
     color: white; /* 활성화된 탭의 글자색 변경 */
     border-bottom-color: transparent; /* 활성화된 탭의 하단 선 제거 */
-}
-.nav-tabs .nav-item {
     text-align: center;
 }
 
@@ -81,20 +84,17 @@ function goSearch(){
 </script>
 
 
-<div style="border : 1px red solid;  padding: 2% 0; display:flex;">
+<div style="border : 0px red solid;  padding: 2% 0; display:flex;">
 	<c:if test="${(sessionScope.loginuser).fk_dept_code != null}">
 		<ul class="nav nav-tabs" style="margin-bottom:0;">
 		    <li class="nav-item">
-		        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">팀 문서함</a>
+		        <a class="nav-link" style="color: black;" href="<%= ctxPath %>/approval/teamDocList.kedai">팀 문서함</a>
 		    </li>
 		    <li class="nav-item">
-		        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/owner_Status.kedai">나의 결재함</a>
+		        <a class="nav-link" style="color: black;" href="<%= ctxPath %>/approval/showMyApprovalList.kedai">나의 결재함</a>
 		    </li>
 		    <li class="nav-item">
-		        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/approval/showMyDocList.kedai">나의 상신 문서</a>
-		    </li>
-		    <li class="nav-item">
-		        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/customer_applyStatus.kedai">모든 문서함</a>
+		        <a class="nav-link active" href="<%= ctxPath %>/approval/showMyDocList.kedai">나의 상신 문서</a>
 		    </li>
 		</ul>
 	</c:if>
@@ -183,7 +183,8 @@ function goSearch(){
    							<td>${allMyDocList.name}</td>					
    							<c:if test="${allMyDocList.doc_status eq 0}"><td>미처리</td></c:if>
 							<c:if test="${allMyDocList.doc_status eq 1}"><td>진행중</td></c:if>
-							<c:if test="${allMyDocList.doc_status eq 2}"><td>반려</td></c:if>
+							<c:if test="${allMyDocList.doc_status eq 2}"><td>결재완료</td></c:if>
+							<c:if test="${allMyDocList.doc_status eq 3}"><td>반려</td></c:if>
    						</tr>
    					</c:if>
   				</c:forEach>

@@ -50,8 +50,15 @@ public class ApprovalService_imple implements ApprovalService {
 	public int noFile_doc(Map<String, Object> paraMap) {
 		
 		int n1 = dao.noFile_newdoc(paraMap);
-		int n2 = dao.noFile_minutes(paraMap);
+		int n2 = 0;
 		int n3 = 0;
+		
+		if("101".equals(paraMap.get("fk_doctype_code"))) {
+			n2 = dao.noFile_minutes(paraMap);
+		}
+		else if("100".equals(paraMap.get("fk_doctype_code"))) {
+			n2 = dao.noFile_dayoff(paraMap);
+		}
 		
 		int lineNumber =(Integer) paraMap.get("lineNumber");
 		
@@ -145,6 +152,13 @@ public class ApprovalService_imple implements ApprovalService {
 		return n;
 	}
 	
+	// 팀 문서 총 페이지수
+	@Override
+	public int getTotalTeamCount(Map<String, String> paraMap) {
+		int n = dao.getTotalTeamCount(paraMap);
+		return n;
+	}
+	
 	// 나의 모든 기안문서 가져오기
 	@Override
 	public List<Map<String, String>> myDocListSearch(Map<String, String> paraMap) {
@@ -166,7 +180,12 @@ public class ApprovalService_imple implements ApprovalService {
 		return allmyAppListSearch;
 	}
 
-
+	// 모든 팀 문서 가져오기
+	@Override
+	public List<DocVO> allteamDocListSearch(Map<String, String> paraMap) {
+		List<DocVO> allteamDocListSearch = dao.allteamDocListSearch(paraMap);
+		return allteamDocListSearch;
+	}
 
 	// 나의 기안 문서에서 문서 한 개 보기(공통부분 + 결재라인 + 문서종류별 내용)
 	@Override
@@ -227,5 +246,7 @@ public class ApprovalService_imple implements ApprovalService {
 		dao.updateApprovalReject(paraMap); // tbl_approval업데이트
 		dao.updateDocReject(paraMap); // tbl_doc업데이트
 	}
+
+
 
 }
