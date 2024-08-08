@@ -168,6 +168,32 @@ $(document).ready(function() {
                     console.error("Error calculating use time:", error);
                 }
             });
+    console.log("pf_empid: ", pf_empid);
+    console.log("pf_res_num: ", pf_res_num);
+    console.log("nickname_applicant: ", nickname_applicant);
+    console.log("email_applicant: ", email_applicant);
+    console.log("nonpayment_amount: ", nonpayment_amount);
+    //var formattedEmailApplicant = parseInt(email_applicant);
+    frmnonpayment_amount = Math.floor(nonpayment_amount);
+    $.ajax({
+        url: "<%=ctxPath%>/request_payment_owner.kedai",
+        type: 'GET',
+        data: {
+            pf_empid: pf_empid,
+            pf_res_num: pf_res_num,
+            nickname_applicant: nickname_applicant,
+            email_applicant: email_applicant,
+            nonpayment_amount: frmnonpayment_amount
+        },
+        success: function(response) {
+            // 메일 전송이 성공한 경우 사용자에게 알림을 표시합니다.
+            alert('메일이 성공적으로 전송되었습니다.');
+        },
+        error: function(xhr, status, error) {
+            console.error('메일 전송 중 오류 발생:', error);
+            console.log('상태 코드:', status);
+            console.log('응답 텍스트:', xhr.responseText);
+            alert('메일 전송 중 오류가 발생했습니다. 다시 시도해 주세요.');
         }
     });
 });
@@ -253,6 +279,57 @@ $(document).ready(function() {
                                     	<td align="center" class="settled_amount">${requestScope.settled_amount}</td>
                                     </c:if>
                                     <td align="center"><button type="button" style="background-color:white;"><i class="fa-solid fa-comments"></i></button></td>
+									<td align="center">
+									    <c:choose>
+									        <c:when test="${owner_carShare.settled_amount ne 0}">
+									            <fmt:formatNumber value="${owner_carShare.settled_amount}" type="number" /><span>point</span>
+									        </c:when>
+									        <c:otherwise>
+									            <i class="fa-solid fa-xmark"></i>
+									        </c:otherwise>
+									    </c:choose>
+									</td>
+									
+									<td align="center">
+									    <c:choose>
+									        <c:when test="${owner_carShare.payment_amount ne 0}">
+									            <fmt:formatNumber value="${owner_carShare.payment_amount}" type="number" /><span>point</span>
+									        </c:when>
+									        <c:otherwise>
+									            <i class="fa-solid fa-xmark"></i>
+									        </c:otherwise>
+									    </c:choose>
+									</td>
+									
+									<td align="center">
+									    <c:choose>
+									        <c:when test="${owner_carShare.settled_amount eq 0}">
+									           	 이용전
+									        </c:when>
+									        <c:when test="${owner_carShare.nonpayment_amount ne 0.0}">
+									            <fmt:formatNumber value="${owner_carShare.nonpayment_amount}" type="number" /><span>point</span>
+									        </c:when>
+									        <c:otherwise>
+									            <i class="fa-solid fa-xmark"></i>
+									        </c:otherwise>
+									    </c:choose>
+									</td>
+									<c:if test="${owner_carShare.settled_amount eq 0}">
+									    <td align="center"> </td>
+									</c:if>
+									<c:if test="${owner_carShare.settled_amount ne 0 && owner_carShare.payment_amount eq 0}">
+									    <td align="center">
+										    <button type="button" style="background-color:white;" 
+										        onclick="request_payment('${status.index}', '${owner_carShare.pf_empid}', '${owner_carShare.pf_res_num}', '${owner_carShare.nickname_applicant}', '${owner_carShare.email_applicant}', '${owner_carShare.nonpayment_amount}')">
+										        <i class="fa-solid fa-comments"></i>
+										    </button>
+										</td>
+									</c:if>
+                                	<c:if test="${owner_carShare.settled_amount ne 0 && owner_carShare.payment_amount ne 0}">
+									    <td align="center">
+										    결제완료
+										</td>
+									</c:if>
                                 </tr>
                             </c:forEach>
                         </c:if>

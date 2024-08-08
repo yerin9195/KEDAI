@@ -157,6 +157,12 @@ body, html {
 	    // root : 192.168.0.210:9099/KEDAI/chatting
 	   
 	    const wsUrl = "ws://"+root+"/multichatstart.kedai";
+		// root : 192.168.10.198:9099/KEDAI/chatting	   
+	    
+		const wsUrl = "ws://"+root+"/multichatstart.kedai";
+	    
+		//const wsUrl = "ws://"+ "192.168.219.106:9099/KEDAI/chatting" +"/multichatstart.kedai";
+	    
 	    // alert("wsUrl : " + wsUrl)
 	    // wsUrl : ws://192.168.0.210:9099/KEDAI/chatting/multichatstart.kedai
 	 	// 웹소켓통신을 하기위해서는 http:// 을 사용하는 것이 아니라 ws:// 을 사용해야 한다. 

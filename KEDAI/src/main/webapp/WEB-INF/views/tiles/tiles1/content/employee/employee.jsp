@@ -150,7 +150,7 @@ color:#2c4459;
 }
 .popup-overlay-tree .popup{
 	width: 70%;
-	outline: 2px solid red;
+	outline: 0px solid red;
 	padding: 20px 60px;
 	border-radius: 20px;
 	position: relative;
@@ -586,6 +586,8 @@ bigName{
 	 	      			$('#empDetailAddress').val(item.detailaddress);
 	 	      			$('#empExtraAddress').val(item.extraaddress);
 	 	      			$("#pop_partnerImg").attr("src", "<%= ctxPath%>/resources/files/employees/" + item.imgfilename);
+	 	      			$("#gender").val(item.func_gender);
+	 	      			$("#age").val(item.func_age);
 	 	      			// console.log("empName : " + item.name);
 	 	      		})
 	 	        }
@@ -767,6 +769,14 @@ bigName{
 							<label> 
 								<span>입사일자</span> 
 								<input type="text" class="form-control" id="hireDate" readonly>
+							</label>
+							<label> 
+								<span>성별</span> 
+								<input type="text" class="form-control" id="gender" readonly>
+							</label>
+							<label> 
+								<span>나이</span> 
+								<input type="text" class="form-control" id="age" readonly>
 							</label>
 							<label> 
 								<span>기본급여</span> 

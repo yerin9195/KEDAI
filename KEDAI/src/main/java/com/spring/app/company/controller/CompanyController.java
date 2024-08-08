@@ -64,7 +64,7 @@ public class CompanyController {
 	public String partnerNoDuplicateCheck(HttpServletRequest request) {
 
 		String partner_no = request.getParameter("partner_no");
-		System.out.println("확인용 partner_no : " + partner_no);
+		// System.out.println("확인용 partner_no : " + partner_no);
 
 		String searchPartnerNo = service.partnerNoDuplicateCheck(partner_no);
 
@@ -178,6 +178,7 @@ public class CompanyController {
 
 		List<PartnerVO> partnervoList = service.otherCom_list_select();
 
+		// System.out.println("partnervoList : " + partnervoList);
 		/*
 		 * for(PartnerVO partvo : partnervoList) { System.out.println("partner_No : " +
 		 * partvo.getPartner_no()); System.out.println("PARTNER_TYPE : " +
@@ -353,7 +354,7 @@ public class CompanyController {
 		
 		
         mav.addObject("partnerList", partnerList);
-		System.out.println("");
+		// System.out.println("");
         // 검색 시 검색조건 및 검색어 값 유지시키기	
 		if("partner_name".equals(searchType) ||
 		   "partner_type".equals(searchType) ||
