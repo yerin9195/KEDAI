@@ -64,7 +64,7 @@ public class CompanyController {
 	public String partnerNoDuplicateCheck(HttpServletRequest request) {
 
 		String partner_no = request.getParameter("partner_no");
-		// System.out.println("확인용 partner_no : " + partner_no);
+		System.out.println("확인용 partner_no : " + partner_no);
 
 		String searchPartnerNo = service.partnerNoDuplicateCheck(partner_no);
 
@@ -96,7 +96,7 @@ public class CompanyController {
 	public ModelAndView othercomRegister_submit(PartnerVO partvo, @RequestParam("is_modify") Boolean isModify,
 			ModelAndView mav, MultipartHttpServletRequest mrequest) {
 
-		// 이미 파 업로드
+		// 이미지파일 업로드
 		imageFileUpload(partvo, mrequest);
 
 		try {
@@ -177,8 +177,7 @@ public class CompanyController {
 	public ModelAndView otherCom_list_select(ModelAndView mav, HttpServletRequest request) {
 
 		List<PartnerVO> partnervoList = service.otherCom_list_select();
-
-		// System.out.println("partnervoList : " + partnervoList);
+		System.out.println("partnervoList : " + partnervoList);
 		/*
 		 * for(PartnerVO partvo : partnervoList) { System.out.println("partner_No : " +
 		 * partvo.getPartner_no()); System.out.println("PARTNER_TYPE : " +
@@ -354,7 +353,7 @@ public class CompanyController {
 		
 		
         mav.addObject("partnerList", partnerList);
-		// System.out.println("");
+		System.out.println("");
         // 검색 시 검색조건 및 검색어 값 유지시키기	
 		if("partner_name".equals(searchType) ||
 		   "partner_type".equals(searchType) ||
@@ -446,7 +445,6 @@ public class CompanyController {
 		}
 		
 		return jsonArr.toString();
-		
 		
 	}
 	

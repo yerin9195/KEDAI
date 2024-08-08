@@ -230,4 +230,4 @@
 	  	$(".nav-toggle").toggleClass("active");
 	});
 </script>
-<%-- side end --%>	
+<%-- side end --%>

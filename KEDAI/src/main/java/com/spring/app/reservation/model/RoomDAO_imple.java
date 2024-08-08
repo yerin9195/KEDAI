@@ -1,4 +1,3 @@
-
 package com.spring.app.reservation.model;
 
 import java.util.HashMap;
@@ -67,24 +66,12 @@ public class RoomDAO_imple implements RoomDAO {
 
 
 	@Override
-	public RoomVO getReservations(String reservation_seq) {
-	    RoomVO reservations = sqlsession.selectOne("Room.getReservations", reservation_seq);
-	    return reservations;
+	public RoomVO getReservationById(int reservationId) {
+		RoomVO reservation = sqlsession.selectOne("Room.getReservationById", reservationId);
+	    return reservation;
 	}
 
 
-	@Override
-	public int updateReservation(RoomVO roomVO) {
-		int updateReservation = sqlsession.insert("Room.updateReservation", roomVO);
-		return updateReservation;// TODO Auto-generated method stub
-	}
-
-
-	@Override
-	public int deleteReservation(int reservationSeq) {
-		int deleteReservation = sqlsession.update("Room.deleteReservation", reservationSeq);
-		return deleteReservation;
-	}
 	
 
 }

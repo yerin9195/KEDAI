@@ -114,7 +114,6 @@ public class MemberController {
                     } else {
                         mav.setViewName("unknown-device");
                     }
-                    //	test
                 }
             }
         }

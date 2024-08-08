@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+ <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
     
@@ -107,15 +107,17 @@ color:#2c4459;
     position: relative; 	/* 상대적 위치 지정 */
 }
 
-.pagenation{
+/* .pagenation{
 	display:flex;
 	justify-content: center;
-}
+} */
+
 .pagenation button{}
-.pagenation ul{
+/* .pagenation ul{
 	display: flex;
-}
-.pagenation ul li{}
+} */
+
+/* .pagenation ul li{} */
 
 /* 팝업 버튼 요소 시작*/
 
@@ -150,7 +152,7 @@ color:#2c4459;
 }
 .popup-overlay-tree .popup{
 	width: 70%;
-	outline: 0px solid red;
+	outline: 2px solid red;
 	padding: 20px 60px;
 	border-radius: 20px;
 	position: relative;
@@ -304,7 +306,7 @@ color:#2c4459;
 }
 .emp-detail.popup{
 	width: 70%;
-	outline: 2px solid red;
+	/* outline: 2px solid red; */
 	padding: 20px 60px;
 	border-radius: 20px;
 	position: relative;
@@ -435,6 +437,26 @@ bigName{
   background-color: #ddd;
   color: #2c4459;
 }
+
+.emp_table{
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+.emp_table th, .emp_table td {
+    border: 1px solid #ddd; /* 테두리 추가 */
+   /*  padding: 8px; /* 패딩 추가 */ */
+    text-align: center; /* 중앙 정렬 */
+    overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
+    white-space: nowrap; /* 줄 바꿈 방지 */
+} 
+
+
+
+
+
+
 </style>
 
 
@@ -455,11 +477,11 @@ bigName{
 				display : 'none'
 			});
 		});
-
+		
 		/* 조직도 팝업 여는 함수 시작 끝 */
 		
 		// 클릭 시 팝업
-		$('.emp-dept, .emp-rank, .emp-name, .dept-tel, .personal-tel, .emp-email ').click(function() {
+		$('.dept_name, .job_name, .name, .nickname, .dept_tel, .mobile, .email').click(function() {
 			$('.popup-overlay-emp').css({
 				display : 'flex'
 			});
@@ -482,7 +504,13 @@ bigName{
 			}
 		});
 		
+		// 검색시 검색조건 및 검색어 값 유지시키기
+		if(${not empty requestScope.paraMap}){ // paraMap 에 넘겨준 값이 존재하는 경우에만 검색조건 및 검색어 값을 유지한다.
+			$("select[name='searchType']").val("${requestScope.paraMap.searchType}");
+			$("input[name='searchWord']").val("${requestScope.paraMap.searchWord}");
+		}
 		
+		// 검색어 입력시 자동글 완성하기
 		$("div#displayList").hide();
 		
 		$("input[name='searchWord']").keydown(function(){
@@ -495,6 +523,7 @@ bigName{
 				if($("select[name='searchType']").val() == "dept_name" ||
 				   $("select[name='searchType']").val() == "job_name" ||
 				   $("select[name='searchType']").val() == "name" ||
+				   $("select[name='searchType']").val() == "nickname" ||
 				   $("select[name='searchType']").val() == "mobile"){
 					
 					$.ajax({
@@ -586,8 +615,6 @@ bigName{
 	 	      			$('#empDetailAddress').val(item.detailaddress);
 	 	      			$('#empExtraAddress').val(item.extraaddress);
 	 	      			$("#pop_partnerImg").attr("src", "<%= ctxPath%>/resources/files/employees/" + item.imgfilename);
-	 	      			$("#gender").val(item.func_gender);
-	 	      			$("#age").val(item.func_age);
 	 	      			// console.log("empName : " + item.name);
 	 	      		})
 	 	        }
@@ -602,20 +629,14 @@ bigName{
 	 	 });
 	});
 	
-	function goSearch(page) {
+	function goSearch() {
 		const frm = document.employee_search_frm;
-		frm.pageSize.value = $("#sizePerPage option:selected").val();
-		if (page >= 0) {
-			frm.pageNumber.value = page;
-		}
 		
+		frm.method="get";
+		frm.action ="<%=ctxPath%>/employee.kedai";
 		frm.submit();
-	}
-
-	function goPage(page) {
-		goSearch(page);
-	}
-
+		
+	} // end of function goSearch() ------------------------------
 	
 	
 </script>
@@ -629,18 +650,19 @@ bigName{
 		
 		<div class="search_bar">
 			<div class="sch_left">
-				<form name="employee_search_frm" method="post">
+				<form name="employee_search_frm">
 					<select name ="searchType">
-						<option value="">검색대상</option>
-						<option value="department" <c:if test="${'department' eq searchType}">selected</c:if>>부서</option>
-						<option value="position" <c:if test="${'position' eq searchType}">selected</c:if>>직위</option>
-						<option value="name" <c:if test="${'name' eq searchType}">selected</c:if>>이름</option>
-						<option value="personal-tel" <c:if test="${'personal-tel' eq searchType}">selected</c:if>>휴대폰번호</option>
+						<option value="dept_name">부서</option>
+						<option value="job_name">직위</option>
+						<option value="name">이름</option>
+						<option value="nickname">닉네임</option>
+						<option value="mobile">휴대폰번호</option>
 					</select>
-					<input type="text" name="searchWord" value="${searchWord}" />
-					<input type="hidden" name="pageNumber" value="${pagedResult.pageable.pageNumber}" />
-					<input type="hidden" name="pageSize" value="${pagedResult.pageable.pageSize}" />
-					<button type="button" onclick="goSearch()">검색</button>
+					
+					<input type="text" name="searchWord" />
+					<input type="text" style="display: none;"/>
+					
+					<button type="button" onclick="goSearch()" style="border: 1px solid black; margin-left:3px;">검색</button>
 				
 					<div id="displayList" style="position: absolute; left: 0; border: solid 1px gray; border-top: 0px; height: 100px; margin-left: 10%; background: #fff; overflow: hidden; overflow-y: scroll;">
 					</div>
@@ -668,41 +690,39 @@ bigName{
 			    	</div>
 			    </div>
 			</div>
-				
-			<div class="sch_right">
-				<span style="font-size: 12pt; font-weight: bold;">페이지당 직원명수&nbsp;-&nbsp;</span>
-					<select name="sizePerPage" id="sizePerPage" onchange="goSearch(1)">
-						<option value="3" <c:if test="${3 == pagedResult.pageable.pageSize}">selected</c:if>>3명</option>
-						<option value="5" <c:if test="${5 == pagedResult.pageable.pageSize}">selected</c:if>>5명</option>
-						<option value="10" <c:if test="${10 == pagedResult.pageable.pageSize}">selected</c:if>>10명</option>		
-					</select>
-			</div> 
+			
 		</div>
 					
 			<table class="emp_table" id="empTbl"><!-- id="empInfo" -->
 			   <thead>
 			       <tr>
 			         <!--  <th id ="empid">ID</th> -->
-			          <th id ="depart">부서</th>
-			          <th id ="position">직위</th>
-			          <th id="name">이름</th>
-			          <th id="dept-tel">내선번호</th>
-			          <th id="personal-tel">휴대폰번호</th>
-			          <th id="email">E-MAIL</th>
+			          <th id ="dept_name" style="width:10%;">부서</th>
+			          <th id ="job_name" style="width:5%;">직위</th>
+			          <th id="name" style="width:10%;">이름</th>
+			          <th id="nickname" style="width:10%;">닉네임</th>
+			          <th id="dept-tel" style="width:15%;">내선번호</th>
+			          <th id="mobile" style="width:15%;">휴대폰번호</th>
+			          <th id="email" style="width:20%;">E-MAIL</th>
 			       </tr>
 			   </thead>
 			   <tbody>
 			   <!-- ${requestScope.pagedResult.pageable.pageSize}  -->
 			   <c:forEach var="empList" items="${requestScope.employeeList}" varStatus="status">
+			 	   <fmt:parseNumber var="currentShowPageNO" value="${requestScope.currentShowPageNO}" />
+			 	   <fmt:parseNumber var="sizePerPage" value="${requestScope.sizePerPage}" />
+			 	   
+			 	   
 			 	   <tr id="empInfo">
 			 	     <td class="empid" hidden>${empList.empid}</td>
 			 	   	<%--  <td class="empid type=hidden">${empList.empid}</td> <!-- 이렇게 하면 값까지 아예 날려버림 (empid 이용해서 값가져올 수 없음) --> --%>
-			 	   	 <td class="emp-dept">${empList.dept_name}</td>
-		   			 <td class="emp-rank">${empList.job_name}</td>
-		   			 <td class="emp-name">${empList.name}</td>
-		  			 <td class="dept-tel">${empList.dept_tel}</td>
-		  			 <td class="personal-tel">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
-		  			 <td class="emp-email">${empList.email}</td>
+			 	   	 <td class="dept_name" style="width:10%;">${empList.dept_name}</td>
+		   			 <td class="job_name" style="width:5%;">${empList.job_name}</td>
+		   			 <td class="name" style="width:10%;">${empList.name}</td>
+		   			 <td class="nickname" style="width:10%;">${empList.nickname}</td>
+		  			 <td class="dept_tel" style="width:15%;">${empList.dept_tel}</td>
+		  			 <td class="mobile" style="width:15%;">${(empList.mobile).substring(0,3)}-${(empList.mobile).substring(3,7)}-${(empList.mobile).substring(7,11)}</td>
+		  			 <td class="email" style="width:20%;">${empList.email}</td>
 	  			   </tr>
 	  			</c:forEach>   
 		   		</tbody>
@@ -710,17 +730,9 @@ bigName{
 		</div>	
 	</div>		
 				            
-	<div class="pagenation">
-		<button></button>
-		<ul>
-		<c:forEach var="p" begin="1" end="${pagedResult.totalPages}">
-			<li class="paging" onclick="goPage(${p-1})"> ${p} </li>&nbsp;
-		</c:forEach>
-		</ul>
-		<button></button>
+	<div align="center" style="border: solid 0px gray; width: 50%; margin: 2% auto;  height: 100px;">
+		${requestScope.pageBar}
 	</div>
-
-
 
 	<%-- 팝업 클릭시 보이는 직원 상세 테이블 --%>
 	<div class="popup-overlay-emp">
@@ -762,21 +774,13 @@ bigName{
 							</label>
 							<label>
 							 	<span>휴대폰번호</span>
-							 	<input type="text" class="form-control" id="empPersonal-Tel" value="000#" readonly>
+							 	<input type="text" class="form-control" id="empPersonal-Tel" readonly>
 							</label>
 							
 						<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
 							<label> 
 								<span>입사일자</span> 
 								<input type="text" class="form-control" id="hireDate" readonly>
-							</label>
-							<label> 
-								<span>성별</span> 
-								<input type="text" class="form-control" id="gender" readonly>
-							</label>
-							<label> 
-								<span>나이</span> 
-								<input type="text" class="form-control" id="age" readonly>
 							</label>
 							<label> 
 								<span>기본급여</span> 
@@ -786,7 +790,6 @@ bigName{
 								<span>포인트</span> 
 								<input type="text" class="form-control" id="point" readonly>
 							</label>
-					
 							</div>
 								<div class="input-address">
 									<label>

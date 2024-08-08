@@ -1,8 +1,6 @@
 package com.spring.app.salary.model;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,29 +31,6 @@ public class SalaryDAO_imple implements SalaryDAO {
 	public int salaryCal(SalaryVO salaryvo) {
 		int n = sqlsession.insert("salary.salaryCal", salaryvo);
 		return n;
-	}
-
-
-	@Override
-	public MemberVO getEmployeeById(String employeeId) {
-		MemberVO getEmployeeById = sqlsession.selectOne("salary.getEmployeeById", employeeId);
-		return getEmployeeById;
-	}
-
-
-	@Override
-	public List<SalaryVO> getSalaryDetailsById(String yearMonth) {
-	  Map<String, Object> params = new HashMap<>();
-	    params.put("yearMonth", yearMonth);
-	    
-		return sqlsession.selectList("salary.getSalaryDetailsById", params);
-	}
-
-
-	@Override
-	public List<SalaryVO> getAllSalaryData() {
-		List<SalaryVO> getAllSalaryData = sqlsession.selectList("salary.getAllSalaryData");
-		return getAllSalaryData;
 	}
 
 	

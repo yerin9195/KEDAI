@@ -55,28 +55,12 @@ public class RoomService_imple implements RoomService {
 		return getAllReservations;
 	}
 
-
-
 	@Override
-	public RoomVO getReservations(String reservation_seq) {
-		RoomVO getReservations = dao.getReservations(reservation_seq);
-		return getReservations;
+	public RoomVO getReservationById(int reservationId) {
+		RoomVO getReservationById = dao.getReservationById(reservationId);
+		return getReservationById;
 	}
 
-
-	@Override
-	public int updateReservation(RoomVO roomVO) {
-		int n = dao.updateReservation(roomVO);
-		return n;
-	}
-
-	@Override
-	public int deleteReservation(int reservationSeq) {
-		int n = dao.deleteReservation(reservationSeq);
-		return n;
-	}
-
-	
 
 
 }
