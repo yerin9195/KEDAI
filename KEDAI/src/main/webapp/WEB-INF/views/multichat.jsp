@@ -178,7 +178,7 @@ body, html {
 	    // div#mycontent 는  /Board/src/main/webapp/WEB-INF/tiles/layout/layout-tiles1.jsp 파일의 내용에 들어 있는 <div id="mycontent"> 이다.
 			
 	    const url = window.location.host;	// 웹브라우저의 주소창의 포트까지 가져오는 것
-	    //alert("url : " + url);
+	    //alert("url : " + url);  
 	    // url : 192.168.10.198:9099
 	    // url : 192.168.0.210:9099
 	    
@@ -195,10 +195,11 @@ body, html {
 	    // root : 192.168.0.210:9099/KEDAI/chatting
 		// root : 192.168.10.198:9099/KEDAI/chatting	   
 	    
+		//const wsUrl = "ws://"+root+"/multichatstart.kedai";
+	    
 		const wsUrl = "ws://"+root+"/multichatstart.kedai";
 	    
 		//const wsUrl = "ws://"+ "192.168.219.106:9099/KEDAI/chatting" +"/multichatstart.kedai";
-	    
 	    // alert("wsUrl : " + wsUrl)
 	    // wsUrl : ws://192.168.10.198:9099/KEDAI/chatting/multichatstart.kedai
 	    // 192.168.10.198:9099/KEDAI/chatting/multichatstart.kedai
@@ -288,9 +289,9 @@ body, html {
         let isOnlyOneDialog = false; // 귀속말 여부. true 이면 귀속말, false 이면 모두에게 공개되는 말 
        
         $("input#btnSendMessage").click(function(){
-        	console.log("1");
+        	// console.log("1");
           if( $("input#message").val().trim() != "" ) {
-        	  console.log("2");
+        	  // console.log("2");
           	// ==== 자바스크립트에서 replace를 replaceAll 처럼 사용하기 ====
             // 자바스크립트에서 replaceAll 은 없다.
             // 정규식을 이용하여 대상 문자열에서 모든 부분을 수정해 줄 수 있다.
