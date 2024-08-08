@@ -195,9 +195,9 @@ body, html {
 	    // root : 192.168.0.210:9099/KEDAI/chatting
 		// root : 192.168.10.198:9099/KEDAI/chatting	   
 	    
-	//	const wsUrl = "ws://"+root+"/multichatstart.kedai";
+		const wsUrl = "ws://"+root+"/multichatstart.kedai";
 	    
-		const wsUrl = "ws://"+ "192.168.219.106:9099/KEDAI/chatting" +"/multichatstart.kedai";
+		//const wsUrl = "ws://"+ "192.168.219.106:9099/KEDAI/chatting" +"/multichatstart.kedai";
 	    
 	    // alert("wsUrl : " + wsUrl)
 	    // wsUrl : ws://192.168.10.198:9099/KEDAI/chatting/multichatstart.kedai
