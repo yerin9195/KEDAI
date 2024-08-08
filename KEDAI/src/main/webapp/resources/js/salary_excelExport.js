@@ -3,7 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#downloadExcel').addEventListener('click', makeFile);
     
     async function makeFile(e) {
-        var selectedValue = document.getElementById('yearMonth').value;
+        e.preventDefault(); // 기본 동작 방지 (폼 제출 등)
+
+        const selectedValue = document.getElementById('yearMonth').value;
         const workbook = new ExcelJS.Workbook();
         const sheet = workbook.addWorksheet('급여명세서');
 
@@ -13,13 +15,13 @@ document.addEventListener('DOMContentLoaded', function() {
             alignment: { horizontal: 'center', vertical: 'middle' },
             fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: '4472C4' } }
         };
-        
+
         const subHeaderStyle = {
             font: { bold: true, size: 12, color: { argb: 'FFFFFF' } },
             alignment: { horizontal: 'center', vertical: 'middle' },
             fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: '5B9BD5' } }
         };
-        
+
         const normalStyle = {
             alignment: { horizontal: 'center', vertical: 'middle' },
             border: {
@@ -29,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 right: { style: 'thin' }
             }
         };
-        
+
         const warningStyle = {
             font: { color: { argb: 'FF0000' } }
         };
@@ -58,28 +60,30 @@ document.addEventListener('DOMContentLoaded', function() {
         sheet.addRow(['', '', '세부 내역', '']);
         sheet.mergeCells('C5:D5');
         const detailHeaderCell = sheet.getCell('C5');
+        detailHeaderCell.value = '세부 내역';
         detailHeaderCell.style = subHeaderStyle;
-		const salaryDetails = document.querySelectorAll('#salaryDetails tr');
-		salaryDetails.forEach(row => {
-		    const cells = row.querySelectorAll('td');
-		    if (cells.length > 0) {
-		        const rowData = Array.from(cells).map(cell => {
-		            // input 필드가 있으면 그 value를 사용하고, 없으면 textContent를 사용
-		            const input = cell.querySelector('input');
-		            return input ? input.value.trim() : cell.textContent.trim();
-		        });
-		        const newRow = sheet.addRow(rowData);
-		        newRow.eachCell((cell, colNumber) => {
-		            cell.style = normalStyle;
-		            if (colNumber === 2 && cell.value === '실지급액') {
-		                cell.style = warningStyle;
-		            }
-		        });
-		    }
-		});
+
+        const salaryDetails = document.querySelectorAll('#salaryDetails tr');
+        salaryDetails.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length > 0) {
+                const rowData = Array.from(cells).map(cell => {
+                    // input 필드가 있으면 그 value를 사용하고, 없으면 textContent를 사용
+                    const input = cell.querySelector('input');
+                    return input ? input.value.trim() : cell.textContent.trim();
+                });
+                const newRow = sheet.addRow(rowData);
+                newRow.eachCell((cell, colNumber) => {
+                    cell.style = normalStyle;
+                    if (colNumber === 2 && cell.value === '실지급액') {
+                        cell.style = warningStyle;
+                    }
+                });
+            }
+        });
 
         // 엑셀 파일 다운로드
-        download(workbook, selectedDate + ' 급여명세서');
+        await download(workbook, selectedDate + ' 급여명세서');
     }
 
     const download = async (workbook, fileName) => {
@@ -91,7 +95,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const anchor = document.createElement('a');
         anchor.href = url;
         anchor.download = fileName + '.xlsx';
+        document.body.appendChild(anchor); // for Firefox
         anchor.click();
+        document.body.removeChild(anchor); // cleanup
         window.URL.revokeObjectURL(url);
     };
 });
