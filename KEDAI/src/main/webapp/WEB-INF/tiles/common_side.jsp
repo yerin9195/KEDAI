@@ -209,7 +209,7 @@
 					<span class="icon"><i class="fa-solid fa-store"></i></span>
 				</li>
 				<li>
-					<a href="#">일정관리</a>
+					<a href="<%=ctxPath%>/scheduler.kedai">일정관리</a>
 					<span class="icon"><i class="fa-regular fa-calendar-check"></i></span>
 				</li>
 				<c:if test="${(sessionScope.loginuser).fk_job_code eq '1'}">
@@ -230,4 +230,4 @@
 	  	$(".nav-toggle").toggleClass("active");
 	});
 </script>
-<%-- side end --%>
+<%-- side end --%>	

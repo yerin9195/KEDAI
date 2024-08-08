@@ -80,7 +80,10 @@
 	     SELECT *
 		FROM tbl_sal
 		WHERE to_char(payment_date, 'YYYY-MM') = #{yearMonth}
-		and fk_empid = #{empid}
+	</select>
+	
+	<select id="getAllSalaryData" resultType="SalaryVO">
+		select * from tbl_sal
 	</select>
 	
 </mapper>

@@ -16,10 +16,11 @@ public interface SalaryService {
 
 	MemberVO getEmployeeById(String employeeId);
 
-	List<SalaryVO> getSalaryDetailsById(String yearMonth, String empid);
+	List<SalaryVO> getSalaryDetailsById(String yearMonth);
 
 
-	
+
+	List<SalaryVO> getAllSalaryData();
 
 	
 

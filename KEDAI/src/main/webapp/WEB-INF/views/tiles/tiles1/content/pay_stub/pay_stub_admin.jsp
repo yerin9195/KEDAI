@@ -10,7 +10,6 @@
 
 <style type="text/css">
 	#myContent > div{
-		border: solid 1px blue;
 		width: 80%;
 		margin-top: 2%;
 	}
@@ -74,6 +73,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
+		loadInitialData();
 		const modalClose = document.querySelector('.close_btn');
 		
 		$("#workdaySmt").click(function(e){	
@@ -87,10 +87,7 @@
 		});
 		
 
-		$("#workListcom_btn").click(function(e){
-			 $('#modal1').modal("show");
-			 Memberview();
-		});
+		
 		$('#close').click(function(e){
 			modal.style.display = "none"
 		});
@@ -223,8 +220,8 @@
 	    		        newRow += '<td class="empid">' + item.empid + '</td>'; // 사원번호
 	    		        newRow += '<td>' + item.name + '</td>'; // 사원명
 	    		        newRow += '<td>' + item.fk_dept_code + '</td>'; // 부서명
-	    		        newRow += '<td><input type="text" class="form-control" id="weekdayCountfi" readonly /></td>'; // 근무일수
-	    		        newRow += '<td><input type="text" class="form-control" readonly /><input type="hidden" id="memberSalary" value="' + item.salary + '"/></td>'; // 추가근무일수 (데이터가 없어서 비워둠)
+	    		        newRow += '<td><input type="text" class="form-control" id="weekdayCountfi" /></td>'; // 근무일수
+	    		        newRow += '<td><input type="text" class="form-control" /><input type="hidden" id="memberSalary" value="' + item.salary + '"/></td>'; // 추가근무일수 (데이터가 없어서 비워둠)
 	    		        newRow += '</tr>';
 	    		        
 	    		        // 새로운 행을 tbody에 추가
@@ -386,8 +383,7 @@
             '', // This will be replaced with the select elements for year and month
             '<button id="workListcom_btn">근무기록확정</button>',
             '<button id="total_bth">전체계산</button>',
-            '<button>조회</button>',
-            '<button>조회</button>',
+            '<button id="dwd">다운로드</button>',
             '지급총액'
         ];
 
@@ -405,17 +401,7 @@
         }
 
         // 전체계산 버튼 클릭 이벤트 바인딩
-        newRow.querySelector('#workListcom_btn').addEventListener('click', function() {
-            $('#modal1').modal("show");
-            Memberview();
-        });
-
-        // 전체계산 버튼 클릭 이벤트 바인딩
-        newRow.querySelector('#total_bth').addEventListener('click', function() {
-        	 console.log("????")
- 		    loadSalaryData();
- 			$('#modal3').modal("show");
-        });
+     
     }
 
 	
@@ -423,7 +409,8 @@
         var workdayval = $("#weekdayCount").val();
         var empidval = [];
         var memberSalary = [];
-        var payment_date = $(".yearSelect").val() +"/"+ $(".monthSelect").val();
+        var payment_date = $(".yearSelect").val() + $(".monthSelect").val()+"07";
+        console.log(payment_date)
         
         $(".checkbox-member:checked").each(function() {
             var empid = $(this).closest('tr').find('.empid').text();
@@ -451,7 +438,7 @@
             data: {
                 workday: workdayval,
                 "empid": empidval,
-                memberSalary: memberSalary
+                memberSalary: memberSalary,
                 payment_date: payment_date
             },
             traditional: true,
@@ -474,27 +461,41 @@
         });
     }
     
-    console.log($('#yearMonth').val())
+    
 
     function loadSalaryData() {
+        var yearMonth_not = document.getElementById('yearMonth').value;
+        var year = yearMonth_not.substring(0, 4); // "2024"
+        var month = yearMonth_not.substring(4, 6); // "08"
+        
+        // 변환된 날짜 문자열 생성 (YYYY-MM 형식)
+        var yearMonth = year + "-" + month; // "2024-08"
+
         $.ajax({
-            url: "<%= ctxPath %>/salaryData.kedai",
+            url: "<%= ctxPath %>/salaryData.kedai", // 서버의 데이터 URL
             type: "GET",
             data: {
-                yearMonth: $('#yearMonth').val(), // 파라미터 값을 가져옵니다
-                empid: $('#empid').val()           // 파라미터 값을 가져옵니다
+                yearMonth: yearMonth // 요청 파라미터
             },
-
-            dataType: "json",
+            dataType: "json", // 데이터 형식
             success: function(response) {
-                var tbody = $('#modal3 table tbody');
-                tbody.empty();
                 
-                // 서버에서 반환하는 JSON 데이터가 배열 형태인지 확인
+                console.log($('#yearMonth').val());
+
+                var tbody = $('#modal3 table tbody');
+                tbody.empty(); // 테이블 내용 초기화
+
+                // 서버에서 반환된 데이터가 배열인지 확인
                 if (Array.isArray(response)) {
                     $.each(response, function(index, salary) {
-                        // 데이터 필드 이름이 서버에서 반환하는 것과 일치하는지 확인
+                        // 데이터에서 error 키가 있는지 확인
+                        if (salary.error) {
+                            alert(salary.error);
+                            return false; // 배열 탐색 중지
+                        }
+
                         var newRow = '<tr>';
+                        newRow += '<td>' + (salary.namd || '') + '</td>';
                         newRow += '<td>' + (salary.base_salary || '') + '</td>';
                         newRow += '<td>' + (salary.meal_allowance || '') + '</td>';
                         newRow += '<td>' + (salary.annual_allowance || '') + '</td>';
@@ -509,6 +510,48 @@
                         newRow += '<td>' + (salary.net_pay || '') + '</td>';
                         newRow += '</tr>';
                         
+                        tbody.append(newRow); // 테이블에 새로운 행 추가
+                    });
+                } else {
+                    alert("서버에서 반환된 데이터 형식이 올바르지 않습니다.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("데이터를 불러오지 못했습니다:", status, error);
+                alert("데이터를 불러오지 못했습니다.");
+            }
+        });
+    }
+
+
+
+    function loadInitialData() {
+        $.ajax({
+            url: "<%= ctxPath %>/initialData.kedai", // 실제 데이터 조회 URL로 변경
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+            	// 각 테이블에 대한 식별자를 확인하고 적절한 테이블을 선택합니다
+                // 이 예제에서는 단일 테이블에 삽입하지만, 조건에 따라 여러 테이블에 삽입할 수 있습니다.
+                var targetTableId = 'salaryTable'; // 여기에 삽입할 테이블의 ID를 설정
+
+                // 테이블 식별자로 tbody 선택
+                var tbody = $('#' + targetTableId + ' tbody');
+                tbody.empty(); // 기존 데이터를 비움
+
+                // 서버에서 반환된 JSON 데이터가 배열 형태인지 확인
+                if (Array.isArray(response)) {
+                    $.each(response, function(index, item) {
+                        // 데이터로 새 행 생성
+                        var newRow = '<tr>';
+                        newRow += '<td>급여</td>'; // '급여구분' 고정값
+                        newRow += '<td id="date">' + item.period + '</td>'; // '대장명칭'에 기간을 삽입
+                        newRow += '<td><button id="workListcom_btn">근무기록확정</button></td>'; // '사전작업' 버튼
+                        newRow += '<td><button id="total_bth">전체계산</button></td>'; // '급여계산' 버튼
+                        newRow += '<td><button id="dwd">다운로드</button></td>'; // '명세서' 버튼
+                        newRow += '<td>' + formatCurrency(item.total_amount) + '</td>'; // '지급총액' 포맷
+                        newRow += '</tr>';
+
                         tbody.append(newRow);
                     });
                 } else {
@@ -523,9 +566,213 @@
     }
 
 
+    // 숫자를 포맷하여 통화 형식으로 변환하는 함수
+    function formatCurrency(amount) {
+        // Check if amount is a number before formatting
+        if (typeof amount === 'number') {
+            return amount.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });
+        }
+        return amount; // If not a number, return it as is
+    }
+
+
+    $(document).on('click', '#workListcom_btn', function(e) {
+		 $('#modal1').modal("show");
+		 Memberview();
+	});
+    
+    $(document).on('click', '#total_bth', function(e) {
+    	// 클릭된 버튼
+        var button = $(this);
+
+        // 클릭된 버튼의 부모 행을 찾기
+        var row = button.closest('tr');
+
+        // 행에서 id가 'date'인 <td> 요소의 값을 가져오기
+        var date = row.find('td#date').text();
+
+        console.log(date);
+        // 또는 클릭된 버튼의 부모 행에서 특정 열의 값을 가져오는 방법
+        // var date = row.find('td').eq(0).text(); // 예를 들어 첫 번째 열에서 가져오기
+
+        // yearSelect와 monthSelect 값 가져오기
+        var yearSelect = document.getElementById('yearSelect');
+        var monthSelect = document.getElementById('monthSelect');
+
+        var yearMonth;
+
+        if (yearSelect && monthSelect) {
+            if (!yearSelect.value || !monthSelect.value) {
+                yearMonth = formatYearMonth(date); // 버튼에서 가져온 date를 포맷팅
+            } else {
+                yearMonth = yearSelect.value + monthSelect.value; // 선택된 연도와 월을 조합
+            }
+        } else {
+            yearMonth = formatYearMonth(date); // 버튼에서 가져온 date를 포맷팅
+        }
+
+         $('#yearMonth').val(yearMonth); // 설정된 값을 hidden input에 저장
+         $('#empid').val(""); // 필요시 empid 값을 설정할 수 있음
+         loadSalaryData(); // 급여 데이터 로드
+         $('#modal3').modal("show");
+     });
 		
+    
+    function formatYearMonth(input) {
+        // 입력 문자열을 "년", "월"로 분리
+        var parts = input.split('년');
+        if (parts.length < 2) {
+            console.error("입력 문자열 형식이 올바르지 않습니다.");
+            return null;
+        }
+
+        var year = parts[0].trim(); // 연도 추출
+        var monthPart = parts[1].split('월')[0].trim(); // 월 추출
+
+        // 연도와 월이 올바른 형식인지 확인
+        if (!year || !monthPart) {
+            console.error("연도 또는 월 정보가 누락되었습니다.");
+            return null;
+        }
+
+        // 월을 두 자리로 포맷
+        var formattedMonth = monthPart.padStart(2, '0');
+
+        // YYYY-MM 형식으로 반환
+        return year + formattedMonth;
+    }
 		
+    
+    $(document).on('click', '#dwd', function(e) {
+    	
+    	console.log("?????????????????????????")
+    	const downloadButton = document.querySelector('#dwd');
+    	if (downloadButton) {
+    	    downloadButton.addEventListener('click', makeFile);
+    	} else {
+    	    console.error('Download button with ID "dwd" not found.');
+    	}
+
+        
+        async function makeFile(e) {
+            e.preventDefault(); // 기본 동작 방지 (폼 제출 등)
+
+            const selectedValue = document.getElementById('yearMonth').value;
+            console.log(selectedValue)
+            const response = await fetch(`/salaryData.kedai?yearMonth=${selectedValue}`);
+            const data = await response.json();
+
+            if (Array.isArray(data) && data.length > 0) {
+                const workbook = new ExcelJS.Workbook();
+
+                // 스타일 설정
+                const headerStyle = {
+                    font: { bold: true, size: 16, color: { argb: 'FFFFFF' } },
+                    alignment: { horizontal: 'center', vertical: 'middle' },
+                    fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: '4472C4' } }
+                };
+
+                const subHeaderStyle = {
+                    font: { bold: true, size: 12, color: { argb: 'FFFFFF' } },
+                    alignment: { horizontal: 'center', vertical: 'middle' },
+                    fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: '5B9BD5' } }
+                };
+
+                const normalStyle = {
+                    alignment: { horizontal: 'center', vertical: 'middle' },
+                    border: {
+                        top: { style: 'thin' },
+                        left: { style: 'thin' },
+                        bottom: { style: 'thin' },
+                        right: { style: 'thin' }
+                    }
+                };
+
+                const warningStyle = {
+                    font: { color: { argb: 'FF0000' } }
+                };
+
+                data.forEach(employeeData => {
+                    const sheet = workbook.addWorksheet(employeeData.namd);
+
+                    // 데이터 삽입
+                    sheet.mergeCells('A1:D1');
+                    const titleCell = sheet.getCell('A1');
+                    titleCell.value = '급여명세서';
+                    titleCell.style = headerStyle;
+
+                    // 선택된 연도와 월 가져오기
+                    sheet.mergeCells('A2:D2');
+                    const dateCell = sheet.getCell('A2');
+                    dateCell.value = '급여지급일 : ' + selectedValue + ' 10일';
+                    dateCell.style = normalStyle;
+
+                    // 개인 정보
+                    sheet.addRow(['이름', employeeData.namd, '부서', employeeData.department || '']);
+                    sheet.addRow(['직위', employeeData.position || '', '입사일자', employeeData.hireDate || '']);
+                    sheet.getRow(3).eachCell(cell => { cell.style = normalStyle; });
+                    sheet.getRow(4).eachCell(cell => { cell.style = normalStyle; });
+
+                    // 세부 내역 헤더
+                    sheet.addRow([]);
+                    sheet.addRow(['', '', '세부 내역', '']);
+                    sheet.mergeCells('C5:D5');
+                    const detailHeaderCell = sheet.getCell('C5');
+                    detailHeaderCell.value = '세부 내역';
+                    detailHeaderCell.style = subHeaderStyle;
+
+                    // 세부 내역 데이터 삽입
+                    const details = [
+                        ['기본급', employeeData.base_salary],
+                        ['식대', employeeData.meal_allowance],
+                        ['연차수당', employeeData.annual_allowance],
+                        ['초과근무수당', employeeData.overtime_allowance],
+                        ['소득세', employeeData.income_tax],
+                        ['지방소득세', employeeData.local_income_tax],
+                        ['연금', employeeData.pension],
+                        ['건강보험', employeeData.health_insurance],
+                        ['고용보험', employeeData.employment_insurance],
+                        ['총소득', employeeData.total_income],
+                        ['총공제', employeeData.total_deduction],
+                        ['실지급액', employeeData.net_pay]
+                    ];
+
+                    details.forEach(detail => {
+                        const newRow = sheet.addRow(['', '', detail[0], detail[1]]);
+                        newRow.eachCell((cell, colNumber) => {
+                            cell.style = normalStyle;
+                            if (colNumber === 2 && cell.value === '실지급액') {
+                                cell.style = warningStyle;
+                            }
+                        });
+                    });
+                });
+
+                // 엑셀 파일 다운로드
+                await download(workbook, selectedValue + ' 급여명세서');
+            } else {
+                alert("서버에서 반환된 데이터가 올바르지 않습니다.");
+            }
+        }
+
+        const download = async (workbook, fileName) => {
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            });
+            const url = window.URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = fileName + '.xlsx';
+            document.body.appendChild(anchor); // for Firefox
+            anchor.click();
+            document.body.removeChild(anchor); // cleanup
+            window.URL.revokeObjectURL(url);
+        };
+    });
+    
 </script>
+<script src="salary_excelExport.js"></script>
 
 <div class="header">
         <h1>급여명세서</h1>
@@ -535,14 +782,13 @@
         </div>
     </div>
 
-    <table>
+    <table id="salaryTable">
         <thead>
             <tr>
             	<th>급여구분</th> 
             	<th>대장명칭</th>
                 <th>사전작업</th>
                 <th>급여계산</th>
-                <th>급여대장</th>
                 <th>명세서</th>
                 <th>지급총액</th>
             </tr>
@@ -553,6 +799,7 @@
     </table>
     <br>
     <button onclick="addNewRow()">신규</button>
+    <input type="text" id="yearMonth" name="yearMonth">
 	
 	<!-- 모달1 -->
 <div id="modal1" class="modal fade" tabindex="-1" role="dialog">
@@ -644,6 +891,7 @@
                 <table>
                     <thead>
                         <tr>
+                        	<th>사원명</th>
                             <th>기본급</th>
                             <th>식대 보조금</th>
                             <th>연차 수당</th>
