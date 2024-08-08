@@ -195,11 +195,15 @@ body, html {
 	    // root : 192.168.0.210:9099/KEDAI/chatting
 		// root : 192.168.10.198:9099/KEDAI/chatting	   
 	    
+
 		// String serverIP = "3.35.50.152";
 	    // "3.35.50.152" => 내 아마존 아이피
 		// const wsUrl = "ws://"+root+"/multichatstart.kedai";
 	    
+
 		const wsUrl = "ws://"+root+"/multichatstart.kedai";
+	    
+		//const wsUrl = "ws://"+ "192.168.219.106:9099/KEDAI/chatting" +"/multichatstart.kedai";
 	    
 	    // alert("wsUrl : " + wsUrl)
 	    // wsUrl : ws://192.168.10.198:9099/KEDAI/chatting/multichatstart.kedai

@@ -673,8 +673,68 @@ from tbl_employees
 where email = 'Pgi/iloKL5vm3RYKplsYSDOaV1KAk0T0UC+OUmsxUo8='
 
 
+select *
+from tbl_employees;
+
+
+SELECT empid, name, nickname, mobile, email, gender,age
+     , postcode, address, detailaddress, extraaddress
+     , imgfilename, orgimgfilename, hire_date, salary, point
+     , fk_dept_code, dept_code, dept_name, fk_job_code, job_code, job_name, dept_tel
+FROM 
+(
+    select empid, name, nickname
+         , email, mobile, postcode, address, detailaddress, extraaddress
+         , func_gender(jubun) AS gender
+         , func_age(jubun) AS age
+         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, point
+         , fk_dept_code, dept_code, nvl(D.dept_name, ' ') AS dept_name
+         , fk_job_code, job_code, nvl(J.job_name, ' ') AS job_name
+         , dept_tel
+    from tbl_employees E1 
+    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+    order by dept_name asc, job_code asc
+) E
+where empid = '2011300-001';
+------------------------------------------------------------------------------------------------------------------------
+
+SELECT empid, name, nickname, jubun, gender, age, email, mobile
+     , postcode, address, detailaddress, extraaddress
+     , imgfilename, orgimgfilename, hire_date, salary, commission_pct, point
+     , fk_dept_code, dept_name, fk_job_code, job_name, dept_tel, sign_img, annual_leave, pwdchangegap
+     , NVL(lastlogingap, trunc(months_between(sysdate, hire_date))) AS lastlogingap
+FROM 
+(
+    select empid, name, nickname, jubun
+         , func_gender(jubun) AS gender
+         , func_age(jubun) AS age
+         , email, mobile, postcode, address, detailaddress, extraaddress
+         , imgfilename, orgimgfilename, to_char(hire_date, 'yyyy-mm-dd') AS hire_date, salary, commission_pct, point
+         , fk_dept_code, nvl(D.dept_name, ' ') AS dept_name
+         , fk_job_code, nvl(J.job_name, ' ') AS job_name
+         , dept_tel, sign_img, annual_leave
+         , trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap
+    from tbl_employees E1 
+    LEFT JOIN tbl_dept D ON E1.fk_dept_code = D.dept_code
+    LEFT JOIN tbl_job J ON E1.fk_job_code = J.job_code
+    where status = 1 and empid = '2011300-001' and pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
+) E2 
+CROSS JOIN 
+( 
+    select trunc(months_between(sysdate, max(logindate))) AS lastlogingap 
+    from tbl_loginhistory 
+    where fk_empid = '2011300-001'
+) H
 
 
 
 
-            
+
+
+
+
+
+
+
+
