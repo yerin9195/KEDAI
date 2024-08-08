@@ -165,16 +165,16 @@ public class RoomController {
 	    }
 
 	
+	 @GetMapping("/getRoomData.kedai")
+	 public ResponseEntity<?> getRoomData(@RequestParam(defaultValue = "default_value") String subroom) {
+	     try {
+	         List<RoomSubVO> roomData = service.getRoomData(subroom);
+	         return ResponseEntity.ok(roomData);
+	     } catch (Exception e) {
+	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching room data");
+	     }
+	 }
 
-	  @GetMapping("/getRoomData.kedai")
-	    public ResponseEntity<?> getRoomData(@RequestParam String subroom) {
-		    try {
-	            List<RoomSubVO> roomData = service.getRoomData(subroom);
-	            return ResponseEntity.ok(roomData);
-	        } catch (Exception e) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching room data");
-	        }
-	    }
 	  
 	  @GetMapping(value = "/getReservations.kedai", produces = "application/json;charset=UTF-8")
 	    @ResponseBody

@@ -1,3 +1,4 @@
+
 package com.spring.app.reservation.model;
 
 import java.util.HashMap;
