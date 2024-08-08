@@ -13,7 +13,7 @@
    	<!-- DBCP 2.x를 위한 DataSource 객체 -->
    	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
     	<property name="driverClassName" value="net.sf.log4jdbc.DriverSpy" />
-      	<property name="url" value="jdbc:log4jdbc:oracle:thin:@//211.238.142.209:1521/xe" /> <!-- 연결해야할 DB 의 ip 주소이다. -->
+      	<property name="url" value="jdbc:log4jdbc:oracle:thin:@//127.0.0.1:1521/xe" /> <!-- 연결해야할 DB 의 ip 주소이다. -->
       	<property name="username" value="final_orauser5" />
       	<property name="password" value="gclass" />
       
