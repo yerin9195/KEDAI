@@ -58,26 +58,6 @@ public interface CarDAO {
 
 	List<Map<String, String>> owner_SettlementList_withPaging(Map<String, String> paraMap);
 
-	List<Map<String, String>> getowner_SettlementList_mobile(Map<String, String> paraMap);
-
-	int getTotalcount_owner_SettlementList_mobile(Map<String, String> paraMap);
-
-	List<Map<String, String>> getowner_SettlementList_withPaging_mobile(Map<String, String> paraMap);
-
-	int update_drive_in_time(Map<String, String> paraMap);
-
-	int update_drive_out_time(Map<String, String> paraMap);
-
-	List<Map<String, String>> getcustomer_applyStatusList(String empid);
-
-	List<Map<String, String>> getcustomer_SettlementList(String empid);
-
-	int pointMinus_applicant(Map<String, String> minusParaMap);
-
-	void pointPlus_owner(Map<String, String> plusParaMap);
-
-	int payment_settled(Map<String, String> minusParaMap);
-
 
 
 }

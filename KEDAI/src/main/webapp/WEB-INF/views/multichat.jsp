@@ -22,7 +22,6 @@ body, html {
   display: flex;
   justify-content: center; /* 수평 중앙 정렬 */
   align-items: center; /* 수직 중앙 정렬 */
-  overflow: hidden;
 }
 #chatStatus {
   background-color: #f1f1f1; /* 배경 색상 설정 */
@@ -78,20 +77,16 @@ body, html {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width:800px;
-	height: 300px;
-	margin-right: 50px;
-	
+	margin-top: 20px;
 }
 
 .message_body{
 	
 }
-
-/*
 #speechbubble{
 
-.tooltip{
+.tooltip::after {
+  content: "";
   position: absolute;
   top: 50%;
   left: 106%;
@@ -102,41 +97,9 @@ body, html {
   border-color:  transparent transparent transparent #555;
 }
 }
-*/
 
 /* common header에 있는 말풍선 참고하기 tooltip */
 
-.chatUser {
-	border: 1px solid black; 
-	width: auto; 
-	text-align: center;
-	font-weight:bold;
-	background-color: #ccc;
-	height: 50px;
-	margin-bottom:258%;
-}
-
-
-#btnSendMessage #btnExitMessage{
-	margin-bottom: 120%;
-}
-
-#chatStatus {
-	border-radius: 10px;
-	font-weight: 700;
-	color: #2c4459;
-}
-
-#chatting_box {
-	width: 900px;
-	height: 890px;
-	
-}
-#secretId{
-	display: inline-block;
-	width: 500px;
-	height: 500px;
-}
 
 </style> 
 
@@ -173,13 +136,12 @@ body, html {
 */
 
 	$(document).ready(function(){
-
+		
 		// $("div#mycontent").css({"background-color":"#cce0ff"});
 	    // div#mycontent 는  /Board/src/main/webapp/WEB-INF/tiles/layout/layout-tiles1.jsp 파일의 내용에 들어 있는 <div id="mycontent"> 이다.
 			
 	    const url = window.location.host;	// 웹브라우저의 주소창의 포트까지 가져오는 것
-	    //alert("url : " + url);
-	    // url : 192.168.10.198:9099
+	    // alert("url : " + url);
 	    // url : 192.168.0.210:9099
 	    
 	    const pathname = window.location.pathname;	// 최초 '/' 부터 오른쪽에 있는 모든 경로를 알려준다. 
@@ -193,15 +155,15 @@ body, html {
 	    const root = url + appCtx;
 	    // alert("root : " + root);
 	    // root : 192.168.0.210:9099/KEDAI/chatting
+	   
+	    const wsUrl = "ws://"+root+"/multichatstart.kedai";
 		// root : 192.168.10.198:9099/KEDAI/chatting	   
 	    
-	//	const wsUrl = "ws://"+root+"/multichatstart.kedai";
+		const wsUrl = "ws://"+root+"/multichatstart.kedai";
 	    
-		const wsUrl = "ws://"+ "192.168.219.106:9099/KEDAI/chatting" +"/multichatstart.kedai";
+		//const wsUrl = "ws://"+ "192.168.219.106:9099/KEDAI/chatting" +"/multichatstart.kedai";
 	    
 	    // alert("wsUrl : " + wsUrl)
-	    // wsUrl : ws://192.168.10.198:9099/KEDAI/chatting/multichatstart.kedai
-	    // 192.168.10.198:9099/KEDAI/chatting/multichatstart.kedai
 	    // wsUrl : ws://192.168.0.210:9099/KEDAI/chatting/multichatstart.kedai
 	 	// 웹소켓통신을 하기위해서는 http:// 을 사용하는 것이 아니라 ws:// 을 사용해야 한다. 
 	    // "/multichatstart.kedai" 에 대한 것은 /WEB-INF/spring/config/websocketContext.xml 파일에 있는 내용이다. 
@@ -223,7 +185,7 @@ body, html {
 	    // === 웹소켓에 최초로 연결이 되었을 경우에 실행되어지는 콜백함수 정의하기 === //
 	    websocket.onopen = function(){
 			// alert("웹소켓 연결됨");
-			$("div#chatStatus").text("웹 채팅에 연결이 성공하였습니다."); 
+			$("div#chatStatus").text("정보: 웹소켓에 연결이 성공됨!!"); 
 			
 			/*   
 	           messageObj.message = "채팅방에 <span style='color: red;'>입장</span> 했습니다.";
@@ -252,25 +214,17 @@ body, html {
 	    
 	    // ==== 메시지 수신시 콜백함수 정의하기 ==== // 
 	    websocket.onmessage = function(event){
-	    	
-	    	// event.data 는 수신되어진 메시지이다. 즉 지금은 「유선우 」이다. 
-    		// if(event.data.substr(0,1)=="「" && event.data.substr(event.data.length-1)=="」") {
-    	   if(event.data.substr(0,1)=="「") {
-    		 //  alert(event.data); 
-    		  $("div#connectingUserList").html(event.data);
-           }
-    	   /// ★
-    	   else if(event.data.substr(0,1)=="⊇"){
-    		  $("tbody#tbody").html(event.data);  
-    	   }
-           else {
-           // 	event.data 는 수신받은 채팅 문자이다.
-           		$("div#chatMessage").append(event.data);
-          		$("div#chatMessage").append("<br>");
-          		$("div#chatMessage").scrollTop(99999999);
-           }
-    	 // } // 이거 추가하면 엔터가 안쳐짐
-	     };
+    	// event.data 는 수신되어진 메시지이다. 즉 지금은 「유선우 」이다. 
+    	if(event.data.substr(0,1)=="「" && event.data.substr(event.data.length-1)=="」") {
+            $("div#connectingUserList").html(event.data);
+         	}
+          else {
+             // event.data 는 수신받은 채팅 문자이다.
+             $("div#chatMessage").append(event.data);
+             $("div#chatMessage").append("<br>");
+             $("div#chatMessage").scrollTop(99999999);
+          }
+	    };
 	    
 		 // === 웹소켓 연결 해제시 콜백함수 정의하기 === //
 	     websocket.onclose = function(){
@@ -288,9 +242,9 @@ body, html {
         let isOnlyOneDialog = false; // 귀속말 여부. true 이면 귀속말, false 이면 모두에게 공개되는 말 
        
         $("input#btnSendMessage").click(function(){
-        	console.log("1");
+       
           if( $("input#message").val().trim() != "" ) {
-        	  console.log("2");
+             
           	// ==== 자바스크립트에서 replace를 replaceAll 처럼 사용하기 ====
             // 자바스크립트에서 replaceAll 은 없다.
             // 정규식을 이용하여 대상 문자열에서 모든 부분을 수정해 줄 수 있다.
@@ -310,17 +264,11 @@ body, html {
                messageObj.message = messageVal;
                messageObj.type = "all";
                messageObj.to = "all";
-               
+             
                const to = $("input#to").val();
-               
-               // console.log("3" + );
-               
                if( to != "" ){
-            	   console.log("4");
                   	messageObj.type = "one";
                   	messageObj.to = to;
-                  	console.log("type" + messageObj.type);
-                  	console.log("to" + messageObj.to );
                }
                
                websocket.send(JSON.stringify(messageObj));
@@ -366,10 +314,6 @@ body, html {
                
                $("input#message").val("");
                $("input#message").focus();
-               
-               ///////////// 확인용 ///////////////
-               // alert()
-               //////////////////////////////////////////////
           }
           
        });
@@ -388,17 +332,15 @@ body, html {
           */
           
           const ws_id = $(this).prev().text();
-       	 // console.log("prev-text : " + ws_id);
-       	  alert(ws_id);
+       // alert(ws_id);
           $("input#to").val(ws_id); 
            
-           $("span#privateWho").text($(this).text());
-           $("button#btnAllDialog").show(); // 귀속말대화끊기 버튼 보이기 
+          $("span#privateWho").text($(this).text());
+          $("button#btnAllDialog").show(); // 귀속말대화끊기 버튼 보이기 
            $("input#message").css({'background-color':'black', 'color':'white'});
            $("input#message").attr("placeholder","귀속말 메시지 내용");
            
            isOnlyOneDialog = true; // 귀속말 대화임을 지정 
-     
        });  
        
        
@@ -416,83 +358,52 @@ body, html {
        
        
        // 메시지 나가기 
-       /*
        $(document).ready(function(){
     	   $(document).keydown(function(event){
     		   if(event.key == "Escape"){
     			   window.history.back();
     		   }
     	   })
-    	   
        })
-		*/
+       
+       
 	}); // end of $(document).ready(function(){}---------------------------------------
 
 
 </script>    
 </head>
 <body>
-<div style="display: flex; height: 90%; margin-bottom: 3%;">
-	<table style="border:solid 0px black; border-radius: 3px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);" class="chatUser">
-		<thead>
-			<tr>
-				<th colspan="4" style="text-align:center;">[ 접속중인 직원 ]</th>
-			</tr>	
-			<tr>
-				<th style="width: 70px; text-align: center;">사진</th>
-				<th style="width: 70px; text-align: center;">이름</th>		
-				<th style="width: 70px; text-align: center;">부서</th>	
-				<th style="width: 70px; text-align: center;">직급</th>			
-			</tr>
-		</thead>
-		<tbody id="tbody">
-			<%-- <c:forEach var="logEmp" items="${requestScope.loginEmpInfoList}"> 
-				<tr>
-					<td style="width: 70px; text-align: center;">
-						<img src="<%= ctxPath%>/resources/files/employees/${logEmp.imgfilename}" width=50px; height=50px;>
-					</td>
-					<td style="width: 70px; text-align: center;">${logEmp.name}</td>
-					<td style="width: 70px; text-align: center;">${logEmp.dept_name}</td>
-					<td style="width: 70px; text-align: center;">${logEmp.job_name}</td>
-				</tr>
-			</c:forEach> --%>
-		</tbody> 
-	</table>
-
-
-<div class="container-fluid" style="width: 80%; height:90%; border-radius: 3px;">
-   <div class="message_body">
-      <div class="row" id="chatting_box" style="border: 0px solid black; width: 890px; height: 890px; margin-bottom: 15px; border-radius: 3%; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);">
-         <div class="col-md-12 offset-md-1" style="overflow:hidden;">
-            <div id="chatStatus"></div>
-               <div style="width:100%;">
-                  - 상대방의 대화내용이 검정색으로 보이면 채팅에 참여한 모두에게 보여지는 것입니다.<br>
-                  - 상대방의 대화내용이 <span style="color: red; font-weight: bold">빨간색</span>으로 보이면 나에게만 보여지는 1:1 귓속말 입니다.<br>
-                  - 1:1 채팅(귓속말)을 하시려면 예를 들어, 채팅시 보이는 [이순신]대화내용 에서 이순신을 클릭하시면 됩니다.
-               </div>
-               <input type="hidden" id="to" placeholder="귓속말대상웹소켓.getEmpid()"/>
-               <br/>
-                	  ♡ 귓속말대상 : <span id="privateWho" style="font-weight: bold; color: red;"></span>
-               <br>
-                  <button type="button" id="btnAllDialog" class="btn btn-secondary btn-sm">귀속말대화끊기</button>
-               <br><br>
-             		   ☆현재접속자명단:<br>
-               <div id="connectingUserList" style="max-height: 100px; overFlow-y: auto; position:fixed;"></div>
-               
-               <div id="chatMessage" style="max-height: 500px; overFlow: auto;"></div>
-               
-               <div class="message_container" style="border: 0px solid red; position: fixed; bottom: -15%; right: 50px; transform: translateX(-40%);">
-                  <input type="text" id="message" class="form-control" width="100px;" placeholder="메시지 내용"/>
-                  
-                  <div class = "button_group">
-                     <input type="button" id="btnSendMessage" class="btn btn-success btn-sm my-3" value="메시지보내기" />
-                     <input type="button" id="btnExitMessage" class="btn btn-danger btn-sm my-3 mx-3" onclick="javascript:location.href='<%=request.getContextPath() %>/index.kedai'" value="채팅방나가기" />
-                  </div> 
-               </div>
-         </div>
-      </div>
-   </div>   
-   </div>
-   </div>
+<div class="container-fluid">
+	<div class="message_body">
+		<div class="row">
+			<div class="col-md-10 offset-md-1">
+			   <div id="chatStatus"></div>
+				   <div class="my-3">
+					   - 상대방의 대화내용이 검정색으로 보이면 채팅에 참여한 모두에게 보여지는 것입니다.<br>
+					   - 상대방의 대화내용이 <span style="color: #e68c0e; font-weight: bold">주황색</span>으로 보이면 나에게만 보여지는 1:1 귓속말 입니다.<br>
+					   - 1:1 채팅(귓속말)을 하시려면 예를 들어, 채팅시 보이는 [이순신]대화내용 에서 이순신을 클릭하시면 됩니다.
+				   </div>
+				   <input type="hidden" id="to" placeholder="귓속말대상웹소켓.getEmpid()"/>
+				   <br/>
+					   ♡ 귓속말대상 : <span id="privateWho" style="font-weight: bold; color: red;"></span>
+				   <br>
+					   <button type="button" id="btnAllDialog" class="btn btn-secondary btn-sm">귀속말대화끊기</button>
+				   <br><br>
+					   현재접속자명단:<br/>
+				   <div id="connectingUserList" style="max-height: 100px; overFlow: auto; position:fixed;"></div>
+				   
+				   <div id="chatMessage" style="max-height: 500px; overFlow: auto; margin: 20px 0;"></div>
+				   <div class="message_container">
+					   <input type="text" id="message" class="form-control" placeholder="메시지 내용"/>
+					   
+						<div class = "button_group">
+						   <input type="button" id="btnSendMessage" class="btn btn-success btn-sm my-3" value="메시지보내기" />
+						   <input type="button" id="btnExitMessage" class="btn btn-danger btn-sm my-3 mx-3" onclick="javascript:location.href='<%=request.getContextPath() %>/index.kedai'" value="채팅방나가기" />
+						</div> 
+				   </div>
+			</div>
+		</div>
+	</div>	
+</div>	  
 </body>
 </html>
