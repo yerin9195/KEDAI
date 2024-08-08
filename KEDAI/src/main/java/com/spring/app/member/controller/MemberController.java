@@ -112,7 +112,7 @@ public class MemberController {
                     } else if ("PC".equals(deviceType)) {
                     	mav.setViewName("redirect:/index.kedai"); 
                     } else {
-                        mav.setViewName("unknown-device");
+                    	mav.setViewName("redirect:/index.kedai"); 
                     }
                 }
             }
