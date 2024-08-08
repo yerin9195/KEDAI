@@ -16,6 +16,10 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <style type="text/css">
+a{
+	color:#fff;
+}
+
 div#title {
 	font-size: 27px;
 	margin: 3% 0 1% 0;
@@ -118,6 +122,11 @@ div.fileDrop > div.fileList > span.fileName{padding-left: 10px;}
 /* div.fileDrop > div.fileList > span.fileSize{padding-right: 20px; float:right;}  */
 span.clear{clear: both;} 
                   
+                  
+.changeCSSblod {
+	font-weight: bold;
+}                  
+
 </style>
 
 
@@ -127,6 +136,9 @@ span.clear{clear: both;}
 <script type="text/javascript">
 	
 	$(document).ready(function(){
+		
+		$("input:checkbox[class='end_day']").prop("disabled", true);
+        
 	<%-- === #166.-2 스마트 에디터 구현 시작 === --%>
   //전역변수
 		var obj = [];
@@ -164,21 +176,17 @@ span.clear{clear: both;}
   	    		 return; // 종료
   	    	}
   	    	
-  	    	// 회의 주관부서 유효성 검사
-  	    	const host_dept = $("input:text[name='host_dept']").val().trim();
-  	    	if(host_dept == ""){
- 	    		 alert("회의 주관 부서를 입력하세요!!");
- 	    		 $("input:text[name='host_dept']").val("");
- 	    		 return; // 종료
+  	    	// 연차 신청 유효성 검사
+  	    	const annual_leave = $("input:text[name='request_annual_leave']").val().trim();
+  	    	if(annual_leave == 0){
+ 	    		alert("신청 연차를 확인 하세요!!");
+ 	    		$("#startdate").datepicker('setDate', new Date());
+ 	           	$("#enddate").datepicker('setDate', new Date());
+ 	     	
+ 	           	$("input:checkbox[class='start_day']").prop("checked", true);
+ 	    		return; // 종료
  	    	}
-			
-  	    	// 회의 참석자 유효성 검사
-  	    	const attendees = $("input:text[name='attendees']").val().trim();
-  	    	if(attendees == ""){
-	    		 alert("회의 참석자를 입력하세요!!");
-	    		 $("input:text[name='attendees']").val("");
-	    		 return; // 종료
-	    	}
+		
   	    	 
   	    	// 글내용 유효성 검사(스마트 에디터를 사용할 경우) 
   	    	<%-- const doc_content = $("textarea[name='doc_content']").val().trim();
@@ -291,7 +299,7 @@ span.clear{clear: both;}
                     }
               	},
               	error: function(request, status, error){
-  					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+  					alert("111111111code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
   		      	}
           	});// end of ajax-------------------
   	      	
@@ -334,7 +342,7 @@ span.clear{clear: both;}
 	        //  ,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
 	    });
 	     
-	    $("input#findate").datepicker({
+	    $("input#enddate").datepicker({
             dateFormat: 'yy-mm-dd'  //Input Display Format 변경
            ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
            ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
@@ -356,46 +364,44 @@ span.clear{clear: both;}
 	  	
         // input을 datepicker로 선언
         $("input#startdate").datepicker();                    
-        $("input#findate").datepicker();
-					
-		$("input#startdate, input#findate").keyup(function(e) {
+        $("input#enddate").datepicker();
+		
+        
+        // 초기값을 오늘 날짜로 설정
+  	  //   $("input#startdate").datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
+  	 //    $("input#enddate").datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
+  	
+		$("#startdate").datepicker('setDate', new Date());
+        $("#enddate").datepicker('setDate', new Date());
+  	
+		$("input#startdate, input#enddate").keyup(function(e) {
 	  		$(e.target).val("");
 	  		$(e.target).datepicker('setDate', 'today');
 	  		alert("기안일자는 마우스로만 클릭하세요.g");
 	  		
 	  	}); //  end of $('input#datepicker').keyup((e) => {})--------------------------------------
 	  	
-
+<%-- 
 	 // 시작일 Datepicker
 	    $("#startdate").datepicker({
 	        onSelect: function(selectedDate) {
 	            // 종료일의 최소 날짜를 선택한 시작일로 설정
 	            var minDate = $(this).datepicker('getDate');
-	            $("#findate").datepicker("option", "minDate", minDate);
+	            $("#enddate").datepicker("option", "minDate", minDate);
 	        }
 	    });
 	    
 	    // 종료일 Datepicker
-        $("#findate").datepicker({
+        $("#enddate").datepicker({
             onSelect: function(selectedDate) {
                 // 시작일의 최대 날짜를 선택한 종료일로 설정
                 var maxDate = $(this).datepicker('getDate');
                 $("#startdate").datepicker("option", "maxDate", maxDate);
             }
         });
-
-        
-	     // 초기값을 오늘 날짜로 설정
-	  //   $("input#startdate").datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-	 //    $("input#findate").datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-	
-	     $("#startdate").datepicker('setDate', new Date());
-         $("#findate").datepicker('setDate', new Date());
-	
-	   
-	     
-	     
- 	     
+--%>	     
+	    
+	    
 	    // **** !!!! 중요 !!!! **** //
 		 /*
 		    선택자를 잡을때 선택자가 <body>태그에 직접 기술한 것이라면 선택자를 제대로 잡을수가 있으나
@@ -733,6 +739,123 @@ span.clear{clear: both;}
 		});	    
 	    <%-- === jQuery 를 사용하여 드래그앤드롭(DragAndDrop)을 통한 파일 업로드 끝 === --%>
 		
+	    
+	    $("input#startdate, input#enddate").on("change", function() {
+			
+			var startDate = $("#startdate").val();
+	        var endDate = $("#enddate").val();
+	        
+            if(startDate != null && endDate != null){
+           		var start = new Date(startDate);
+                var end = new Date(endDate);
+                
+                if (end < start) {
+                	 // endDate가 startDate보다 이전 날짜인 경우
+                    alert("종료 날짜는 시작 날짜보다 이후여야 합니다.");
+                    // Optional: endDate를 startDate와 동일하게 설정
+                    //$("#enddate").val(startDate);
+                    $("#startdate").datepicker('setDate', new Date());
+                    $("#enddate").datepicker('setDate', new Date());
+                    $("input:checkbox[class='end_day']").prop("checked", false);
+                    $("input:checkbox[class='end_day']").prop("disabled", true);
+                    $("input:checkbox[class='start_day']").prop("checked", false);
+                    $("input#request_annual_leave").val(1);
+                    return; // 이 시점에서 함수 종료
+                }
+                
+                const diffTime = end.getTime() - start.getTime();// 문자열(날짜형식의 문자열이어야 함)을 날짜로 변경하기 
+                // 날짜형식의 문자열은 2023-09-05 또는 2023/09/05 또는 2023.09.05 이다.
+                const diffDay = Math.floor(diffTime / (1000 * 3600 * 24));
+                var userAnnualLeave = ${sessionScope.loginuser.annual_leave};
+                
+                if (diffDay === 0) {
+                    // diffDay가 0일 때
+                    $("input:checkbox[class='end_day']").prop("disabled", true);
+                } else if(diffDay > userAnnualLeave) {
+                	alert("사용할 수 있는 연차보다 더 많은 날짜가 선택 되었습니다!");
+                	$("#startdate").datepicker('setDate', new Date());
+                    $("#enddate").datepicker('setDate', new Date());
+                    $("input:checkbox[class='end_day']").prop("checked", false);
+                    $("input:checkbox[class='end_day']").prop("disabled", true);
+                    $("input:checkbox[class='start_day']").prop("checked", false);
+                    $("input#request_annual_leave").val(1);
+                    
+                } else{
+                    // diffDay가 0이 아닐 때
+                    $("input:checkbox[class='end_day']").prop("disabled", false);
+                }
+                
+                $("input#request_annual_leave").val(diffDay+1);
+            	
+            }
+	    });
+	    
+	    
+	  //시작일 안에 있는 체크박스들을 선택했을 경우 
+	    $("input:checkbox[class='start_day']").click( (e) => {
+	    	let annual_leave_get = parseFloat($("#request_annual_leave").val());
+	        const bool = $(e.target).prop("checked");
+	        var checkedCount = $("input:checkbox[class='start_day']:checked").length;
+	        
+	        //연차를 하루만 쓰는 경우
+	        if ($("input:checkbox[class='end_day']").prop("disabled")) {
+	        	if(checkedCount == 2 || checkedCount === 0){
+	        		$("input:checkbox[class='start_day']").prop("checked", false);
+	        		$("#request_annual_leave").val(1);
+	        	}
+	        	else{
+	        		let annual_leave_new = annual_leave_get-0.5;
+		            $("#request_annual_leave").val(annual_leave_new);
+	        	}
+	        }
+	        else{// 연차를 연속해서 쓰는 경우 오전 반차만 허용한다.
+	        	if(bool){
+	        		if ($("input:checkbox[id='start_am_half_day']").prop("checked")) {
+	        			let annual_leave_new = annual_leave_get-0.5;
+			            $("#request_annual_leave").val(annual_leave_new);
+	        		}
+	        		else if($("input:checkbox[id='start_pm_half_day']").prop("checked")){
+	        			alert("연차를 연속 사용할 경우 시작일은 오전 반차만 가능합니다!");
+	        			$(e.target).prop("checked", false);
+	        		}
+	        	}
+	        	else{
+	        		let annual_leave_new = annual_leave_get+0.5;
+		            $("#request_annual_leave").val(annual_leave_new);
+	        	}
+	        	
+	        }
+	        
+	        
+	        
+	       
+	    });// end of  $("input:checkbox[class='start_day']").click( (e) => {})----------------------------------
+	    
+		//종료일 안에 있는 체크박스들을 선택했을 경우 
+	    $("input:checkbox[class='end_day']").click( (e) => {
+	    	let annual_leave_get = parseFloat($("#request_annual_leave").val());
+	        const bool = $(e.target).prop("checked");
+	        // 클릭한 체크박스의 체크유무를 알아온다.
+	        if(bool){
+	        	if ($("input:checkbox[id='end_pm_half_day']").prop("checked")) {
+        			let annual_leave_new = annual_leave_get-0.5;
+		            $("#request_annual_leave").val(annual_leave_new);
+	        	}
+	        	else{
+        			alert("연차를 연속 사용할 경우 종료일 오후 반차만 가능합니다!");
+        			$(e.target).prop("checked", false);
+        		}
+	        }
+	        else{
+        		let annual_leave_new = annual_leave_get+0.5;
+	            $("#request_annual_leave").val(annual_leave_new);
+        	}
+	    });// end of  $("input:checkbox[class='start_day']").click( (e) => {})----------------------------------
+	    
+	    
+	    
+	    
+	    
 		
 	});// end of $(document).ready(function(){})-----------
 	
@@ -822,22 +945,35 @@ span.clear{clear: both;}
 			<tr>
 				<th>날짜</th>
 				<td>
-					<input type="text" name="startdate" id="startdate" maxlength="8" size="8" /> ~ <input type="text" name="findate" id="findate" maxlength="8" size="8" />
+					<input type="text" name="startdate" id="startdate" maxlength="8" size="8" /> ~ <input type="text" name="enddate" id="enddate" maxlength="8" size="8" />
 				</td>
 			</tr>
 			<tr>
 				<th>사용 가능 연차</th>
-				<td><span>잔여 연차 : <span style="border: solid 1px black; width:30px;"></span></span>&nbsp; <span>신청 연차 : </span></td>
+				<td>
+					<span>잔여 연차 :</span> <input type="text" style="font-weight:bold; width: 30px; text-align:center;" value="${sessionScope.loginuser.annual_leave}" readonly/>&nbsp; 
+					<span>신청 연차 :</span> <input type="text" name="request_annual_leave" id="request_annual_leave" style="font-weight:bold; width: 30px; text-align:center;" value="1" readonly/>
+				</td>
 			</tr>
 		
 			<tr>
-				<th>반차여부</th>
-				<td></td>
+				<th style = "vertical-align: middle;">반차여부</th>
+				<td id = "half_day">
+					시작일&nbsp;(&nbsp;
+					<input type="checkbox" id="start_am_half_day" name="start_am_half_day" class="start_day" /><label for="start_am_half_day">오전 반차</label>&nbsp;
+					<input type="checkbox" id="start_pm_half_day" name="start_pm_half_day" class="start_day"/><label for="start_pm_half_day">오후 반차</label>&nbsp;
+					)
+					<br>
+					종료일&nbsp;(&nbsp;
+					<input type="checkbox" id="end_am_half_day" name="end_am_half_day" class="end_day"/><label for="end_am_half_day">오전 반차</label>&nbsp;
+					<input type="checkbox" id="end_pm_half_day" name="end_pm_half_day" class="end_day"/><label for="end_pm_half_day">오후 반차</label>&nbsp;
+					)
+				</td>
 			</tr>
 		</table>
 
 		<div id="title2">
-			결제라인
+			결재라인
 			<button type="button" class="btn btn-outline-secondary btn-sm"
 				data-toggle="modal" style="margin-left: 20%;"
 				data-target="#selectLineModal">선택하기</button>
@@ -918,7 +1054,7 @@ span.clear{clear: both;}
 		</table>
 		
 		<div class="htmlAdd">
-			<input type="hidden" name="fk_doctype_code" value="101"/>
+			
 		</div>
 		
 	</div>
@@ -957,7 +1093,7 @@ span.clear{clear: both;}
 				<button type="button" class="btn btn-primary btn-sm"
 					onclick="javascript:history.back()">취소</button>
 			</div>
-			<input type="hidden" name="fk_doctype_code" value="101"/>
+			<input type="hidden" name="fk_doctype_code" value="100"/>
 		
 		</div>
 </form>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.app.approval.model.ApprovalDAO;
 import com.spring.app.domain.ApprovalVO;
+import com.spring.app.domain.DayoffVO;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
 import com.spring.app.domain.DocfileVO;
@@ -50,8 +51,15 @@ public class ApprovalService_imple implements ApprovalService {
 	public int noFile_doc(Map<String, Object> paraMap) {
 		
 		int n1 = dao.noFile_newdoc(paraMap);
-		int n2 = dao.noFile_minutes(paraMap);
+		int n2 = 0;
 		int n3 = 0;
+		
+		if("101".equals(paraMap.get("fk_doctype_code"))) {
+			n2 = dao.noFile_minutes(paraMap);
+		}
+		else if("100".equals(paraMap.get("fk_doctype_code"))) {
+			n2 = dao.noFile_dayoff(paraMap);
+		}
 		
 		int lineNumber =(Integer) paraMap.get("lineNumber");
 		
@@ -131,13 +139,34 @@ public class ApprovalService_imple implements ApprovalService {
 		return n;
 	}
 
-	// 나의 결재 문서에서 총 페이지수 가져오기
+	// 나의 결재 예정 문서에서 총 페이지수 가져오기
+	@Override
+	public int getTotalMyNowApprovalCount(Map<String, String> paraMap) {
+		int n = dao.getTotalMyNowApprovalCount(paraMap);
+		return n;
+	}
+	
+	// 나의 모든 결재 문서 총 페이지수
 	@Override
 	public int getTotalMyApprovalCount(Map<String, String> paraMap) {
 		int n = dao.getTotalMyApprovalCount(paraMap);
 		return n;
 	}
+	
+	// 팀 문서 총 페이지수
+	@Override
+	public int getTotalTeamCount(Map<String, String> paraMap) {
+		int n = dao.getTotalTeamCount(paraMap);
+		return n;
+	}
 
+	// 전체 문서 총 페이지수
+	@Override
+	public int getTotalAllCount(Map<String, String> paraMap) {
+		int n = dao.getTotalAllCount(paraMap);
+		return n;
+	}
+	
 	// 나의 모든 기안문서 가져오기
 	@Override
 	public List<Map<String, String>> myDocListSearch(Map<String, String> paraMap) {
@@ -145,11 +174,32 @@ public class ApprovalService_imple implements ApprovalService {
 		return myDocListSearch;
 	}
 	
-	// 나의 모든 결재문서 가져오기
+	// 나의 모든 결재 예정 문서 가져오기
 	@Override
 	public List<Map<String, String>> myNowApprovalListSearch(Map<String, String> paraMap) {
 		List<Map<String, String>> myNowApprovalListSearch = dao.myNowApprovalListSearch(paraMap);
 		return myNowApprovalListSearch;
+	}
+	
+	// 나의 모든 결재 문서 가져오기
+	@Override
+	public List<DocVO> allmyAppListSearch(Map<String, String> paraMap) {
+		List<DocVO> allmyAppListSearch = dao.allmyAppListSearch(paraMap);
+		return allmyAppListSearch;
+	}
+
+	// 모든 팀 문서 가져오기
+	@Override
+	public List<DocVO> allteamDocListSearch(Map<String, String> paraMap) {
+		List<DocVO> allteamDocListSearch = dao.allteamDocListSearch(paraMap);
+		return allteamDocListSearch;
+	}
+
+	// 관리자가 모든 서류 보기
+	@Override
+	public List<DocVO> allDocListSearch(Map<String, String> paraMap) {
+		List<DocVO> allDocListSearch = dao.allDocListSearch(paraMap);
+		return allDocListSearch;
 	}
 
 	// 나의 기안 문서에서 문서 한 개 보기(공통부분 + 결재라인 + 문서종류별 내용)
@@ -164,7 +214,10 @@ public class ApprovalService_imple implements ApprovalService {
 				if(("fk_doctype_code") != null) {
 					// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
 					if("100".equals(paraMap.get("fk_doctype_code"))) {
-						
+						DayoffVO dayoffvo = dao.getOneDayoff(paraMap);
+						if(dayoffvo != null) {
+							docvo.setDayoffvo(dayoffvo);
+						}
 					}
 					else if("101".equals(paraMap.get("fk_doctype_code"))) {
 						MinutesVO minutesvo = dao.getOneMinutes(paraMap);
@@ -198,6 +251,18 @@ public class ApprovalService_imple implements ApprovalService {
 		return getDocfileOne;
 	}
 
+	// 결재하기 눌렀을 떄 결재, doc테이블 업데이트 하기
+	@Override
+	public void updateDocApprovalOk(Map<String, String> paraMap) {
+		dao.updateApprovalOk(paraMap); // tbl_approval업데이트
+		dao.updateDocOk(paraMap); // tbl_doc업데이트		
+	}
 
+	// 반려하기 눌렀을 떄 결재, doc테이블 업데이트 하기
+	@Override
+	public void updateDocApprovalReject(Map<String, String> paraMap) {
+		dao.updateApprovalReject(paraMap); // tbl_approval업데이트
+		dao.updateDocReject(paraMap); // tbl_doc업데이트
+	}
 
 }

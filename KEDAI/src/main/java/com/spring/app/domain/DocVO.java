@@ -26,8 +26,10 @@ public class DocVO {
 	
 	
 	private MinutesVO minutesvo;
+	private DayoffVO dayoffvo;
 	private List<ApprovalVO> approvalvoList;
 	private List<DocfileVO> docfilevoList;
+	
 
 	
 	////////////////////////////////// 
@@ -156,6 +158,14 @@ public class DocVO {
 
 	public void setMinutesvo(MinutesVO minutesvo) {
 		this.minutesvo = minutesvo;
+	}
+
+	public DayoffVO getDayoffvo() {
+		return dayoffvo;
+	}
+
+	public void setDayoffvo(DayoffVO dayoffvo) {
+		this.dayoffvo = dayoffvo;
 	}
 
 	public List<DocfileVO> getDocfilevoList() {
