@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String ctxPath = request.getContextPath();
-	//	   /KEDAI
+	//	   /KEDA
 	
 	// ==== #221. (웹채팅관련3) ==== 
     // 서버 IP 주소 알아오기(사용중인 IP주소가 유동IP 이라면 IP주소를 알아와야 한다.) 
