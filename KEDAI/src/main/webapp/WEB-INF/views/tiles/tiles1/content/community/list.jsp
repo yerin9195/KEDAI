@@ -184,7 +184,7 @@
 		<table class="table table-bordered mt-3" id="communityTbl">
 			<thead>
 	       		<tr>
-	       			<th style="width: 5%; text-align: center;">순번</th>
+	       			<th style="width: 10%; text-align: center;">순번</th>
 	         		<th style="width: 60%; text-align: center;" colspan="3">글제목</th>
 	         		<th style="width: 20%; text-align: center;">작성일자</th>
 	         		<th style="width: 10%; text-align: center;">조회수</th>
@@ -200,8 +200,8 @@
 		      					>>> 페이징 처리시 보여주는 순번 공식 <<<
 		      					데이터개수-(페이지번호-1)*1페이지당보여줄개수-인덱스번호 => 순번
 		      				--%>
-		      				<td align="center" width="10%" style="vertical-align: middle; align-items: center;"><span style="display: inline-block; width: 60px; height: 60px; border-radius: 50%; overflow: hidden;"><img style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/files/employees/${cvo.imgfilename}" /></span><span style="display: block;">${cvo.nickname}</span></td>
-		      				<td style="vertical-align: middle;" width="50%">
+		      				<td align="center" style="vertical-align: middle; align-items: center; width: 10%;"><span style="display: inline-block; width: 60px; height: 60px; border-radius: 50%; overflow: hidden;"><img style="width: 100%; height: 100%;" src="<%= ctxPath%>/resources/files/employees/${cvo.imgfilename}" /></span><span style="display: block;">${cvo.nickname}</span></td>
+		      				<td style="vertical-align: middle; width: 45%;">
 		      					<%-- === 댓글쓰기 및 파일첨부가 있는 게시판 시작 === --%>
 		      					<%-- 첨부파일이 없는 경우 --%>
 		      					<c:if test="${empty cvo.fk_community_seq}">
@@ -231,7 +231,7 @@
 		      						</c:if>
 		      					</c:if>
 		      				</td>
-		      				<td align="center" width="5%" style="vertical-align: middle;"><img alt="heart" src="<%= ctxPath%>/resources/images/common/heart.png" width="50%" class="heart" /><span id="like_cnt" style="display: block;">${cvo.like_count}</span></td>
+		      				<td align="center" style="vertical-align: middle; width: 5%;"><img alt="heart" src="<%= ctxPath%>/resources/images/common/heart.png" width="50%" class="heart" /><span id="like_cnt" style="display: block;">${cvo.like_count}</span></td>
 		      				<td align="center" style="vertical-align: middle;">${cvo.registerday}</td>
 		      				<td align="center" style="vertical-align: middle;">${cvo.read_count}</td>
 						</tr>

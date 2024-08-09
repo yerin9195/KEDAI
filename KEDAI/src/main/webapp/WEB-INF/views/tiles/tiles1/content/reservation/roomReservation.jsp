@@ -5,144 +5,164 @@
    String ctxPath = request.getContextPath();
 %>
 
- <style type="text/css">
-      .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-right: 15%;
-        }
+<style type="text/css">
+    .header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-right: 15%;
+    }
+    
+    .date-navigation { 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        padding-left: 45%;
+        font-size: 35px;
+    }
+    
+    .date-navigation button {
+        margin: 0 10px;
+        background-color: transparent;
+        border: none;
+        font-size: 35px;
+        cursor: pointer;
+    }
+    
+    table {         
+        border-collapse: collapse; 
+        width: 80%;
+    }
+    
+    th, td { 
+        border: 1px solid #ddd; 
+        text-align: center;
+    }
+    
+    .time-slot:hover {
+        background-color: yellow;
+        cursor: pointer;
+    }
 
-        .date-navigation { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            padding-left: 45%;
-            font-size: 35px;
-        }
+    .modal-dialog {
+        max-width: 800px;
+    }
+    
+    .modal-header, .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        .date-navigation button {
-            margin: 0 10px; /* 버튼과 텍스트 사이의 간격 추가 */
-            background-color: transparent; /* 배경색 제거 */
-            border: none; /* 버튼의 기본 테두리 제거 */
-            font-size: 35px; /* 버튼의 글자 크기 조정 */
-            cursor: pointer; /* 버튼에 커서 포인터 표시 */
-        }
+    .modal-body {
+        display: flex;
+        flex-direction: column;
+        width: auto;
+    }
 
-        table {         
-            border-collapse: collapse; 
-            width: 80%;
-        }
+    .form-group {
+        margin-bottom: 1rem;
+    }
 
-        th, td { 
-            border: 1px solid #ddd; 
-            text-align: center;
-        }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
 
-        th { background-color: #f2f2f2; }
-        
-        .time-slot:hover {
-            background-color: yellow;
-            cursor: pointer;
-        }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
 
-        /* 모달 스타일 */
-        .modal-dialog {
-            max-width: 800px; /* 원하는 너비로 설정 */
-        }
-        
-        .modal-header, .modal-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
 
-        .modal-body {
-            display: flex;
-            flex-direction: column;
-            width: auto;
-        }
+    .form-group input, .form-group textarea, .form-group select {
+        padding: 8px;
+    }
+    
+    .reserveBtn {
+        padding: 22px;
+        background-color: transparent;
+    }
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
+    .date-time-group {
+        display: flex;
+        align-items: center;
+    }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
+    .date-input {
+        margin-right: 10px;
+        flex: 1;
+    }
 
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+    .time-input {
+        margin-right: 10px;
+        width: 80px;
+        text-align: center;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
+    .checkbox-label {
+        display: inline-block;
+        margin-left: 10px;
+    }
 
-        .form-group input, .form-group textarea, .form-group select {
-            padding: 8px;
-            
-        }
-        
-        .reserveBtn {
-            padding: 22px;
-            background-color: transparent;
-        }
+    .reservee {
+        display: inline-block;
+        background-color: #e0e0e0;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
 
-        .date-time-group {
-            display: flex;
-            align-items: center;
-        }
+    .change-btn {
+        margin-left: 10px;
+        cursor: pointer;
+    }
+    
+    .highlighted {
+        background-color: blue !important;
+        color: white;
+    }
+    
+    #floorSelect {
+        margin-right: 10px;
+    }
 
-        .date-input {
-            margin-right: 10px;
-            flex: 1;
-        }
+    .search-button {
+        cursor: pointer;
+        font-size: 20px;
+        border: none;
+        background: none;
+        color: #007bff;
+    }
 
-        .time-input {
-            margin-right: 10px;
-            width: 80px; /* 시간 입력 필드의 크기 조정 */
-            text-align: center;
-        }
+    #buttonContainer {
+        display: none;
+        margin-left: 10px;
+    }
+</style>
 
-        .checkbox-label {
-            display: inline-block;
-            margin-left: 10px;
-        }
-
-        .reservee {
-            display: inline-block;
-            background-color: #e0e0e0;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-
-        .change-btn {
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        
-        .highlighted {
-		    background-color: blue !important;
-		    color: white; /* 텍스트 색상도 변경하여 가독성 향상 */
-		}
-
-    </style>
- 
  <script type="text/javascript">
  $(document).ready(function(){
-	showallsub();
-	setToday();
-	fetchReservations();
-	
-	 
+	 // 페이지 로드 시 초기화
+	    showallsub();
+	    setToday();
+	    fetchReservations();
+
+	    // 시간과 분 선택 옵션을 초기화
+	    populateTimeSelect();
+	   
+	    // 전체 버튼 클릭 시 `showallsub()` 호출
+	    $("#showAllButton").click(function() {
+	        showallsub();
+	    });
+	    
     // 시간과 분 선택 옵션을 초기화
     populateTimeSelect();
     
@@ -346,77 +366,11 @@
     $("#endDate").val(formattedToday);
 	
      
-     $("#assetSelect").change(function() {
-         var selectedRoomMainSeq = $(this).val(); // 선택된 roomMainSeq 값 가져오기
-		//	console.log(selectedRoomMainSeq);
-         
-         
-         // 선택된 값이 존재할 때만 AJAX 요청 보내기
-         if(selectedRoomMainSeq == '전사 자산 목록'){
-        	 selectedRoomMainSeq = '0';
-        	showallsub();
-        	fetchReservations();
-         }
-         
-         if (selectedRoomMainSeq > 1) {
-        	 var subroom = "";
-        	 $("td.time-slot").each(function() {
-	        	 var row = $(this).closest("tr"); // 현재 셀이 포함된 행 찾기
-	        	 var leftCell = row.find("td:first-child"); // 첫 번째 셀 찾기
-	        	 subroom = leftCell.text().trim();
-        	 });
-        	 
-        	 fetchReservations(subroom);
-        	 $.ajax({
-        	        url: "<%= request.getContextPath() %>/roommain.kedai?roomMainSeq=" + selectedRoomMainSeq,
-        	        type: "GET",
-        	        dataType: "json",
-        	        success: function(json) {
-        	        	 var tableBody = $("#assetTableBody");
-        	                tableBody.empty(); // 기존 테이블 내용 초기화
 
-        	                json.forEach(function(item) {
-        	                    var roomSubSeq = item.roomSubSeq;
-        	                    var roomSubName = item.roomSubName;
-
-        	                    // 방 이름과 관련된 데이터가 있는 경우, 각 방 이름별로 시간 슬롯을 생성
-        	                    var row = $("<tr></tr>");
-        	                    var roomCell = $("<td>").text(roomSubName).addClass("room-name-cell");
-        	                    row.append(roomCell);
-
-        	                    for (var hour = 9; hour <= 21; hour++) {
-        	                        var cell1 = $("<td>")
-        	                            .addClass("time-slot")
-        	                            .data("hour", hour)
-        	                            .data("minute", "00")
-        	                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='00'></button>");
-
-        	                        var cell2 = $("<td>")
-        	                            .addClass("time-slot")
-        	                            .data("hour", hour)
-        	                            .data("minute", "30")
-        	                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='30'></button>");
-
-        	                        row.append(cell1);
-        	                        row.append(cell2);
-        	                    }
-
-        	                    tableBody.append(row); // 시간 슬롯이 포함된 행을 추가
-        	                });
-                        
-        	        },
-        	        error: function(request, status, error) {
-        	            alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-        	        }
-        	    });
-         } else {
-             // 선택이 해제된 경우, 두 번째 선택 박스 초기화
-             $("#additionalSelect").html("");
-         }
-     });
      
      // 예약 버튼 클릭 시 모달 내 날짜 및 시간 초기화
      $("#reserve_submit").on("click", function() {
+    	 $("#reservationModal").hide();
     	 var startDate = $("#startDate").val(); // 포맷팅된 날짜
          var endDate = $("#endDate").val();   // 포맷팅된 날짜
          var startTime = $("#startTime").val();
@@ -502,20 +456,115 @@
 	    type: "GET",
 	    dataType: "json", // 반환되는 데이터 타입 (JSON 형식)
 	    success: function(json) {
-	        var options = "<option>전사 자산 목록</option>";
-	        for (var i = 0; i < json.length; i++) {
-	            options += "<option value='" + json[i].roomMainSeq + "'>" + json[i].roomMainName + "</option>";
-	        }
-	        $("#assetSelect").html(options); // id가 assetSelect인 select 태그에 옵션들을 추가
-	        
-	        
-	    },
-	    error: function(request, status, error) {
-	        alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-	    }
-	});
+	    	var assetOptions = "<option value=''>전체</option>";
+            for (var i = 0; i < json.length; i++) {
+                assetOptions += "<option value='" + json[i].roomMainSeq + "'>" + json[i].roomMainName + "</option>";
+            }
+            $("#assetSelect").html(assetOptions); // 자산 선택 드롭다운 업데이트
 
+            // 돋보기 버튼 동적으로 추가
+            var searchButtonHtml = '<button id="searchButton" class="search-button"><i class="fas fa-search"></i></button>';
+            $("#buttonContainer").html(searchButtonHtml);
 
+            // 자산 선택 드롭다운 변화 이벤트
+            $('#assetSelect').change(function() {
+                var selectedValue = $(this).val();
+                
+                if(!selectedValue){
+                	 selectedRoomMainSeq = '0';
+                     showallsub();
+                     fetchReservations();
+                }
+                if (selectedValue) {
+                    $("#buttonContainer").show(); // 선택된 값이 있으면 버튼 보이기
+                    
+                    var selectedRoomMainSeq = $(this).val(); // 선택된 roomMainSeq 값 가져오기
+
+                    if (selectedRoomMainSeq > 1) {
+                        $.ajax({
+                            url: "<%= request.getContextPath() %>/roommain.kedai",
+                            type: "GET",
+                            dataType: "json",
+                            data: {
+                                roomMainSeq: selectedRoomMainSeq
+                            },
+                            success: function(json) {
+                                var tableBody = $("#assetTableBody");
+                                tableBody.empty(); // 기존 테이블 내용 초기화
+
+                                json.forEach(function(item) {
+                                    var roomSubSeq = item.roomSubSeq;
+                                    var roomSubName = item.roomSubName;
+
+                                    // 방 이름과 관련된 데이터가 있는 경우, 각 방 이름별로 시간 슬롯을 생성
+                                    var row = $("<tr></tr>");
+                                    var roomCell = $("<td>").text(roomSubName).addClass("room-name-cell");
+                                    row.append(roomCell);
+
+                                    for (var hour = 9; hour <= 21; hour++) {
+                                        var cell1 = $("<td>")
+                                            .addClass("time-slot")
+                                            .data("hour", hour)
+                                            .data("minute", "00")
+                                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='00'></button>");
+
+                                        var cell2 = $("<td>")
+                                            .addClass("time-slot")
+                                            .data("hour", hour)
+                                            .data("minute", "30")
+                                            .append("<button class='reserveBtn' data-hour='" + hour + "' data-minute='30'></button>");
+
+                                        row.append(cell1);
+                                        row.append(cell2);
+                                    }
+
+                                    tableBody.append(row); // 시간 슬롯이 포함된 행을 추가
+                                });
+                                fetchReservations();
+                            },
+                            error: function(request, status, error) {
+                                alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+                            }
+                        });
+                    } else {
+                        // 선택이 해제된 경우, 두 번째 선택 박스 초기화
+                        $("#additionalSelect").html("");
+                    }
+                    
+                    
+                } else {
+                    $("#buttonContainer").hide(); // 전체가 선택되면 버튼 숨기기
+                }
+                
+            });
+
+            // 돋보기 버튼 클릭 이벤트
+         // 돋보기 버튼 클릭 이벤트
+            $('#searchButton').click(function() {
+                var assetSelectValue = $('#assetSelect option:selected').val();
+                var assetSelectText = $('#assetSelect option:selected').text().trim();
+                
+                // assetSelectValue를 사용하여 층 선택 여부를 판단
+                if (assetSelectValue !== undefined && assetSelectValue !== null) {
+                    if (assetSelectValue === '') {
+                        alert("층을 선택해 주세요."); // 전체가 선택된 경우 경고 메시지
+                    } else {
+                        var imagePath = '<%= ctxPath %>/resources/images/room/' + assetSelectText + ' 도면도.jpg';
+                        window.open(imagePath, '_blank'); // 새 탭에서 이미지 열기
+                    }
+                } else {
+                    alert("층을 선택해 주세요."); // 전체가 선택된 경우 경고 메시지
+                }
+            });
+
+	    
+        },
+        error: function(request, status, error) {
+            alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+        }
+    });
+	        
+	  
 
 	// 날짜 포맷팅 함수
 	function formatDate(date) {
@@ -620,20 +669,20 @@
 	    }
 
 	    function fetchReservations() {
-	    	var selectedDate = $("#currentDate").text().substr(0, 10);  // 현재 날짜 가져오기
+	        var selectedDate = $("#currentDate").text().substr(0, 10); // 현재 날짜 가져오기
 
 	        $.ajax({
 	            url: "<%= request.getContextPath() %>/getReservations.kedai",
 	            type: "GET",
-	            data: { date: selectedDate },  // 선택한 날짜로 요청
+	            data: { date: selectedDate }, // 선택한 날짜로 요청
 	            dataType: "json",
 	            success: function(reservations) {
 	                // 기존 강조 표시 제거
 	                $("td.time-slot").removeClass("highlighted");
 
 	                reservations.forEach(function(reservation) {
-	                    var startReservationDate = reservation.startTime.substr(0, 10);  // 예약 날짜
-	                    var endReservationDate = reservation.endTime.substr(0, 10);  // 예약 날짜
+	                    var startReservationDate = reservation.startTime.substr(0, 10); // 예약 날짜
+	                    var endReservationDate = reservation.endTime.substr(0, 10); // 예약 날짜
 	                    var startTime = parseTime(reservation.startTime);
 	                    var endTime = parseTime(reservation.endTime);
 	                    var reservationRoomName = reservation.roomName;
@@ -642,15 +691,25 @@
 
 	                    // 예약 날짜가 현재 날짜와 일치하는 경우에만 처리
 	                    if (startReservationDate === selectedDate) {
+	                    	$("#reservationModal").hide();
 	                        $("td.time-slot").each(function() {
 	                            var self = this;
 	                            var cellHour = $(this).data('hour');
 	                            var cellMinute = $(this).data('minute');
-	                            var cellRoomName = $(this).data('roomname');
+	                            
+	                            var $row = $(this).closest('tr');
+	                            cellRoomName = $row.find('td.room-name-cell').text().trim();
+	                            
+	                            /* // assetSelect 요소의 값 가져오기
+	                            var assetSelectValue = $('#assetSelect option:selected').text();
+	                            if (assetSelectValue != "전체") {
+	                                cellRoomName = assetSelectValue + cellRoomName;
+	                            }
+	                            */
 	                            var cellTime = formatTime(cellHour, cellMinute);
-
+ 	                            
 	                            $.ajax({
-	                                url: '<%= ctxPath %>/getRoomData.kedai',
+	                                url: '<%= request.getContextPath() %>/getRoomData.kedai',
 	                                method: 'GET',
 	                                data: { subroom: cellRoomName },
 	                                success: function(response) {
@@ -659,7 +718,7 @@
 	                                        var roomMainName = data.ROOMMAINNAME || '';
 	                                        var roomSubName = data.ROOMSUBNAME || '';
 	                                        var cellRoomFullName = roomMainName + roomSubName;
-
+	                                        
 	                                        if (cellRoomFullName === reservationRoomName && cellTime >= startTime && cellTime < endTime) {
 	                                            $(self).addClass("highlighted");
 
@@ -696,6 +755,7 @@
 	    }
 
 
+
  </script>
 
  <div class="header">
@@ -703,11 +763,15 @@
         <h3 style="margin-top: 20%;">예약</h3>
     </div>
 </div>
-<div style="width: 85%; background-color:grey;">
-    <div class="assets">
+<div style="width: 85%;">
+    <div class="assets" style="display: flex;">
+       <!-- 자산 선택 드롭다운 -->
         <select id="assetSelect">
-            <option>전사 자산 목록</option>
+            <!-- Ajax 호출 후 동적으로 추가됩니다 -->
         </select>
+        
+        <!-- 버튼을 동적으로 추가할 컨테이너 -->
+        <div id="buttonContainer"></div>
         <hr />
     </div>
 </div>

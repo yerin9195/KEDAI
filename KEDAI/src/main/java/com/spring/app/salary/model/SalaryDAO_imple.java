@@ -44,12 +44,18 @@ public class SalaryDAO_imple implements SalaryDAO {
 
 
 	@Override
-	public List<SalaryVO> getSalaryDetailsById(String empid, String yearMonth) {
+	public List<SalaryVO> getSalaryDetailsById(String yearMonth) {
 	  Map<String, Object> params = new HashMap<>();
 	    params.put("yearMonth", yearMonth);
-	    params.put("empid", empid);
 	    
 		return sqlsession.selectList("salary.getSalaryDetailsById", params);
+	}
+
+
+	@Override
+	public List<SalaryVO> getAllSalaryData() {
+		List<SalaryVO> getAllSalaryData = sqlsession.selectList("salary.getAllSalaryData");
+		return getAllSalaryData;
 	}
 
 	
