@@ -728,7 +728,7 @@
 	</update>
 	
 	 <update id="updateAnnualLeave" parameterType="HashMap">
-		UPDATE tbl_employees SET ANNUAL_LEAVE = ANNUAL_LEAVE - #{offdays} 
+		UPDATE tbl_employees SET ANNUAL_LEAVE = ANNUAL_LEAVE - #{offdays}
  		WHERE empid = #{loginEmpId}
 	</update>
 	
@@ -746,5 +746,11 @@
 		</if>
  		WHERE fk_doc_no = #{fk_doc_no} and fk_empid = #{loginEmpId}
 	</update>
+	
+	
+	<update id="updateSignImg" parameterType="HashMap">
+ 		UPDATE tbl_employees SET SIGN_IMG = #{newFileName} 
+ 		WHERE EMPID = #{loginId}
+ 	</update>
 	
 </mapper>

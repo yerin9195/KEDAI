@@ -469,6 +469,12 @@ DELETE FROM tbl_approval;
 select *
 from tbl_approval;
 
+--4. tbl_dayoff 삭제
+DELETE FROM tbl_dayoff;
+
+select *
+from tbl_dayoff;
+
 --4. tbl_doc 삭제
 DELETE FROM tbl_doc;
 
@@ -544,6 +550,23 @@ nocache;
 SELECT sequence_name
 FROM all_sequences
 WHERE sequence_name = 'approval_noSeq';
+
+--5. dayoff_noSeq 
+
+
+DROP SEQUENCE dayoff_noSeq;
+
+create sequence dayoff_noSeq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+SELECT sequence_name
+FROM all_sequences
+WHERE sequence_name = 'dayoff_noSeq';
 
 commit;
 
@@ -1203,32 +1226,6 @@ ON D.doc_no = A.fk_doc_no
 where fk_doc_no = 'KD24-101-3'
 order by level_no 
 
-select *
-from tbl_approval
-order by approval_no, level_no
-
-UPDATE tbl_doc
-SET doc_status = 1
-WHERE doc_no ='KD24-101-3'
-
-
-
-commit;
-
-select *
-from tbl_employees
-
-
-SELECT *
-FROM tbl_approval
-order by approval_no, level_no
-
-
-desc tbl_approval
-
-UPDATE tbl_approval
-SET approval_date = TO_DATE('2024-07-23', 'YYYY-MM-DD')
-WHERE approval_no = 1 AND level_no = 2;
 
 
 -----------------------------------------------------------------------
@@ -1395,9 +1392,11 @@ values(seq_scheduleno.nextval, to_date('20240801100000', 'yyyymmddhh24miss'), to
 rollback;
 
 
-select ANNUAL_LEAVE
+select *
 from tbl_employees
-where empid='2012100-001'
+where empid='2010001-001'
+
+desc tbl_employees
 
 select *
 from tbl_dayoff

@@ -240,19 +240,19 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 
 	// 결재하기 눌렀을 떄 doc테이블 업데이트 하기
 	@Override
-	public void updateDocOk(Map<String, String> paraMap) {
+	public void updateDocOk(Map<String, Object> paraMap) {
 		sqlsession.update("approval.updateDocOk", paraMap);
 	}
 
 	// 결재하기 눌렀을 떄 결재 테이블 업데이트 하기
 	@Override
-	public void updateApprovalOk(Map<String, String> paraMap) {
+	public void updateApprovalOk(Map<String, Object> paraMap) {
 		sqlsession.update("approval.updateApprovalOk", paraMap);
 	}
 	
 	// 결재하기 눌렀을 떄 employees 테이블 업데이트 하기
 	@Override
-	public void updateAnnualLeave(Map<String, String> paraMap) {
+	public void updateAnnualLeave(Map<String, Object> paraMap) {
 		sqlsession.update("approval.updateAnnualLeave", paraMap);
 	}
 
@@ -267,6 +267,13 @@ public class ApprovalDAO_imple implements ApprovalDAO {
 	@Override
 	public void updateApprovalReject(Map<String, String> paraMap) {
 		sqlsession.update("approval.updateApprovalReject", paraMap);
+	}
+
+	// 서명 이미지 업데이트
+	@Override
+	public int updateSignImg(Map<String, String> paraMap) {
+		int n = sqlsession.update("approval.updateSignImg", paraMap);
+		return n;
 	}
 
 

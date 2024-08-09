@@ -303,7 +303,7 @@ $(document).ready(function(){
                                    	if( $("input:checkbox[name=com_smcatgono]:checked").length <= $("input:checkbox[name=com_smcatgono]").length ){
                                    		for(var i=0; i<$("input:checkbox[name=com_smcatgono]:checked").length; i++){
 	                                    	if($("input:checkbox[name=com_smcatgono]:checked").eq(i).val() == item.fk_smcatgono){
-	   			                                 alert("캘린더 소분류 번호 : " + $("input:checkbox[name=com_smcatgono]:checked").eq(i).val());
+	   			                                 //alert("캘린더 소분류 번호 : " + $("input:checkbox[name=com_smcatgono]:checked").eq(i).val());
 	   			                      
 	                                			   events.push({
 	   			                                	            id: item.scheduleno,
@@ -773,7 +773,8 @@ function goSearch(){
 	<input type="hidden" value="${sessionScope.loginuser.empid}" id="empid"/>
 		<h3>일정 관리</h3>
 		
-		<form id="searchScheduleFrm" name="searchScheduleFrm">
+			<form id="searchScheduleFrm" name="searchScheduleFrm">
+		<%-- 
 			<div>
 				<input type="text" id="fromDate" name="cal_startdate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp;-&nbsp;&nbsp; 
 				<input type="text" id="toDate" name="cal_enddate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp;
@@ -793,6 +794,8 @@ function goSearch(){
 				<input type="hidden" name="empid" value="${sessionScope.loginuser.empid}"/>
 				<button type="button" class="btn_normal" style="display: inline-block;" onclick="goSearch()">검색</button>
 			</div>
+			--%>
+			<input type="hidden" name="empid" value="${sessionScope.loginuser.empid}"/>
 		</form>
 	</div>
 	

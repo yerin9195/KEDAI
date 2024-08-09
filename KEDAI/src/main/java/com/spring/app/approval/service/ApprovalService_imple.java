@@ -71,7 +71,7 @@ public class ApprovalService_imple implements ApprovalService {
 			paraMap.put("empId", level_no_value);			
 			
 			n3 = dao.noFile_approval(paraMap);
-			System.out.println("확인용 i" + i);
+			
 			if(n3 != 1) {
 				n3=0;
 				break;
@@ -218,8 +218,6 @@ public class ApprovalService_imple implements ApprovalService {
 						DayoffVO dayoffvo = dao.getOneDayoff(paraMap);
 						if(dayoffvo != null) {
 							docvo.setDayoffvo(dayoffvo);
-							System.out.println("서비스단 확인용  " + docvo.getDayoffvo().getOffdays()); 
-							
 						}
 					}
 					else if("101".equals(paraMap.get("fk_doctype_code"))) {
@@ -254,11 +252,13 @@ public class ApprovalService_imple implements ApprovalService {
 
 	// 결재하기 눌렀을 떄 결재, doc테이블 업데이트 하기
 	@Override
-	public void updateDocApprovalOk(Map<String, String> paraMap) {
+	public void updateDocApprovalOk(Map<String, Object> paraMap) {
 		dao.updateApprovalOk(paraMap); // tbl_approval업데이트
 		dao.updateDocOk(paraMap); // tbl_doc업데이트
 		
-		if("true".equals(paraMap.get("annualLeaveUpdate"))) {
+		Object annualLeaveUpdate = paraMap.get("annualLeaveUpdate");
+		
+		if(annualLeaveUpdate.equals("true")) {
 			dao.updateAnnualLeave(paraMap); // tbl_employees 업데이트
 		}
 	}
@@ -268,6 +268,13 @@ public class ApprovalService_imple implements ApprovalService {
 	public void updateDocApprovalReject(Map<String, String> paraMap) {
 		dao.updateApprovalReject(paraMap); // tbl_approval업데이트
 		dao.updateDocReject(paraMap); // tbl_doc업데이트
+	}
+
+	// 서명 이미지 업데이트
+	@Override
+	public int updateSignImg(Map<String, String> paraMap) {
+		int n = dao.updateSignImg(paraMap); // tbl_employees 서명 이미지 업데이트
+		return n;
 	}
 
 }

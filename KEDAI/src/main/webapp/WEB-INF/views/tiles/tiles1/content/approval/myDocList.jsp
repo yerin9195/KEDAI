@@ -21,6 +21,11 @@
 }
 
 
+tr.subject {
+    cursor: pointer;
+}
+
+
 </style>
 
 
@@ -154,7 +159,8 @@ function goSearch(){
   			<c:if test="${not empty requestScope.allMyDocList}">
   				<c:forEach var="allMyDocList" items="${requestScope.allMyDocList}" varStatus="status">
   					<c:if test="${status.index <= 9}"> <!-- 10개까지만 보이도록 설정 -->
-   						<tr>
+   						<tr class="subject" onclick="goView('${allMyDocList.doc_no}', '${allMyDocList.fk_doctype_code}')">
+   						
    							<td align="center">
 							${(requestScope.totalCount) - (requestScope.currentShowPageNo - 1 ) * (requestScope.sizePerPage) - (status.index)}</td>
 													
@@ -188,7 +194,7 @@ function goSearch(){
    							<td>${allMyDocList.created_date}</td>
    							<td>${allMyDocList.doctype_name}</td>
    							<td>${allMyDocList.doc_no}</td>
-   							<td><span class="subject" onclick="goView('${allMyDocList.doc_no}', '${allMyDocList.fk_doctype_code}')">${allMyDocList.doc_subject}</span>
+   							<td>${allMyDocList.doc_subject}
    								<c:if test="${allMyDocList.isAttachment eq 1}">
    									&nbsp;<i class="fa-solid fa-paperclip"></i>
    								</c:if>  								
@@ -203,7 +209,8 @@ function goSearch(){
    							<td>${allMyDocList.name}</td>					
    							<c:if test="${allMyDocList.doc_status eq 0}"><td>미처리</td></c:if>
 							<c:if test="${allMyDocList.doc_status eq 1}"><td>진행중</td></c:if>
-							<c:if test="${allMyDocList.doc_status eq 2}"><td>반려</td></c:if>
+							<c:if test="${allMyDocList.doc_status eq 2}"><td>결재완료</td></c:if>
+							<c:if test="${allMyDocList.doc_status eq 3}"><td>반려</td></c:if>
    						</tr>
    					</c:if>
   				</c:forEach>

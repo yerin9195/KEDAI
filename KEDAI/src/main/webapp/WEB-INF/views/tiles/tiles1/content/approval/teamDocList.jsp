@@ -19,6 +19,10 @@
     text-align: center;
 }
 
+tr.subject {
+    cursor: pointer;
+}
+
 </style>
 
 
@@ -152,7 +156,7 @@ function goSearch(){
   			<c:if test="${not empty requestScope.teamDocList}">
   				<c:forEach var="teamDocList" items="${requestScope.teamDocList}" varStatus="status">
   					<c:if test="${status.index <= 9}"> <!-- 10개까지만 보이도록 설정 -->
-   						<tr>
+   						<tr class="subject" onclick="goView('${teamDocList.doc_no}', '${teamDocList.fk_doctype_code}')">
    							<td align="center">
 							${(requestScope.totalCount) - (requestScope.currentShowPageNo - 1 ) * (requestScope.sizePerPage) - (status.index)}</td>
 													
@@ -186,7 +190,7 @@ function goSearch(){
    							<td>${teamDocList.created_date}</td>
    							<td>${teamDocList.doctype_name}</td>
    							<td>${teamDocList.doc_no}</td>
-   							<td><span class="subject" onclick="goView('${teamDocList.doc_no}', '${teamDocList.fk_doctype_code}')">${teamDocList.doc_subject}</span>
+   							<td>${teamDocList.doc_subject}
    								<c:if test="${teamDocList.isAttachment eq 1}">
    									&nbsp;<i class="fa-solid fa-paperclip"></i>
    								</c:if>  								

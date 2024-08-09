@@ -40,6 +40,20 @@ div.col-md-6 {
 .table-hover tr {
 	cursor: pointer;
 }
+
+button.reg {
+	transition: color 0.2s; /* 부드러운 색상 전환 효과 */
+}
+
+button.reg:hover{
+	color: #e68c0e;
+	font-weight: bold;
+}
+
+.signImgModalBody {
+	text-align: center; /* 내부 요소들을 가운데 정렬 */
+}
+        
 </style>
 
 
@@ -50,10 +64,21 @@ div.col-md-6 {
 			
 		};*/
 		
+		$(document).on("change", "input.img_file", function(e){
+			const input_file = $(e.target).get(0);
+		
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(input_file.files[0]); 
+			
+			fileReader.onload = function(){
+				document.getElementById("previewImg").src = fileReader.result;
+			};
+			
+		}); // end of $(document).on("change", "input.img_file", function(e){}) ----------
+		
 	});
 	
 	function newDoc(){
-		
 		const frm = document.docTypeFrm;
 		
 		let docRadio = document.querySelectorAll(`input[name='doctype_code']`); 
@@ -68,6 +93,7 @@ div.col-md-6 {
 		}// end of for------------------ 
 		if(isCheck == false){
 			alert("양식을 선택해주세요.");
+		    return; // 더 이상의 코드 실행 방지
 		}
 		
 		frm.action = "<%= ctxPath%>/approval/newdoc.kedai";  
@@ -102,13 +128,44 @@ div.col-md-6 {
 
 	}//end of goView(doc_no, fk_doctype_code)---------------------------
 	
+	// 서명 이미지 등록하기
+	function imgReg(){
+		
+		
+		var fileInput = document.getElementById('fileInput');
+		if (fileInput.files.length === 0) {
+		    alert('파일을 선택해 주세요.');
+		    return;
+		}
+		
+		var formData = new FormData();
+		formData.append("attach", fileInput.files[0]);
+		
+	    $.ajax({
+	        url: '<%= ctxPath%>/approval/singImfRegisterJSON.kedai', // 요청을 보낼 URL
+	        type: 'POST', // HTTP 메서드
+	        data: formData, // 서버로 보낼 데이터
+	        processData: false, // jQuery가 데이터를 처리하지 않도록 설정
+	        contentType: false, // jQuery가 콘텐츠 타입을 설정하지 않도록 설정
+	        success: function(json) {
+	            // 서버로부터의 성공적인 응답 처리
+	            if (json.result == 1) {
+	            	location.href="<%= ctxPath%>/approval/singImgEnd.kedai"; 
+	            } else {
+	                alert('이미지 업로드에 실패했습니다.');
+	            }
+	        },
+	        error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		    }
+	    });
+	}
 	
 </script>
 
 
 <div style="border : 0px red solid;  padding: 2% 0; display:flex;">
 <c:if test="${(sessionScope.loginuser).fk_dept_code != null}">
-	<button type="button" data-toggle="modal" style="width: 150px; height:43px; margin-right:5%; background-color:white; border : solid 1px black;" data-target="#newDocModal" >결재 작성하기</button>
 	<ul class="nav nav-tabs" style="margin-bottom:0;">
 	    <li class="nav-item">
 	        <a class="nav-link" style="color: black; font-size:12pt;" href="<%= ctxPath %>/approval/teamDocList.kedai">팀 문서함</a>
@@ -124,6 +181,7 @@ div.col-md-6 {
 	    </li>
 	</ul>
 </c:if>
+	
 <!-- Navigation Tabs -->
 
 <c:if test="${(sessionScope.loginuser).fk_dept_code == null}">
@@ -139,6 +197,11 @@ div.col-md-6 {
     </li>
 </ul>
 </c:if>
+
+
+<button class = "reg" type="button" data-toggle="modal" style="width: 150px; height:40px; margin-left: 35%; background-color:white; border : solid 1px black;" data-target="#newDocModal" >결재 작성하기</button>
+<button class = "reg" type="button" data-toggle="modal" style="width: 150px; height:40px; margin-left: 1%;background-color:white; border : solid 1px black;" data-target="#signImgReg" >서명 등록하기</button>
+
 
 </div>
 	<!-- Modal -->
@@ -168,6 +231,42 @@ div.col-md-6 {
 		      	<!-- Modal footer -->
 		      		<div class="modal-footer">
 		        		<button type="button" onclick="newDoc()" style="background-color:white; color:black; width:10%; height:30px; font-size:10pt; border: solid 1px gray; ">확인</button>
+		        		<button type="button" style="background-color:white; color:black; width:10%; height:30px; font-size:10pt; border : solid 1px gray;" data-dismiss="modal">취소</button>
+		      		</div>
+	      		</form>
+	    	</div>
+	    	
+	  	</div>
+	</div>
+	
+	
+		<!-- Modal -->
+	<!-- Modal 구성 요소는 현재 페이지 상단에 표시되는 대화 상자/팝업 창입니다. -->
+	<div class="modal fade" id="signImgReg">
+		<div class="modal-dialog modal-dialog-centered">
+	  	<!-- .modal-dialog-centered 클래스를 사용하여 페이지 내에서 모달을 세로 및 가로 중앙에 배치합니다. -->
+	    	<div class="modal-content">
+	      
+	      	<!-- Modal header -->
+	      		<div class="modal-header">
+	        		<h5 class="modal-title">서명 이미지 등록하기</h5>
+	        		<button type="button" class="close" data-dismiss="modal">&times;</button>
+	      		</div>
+	      
+	      	<!-- Modal body -->
+	      		<form name="singImgRegForm" enctype="multipart/form-data" >
+		      		<div class="modal-body signImgModalBody">
+		      		<!--  라디오 버튼과 연결된 라벨(label)을 클릭했을 때 라디오 버튼이 체크되도록 하려면, 라벨의 for 속성과 라디오 버튼의 id 속성을 일치하게 해야 한다. -->
+		      			<div style="width: 200px; height: 230px; overflow: hidden; border: 1px solid #ddd; margin:auto; text-align : center;">
+							<img id="previewImg" style="width: 100%; height: 100%;" />
+						</div>
+						<br>
+	   					<input type="file" name="attach" class="infoData img_file" accept='image/*' />
+		      		</div>
+		      
+		      	<!-- Modal footer -->
+		      		<div class="modal-footer">
+		        		<button type="button" onclick="imgReg()" style="background-color:white; color:black; width:10%; height:30px; font-size:10pt; border: solid 1px gray; ">확인</button>
 		        		<button type="button" style="background-color:white; color:black; width:10%; height:30px; font-size:10pt; border : solid 1px gray;" data-dismiss="modal">취소</button>
 		      		</div>
 	      		</form>

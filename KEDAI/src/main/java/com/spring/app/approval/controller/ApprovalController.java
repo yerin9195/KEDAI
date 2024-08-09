@@ -245,7 +245,6 @@ public class ApprovalController {
 		String year_new = String.valueOf(year).substring(2);
 		String fk_doctype_code = mtp_request.getParameter("fk_doctype_code");
 		String fk_doc_no = "KD" +year_new +"-"+ fk_doctype_code + "-" + docSeq.get("doc_noSeq");
-		System.out.println("확인용 fk_doctype_code" + fk_doctype_code);
 		docvo.setDoc_no(fk_doc_no); 
 		
 		Map<String, Object> paraMap = new HashMap<>();
@@ -268,8 +267,6 @@ public class ApprovalController {
 			paraMap.put("startdate", mtp_request.getParameter("startdate"));
 			paraMap.put("enddate", mtp_request.getParameter("enddate"));
 			paraMap.put("request_annual_leave", mtp_request.getParameter("request_annual_leave"));
-			
-			System.out.println("확인용 request_annual_leave" + mtp_request.getParameter("request_annual_leave"));
 			
 			String start_am_half_day =  mtp_request.getParameter("start_am_half_day");
 			String start_pm_half_day = mtp_request.getParameter("start_pm_half_day");
@@ -1196,18 +1193,17 @@ public class ApprovalController {
 		String approval_comment = request.getParameter("approval_comment").trim();
 		String level_no_str = request.getParameter("level_no");
 		String fk_doctype_code = request.getParameter("fk_doctype_code");
-		String offdays = "";
+		int offdays = 0;
 		boolean annualLeaveUpdate = false;
-		Map<String, String> paraMap = new HashMap<>();
+		Map<String, Object> paraMap = new HashMap<>();
 		
 		String doc_status;
 		if("1".equals(level_no_str)) {
-			doc_status = "3";
+			doc_status = "2"; // 결재완료
 			if("100".equals(fk_doctype_code)) {
 				annualLeaveUpdate = true;
-				offdays = request.getParameter("offdays");
+				offdays = Integer.parseInt(request.getParameter("offdays"));
 				paraMap.put("offdays", offdays);
-				System.out.println("확인용 offdays " + offdays);
 			}
 		}
 		else {
@@ -1250,7 +1246,7 @@ public class ApprovalController {
 		
 		String fk_doc_no = request.getParameter("doc_no");
 		String approval_comment = request.getParameter("approval_comment").trim();
-		String doc_status = "2"; // 서류 상태는 반려로 설정
+		String doc_status = "3"; // 서류 상태는 반려로 설정
 		
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");	
@@ -1855,6 +1851,77 @@ public class ApprovalController {
 		
 		return mav;
 	}
+	
+	@ResponseBody
+	@PostMapping(value="/approval/singImfRegisterJSON.kedai", produces="text/plain;charset=UTF-8")
+	public String singImfRegisterJSON(MultipartHttpServletRequest mrequest) {
+		
+		MultipartFile attach = mrequest.getFile("attach"); // 폼의 'name' 값과 일치해야 함
+		int n = 0;
+		
+		System.out.println("확인용~~" + attach);
+		
+		if (attach != null && !attach.isEmpty()) { // 첨부파일이 있는 경우
+		
+			// WAS 의 webapp 의 절대경로 알아오기
+			HttpSession session = mrequest.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			String loginId = loginuser.getEmpid();
+			String root = session.getServletContext().getRealPath("/"); 
+			String path = root+"resources"+File.separator+"files"+File.separator+"doc_attach_file";
+			
+			File directory = new File(path);
+			if (!directory.exists()) {
+			    directory.mkdirs(); // 폴더가 없으면 생성
+			}
+			
+			String setSignImgname = loginuser.getName() + loginuser.getJob_name();	
+		    // path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
+		      
+		    System.out.println("~~~~ 확인용 업로드 path => " + path);
+		    //~~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp1\wtpwebapps\board\resources\doc_attach_file
+		    // resources에 들어가면 doc_attach_file폴더가 아직 생성되지 않았다. 아래와 같이 생성해준다.
+		    
+		 // 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+		 	String newFileName = ""; // WAS(톰캣)의 디스크에 저장될 파일명
+		 	byte[] bytes = null;     // 첨부파일의 내용물을 담는 것
+		 	
+		 	try {
+				bytes = attach.getBytes(); 
+				
+				String originalFilename = attach.getOriginalFilename(); // 첨부파일명의 원래 파일명
+		        String extension = originalFilename.substring(originalFilename.lastIndexOf('.')); // 파일 확장자 추출
+		        newFileName = setSignImgname + extension; // 새 파일명 생성
+				
+		        String uploadedFilePath = fileManager.doFileUpload(bytes, newFileName, path); // 첨부되어진 파일을 업로드
+		        System.out.println("파일이 업로드되었습니다: " + uploadedFilePath);
+		        
+		        Map<String, String> paraMap = new HashMap<>();
+		        paraMap.put("loginId", loginId);
+		        paraMap.put("newFileName", newFileName);
+		        
+		        n = service.updateSignImg(paraMap);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				n=0;
+			}
+		}// end of if (attach != null && !attach.isEmpty())------------------ 
+		JSONObject jsonObj = new JSONObject();
+		
+		jsonObj.put("result", n);
+		
+        return jsonObj.toString(); 
+		
+	}
+	
+	@GetMapping(value="/approval/singImgEnd.kedai")
+	public String singImgEnd(ModelAndView mav, HttpServletRequest request ) {
+	      
+		return "redirect:/approval/main.kedai"; // 메인 화면으로 돌아가기
+	    //  /WEB-INF/views/tiles1/email/emailWrite_done.jsp 페이지를 만들어야 한다.
+	}	
+	
 	
 	 /*
     @ResponseBody 란?

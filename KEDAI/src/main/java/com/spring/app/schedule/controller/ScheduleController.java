@@ -99,7 +99,7 @@ public class ScheduleController {
 	
 		List<CalendarScheduleVO> scheduleList = service.allSchedule(empid);
 		
-		System.out.println("확인용 scheduleList : " + scheduleList);
+		//System.out.println("확인용 scheduleList : " + scheduleList);
 		
 		JSONArray jsArr = new JSONArray();
 		
@@ -116,7 +116,7 @@ public class ScheduleController {
 				jsObj.put("fk_lgcatgono", svo.getFk_lgcatgono());
 				jsObj.put("fk_empid", svo.getFk_empid());
 				jsObj.put("cal_joinuser", svo.getCal_joinuser());
-				System.out.println("확인용 jsObj : " + jsObj);
+			//	System.out.println("확인용 jsObj : " + jsObj);
 				
 				
 				jsArr.put(jsObj);

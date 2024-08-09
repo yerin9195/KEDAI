@@ -103,19 +103,22 @@ public interface ApprovalDAO {
 	DocfileVO getDocfileOne(String fileNo);
 
 	// 결재하기 눌렀을 떄 doc테이블 업데이트 하기
-	void updateDocOk(Map<String, String> paraMap);
+	void updateDocOk(Map<String, Object> paraMap);
 	
 	// 결재하기 눌렀을 떄 결재 테이블 업데이트 하기
-	void updateApprovalOk(Map<String, String> paraMap);
+	void updateApprovalOk(Map<String, Object> paraMap);
 
 	// 결재하기 눌렀을 떄 employees 테이블 업데이트 하기
-	void updateAnnualLeave(Map<String, String> paraMap);
+	void updateAnnualLeave(Map<String, Object> paraMap);
 	
 	// 반려하기 눌렀을 떄 doc테이블 업데이트 하기
 	void updateDocReject(Map<String, String> paraMap);
 
 	// 반려하기 눌렀을 떄 결재 테이블 업데이트 하기
 	void updateApprovalReject(Map<String, String> paraMap);
+
+	// 서명 이미지 업데이트
+	int updateSignImg(Map<String, String> paraMap);
 
 
 
