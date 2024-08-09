@@ -9,7 +9,15 @@ public class DayoffVO {
 	private String enddate;	//휴가종료일
 	private String start_half;	//휴가시작일반차(만약하루만연차일경우여기에반차가생김)0미해당1오전2오후
 	private String end_half;	//휴가종료일반차0미해당1오전2오후
+	private String offdays;
 	
+	
+	public String getOffdays() {
+		return offdays;
+	}
+	public void setOffdays(String offdays) {
+		this.offdays = offdays;
+	}
 	
 	public String getDayoff_no() {
 		return dayoff_no;

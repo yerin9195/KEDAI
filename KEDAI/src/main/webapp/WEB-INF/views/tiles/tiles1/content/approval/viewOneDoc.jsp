@@ -69,8 +69,8 @@ div#fileList a {
     color: black; 
 }
 
-#commentModal{
-
+a.downloadatag:hover {
+    color: #e68c0e;/* 또는 원하는 색상으로 변경 */
 }
 
 .modal-body{
@@ -145,8 +145,16 @@ function goViewApprovalInfo(){
 			$("#fileList").text();
 			let v_html = ``;
 			$.each(json, function(index, item){	
-				v_html += "<a href='<%= ctxPath %>/approval/downloadDocfile.kedai?seq=" + item.file_no + "'>"
-               			 + item.org_filename + "(" + formatNumber(item.filesize)  + "bytes)</a>&nbsp;";
+				
+				let fileSize = parseInt(item.filesize, 10); // 10은 10진수
+	            if (isNaN(fileSize)) {
+	                fileSize = 0; // NaN일 경우 기본값으로 0 설정
+	            }
+	            fileSize = fileSize / 1024 / 1024; // 파일의 크기를 MB로 변환
+	            fileSize = fileSize < 1 ? fileSize.toFixed(3) : fileSize.toFixed(1); // 소수점 자리수 설정
+				
+	            v_html += "<a class='downloadatag' href='<%= ctxPath %>/approval/downloadDocfile.kedai?seq=" + item.file_no + "'>"
+               			 + item.org_filename + "(" + fileSize  + "MB)</a>&nbsp;&nbsp;&nbsp;&nbsp;";
 			});
 			
 		//	const input_width = $("input[name='searchWord']").css("width");// 검색어 input태그 width값 알아오기			
@@ -159,7 +167,7 @@ function goViewApprovalInfo(){
 	});// end of $.ajax---------------------
 }
 
-function btnOk(doc_no, level_no){
+function btnOk(doc_no, level_no, fk_doctype_code){
 	
 	<%--location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;--%>
 	<%-- 또는 location.href=`<%= ctxPath%>/view.action?seq=+seq`; --%>
@@ -167,7 +175,7 @@ function btnOk(doc_no, level_no){
 	const goBackURL = "${requestScope.goBackURL}" <%-- 문자열 : 쌍따옴표--%>
 	// goBackURL = "/list.action?searchType=subject&searchWord=정화&currentShowPageNo=3"
 	// &은 종결자. 그래서 			/list.action?searchType=subject 까지밖에 못 받아온다.
-	
+
 <%--	
 	아래처럼 get 방식으로 보내면 안된다. 왜냐하면 get방식에서 &는 전송될 데이터의 구분자로 사용되기 때문이다.
 	location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;
@@ -178,6 +186,7 @@ function btnOk(doc_no, level_no){
 	const frm = document.appfrm;
 	// hidden 필드에 doc_no 값을 설정
     frm.doc_no.value = doc_no;
+	frm.fk_doctype_code.value= fk_doctype_code;
     frm.level_no.value = level_no;
 	frm.method = "post";
 	frm.action = "<%= ctxPath%>/approval/appOk.kedai";
@@ -194,12 +203,6 @@ function btnReject(doc_no){
 	frm.method = "post";
 	frm.action = "<%= ctxPath%>/approval/appReject.kedai";
 	frm.submit();
-}
-
-function formatNumber(number) {
-    // Convert to a number if it's a string
-    var num = typeof number === 'string' ? parseFloat(number) : number;
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 
@@ -221,9 +224,15 @@ function formatFileSize(size) {
 
 
 <div id="total_contatiner">
-	<c:set var="mvo" value="${requestScope.docvo.minutesvo}" />
+	<c:if test="${requestScope.docvo.fk_doctype_code eq '100'}">
+		<c:set var="offvo" value="${requestScope.docvo.dayoffvo}" />
+	</c:if>
+	<c:if test="${requestScope.docvo.fk_doctype_code eq '101'}">
+		<c:set var="mvo" value="${requestScope.docvo.minutesvo}" />
+	</c:if>
 	<c:set var="avo" value="${requestScope.docvo.approvalvoList}" />
 	<c:set var="dvo" value="${requestScope.docvo}" />
+	<form name ="appfrm">
 	<div style="display: flex;">
 		<div id="leftside" class="col-md-4" style="width: 90%; padding: 0;">
 			<div id="title">${docvo.doctype_name}</div>
@@ -241,7 +250,8 @@ function formatFileSize(size) {
 					<td>${docvo.dept_name}</td>
 				</tr>
 			</table>
-			<table class="table left_table" id="docInfo">
+				<table class="table left_table" id="docInfo">
+			<c:if test="${requestScope.docvo.fk_doctype_code eq '101'}">
 				<tr>
 					<th>회의일자</th>
 					<td>${mvo.meeting_date}</td>
@@ -254,7 +264,44 @@ function formatFileSize(size) {
 					<th>회의 참석자</th>
 					<td>${mvo.attendees}</td>
 				</tr>
+			</c:if>
+			<c:if test="${requestScope.docvo.fk_doctype_code eq '100'}">
+				<tr>
+					<th>날짜</th>
+					<td>${offvo.startdate}&nbsp;~&nbsp;${offvo.enddate}</td>
+				</tr>
+				<tr>
+					<th>반차여부</th>
+					<td>시작일 ( 
+						<c:choose>
+							 <c:when test="${offvo.start_half eq 0}">
+							 	해당없음
+							 </c:when>
+							 <c:when test="${offvo.start_half eq 1}">
+							 	오전
+							 </c:when>
+							 <c:when test="${offvo.start_half eq 2}">
+							 	오후
+							 </c:when>
+						</c:choose>
+						)<br>종료일(
+						<c:choose>
+							<c:when test="${offvo.end_half eq 0}">
+							 	해당없음
+							 </c:when>
+							 <c:when test="${offvo.end_half eq 1}">
+							 	오전
+							 </c:when>
+							 <c:when test="${offvo.end_half eq 2}">
+							 	오후
+							 </c:when>
+						</c:choose>)
+					</td>
+				</tr>
+				<input type="hidden" name="offdays" value="${offvo.offdays}" />	
+			</c:if>
 			</table>
+			
 			<div id="title2">
 				결재라인
 			</div>
@@ -342,7 +389,7 @@ function formatFileSize(size) {
 		</div>
 		<!--  오른쪽 div -->
 		
-		<form name ="appfrm">
+		
 			
 		<!-- Modal -->
 		<!-- Modal 구성 요소는 현재 페이지 상단에 표시되는 대화 상자/팝업 창입니다. -->
@@ -371,7 +418,7 @@ function formatFileSize(size) {
 				<!-- Modal footer -->
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger my_close" data-dismiss="modal">취소</button>
-						<button type="button" class="btn btn-primary btn_ok_Modal" style="display:none;" onclick="btnOk('${dvo.doc_no}', '${requestScope.level_no_str}')">결재하기</button>
+						<button type="button" class="btn btn-primary btn_ok_Modal" style="display:none;" onclick="btnOk('${dvo.doc_no}', '${requestScope.level_no_str}', '${dvo.fk_doctype_code}')">결재하기</button>
                 		<button type="button" class="btn btn-primary btn_reject_Modal" style="display:none;"  onclick="btnReject('${dvo.doc_no}')">반려하기</button>
 					</div>
 				</div>
@@ -379,9 +426,11 @@ function formatFileSize(size) {
 		</div>
 		 <input type="hidden" name="doc_no" id="doc_no_field" />
 		 <input type="hidden" name="level_no" id="level_no_field" />
-		</form>
+		 <input type="hidden" name="fk_doctype_code" id="fk_doctype_code" />	
+	
 		
 	</div>
+		</form>
 </div>
 </body>
 </html>

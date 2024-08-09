@@ -111,8 +111,8 @@ function goSearch(){
 			<li class="nav-item">
         		<a class="nav-link" style="color: black;" href="<%= ctxPath %>/approval/showMyApprovalList.kedai">나의 결재함</a>
     		</li>
-     		<li class="nav-item active">
-        		<a class="nav-link"  href="<%= ctxPath %>/approval/allDocList.kedai">모든 문서함</a>
+     		<li class="nav-item">
+        		<a class="nav-link active"  href="<%= ctxPath %>/approval/allDocList.kedai">모든 문서함</a>
     		</li>
 		</ul>
 	</c:if>

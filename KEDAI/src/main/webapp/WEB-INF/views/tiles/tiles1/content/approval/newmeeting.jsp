@@ -280,7 +280,7 @@ span.clear{clear: both;}
               	contentType:false,  // 파일 전송시 설정 
               	dataType:"json",
               	success:function(json){
-            	  // console.log("~~~ 확인용 : " + JSON.stringify(json));
+            	  console.log("~~~ 확인용 : " + JSON.stringify(json));
                   // ~~~ 확인용 : {"result":1}
                 	if(json.result == 1) {
             	    	location.href="<%= ctxPath%>/approval/newDocEnd.kedai"; 
@@ -940,8 +940,8 @@ span.clear{clear: both;}
 				<button type="button" class="btn btn-primary btn-sm"
 					onclick="javascript:history.back()">취소</button>
 			</div>
-			<input type="hidden" name="fk_doctype_code" value="101"/>
 		
+		<input type="hidden" name="fk_doctype_code" value="101"/>
 		</div>
 </form>
 	</div>

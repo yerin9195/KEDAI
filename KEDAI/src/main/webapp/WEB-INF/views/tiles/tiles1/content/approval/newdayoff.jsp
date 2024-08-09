@@ -440,7 +440,7 @@ span.clear{clear: both;}
 							v_html += "<ul class='moreList approvalList'>";
 							$.each(json, function(index, item){
 								v_html += 	`<li>
-								    			<input type='checkbox' id='\${item.empid}' value='\${item.empid}' />
+								    			<input type='checkbox' id='\${item.empid}' value='\${item.empid}' class='inModalAppList' />
 								    			<input type='hidden' id='deptName' value='\${item.dept_name}' />
 								    			<input type='hidden' id='jobCode' value='\${item.job_code}'/>
 								    			<label for='\${item.empid}' id="labelBold"><span id="emp_name">\${item.name}</span>&nbsp;<span id="emp_jobName">\${item.job_name}</span></label>
@@ -864,7 +864,7 @@ span.clear{clear: both;}
 		var login_jobCode = ${sessionScope.loginuser.fk_job_code}; // 로그인한 사람의 직급코드
 		var v_html ="";
 		
-		const isChecked = $("input[type='checkbox']:checked").length;
+		const isChecked = $("input[class='inModalAppList']:checked").length;
 		
 		if(isChecked != 0){// 모달 결재라인에 하나라도 선택이 되어 있으면
 			$("table#approval").find("tr:not(:first)").remove(); // 회의록에 있는 결제 라인에 제목 부분 빼고 다 지우기

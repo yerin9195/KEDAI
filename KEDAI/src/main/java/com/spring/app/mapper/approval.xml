@@ -94,8 +94,8 @@
  	
  	<!-- 첨부파일이 없는 서류 작성하기(noFile_dayoff) -->
  	<insert id="noFile_dayoff" parameterType="HashMap">
-		insert into tbl_dayoff(dayoff_no, fk_doc_no, startdate, enddate, start_half, end_half)
-		values( dayoff_noSeq.nextval, #{fk_doc_no}, #{startdate}, #{enddate}, #{start_half}, #{end_half})
+		insert into tbl_dayoff(dayoff_no, fk_doc_no, startdate, enddate, start_half, end_half, offdays)
+		values( dayoff_noSeq.nextval, #{fk_doc_no}, #{startdate}, #{enddate}, #{start_half}, #{end_half}, #{request_annual_leave})
 	</insert>
  	
  	<!-- 첨부파일이 없는 서류 작성하기(tbl_approval) -->
@@ -682,7 +682,7 @@
  	
  	<!-- 하나의 연차신청서 불러오기  -->
  	<select id="getOneDayoff" parameterType="HashMap" resultType="com.spring.app.domain.DayoffVO">
- 		select dayoff_no, fk_doc_no, to_char(startdate, 'yyyy-mm-dd') as startdate, to_char(enddate, 'yyyy-mm-dd') as enddate, start_half, end_half
+ 		select dayoff_no, fk_doc_no, to_char(startdate, 'yyyy-mm-dd') as startdate, to_char(enddate, 'yyyy-mm-dd') as enddate, start_half, end_half, offdays
 		from tbl_dayoff
 		where fk_doc_no = #{doc_no}
  	</select>
@@ -726,6 +726,12 @@
 		</if>
  		WHERE fk_doc_no = #{fk_doc_no} and fk_empid = #{loginEmpId}
 	</update>
+	
+	 <update id="updateAnnualLeave" parameterType="HashMap">
+		UPDATE tbl_employees SET ANNUAL_LEAVE = ANNUAL_LEAVE - #{offdays} 
+ 		WHERE empid = #{loginEmpId}
+	</update>
+	
 	
 	
 	<update id="updateDocReject" parameterType="HashMap">

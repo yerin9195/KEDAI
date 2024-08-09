@@ -1395,44 +1395,23 @@ values(seq_scheduleno.nextval, to_date('20240801100000', 'yyyymmddhh24miss'), to
 rollback;
 
 
-select *
+select ANNUAL_LEAVE
 from tbl_employees
+where empid='2012100-001'
+
+select *
+from tbl_dayoff
+where fk_doc_no='KD24-101-13'
+order by dayoff_no desc;
+
+desc tbl_dayoff
 
 
+ALTER TABLE TBL_DAYOFF
+ADD OFFDAYS NUMBER(10, 0) DEFAULT 0 NOT NULL;
 
-SELECT rno, doc_no, fk_empid, doc_status, doc_subject, doc_content, created_date, doctype_name,
-       		isAttachment, NAME, dept_name, fk_doctype_code
-		FROM (
-    		SELECT rownum AS rno,
-           		approval_no, fk_doc_no as doc_no, fk_empid, status, level_no, doc_subject, created_date, doctype_name,
-           		isAttachment, doc_status, NAME, writer, dept_name, doc_content, fk_doctype_code
-    		FROM (
-        		SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
-               		D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
-               		CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, D.doc_status, NAME, dept_name, D.fk_empid AS writer
-               		, doc_content, fk_doctype_code
-        		FROM tbl_approval A1
-        		JOIN tbl_doc D 
-        		ON D.doc_no = A1.fk_doc_no
-        		JOIN tbl_doctype T 
-        		ON T.doctype_code = D.fk_doctype_code
-        		LEFT JOIN (
-            		SELECT fk_doc_no
-            		FROM tbl_doc_file
-            		GROUP BY fk_doc_no
-        		) F ON F.fk_doc_no = D.doc_no
-        		JOIN tbl_employees E
-        		ON E.empid = D.fk_empid
-        		JOIN tbl_dept DP
-        		ON E.fk_dept_code = DP.dept_code
-        		WHERE A1.FK_EMPID = '2012100-001'
-                
-                	ORDER BY D.created_date DESC, D.doc_no DESC
-			) V
-		)T2
-		WHERE rno between #{startRno} and #{endRno}
-                
-        
-        select *
-        from tbl_approval
-        where fk_empid = '2012100-001'
+	select dayoff_no, fk_doc_no, to_char(startdate, 'yyyy-mm-dd') as startdate, to_char(enddate, 'yyyy-mm-dd') as enddate, start_half, end_half, offdays
+		from tbl_dayoff
+		where fk_doc_no = #{doc_no}
+
+commit;

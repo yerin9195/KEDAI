@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.app.approval.model.ApprovalDAO;
 import com.spring.app.domain.ApprovalVO;
+import com.spring.app.domain.DayoffVO;
 import com.spring.app.domain.DeptVO;
 import com.spring.app.domain.DocVO;
 import com.spring.app.domain.DocfileVO;
@@ -50,8 +51,15 @@ public class ApprovalService_imple implements ApprovalService {
 	public int noFile_doc(Map<String, Object> paraMap) {
 		
 		int n1 = dao.noFile_newdoc(paraMap);
-		int n2 = dao.noFile_minutes(paraMap);
+		int n2 = 0;
 		int n3 = 0;
+		
+		if("101".equals(paraMap.get("fk_doctype_code"))) {
+			n2 = dao.noFile_minutes(paraMap);
+		}
+		else if("100".equals(paraMap.get("fk_doctype_code"))) {
+			n2 = dao.noFile_dayoff(paraMap);
+		}
 		
 		int lineNumber =(Integer) paraMap.get("lineNumber");
 		
@@ -63,6 +71,7 @@ public class ApprovalService_imple implements ApprovalService {
 			paraMap.put("empId", level_no_value);			
 			
 			n3 = dao.noFile_approval(paraMap);
+			System.out.println("확인용 i" + i);
 			if(n3 != 1) {
 				n3=0;
 				break;
@@ -206,7 +215,12 @@ public class ApprovalService_imple implements ApprovalService {
 				if(("fk_doctype_code") != null) {
 					// 기안종류코드 100:연차신청서 101:회의록 102:야간근무신청
 					if("100".equals(paraMap.get("fk_doctype_code"))) {
-						
+						DayoffVO dayoffvo = dao.getOneDayoff(paraMap);
+						if(dayoffvo != null) {
+							docvo.setDayoffvo(dayoffvo);
+							System.out.println("서비스단 확인용  " + docvo.getDayoffvo().getOffdays()); 
+							
+						}
 					}
 					else if("101".equals(paraMap.get("fk_doctype_code"))) {
 						MinutesVO minutesvo = dao.getOneMinutes(paraMap);
@@ -220,8 +234,6 @@ public class ApprovalService_imple implements ApprovalService {
 					}
 				}
 			}
-			
-
 		}
 		return docvo;	
 	}
@@ -244,7 +256,11 @@ public class ApprovalService_imple implements ApprovalService {
 	@Override
 	public void updateDocApprovalOk(Map<String, String> paraMap) {
 		dao.updateApprovalOk(paraMap); // tbl_approval업데이트
-		dao.updateDocOk(paraMap); // tbl_doc업데이트		
+		dao.updateDocOk(paraMap); // tbl_doc업데이트
+		
+		if("true".equals(paraMap.get("annualLeaveUpdate"))) {
+			dao.updateAnnualLeave(paraMap); // tbl_employees 업데이트
+		}
 	}
 
 	// 반려하기 눌렀을 떄 결재, doc테이블 업데이트 하기

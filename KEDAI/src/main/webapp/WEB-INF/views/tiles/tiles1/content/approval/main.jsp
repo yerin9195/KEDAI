@@ -36,6 +36,10 @@ div.col-md-6 {
 	margin-left:0;
 	margin-top:0;
 }
+
+.table-hover tr {
+	cursor: pointer;
+}
 </style>
 
 
@@ -72,11 +76,6 @@ div.col-md-6 {
 		frm.submit();
 	}// end of function newDoc()------------------
 	
-	function allMyNowApproval(){
-		
-	}
-	
-	
 
 	function goView(doc_no, fk_doctype_code){
 		<%--location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;--%>
@@ -98,11 +97,11 @@ div.col-md-6 {
 		frm.fk_doctype_code.value = fk_doctype_code;
 
 		frm.method = "post";
-		frm.action = "<%= ctxPath%>/approval/viewOneMyDoc.kedai";
+		frm.action = "<%= ctxPath%>/approval/viewOneDoc.kedai";
 		frm.submit();
 
 	}//end of goView(doc_no, fk_doctype_code)---------------------------
-
+	
 	
 </script>
 
@@ -197,7 +196,7 @@ div.col-md-6 {
 			<div class="document_inProgress">
       			<div  style="display:flex; align-items: center;">
       				<span style="margin: 6px; font-size: 15pt;"> 결재할 문서 </span>
-      				<span style="margin-left:auto; align-self: flex-end; padding: 1% 2%;" onclick="javascript:location.href='<%=request.getContextPath() %>/approval/nowApprovalList.kedai'">더보기</span>
+      		<%-- 	<span style="margin-left:auto; align-self: flex-end; padding: 1% 2%;" onclick="javascript:location.href='<%=request.getContextPath() %>/approval/nowApprovalList.kedai'">더보기</span>--%>	
       			</div>
       			<table class="table table-hover">
       				<thead>
@@ -213,11 +212,11 @@ div.col-md-6 {
       					<c:if test="${not empty requestScope.nowApproval}">
       						<c:forEach var="nowApproval" items="${requestScope.nowApproval}" varStatus="status">
       							<c:if test="${status.index <= 9}"> <!-- 10개까지만 보이도록 설정 -->
-	      							<tr>
+	      							<tr onclick="goView('${nowApproval.doc_no}', '${nowApproval.doctype_code}')">
 	      								<td>${nowApproval.created_date}</td>
 	      								<td>${nowApproval.doctype_name}</td>
 	      								<td>${nowApproval.doc_no}</td>
-	      								<td><span class="subject" onclick="goView('${nowApproval.doc_no}', '${nowApproval.doctype_code}')">${nowApproval.doc_subject}</span>
+	      								<td>${nowApproval.doc_subject}
 	      									<c:if test="${nowApproval.isAttachment eq 1}">
 	      										&nbsp;<i class="fa-solid fa-paperclip"></i>
 	      									</c:if>  								
@@ -259,7 +258,7 @@ div.col-md-6 {
      		<div class="document_approved">
       			<div  style="display:flex; align-items: center;">
       				<span style="margin: 1.5% 1%; font-size: 15pt;"> 기안 진행 문서 </span>
-      				<span style="margin-left:auto; align-self: flex-end; padding: 1% 2%;" onclick="javascript:location.href='<%=request.getContextPath() %>/approval/showMyDocList.kedai'">더보기</span>
+      		<%--	<span style="margin-left:auto; align-self: flex-end; padding: 1% 2%;" onclick="javascript:location.href='<%=request.getContextPath() %>/approval/showMyDocList.kedai'">더보기</span> --%>
       			</div>
       			<table class="table table-hover">
         			<thead>
@@ -274,11 +273,11 @@ div.col-md-6 {
         				<c:if test="${not empty requestScope.myDocList}">
       						<c:forEach var="myDocList" items="${requestScope.myDocList}" varStatus="status">
       							<c:if test="${status.index <= 9}"> <!-- 10개까지만 보이도록 설정 -->
-	      							<tr>
+	      							<tr onclick="goView('${myDocList.doc_no}', '${myDocList.fk_doctype_code}')">
 	      								<td>${myDocList.created_date}</td>
 	      								<td>${myDocList.doctype_name}</td>
 	      								<td>${myDocList.doc_no}</td>
-	      								<td><span class="subject" onclick="goView('${myDocList.doc_no}', '${myDocList.fk_doctype_code}')">${myDocList.doc_subject}</span>
+	      								<td>${myDocList.doc_subject}
 	      									<c:if test="${myDocList.isAttachment eq 1}">
 	      										&nbsp;<i class="fa-solid fa-paperclip"></i>
 	      									</c:if>  								
@@ -306,5 +305,7 @@ div.col-md-6 {
     	</c:if>
 	</div>
 </div>
-</body>
-</html>
+<form name="goViewFrm">
+	<input type="hidden" name="doc_no" />
+    <input type="hidden" name="fk_doctype_code" />
+</form>   

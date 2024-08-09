@@ -160,10 +160,11 @@ public class ApprovalController {
 		
 		HttpSession session = mtp_request.getSession();
 	    String root = session.getServletContext().getRealPath("/");
-	    String path = root + "resources"+File.separator+"doc_attach_file";
+		String path = root+"resources"+File.separator+"files"+File.separator+"doc_attach_file";
+		
 	    // path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
 	      
-	    //  System.out.println("~~~~ 확인용 path => " + path);
+	    System.out.println("~~~~ 확인용 업로드 path => " + path);
 	    //~~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp1\wtpwebapps\board\resources\doc_attach_file
 	    // resources에 들어가면 doc_attach_file폴더가 아직 생성되지 않았다. 아래와 같이 생성해준다.
 	    
@@ -175,11 +176,13 @@ public class ApprovalController {
 	  //C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp1\wtpwebapps\board\resources\doc_attach_file 라는 폴더가 생성 되었는지 확인해준다.
 		
 		 // >>>> 첨부파일을 위의 path 경로에 올리기 <<<< //
-		String[] arr_attachFilename = null; // 첨부파일명들을 기록하기 위한 용도
+	    String[] arr_attachOrgFilename = null; // 기존 첨부파일명들을 기록하기 위한 용도
+		String[] arr_attachNewFilename = null; // 첨부파일명들을 기록하기 위한 용도
 		String[] arr_attachFileSize = null;
 		
 		if(fileList != null && fileList.size() > 0){ // 파일 첨부가 있는 경우라면
-			arr_attachFilename = new String[fileList.size()];
+			arr_attachOrgFilename = new String[fileList.size()];
+			arr_attachNewFilename = new String[fileList.size()];
 			arr_attachFileSize = new String[fileList.size()];	
 			
 		    for(int i=0; i<fileList.size(); i++) {
@@ -218,8 +221,8 @@ public class ApprovalController {
 		               // 탐색기에서 C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp1\wtpwebapps\board\resources\doc_attach_file 폴더에 가보면
 		               // 첨부한 파일이 생성되어져 있음을 확인할 수 있다.
 			    		
-			    //	arr_attachFilename[i] = mtfile.getOriginalFilename(); // 배열 속에 첨부파일명 들을 기록한다.
-			    	arr_attachFilename[i] = newFilename; // 배열 속에 첨부파일명 들을 기록한다.
+			    	arr_attachOrgFilename[i] = mtfile.getOriginalFilename(); // 배열 속에 첨부파일명 들을 기록한다.
+			    	arr_attachNewFilename[i] = newFilename; // 배열 속에 첨부파일명 들을 기록한다.
 			    	
 			    	arr_attachFileSize[i] = Long.toString(mtfile.getSize());
 			    		
@@ -242,8 +245,7 @@ public class ApprovalController {
 		String year_new = String.valueOf(year).substring(2);
 		String fk_doctype_code = mtp_request.getParameter("fk_doctype_code");
 		String fk_doc_no = "KD" +year_new +"-"+ fk_doctype_code + "-" + docSeq.get("doc_noSeq");
-		System.out.println("1확인용 fk_doc_no" + fk_doc_no);
-		
+		System.out.println("확인용 fk_doctype_code" + fk_doctype_code);
 		docvo.setDoc_no(fk_doc_no); 
 		
 		Map<String, Object> paraMap = new HashMap<>();
@@ -255,11 +257,7 @@ public class ApprovalController {
 		paraMap.put("fk_doc_no", fk_doc_no);
 		paraMap.put("fk_doctype_code", fk_doctype_code);
 		paraMap.put("approval_no", docSeq.get("approval_noSeq"));
-		
-		System.out.println("2확인용 approval_no" + docSeq.get("approval_noSeq"));
-		
 		paraMap.put("lineNumber", lineNumber);
-		System.out.println("3확인용 lineNumber" + lineNumber);
 		
 		if("101".equals(fk_doctype_code)) {
 			paraMap.put("meeting_date", mtp_request.getParameter("meeting_date"));
@@ -268,23 +266,14 @@ public class ApprovalController {
 		}
 		else if("100".equals(fk_doctype_code)) {
 			paraMap.put("startdate", mtp_request.getParameter("startdate"));
-			System.out.println("4 확인용  startdate" + mtp_request.getParameter("startdate"));
-			
 			paraMap.put("enddate", mtp_request.getParameter("enddate"));
-			System.out.println("5 확인용  enddate" + mtp_request.getParameter("enddate"));
-			
 			paraMap.put("request_annual_leave", mtp_request.getParameter("request_annual_leave"));
-			System.out.println("6 확인용  request_annual_leave" + mtp_request.getParameter("request_annual_leave"));
 			
+			System.out.println("확인용 request_annual_leave" + mtp_request.getParameter("request_annual_leave"));
 			
 			String start_am_half_day =  mtp_request.getParameter("start_am_half_day");
-			System.out.println("7 확인용  start_am_half_day" + mtp_request.getParameter("start_am_half_day"));
-			
 			String start_pm_half_day = mtp_request.getParameter("start_pm_half_day");
-			System.out.println("8 확인용  start_pm_half_day" + mtp_request.getParameter("start_pm_half_day"));
-			
 			String end_pm_half_day = mtp_request.getParameter("end_pm_half_day");
-			System.out.println("9 확인용  end_pm_half_day" + mtp_request.getParameter("end_pm_half_day"));
 			
 			String start_half = "0";
 			String end_half = "0";
@@ -316,8 +305,8 @@ public class ApprovalController {
 		paraMap.put("empId1", mtp_request.getParameter("level_no_1"));
 		paraMap.put("empId2", mtp_request.getParameter("level_no_2"));
 		paraMap.put("empId3", mtp_request.getParameter("level_no_3"));
-		 	*/
-		
+		 	*/	
+
 		n1 = service.noFile_doc(paraMap); // 서류 작성 insert 하기
 	/*	
 		if(n1>0) {
@@ -336,9 +325,9 @@ public class ApprovalController {
 			docFileMap.put("fk_doc_no", fk_doc_no);
 			
 			for(int i=0; i<fileList.size(); i++) {
-				docFileMap.put("doc_filename", arr_attachFilename[i]);
+				docFileMap.put("doc_filename", arr_attachNewFilename[i]);
 				docFileMap.put("doc_filesize", arr_attachFileSize[i]);
-				docFileMap.put("doc_org_filename", arr_attachFilename[i].substring(0, arr_attachFilename[i].lastIndexOf("_")));
+				docFileMap.put("doc_org_filename", arr_attachOrgFilename[i]);
 			
 				int attach_insert_result = service.withFile_doc(docFileMap);
 				
@@ -671,8 +660,8 @@ public class ApprovalController {
 	public ModelAndView showMyDocList(ModelAndView mav, HttpServletRequest request) {
 		
 		
-		System.out.println("확인용 searchWord" + request.getParameter("searchWord"));
-		System.out.println("확인용 searchType" + request.getParameter("searchType"));
+		//System.out.println("확인용 searchWord" + request.getParameter("searchWord"));
+		//System.out.println("확인용 searchType" + request.getParameter("searchType"));
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		
@@ -737,7 +726,7 @@ public class ApprovalController {
 		//총 게시물 건수(totalCount)
 		totalCount = service.getTotalMyDocCount(paraMap);
 		
-		System.out.println("~~확인용totalCount "+totalCount);
+		//System.out.println("~~확인용totalCount "+totalCount);
 		//~~확인용totalCount 14
 		// 글 제목에 검색어 입력하고 검색 했을 때 
 		//~~확인용totalCount 5
@@ -790,7 +779,7 @@ public class ApprovalController {
         paraMap.put("endRno", String.valueOf(endRno));
 				
         allMyDocList = service.myDocListSearch(paraMap);
-        System.out.println("확인용 allMyDocList" + allMyDocList);
+       // System.out.println("확인용 allMyDocList" + allMyDocList);
      // 글 목록 가져오기(페이징 처리 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것이다.
 		
 		mav.addObject("loginuser", loginuser); // 모델에 loginuser 객체 추가
@@ -954,7 +943,7 @@ public class ApprovalController {
 	        // 그런데 "이전글제목" 또는 "다음글제목" 을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는 원본이 /view_2.action 을 통해서 redirect 되어진 경우이므로 form 을 사용한 것이 아니라서 "양식 다시 제출 확인" 이라는 alert 대화상자가 뜨지 않는다. 그래서  request.getParameter("seq"); 은 null 이 된다. 
 			doc_no= request.getParameter("doc_no");
 			fk_doctype_code = request.getParameter("fk_doctype_code");
-			System.out.println("~~~~~~ 확인용 doc_no : " + doc_no);
+
 	        // ~~~~~~ 확인용 seq : 213
 	        // ~~~~~~ 확인용 seq : null
 			
@@ -1069,7 +1058,6 @@ public class ApprovalController {
 				}	
 			}
 			
-			System.out.println("확인용 isNowApproval " + isNowApproval );
 			mav.addObject("isNowApproval",isNowApproval);
 			mav.addObject("docvo",docvo);
 			mav.addObject("level_no_str", level_no_str);
@@ -1160,14 +1148,17 @@ public class ApprovalController {
 		         //System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root); 
 		         //C:\NCS\workspce_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
 				
-		         String path = root + "resources"+File.separator + "files";
+		         String path = root+"resources"+File.separator+"files"+File.separator+"doc_attach_file";
+		         
+					// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\KEDAI\resources\files\
+					
 		         /* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
 			             운영체제가 Windows 이라면 File.separator 는  "\" 이고,
 			             운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
 			     */
 		         
 		      // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
-		         System.out.println("~~~ 확인용 path 첨부파일 => " + path);
+		         System.out.println("~~~ 확인용 path 다운로드 첨부파일 => " + path);
 		         //  ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
 		         //  C:\NCS\workspce_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
 		           
@@ -1204,9 +1195,20 @@ public class ApprovalController {
 		String fk_doc_no = request.getParameter("doc_no");
 		String approval_comment = request.getParameter("approval_comment").trim();
 		String level_no_str = request.getParameter("level_no");
+		String fk_doctype_code = request.getParameter("fk_doctype_code");
+		String offdays = "";
+		boolean annualLeaveUpdate = false;
+		Map<String, String> paraMap = new HashMap<>();
+		
 		String doc_status;
 		if("1".equals(level_no_str)) {
 			doc_status = "3";
+			if("100".equals(fk_doctype_code)) {
+				annualLeaveUpdate = true;
+				offdays = request.getParameter("offdays");
+				paraMap.put("offdays", offdays);
+				System.out.println("확인용 offdays " + offdays);
+			}
 		}
 		else {
 			doc_status = "1";
@@ -1221,12 +1223,13 @@ public class ApprovalController {
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");	
 		String loginEmpId = loginuser.getEmpid();
 		
-        Map<String, String> paraMap = new HashMap<>();
+        
         paraMap.put("fk_doc_no", fk_doc_no);
         paraMap.put("approval_comment", approval_comment);
         paraMap.put("approval_date", approval_date);
         paraMap.put("loginEmpId", loginEmpId);
         paraMap.put("doc_status", doc_status); // tbl_doc의 status 업데이트
+        paraMap.put("annualLeaveUpdate", String.valueOf(annualLeaveUpdate)); // 연차 업데이트가 필요한지 여
         
         service.updateDocApprovalOk(paraMap); // tbl_doc, tbl_approval업데이트
         
