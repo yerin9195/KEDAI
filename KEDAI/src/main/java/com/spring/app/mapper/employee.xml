@@ -242,19 +242,19 @@
 	<select id="wordSearchShowJSON" parameterType="HashMap" resultType="String">
 		<choose>
 			<when test='searchType == "dept_name"'>
-				select dept_name
+				select distinct dept_name
 			</when>
 			<when test='searchType == "job_name"'>
-				select job_name
+				select distinct job_name
 			</when>
 			<when test='searchType == "name"'>
-				select name
+				select distinct name
 			</when>
 			<when test='searchType == "nickname"'>
-				select nickname
+				select distinct nickname
 			</when>
 			<when test='searchType == "mobile"'>
-				select mobile
+				select distinct mobile
 			</when>
 		</choose>		
 			from tbl_employees E1

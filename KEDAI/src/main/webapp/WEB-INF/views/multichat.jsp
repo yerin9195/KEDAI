@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+  <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <%
@@ -183,15 +183,15 @@ body, html {
 	    // url : 192.168.0.210:9099
 	    
 	    const pathname = window.location.pathname;	// 최초 '/' 부터 오른쪽에 있는 모든 경로를 알려준다. 
-	    // alert("pathname : " + pathname);
+	    //alert("pathname : " + pathname);
 	   // pathname : /KEDAI/chatting/multichat.kedai
 		
 	    const appCtx =  pathname.substring(0, pathname.lastIndexOf("/"));	// "전체 문자열".lastIndexOf("검사할 문자"); 
-	    // alert("appCtx : " + appCtx);
+	    //alert("appCtx : " + appCtx);
 	    // appCtx : /KEDAI/chatting
 	    
 	    const root = url + appCtx;
-	    // alert("root : " + root);
+	    //alert("root : " + root);
 	    // root : 192.168.0.210:9099/KEDAI/chatting
 		// root : 192.168.10.198:9099/KEDAI/chatting	   
 	    
@@ -200,7 +200,7 @@ body, html {
 		const wsUrl = "ws://"+root+"/multichatstart.kedai";
 	    
 		//const wsUrl = "ws://"+ "192.168.219.106:9099/KEDAI/chatting" +"/multichatstart.kedai";
-	    // alert("wsUrl : " + wsUrl)
+	    //alert("wsUrl : " + wsUrl)
 	    // wsUrl : ws://192.168.10.198:9099/KEDAI/chatting/multichatstart.kedai
 	    // 192.168.10.198:9099/KEDAI/chatting/multichatstart.kedai
 	    // wsUrl : ws://192.168.0.210:9099/KEDAI/chatting/multichatstart.kedai
@@ -223,7 +223,7 @@ body, html {
 	    
 	    // === 웹소켓에 최초로 연결이 되었을 경우에 실행되어지는 콜백함수 정의하기 === //
 	    websocket.onopen = function(){
-			// alert("웹소켓 연결됨");
+			alert("웹소켓 연결됨");
 			$("div#chatStatus").text("웹 채팅에 연결이 성공하였습니다."); 
 			
 			/*   
