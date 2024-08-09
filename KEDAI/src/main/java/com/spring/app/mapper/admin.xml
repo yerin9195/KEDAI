@@ -156,15 +156,15 @@
 	
 	<select id="pageurlEmpname" resultMap="pageurlEmpname_Map">
 		SELECT case 
-		       when instr(PAGEURL, 'approval/main.kedai', 1, 1) > 0 then '전자결재' 
-		       when instr(PAGEURL, 'pay_stub.kedai', 1, 1) > 0 then '급여명세서'
-		       when instr(PAGEURL, 'roomResercation.kedai', 1, 1) > 0 then '회의실예약'
-		       when instr(PAGEURL, 'board/list.kedai', 1, 1) > 0 then '게시판'
-		       when instr(PAGEURL, 'community/list.kedai', 1, 1) > 0 then '커뮤니티'
-		       when instr(PAGEURL, 'carShare.kedai', 1, 1) > 0 then '카쉐어'
-		       when instr(PAGEURL, 'bus.kedai', 1, 1) > 0 then '통근버스'
-		       when instr(PAGEURL, 'employee.kedai', 1, 1) > 0 then '사내연락망'
-		       when instr(PAGEURL, 'othercom_list.kedai', 1, 1) > 0 then '거래처정보'
+		       when instr(PAGEURL, 'approval/main.kedai', 1, 1) &gt; 0 then '전자결재' 
+		       when instr(PAGEURL, 'pay_stub.kedai', 1, 1) &gt; 0 then '급여명세서'
+		       when instr(PAGEURL, 'roomResercation.kedai', 1, 1) &gt; 0 then '회의실예약'
+		       when instr(PAGEURL, 'board/list.kedai', 1, 1) &gt; 0 then '게시판'
+		       when instr(PAGEURL, 'community/list.kedai', 1, 1) &gt; 0 then '커뮤니티'
+		       when instr(PAGEURL, 'carShare.kedai', 1, 1) &gt; 0 then '카쉐어'
+		       when instr(PAGEURL, 'bus.kedai', 1, 1) &gt; 0 then '통근버스'
+		       when instr(PAGEURL, 'employee.kedai', 1, 1) &gt; 0 then '사내연락망'
+		       when instr(PAGEURL, 'othercom_list.kedai', 1, 1) &gt; 0 then '거래처정보'
 		       else '기타'
 		       end AS PAGENAME
 		     , name     
