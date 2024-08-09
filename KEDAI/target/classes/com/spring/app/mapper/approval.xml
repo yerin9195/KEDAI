@@ -82,20 +82,20 @@
  	<!-- 첨부파일이 없는 서류 작성하기(tbl_doc) -->
  	<insert id="noFile_newdoc" parameterType="HashMap">
 		insert into tbl_doc(doc_no, fk_doctype_code, fk_empid, doc_subject, doc_content, created_date)
-		values(#{docvo.doc_no}, #{docvo.fk_doctype_code}, #{docvo.fk_empid}, #{docvo.doc_subject}, #{docvo.doc_content}, #{docvo.created_date})
+		values(#{docvo.doc_no}, #{docvo.fk_doctype_code}, #{docvo.fk_empid}, #{docvo.doc_subject}, #{docvo.doc_content}, to_date(#{docvo.created_date}, 'yyyy-mm-dd')
 	</insert>
  	
  	
  	<!-- 첨부파일이 없는 서류 작성하기(tbl_minutes) -->
  	<insert id="noFile_minutes" parameterType="HashMap">
 		insert into tbl_minutes(minutes_no, fk_doc_no, meeting_date, attendees, host_dept)
-		values( minutes_noSeq.nextval, #{fk_doc_no}, #{meeting_date}, #{attendees}, #{host_dept})
+		values( minutes_noSeq.nextval, #{fk_doc_no}, to_date(#{meeting_date}, 'yyyy-mm-dd'), #{attendees}, #{host_dept})
 	</insert>
  	
  	<!-- 첨부파일이 없는 서류 작성하기(noFile_dayoff) -->
  	<insert id="noFile_dayoff" parameterType="HashMap">
 		insert into tbl_dayoff(dayoff_no, fk_doc_no, startdate, enddate, start_half, end_half, offdays)
-		values( dayoff_noSeq.nextval, #{fk_doc_no}, #{startdate}, #{enddate}, #{start_half}, #{end_half}, #{request_annual_leave})
+		values( dayoff_noSeq.nextval, #{fk_doc_no}, to_date(#{startdate}, 'yyyy-mm-dd'), to_date(#{enddate, 'yyyy-mm-dd')}, #{start_half}, #{end_half}, #{request_annual_leave})
 	</insert>
  	
  	<!-- 첨부파일이 없는 서류 작성하기(tbl_approval) -->

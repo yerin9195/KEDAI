@@ -40,9 +40,18 @@ div#calInfo_right{
     cursor: pointer;
 } 
 
-div.fc-scrollgrid-sync-inner a {
-	color: #000;
-}
+.fc-scrollgrid-sync-inner a,
+.fc-scrollgrid-sync-inner a:hover,
+.fc-daygrid-day-top a, 
+.fc-daygrid-day-top a:hover,
+.fc-daygrid ,
+.fc-daygrid-event-harness a,
+a.fc-daygrid-event{
+	    color: #000;
+	    text-decoration: none;
+	    background-color: transparent;
+	    cursor: pointer;
+	} 
 
 
 .fc-sat { color: #0000FF; }    /* 토요일 */
