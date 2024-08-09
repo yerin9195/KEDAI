@@ -62,11 +62,11 @@
           bus_no, pf_station_id, station_name, way, lat, lng, zindex,
           CASE
           <![CDATA[
-              WHEN current_time < first_time THEN
+              WHEN current_time &lt; first_time THEN
               ]]>
                   ROUND((first_time - current_time) * 24 * 60)
             <![CDATA[
-              WHEN current_time > last_time THEN
+              WHEN current_time &gt; last_time THEN
                ]]>
                   NULL
               ELSE
