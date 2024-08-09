@@ -125,7 +125,7 @@
                 data: { yearMonth: selectedDate, empid: empid },
                 dataType: 'json',
                 success: function(data) { 
-                	console.log(data)
+                	//	console.log(data)
                 	
                 	var base_salary = data.base_salary;
                 	var annual_allowance = data.annual_allowance;

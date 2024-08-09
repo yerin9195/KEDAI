@@ -228,7 +228,7 @@
     	        });
     	    } else {
     	        // 사용자가 "취소"를 선택한 경우 아무 작업도 하지 않습니다.
-    	        console.log("예약 취소가 취소되었습니다.");
+    	        //	console.log("예약 취소가 취소되었습니다.");
     	    }
     	});
 
@@ -274,7 +274,7 @@
 
     function updateEndTimeOptions() {
         var startTime = $("#startTime").val();
-        console.log("Start time value: ", startTime); // 디버깅을 위한 로그 추가
+        //	console.log("Start time value: ", startTime); // 디버깅을 위한 로그 추가
 
         if (!startTime) {
             console.error("Start time is not set. Ensure that start time is properly assigned.");

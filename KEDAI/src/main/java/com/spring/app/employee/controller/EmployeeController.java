@@ -270,8 +270,8 @@ public class EmployeeController {
 				jsonObj.put("job_code", map.get("job_code"));
 				jsonObj.put("job_name", map.get("job_name"));
 				jsonObj.put("dept_tel", map.get("dept_tel"));
-				jsonObj.put("gender", map.get("gender"));
-				jsonObj.put("age", map.get("age"));
+				jsonObj.put("func_gender", map.get("gender"));
+				jsonObj.put("func_age", map.get("age"));
 				// 디테일 팝업에 gender , age 항목 추가하기
 				
 
