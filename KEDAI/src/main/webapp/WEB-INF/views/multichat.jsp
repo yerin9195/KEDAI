@@ -223,7 +223,7 @@ body, html {
 	    
 	    // === 웹소켓에 최초로 연결이 되었을 경우에 실행되어지는 콜백함수 정의하기 === //
 	    websocket.onopen = function(){
-			alert("웹소켓 연결됨");
+			// alert("웹소켓 연결됨");
 			$("div#chatStatus").text("웹 채팅에 연결이 성공하였습니다."); 
 			
 			/*   
@@ -390,7 +390,7 @@ body, html {
           
           const ws_id = $(this).prev().text();
        	 // console.log("prev-text : " + ws_id);
-       	  alert(ws_id);
+       	 // alert(ws_id);
           $("input#to").val(ws_id); 
            
            $("span#privateWho").text($(this).text());
