@@ -117,7 +117,7 @@
 		else{
 			const regex = /\d{2,3}[가-힣]{1}\d{4}/gm;
 			const bool = regex.test(car_num);
-	        if(!bool) { // 생년월일이 정규표현식에 위배된 경우
+	        if(!bool) { // 차량번호가 정규표현식에 위배된 경우
 				$(".requiredInfo :input").prop("disabled", true);
 				$("input#car_num").prop("disabled", false);
 	        	$("input#car_num").val("");
