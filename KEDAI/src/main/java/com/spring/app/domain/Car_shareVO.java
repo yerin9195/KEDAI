@@ -29,8 +29,14 @@ public class Car_shareVO {
 	private String nickname_owner;
 	private String nickname_applicant;
 	private String email_applicant;
+	private String empid_owner;
 	
-	
+	public String getEmpid_owner() {
+		return empid_owner;
+	}
+	public void setEmpid_owner(String empid_owner) {
+		this.empid_owner = empid_owner;
+	}
 	public String getEmail_applicant() {
 		return email_applicant;
 	}

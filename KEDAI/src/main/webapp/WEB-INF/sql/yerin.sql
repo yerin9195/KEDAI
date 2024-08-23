@@ -281,12 +281,8 @@ commit;
 
 select *
 from tbl_employees
-where fk_dept_code = '100'
-order by fk_job_code asc;  
-
-select *
-from tbl_employees
-where email = 'NH6B6sIcB8KyRPYzQRdTgmHS0x9w3e1n5Ylt7gbIJ/s=';
+where fk_dept_code = '200'
+order by fk_job_code asc;   
 
 delete from tbl_employees
 where empid = '2010001-001'
@@ -946,7 +942,7 @@ where nickname = 'Liam';
 select category_code, category_name
 from tbl_community_category
 order by category_code asc;
-
+s
 desc tbl_community;
 desc tbl_comment;
 
@@ -1163,20 +1159,6 @@ from dual
 select func_gender(jubun) AS gender
      , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2010, 1, 0)) AS Y2010
      , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2011, 1, 0)) AS Y2011
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2012, 1, 0)) AS Y2012
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2013, 1, 0)) AS Y2013
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2014, 1, 0)) AS Y2014
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2015, 1, 0)) AS Y2015
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2016, 1, 0)) AS Y2016
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2017, 1, 0)) AS Y2017
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2018, 1, 0)) AS Y2018
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2019, 1, 0)) AS Y2019
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2020, 1, 0)) AS Y2020
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2021, 1, 0)) AS Y2021
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2022, 1, 0)) AS Y2022
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2023, 1, 0)) AS Y2023
-     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2024, 1, 0)) AS Y2024
-     , COUNT(*) AS totalCount
 from tbl_employees
 group by func_gender(jubun)
 order by gender;

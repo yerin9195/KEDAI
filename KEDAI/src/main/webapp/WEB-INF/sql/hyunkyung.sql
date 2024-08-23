@@ -1228,7 +1228,7 @@ order by level_no
 
 
 
------------------------------------------------------------------------
+
 
 ------------- >>>>>>>> 일정관리(풀캘린더) 시작 <<<<<<<< -------------
 
@@ -1266,6 +1266,8 @@ create table tbl_calendar_small_category
 ,constraint FK_small_category_fk_userid foreign key(fk_empid) references tbl_employees(empid)            
 );
 -- Table TBL_CALENDAR_SMALL_CATEGORY이(가) 생성되었습니다.
+
+insert 
 
 create sequence seq_smcatgono
 start with 1
@@ -1336,11 +1338,6 @@ JOIN tbl_calendar_small_category SC
 ON SD.fk_smcatgono = SC.smcatgono
 where SD.scheduleno = 21;
 
--- 'leess' 은 휴면계정이기 때문에 동명이인인 'leesunsin' 추가하기
-insert into tbl_member(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday, coin, point, registerday, lastpwdchangedate, status, idle, gradelevel)  
-values('leesunsin', '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382', '이순신', '2IjrnBPpI++CfWQ7CQhjIw==', 'fCQoIgca24/q72dIoEVMzw==', '15864', '경기 군포시 오금로 15-17', '101동 202호', ' (금정동)', '1', '1995-10-04', 0, 0, default, default, default, default, default);
--- 1 행 이(가) 삽입되었습니다.
-
 commit;
 -- 커밋 완료.
 
@@ -1409,8 +1406,78 @@ desc tbl_dayoff
 ALTER TABLE TBL_DAYOFF
 ADD OFFDAYS NUMBER(10, 0) DEFAULT 0 NOT NULL;
 
+<<<<<<< HEAD
 	select dayoff_no, fk_doc_no, to_char(startdate, 'yyyy-mm-dd') as startdate, to_char(enddate, 'yyyy-mm-dd') as enddate, start_half, end_half, offdays
 		from tbl_dayoff
 		where fk_doc_no = #{doc_no}
 
 commit;
+=======
+SELECT rno, doc_no, fk_empid, doc_status, doc_subject, doc_content, created_date, doctype_name,
+       		isAttachment, NAME, dept_name, fk_doctype_code
+		FROM (
+    		SELECT rownum AS rno,
+           		approval_no, fk_doc_no as doc_no, fk_empid, status, level_no, doc_subject, created_date, doctype_name,
+           		isAttachment, doc_status, NAME, writer, dept_name, doc_content, fk_doctype_code
+    		FROM (
+        		SELECT A1.approval_no, A1.fk_doc_no, A1.fk_empid, A1.status, A1.level_no, 
+               		D.doc_subject, to_char(D.created_date, 'yyyy-mm-dd') as created_date, T.doctype_name,
+               		CASE WHEN F.fk_doc_no IS NOT NULL THEN '1' ELSE '0' END AS isAttachment, D.doc_status, NAME, dept_name, D.fk_empid AS writer
+               		, doc_content, fk_doctype_code
+        		FROM tbl_approval A1
+        		JOIN tbl_doc D 
+        		ON D.doc_no = A1.fk_doc_no
+        		JOIN tbl_doctype T 
+        		ON T.doctype_code = D.fk_doctype_code
+        		LEFT JOIN (
+            		SELECT fk_doc_no
+            		FROM tbl_doc_file
+            		GROUP BY fk_doc_no
+        		) F ON F.fk_doc_no = D.doc_no
+        		JOIN tbl_employees E
+        		ON E.empid = D.fk_empid
+        		JOIN tbl_dept DP
+        		ON E.fk_dept_code = DP.dept_code
+        		WHERE A1.FK_EMPID = '2012100-001'
+                
+                	ORDER BY D.created_date DESC, D.doc_no DESC
+			) V
+		)T2
+		WHERE rno between #{startRno} and #{endRno}
+                
+        
+        select *
+        from tbl_approval
+        where fk_empid = '2012100-001'
+        
+        
+
+    
+DECLARE
+    v_smcatgono NUMBER;  -- 소분류 번호를 저장할 변수
+BEGIN
+    FOR emp_rec IN (
+        SELECT empid
+        FROM tbl_employees
+    ) LOOP
+        -- 새로운 smcatgono 값을 생성
+        SELECT SEQ_SMCATGONO.NEXTVAL INTO v_smcatgono FROM dual;
+        
+        -- 각 empid에 대해 데이터 삽입
+        INSERT INTO tbl_calendar_small_category (
+            smcatgono,
+            fk_lgcatgono,
+            smcatgoname,
+            fk_empid
+        ) VALUES (
+            v_smcatgono,      -- 생성된 소분류 번호
+            1,                -- 대분류 번호 (고정값)
+            '예약',           -- 소분류 명 (고정값)
+            emp_rec.empid     -- 현재 직원의 empid
+        );
+    END LOOP;
+END;
+
+commit;
+
+>>>>>>> branch 'dohyeon' of https://github.com/yerin9195/KEDAI.git

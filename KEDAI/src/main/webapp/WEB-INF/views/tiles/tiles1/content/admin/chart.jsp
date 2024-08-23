@@ -527,7 +527,6 @@
 						//////////////////////////////////////////////////////////////
 						
 						Highcharts.chart('chart_container', {
-
 						    title: {
 						        text: '<span style="font-size: 18pt; font-weight: bold; color: #e68c0e;">《&nbsp;입사년도별 성별 인원통계, 2010년 ~ 2024년 &nbsp;》</span>'
 						    },
@@ -539,19 +538,16 @@
 						            text: '사원수'
 						        }
 						    },
-
 						    xAxis: {
 						        accessibility: {
 						            rangeDescription: 'Range: 2010 to 2024'
 						        }
 						    },
-
 						    legend: {
 						        layout: 'vertical',
 						        align: 'right',
 						        verticalAlign: 'middle'
 						    },
-
 						    plotOptions: {
 						        series: {
 						            label: {
@@ -560,9 +556,7 @@
 						            pointStart: 2010
 						        }
 						    },
-
 						    series: resultArr,
-
 						    responsive: {
 						        rules: [{
 						            condition: {
@@ -577,7 +571,6 @@
 						            }
 						        }]
 						    }
-
 						});
 						
 						//////////////////////////////////////////////////////////////
@@ -639,7 +632,6 @@
 						v_html += "</table>";
 					    
 				    	$("div#table_container").html(v_html);
-			    	 	
 		    		},
 			    	error: function(request, status, error){
 					   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);

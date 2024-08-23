@@ -834,4 +834,6 @@
 		</div>
 	</section>
 </div>
+
+<input type="hidden" name="empid" value="${(sessionScope.loginuser).empid}" />
 <%-- content end --%>

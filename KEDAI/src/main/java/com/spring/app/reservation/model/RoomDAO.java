@@ -23,13 +23,7 @@ public interface RoomDAO {
 
 	List<RoomVO> getAllReservations();
 
-	
-
-	RoomVO getReservations(String reservation_seq);
-
-	int updateReservation(RoomVO roomVO);
-
-	int deleteReservation(int reservationSeq);
+	RoomVO getReservationById(int reservationId);
 
 
 }

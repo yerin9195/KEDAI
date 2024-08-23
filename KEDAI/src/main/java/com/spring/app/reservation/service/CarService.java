@@ -69,6 +69,16 @@ public interface CarService {
 
 	int update_drive_out_time(Map<String, String> paraMap);
 
+	List<Map<String, String>> getcustomer_applyStatusList(String empid);
+
+	List<Map<String, String>> getcustomer_SettlementList(String empid);
+
+	int pointMinus_applicant(Map<String, String> minusParaMap);
+
+	void pointPlus_owner(Map<String, String> plusParaMap);
+
+	int payment_settled(Map<String, String> minusParaMap);
+
 
 
 }

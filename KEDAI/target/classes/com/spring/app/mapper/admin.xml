@@ -119,7 +119,7 @@
 		<result property="Y2024"       column="Y2024"       javaType="String" />
 		<result property="totalCount"  column="totalCount"  javaType="String" />
 	</resultMap>
-	
+
 	<select id="empCntByGenderHireYear" resultMap="empCntByGenderHireYear_Map">
 		select func_gender(jubun) AS gender
 		     , sum(decode(EXTRACT(YEAR FROM TO_DATE(hire_date, 'YY/MM/DD')), 2010, 1, 0)) AS Y2010
