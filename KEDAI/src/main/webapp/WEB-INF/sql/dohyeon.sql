@@ -835,3 +835,6 @@ from
     ) h
     where fk_empid = h.empid
 )b
+
+select *
+from tbl_employees
