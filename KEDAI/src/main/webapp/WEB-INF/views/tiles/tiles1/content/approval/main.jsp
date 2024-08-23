@@ -198,8 +198,12 @@ button.reg:hover{
 </ul>
 </c:if>
 
+<c:if test="${(sessionScope.loginuser).fk_dept_code != null}">
 
 <button class = "reg" type="button" data-toggle="modal" style="width: 150px; height:40px; margin-left: 35%; background-color:white; border : solid 1px black;" data-target="#newDocModal" >결재 작성하기</button>
+
+</c:if>
+
 <button class = "reg" type="button" data-toggle="modal" style="width: 150px; height:40px; margin-left: 1%;background-color:white; border : solid 1px black;" data-target="#signImgReg" >서명 등록하기</button>
 
 
